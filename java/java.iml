@@ -11,5 +11,6 @@
     <orderEntry type="library" name="org.apache.clerezza.ext:org.json.simple:0.4" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" name="com.google.guava:guava:26.0-jre" level="project" />
+    <orderEntry type="library" name="org.mongodb:mongodb-driver:3.8.1" level="project" />
   </component>
 </module>

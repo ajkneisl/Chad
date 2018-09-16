@@ -2,7 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.JSON;
 import com.jhobot.handle.Messages;
-import com.jhobot.handle.SQL;
+import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.obj.Command;
 import org.json.JSONArray;
@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class Steam implements Command {
     @Override
-    public void onRequest(MessageReceivedEvent e, List<String> args) {
+    public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         String key = JSON.get("steam_api_token");
 
         if (args.size() == 0 || args.size() == 1)
@@ -163,24 +163,24 @@ public class Steam implements Command {
     }
 
     @Override
-    public void helpCommand(MessageReceivedEvent e) {
+    public void helpCommand(MessageReceivedEvent e, DB db) {
         EmbedBuilder b = new EmbedBuilder();
         b.withTitle("Help : Steam");
         b.withDesc("Remember: Steam Profile must be public!");
-        b.appendField(SQL.get(e.getGuild(), "prefix") + "steam profile <steam name>", "Gets a steam user's profile.", false);
-        b.appendField(SQL.get(e.getGuild(), "prefix") + "steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CSGO stats.", false);
+        b.appendField(new DB(JSON.get("uri_link")).getString(e.getGuild(), "prefix") + "steam profile <steam name>", "Gets a steam user's profile.", false);
+        b.appendField(new DB(JSON.get("uri_link")).getString(e.getGuild(), "prefix") + "steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CSGO stats.", false);
         b.withFooterText(Util.getTimeStamp());
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         new Messages(e.getChannel()).sendEmbed(b.build());
     }
 
     @Override
-    public boolean botHasPermission(MessageReceivedEvent e) {
+    public boolean botHasPermission(MessageReceivedEvent e, DB db) {
         return e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES);
     }
 
     @Override
-    public boolean userHasPermission(MessageReceivedEvent e) {
+    public boolean userHasPermission(MessageReceivedEvent e, DB db) {
         return true;
     }
 }

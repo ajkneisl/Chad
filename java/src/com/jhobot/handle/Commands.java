@@ -1,5 +1,6 @@
 package com.jhobot.handle;
 
+import com.jhobot.commands.function.Prefix;
 import com.jhobot.commands.info.GuildInfo;
 import com.jhobot.commands.info.Jho;
 import com.jhobot.commands.info.Steam;
@@ -14,6 +15,9 @@ public class Commands
 {
     public static void call(MessageReceivedEvent e)
     {
+        // database instance, so it doesn't create multiple and slow everything down
+        DB db = new DB(JSON.get("uri_link"));
+
         // Gets the message, then splits all the different parts with a space.
         String[] argArray = e.getMessage().getContent().split(" ");
 
@@ -22,11 +26,11 @@ public class Commands
             return;
 
         // If the prefix isn't jho! it returns
-        if (!argArray[0].startsWith("jho!"))
+        if (!argArray[0].startsWith(db.getString(e.getGuild(), "prefix")))
             return;
 
         // Gets the command string aka stuff after jho!
-        String commandString = argArray[0].substring(4).toLowerCase();
+        String commandString = argArray[0].substring(db.getString(e.getGuild(), "prefix").length()).toLowerCase();
 
         // Gets the arguments & removes the command strings
         List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
@@ -37,9 +41,9 @@ public class Commands
         {
             case "jho":
                 Jho jho = new Jho();
-                if (jho.botHasPermission(e))
+                if (jho.botHasPermission(e, db))
                 {
-                    if (!jho.userHasPermission(e))
+                    if (!jho.userHasPermission(e, db))
                     {
                         new Messages(e.getChannel()).sendError("You don't have permissions for this!");
                         return;
@@ -47,11 +51,11 @@ public class Commands
 
                     if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
                     {
-                        jho.helpCommand(e);
+                        jho.helpCommand(e, db);
                         return;
                     }
 
-                    jho.onRequest(e, argsList);
+                    jho.onRequest(e, argsList, db);
 
                 }
                 else {
@@ -60,9 +64,9 @@ public class Commands
                 break;
             case "guildinfo":
                 GuildInfo guildinfo = new GuildInfo();
-                if (guildinfo.botHasPermission(e))
+                if (guildinfo.botHasPermission(e, db))
                 {
-                    if (!guildinfo.userHasPermission(e))
+                    if (!guildinfo.userHasPermission(e, db))
                     {
                         new Messages(e.getChannel()).sendError("You don't have permissions for this!");
                         return;
@@ -70,11 +74,11 @@ public class Commands
 
                     if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
                     {
-                        guildinfo.helpCommand(e);
+                        guildinfo.helpCommand(e, db);
                         return;
                     }
 
-                    guildinfo.onRequest(e, argsList);
+                    guildinfo.onRequest(e, argsList, db);
 
                 }
                 else {
@@ -83,9 +87,9 @@ public class Commands
                 break;
             case "userinfo":
                 UserInfo userinfo = new UserInfo();
-                if (userinfo.botHasPermission(e))
+                if (userinfo.botHasPermission(e, db))
                 {
-                    if (!userinfo.userHasPermission(e))
+                    if (!userinfo.userHasPermission(e, db))
                     {
                         new Messages(e.getChannel()).sendError("You don't have permissions for this!");
                         return;
@@ -93,11 +97,11 @@ public class Commands
 
                     if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
                     {
-                        userinfo.helpCommand(e);
+                        userinfo.helpCommand(e, db);
                         return;
                     }
 
-                    userinfo.onRequest(e, argsList);
+                    userinfo.onRequest(e, argsList, db);
 
                 }
                 else {
@@ -106,9 +110,9 @@ public class Commands
                 break;
             case "steam":
                 Steam steam = new Steam();
-                if (steam.botHasPermission(e))
+                if (steam.botHasPermission(e, db))
                 {
-                    if (!steam.userHasPermission(e))
+                    if (!steam.userHasPermission(e, db))
                     {
                         new Messages(e.getChannel()).sendError("You don't have permissions for this!");
                         return;
@@ -116,11 +120,34 @@ public class Commands
 
                     if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
                     {
-                        steam.helpCommand(e);
+                        steam.helpCommand(e, db);
                         return;
                     }
 
-                    steam.onRequest(e, argsList);
+                    steam.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "prefix":
+                Prefix prefix = new Prefix();
+                if (prefix.botHasPermission(e, db))
+                {
+                    if (!prefix.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        prefix.helpCommand(e, db);
+                        return;
+                    }
+
+                    prefix.onRequest(e, argsList, db);
 
                 }
                 else {

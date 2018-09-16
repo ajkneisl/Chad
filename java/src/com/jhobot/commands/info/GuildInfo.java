@@ -2,7 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.JSON;
 import com.jhobot.handle.Messages;
-import com.jhobot.handle.SQL;
+import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class GuildInfo implements Command {
     @Override
-    public void onRequest(MessageReceivedEvent e, List<String> args) {
+    public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         IGuild g = e.getGuild();
         EmbedBuilder b = new EmbedBuilder();
         b.withTitle("Guild : " + g.getName());
@@ -51,22 +51,22 @@ public class GuildInfo implements Command {
     }
 
     @Override
-    public void helpCommand(MessageReceivedEvent e) {
+    public void helpCommand(MessageReceivedEvent e, DB db) {
         EmbedBuilder b = new EmbedBuilder();
         b.withTitle("Help : GuildInfo");
-        b.appendField(SQL.get(e.getGuild(), "prefix") + "guildinfo", "Gives information about the current guild.", false);
+        b.appendField(db.getString(e.getGuild(), "prefix") + "guildinfo", "Gives information about the current guild.", false);
         b.withFooterText(Util.getTimeStamp());
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         new Messages(e.getChannel()).sendEmbed(b.build());
     }
 
     @Override
-    public boolean botHasPermission(MessageReceivedEvent e) {
+    public boolean botHasPermission(MessageReceivedEvent e, DB db) {
         return e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES);
     }
 
     @Override
-    public boolean userHasPermission(MessageReceivedEvent e) {
+    public boolean userHasPermission(MessageReceivedEvent e, DB db) {
         return true;
     }
 }
