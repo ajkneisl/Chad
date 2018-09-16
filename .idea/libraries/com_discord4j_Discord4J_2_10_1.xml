@@ -1,0 +1,43 @@
+<component name="libraryTable">
+  <library name="com.discord4j:Discord4J:2.10.1" type="repository">
+    <properties maven-id="com.discord4j:Discord4J:2.10.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/Discord4J-2.10.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/httpcore-4.4.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/httpclient-4.5.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/httpmime-4.5.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-io-2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/websocket-client-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jetty-client-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jetty-http-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jetty-xml-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jetty-util-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jetty-io-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/websocket-common-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/websocket-api-9.4.8.v20171121.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/typetools-0.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang3-3.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-module-afterburner-2.9.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.9.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-databind-2.9.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-annotations-2.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-4.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mp3spi-1.9.5.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jlayer-1.0.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-3.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jorbis-0.0.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jflac-codec-1.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/tritonus-share-0.3.7.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/tritonus-dsp-0.3.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/emoji-java-4.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json-20170516.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/koloboke-impl-common-jdk8-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/koloboke-api-jdk8-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
