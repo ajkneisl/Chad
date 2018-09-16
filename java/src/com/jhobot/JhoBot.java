@@ -18,10 +18,10 @@ public class JhoBot {
         try
         {
             File dir = new File(System.getenv("appdata") + "\\jho");
-            if (dir.exists())
+            if (!dir.exists())
                 dir.mkdirs();
             File bot = new File(dir + "\\bot.json");
-            if (new File(dir + "\\bot.json").exists())
+            if (!new File(dir + "\\bot.json").exists())
             {
                 bot.createNewFile();
                 JSONObject obj = new JSONObject();
@@ -46,6 +46,11 @@ public class JhoBot {
         /*
         Creates bot
          */
+        if (JSON.get("token").equals(""))
+        {
+            System.err.println("No Token!");
+            System.exit(1);
+        }
         IDiscordClient cli = new ClientBuilder().withToken(JSON.get("token")).build();
         cli.login();
         cli.getDispatcher().registerListener(new Listener());

@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import sx.blah.discord.handle.obj.IGuild;
 
@@ -46,7 +46,7 @@ public class JSON
         Files.write(resultingJson, file, Charsets.UTF_8);
     }
 
-    public static JSONObject read(String url) throws IOException, JSONException {
+    public static org.json.JSONObject read(String url) throws IOException, JSONException {
         InputStream is = new URL(url).openStream();
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -55,7 +55,7 @@ public class JSON
             while ((cp = rd.read()) != -1) {
                 sb.append((char) cp);
             }
-            JSONObject json = new JSONObject(sb.toString());
+            org.json.JSONObject json = new org.json.JSONObject(sb.toString());
             return json;
         } finally {
             is.close();

@@ -5,6 +5,9 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
+import java.awt.*;
+import java.util.Random;
+
 public class Messages
 {
     private IChannel channel;
@@ -33,6 +36,8 @@ public class Messages
         b.withTitle("Error");
         b.withDesc(error);
         b.withFooterText(Util.getTimeStamp());
+
+        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         RequestBuffer.request(() -> {
            channel.sendMessage(b.build());
         });

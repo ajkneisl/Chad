@@ -9,16 +9,20 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Random;
 
 public class Jho implements Command
 {
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args) {
         EmbedBuilder b = new EmbedBuilder();
-        b.withTitle("JhoBot");
-        b.appendField("By", "j9ke and sho", true);
+        b.withTitle("jhobot");
+        b.withDesc("by j9ke and sho!");
         b.appendField("Version", JSON.get("version"), true);
+        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+        new Messages(e.getChannel()).sendEmbed(b.build());
     }
 
     @Override
@@ -27,6 +31,7 @@ public class Jho implements Command
         b.withTitle("Help : Jho");
         b.appendField(SQL.get(e.getGuild(), "prefix") + "jho", "Gives information about the bot.", false);
         b.withFooterText(Util.getTimeStamp());
+        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         new Messages(e.getChannel()).sendEmbed(b.build());
     }
 
