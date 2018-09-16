@@ -1,4 +1,4 @@
-package com.jhobot.commands.handle;
+package com.jhobot.obj;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 

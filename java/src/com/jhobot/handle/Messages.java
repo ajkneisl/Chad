@@ -1,7 +1,8 @@
-package com.jhobot.commands.handle;
+package com.jhobot.handle;
 
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 public class Messages
@@ -23,6 +24,17 @@ public class Messages
     {
         RequestBuffer.request(() ->{
             channel.sendMessage(e);
+        });
+    }
+
+    public void sendError(String error)
+    {
+        EmbedBuilder b = new EmbedBuilder();
+        b.withTitle("Error");
+        b.withDesc(error);
+        b.withFooterText(Util.getTimeStamp());
+        RequestBuffer.request(() -> {
+           channel.sendMessage(b.build());
         });
     }
 }
