@@ -8,6 +8,6 @@ public interface Command
 {
     public void onRequest(MessageReceivedEvent e, List<String> args);
     public void helpCommand(MessageReceivedEvent e);
-    public void botHasPermission(MessageReceivedEvent e);
-    public void userHasPermission(MessageReceivedEvent e);
+    public boolean botHasPermission(MessageReceivedEvent e);
+    public boolean userHasPermission(MessageReceivedEvent e);
 }

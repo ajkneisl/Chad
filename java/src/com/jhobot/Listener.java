@@ -1,5 +1,6 @@
 package com.jhobot;
 
+import com.jhobot.commands.fun.TicTacToe;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -34,7 +35,11 @@ public class Listener
         switch (commandString)
         {
             case "tictactoe":
-                // do stuff
+                TicTacToe ttt = new TicTacToe();
+                if (ttt.botHasPermission(e) && ttt.userHasPermission(e))
+                {
+                    ttt.onRequest(e, argsList);
+                }
                 break;
         }
     }
