@@ -1,6 +1,9 @@
 package com.jhobot.handle;
 
+import com.jhobot.commands.info.GuildInfo;
 import com.jhobot.commands.info.Jho;
+import com.jhobot.commands.info.Steam;
+import com.jhobot.commands.info.UserInfo;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -54,6 +57,76 @@ public class Commands
                 else {
                     return;
                 }
+                break;
+            case "guildinfo":
+                GuildInfo guildinfo = new GuildInfo();
+                if (guildinfo.botHasPermission(e))
+                {
+                    if (!guildinfo.userHasPermission(e))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        guildinfo.helpCommand(e);
+                        return;
+                    }
+
+                    guildinfo.onRequest(e, argsList);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "userinfo":
+                UserInfo userinfo = new UserInfo();
+                if (userinfo.botHasPermission(e))
+                {
+                    if (!userinfo.userHasPermission(e))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        userinfo.helpCommand(e);
+                        return;
+                    }
+
+                    userinfo.onRequest(e, argsList);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "steam":
+                Steam steam = new Steam();
+                if (steam.botHasPermission(e))
+                {
+                    if (!steam.userHasPermission(e))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        steam.helpCommand(e);
+                        return;
+                    }
+
+                    steam.onRequest(e, argsList);
+
+                }
+                else {
+                    return;
+                }
+                break;
         }
     }
 }
