@@ -35,6 +35,7 @@ public class Prefix implements Command {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Changed Prefix");
             b.withDesc("Your prefix is now " + args.get(1));
+            new Messages(e.getChannel()).sendConfigLog("Prefix", args.get(1), db.getString(e.getGuild(), "prefix"), e.getAuthor(), e.getGuild(), db);
             db.set(e.getGuild(), "prefix", args.get(1));
             b.withFooterText(Util.getTimeStamp());
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));

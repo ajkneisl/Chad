@@ -39,8 +39,8 @@ public class Listener
             doc.append("music_requires_admin", false);
             doc.append("role_on_join", false);
             doc.append("join_role", "none");
-            doc.append("ban_message", "You have been banned from &guild&.");
-            doc.append("kick_message", "You have been kicked from &guild&.");
+            doc.append("ban_message", "You have been banned from &guild&. \n &reason&");
+            doc.append("kick_message", "You have been kicked from &guild&. \n &reason&");
 
             dbb.getCollection().insertOne(doc);
 

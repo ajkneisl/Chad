@@ -5,6 +5,7 @@ import com.jhobot.commands.info.GuildInfo;
 import com.jhobot.commands.info.Jho;
 import com.jhobot.commands.info.Steam;
 import com.jhobot.commands.info.UserInfo;
+import com.jhobot.commands.punishments.Ban;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -148,6 +149,29 @@ public class Commands
                     }
 
                     prefix.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "ban":
+                Ban ban = new Ban();
+                if (ban.botHasPermission(e, db))
+                {
+                    if (!ban.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        ban.helpCommand(e, db);
+                        return;
+                    }
+
+                    ban.onRequest(e, argsList, db);
 
                 }
                 else {
