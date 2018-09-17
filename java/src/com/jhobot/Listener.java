@@ -4,6 +4,7 @@ import com.jhobot.handle.Commands;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.JSON;
 import com.jhobot.handle.Util;
+import org.bson.BsonArray;
 import org.bson.Document;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
@@ -51,6 +52,6 @@ public class Listener
     @EventSubscriber
     public void leaveGuild(GuildLeaveEvent e)
     {
-        // do stuff
+        // TODO do stuff
     }
 }

@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Ban implements Command {
+public class Kick implements Command {
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         Messages m = new Messages(e.getChannel());
@@ -64,10 +64,10 @@ public class Ban implements Command {
             sb2.append(s + " ");
         }
 
-        String ban_message = db.getString(e.getGuild(), "ban_message");
+        String ban_message = db.getString(e.getGuild(), "kick_message");
         if (!ban_message.equalsIgnoreCase("&disabled&") || !ban_message.toLowerCase().contains("&disabled&") && !user.isBot())
         {
-            String[] msgsArray = db.getString(e.getGuild(), "ban_message").split(" ");
+            String[] msgsArray = db.getString(e.getGuild(), "kick_message").split(" ");
             List<String> msgs = Arrays.asList(msgsArray);
             for (int i = 0; msgs.size() > i; i++)
             {
@@ -90,21 +90,21 @@ public class Ban implements Command {
         if (reason.isEmpty())
         {
             reason.add("None");
-            m.send("Successfully banned " + user.getName() + " for no reason.", "Banned User");
+            m.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
             m.sendPunishLog("Ban", user, e.getAuthor(), db, e.getGuild(), reason);
             return;
         }
         // ban
         e.getGuild().banUser(user);
-        m.send("Successfully banned " + user.getName() + " for " + sb2.toString().trim() + ".", "Banned User");
-        m.sendPunishLog("Ban", user, e.getAuthor(), db, e.getGuild(), reason);
+        m.send("Successfully kicked " + user.getName() + " for " + sb2.toString().trim() + ".", "Kicked User");
+        m.sendPunishLog("Kick", user, e.getAuthor(), db, e.getGuild(), reason);
     }
 
     @Override
     public void helpCommand(MessageReceivedEvent e, DB db) {
         EmbedBuilder b = new EmbedBuilder();
         b.withTitle("Help : Ban");
-        b.appendField(db.getString(e.getGuild(), "prefix") + "ban <user/@user> [reason]", "Gives information about the mentioned user.", false);
+        b.appendField(db.getString(e.getGuild(), "prefix") + "kick <user/@user> [reason]", "Kicks a user with a reason.", false);
         b.withFooterText(Util.getTimeStamp());
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         new Messages(e.getChannel()).sendEmbed(b.build());
@@ -112,11 +112,11 @@ public class Ban implements Command {
 
     @Override
     public boolean botHasPermission(MessageReceivedEvent e, DB db) {
-        return e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.BAN);
+        return e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK);
     }
 
     @Override
     public boolean userHasPermission(MessageReceivedEvent e, DB db) {
-        return e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.BAN);
+        return e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK);
     }
 }

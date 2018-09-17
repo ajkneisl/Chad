@@ -49,8 +49,8 @@ public class Messages
     public void send(String msg, String title)
     {
         EmbedBuilder b = new EmbedBuilder();
-        b.withTitle(msg);
-        b.withDesc(title);
+        b.withTitle(title);
+        b.withDesc(msg);
         b.withFooterText(Util.getTimeStamp());
 
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));

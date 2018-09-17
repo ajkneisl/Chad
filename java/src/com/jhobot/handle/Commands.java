@@ -1,5 +1,6 @@
 package com.jhobot.handle;
 
+import com.jhobot.commands.fun.EightBall;
 import com.jhobot.commands.function.Prefix;
 import com.jhobot.commands.info.GuildInfo;
 import com.jhobot.commands.info.Jho;
@@ -172,6 +173,29 @@ public class Commands
                     }
 
                     ban.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "8ball":
+                EightBall ball = new EightBall();
+                if (ball.botHasPermission(e, db))
+                {
+                    if (!ball.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        ball.helpCommand(e, db);
+                        return;
+                    }
+
+                    ball.onRequest(e, argsList, db);
 
                 }
                 else {
