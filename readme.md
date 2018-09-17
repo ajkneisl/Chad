@@ -12,5 +12,6 @@
 ### Discord Server
 https://discord.gg/EEHKTW
 
-### Builds
-nothing here yet
+### Building // Personal Use
+We provide no support for personal usage, and do not provide any builds of jhobot. 
+You may use some the bot's files, but with credit.
