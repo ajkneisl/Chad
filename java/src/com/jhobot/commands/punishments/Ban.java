@@ -3,7 +3,7 @@ package com.jhobot.commands.punishments;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
-import com.jhobot.obj.Command;
+import com.jhobot.handle.commands.CommandClass;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Ban implements Command {
+public class Ban implements CommandClass {
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         Messages m = new Messages(e.getChannel());

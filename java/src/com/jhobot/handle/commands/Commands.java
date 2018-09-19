@@ -1,12 +1,18 @@
-package com.jhobot.handle;
+package com.jhobot.handle.commands;
 
+import com.jhobot.commands.fun.CatFact;
 import com.jhobot.commands.fun.EightBall;
+import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Prefix;
 import com.jhobot.commands.info.GuildInfo;
 import com.jhobot.commands.info.Jho;
 import com.jhobot.commands.info.Steam;
 import com.jhobot.commands.info.UserInfo;
 import com.jhobot.commands.punishments.Ban;
+import com.jhobot.commands.punishments.Kick;
+import com.jhobot.handle.DB;
+import com.jhobot.handle.JSON;
+import com.jhobot.handle.Messages;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -196,6 +202,75 @@ public class Commands
                     }
 
                     ball.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "catfact":
+                CatFact catFact = new CatFact();
+                if (catFact.botHasPermission(e, db))
+                {
+                    if (!catFact.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        catFact.helpCommand(e, db);
+                        return;
+                    }
+
+                    catFact.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "logging":
+                Logging logging = new Logging();
+                if (logging.botHasPermission(e, db))
+                {
+                    if (!logging.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        logging.helpCommand(e, db);
+                        return;
+                    }
+
+                    logging.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "kick":
+                Kick kick = new Kick();
+                if (kick.botHasPermission(e, db))
+                {
+                    if (!kick.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        kick.helpCommand(e, db);
+                        return;
+                    }
+
+                    kick.onRequest(e, argsList, db);
 
                 }
                 else {

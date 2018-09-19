@@ -4,7 +4,7 @@ import com.jhobot.handle.JSON;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
-import com.jhobot.obj.Command;
+import com.jhobot.handle.commands.CommandClass;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public class Steam implements Command {
+public class Steam implements CommandClass {
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         String key = JSON.get("steam_api_token");

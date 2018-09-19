@@ -3,7 +3,7 @@ package com.jhobot.commands.punishments;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
-import com.jhobot.obj.Command;
+import com.jhobot.handle.commands.CommandClass;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Kick implements Command {
+public class Kick implements CommandClass {
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         Messages m = new Messages(e.getChannel());
@@ -65,7 +65,7 @@ public class Kick implements Command {
         }
 
         String ban_message = db.getString(e.getGuild(), "kick_message");
-        if (!ban_message.equalsIgnoreCase("&disabled&") || !ban_message.toLowerCase().contains("&disabled&") && !user.isBot())
+        if (!ban_message.toLowerCase().contains("&disabled&") && !user.isBot())
         {
             String[] msgsArray = db.getString(e.getGuild(), "kick_message").split(" ");
             List<String> msgs = Arrays.asList(msgsArray);

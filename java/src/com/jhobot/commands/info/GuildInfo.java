@@ -1,10 +1,9 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.handle.JSON;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
-import com.jhobot.obj.Command;
+import com.jhobot.handle.commands.CommandClass;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
@@ -17,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class GuildInfo implements Command {
+public class GuildInfo implements CommandClass {
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         IGuild g = e.getGuild();

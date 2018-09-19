@@ -61,7 +61,7 @@ public class Messages
 
     public void sendLog(EmbedObject e, DB db, IGuild g)
     {
-        if (db.getBoolean(g, "logging"))
+        if (!db.getBoolean(g, "logging"))
             return;
         if (db.getString(g, "logging_channel").equalsIgnoreCase("none"))
             return;
@@ -78,7 +78,7 @@ public class Messages
 
     public void sendPunishLog(String punishment, IUser punished, IUser punisher, DB db, IGuild g, List<String> reason)
     {
-        if (db.getBoolean(g, "logging"))
+        if (!db.getBoolean(g, "logging"))
             return;
         if (db.getString(g, "logging_channel").equalsIgnoreCase("none"))
             return;
@@ -102,7 +102,7 @@ public class Messages
 
     public void sendConfigLog(String changedVal, String newval, String oldval, IUser mod, IGuild g, DB db)
     {
-        if (db.getBoolean(g, "logging"))
+        if (!db.getBoolean(g, "logging"))
             return;
         if (db.getString(g, "logging_channel").equalsIgnoreCase("none"))
             return;

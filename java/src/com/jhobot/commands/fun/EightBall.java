@@ -3,7 +3,7 @@ package com.jhobot.commands.fun;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
-import com.jhobot.obj.Command;
+import com.jhobot.handle.commands.CommandClass;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
-public class EightBall implements Command {
+public class EightBall implements CommandClass {
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         if (args.size() == 0)
