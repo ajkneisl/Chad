@@ -52,6 +52,35 @@ j!warn sho spamming
 ##### Configurable
 Logging.
 
+#### j!8ball
+Responds to your questions.
+###### Usage
+j!8ball <question>
+###### Configurable
+none
+    
+#### j!catfact
+Gives a cat fact.
+###### Usage
+j!catfact
+###### Configurable
+none
+
+#### j!guildinfo
+Gives info from your guild.
+###### Usage
+j!guildinfo
+###### Configurable
+none
+
+#### j!userinf0
+Gives info about a user.
+###### Usage
+j!kick <@user>
+j!ban <user's name>
+###### Configurable
+none
+
 ### Discord Server
 https://discord.gg/EEHKTW
 
