@@ -1,5 +1,6 @@
 package com.jhobot;
 
+import com.jhobot.handle.DB;
 import com.jhobot.handle.JSON;
 import org.json.simple.JSONObject;
 import sx.blah.discord.api.ClientBuilder;
@@ -57,5 +58,9 @@ public class JhoBot {
         cli.getDispatcher().registerListener(new Listener());
 
 
+        /*
+        Stats Handler
+         */
+        DB db = new DB(JSON.get("uri_link")).getSeperateCollection("stats");
     }
 }

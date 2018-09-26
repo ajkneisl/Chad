@@ -1,17 +1,21 @@
 # jhobot!
 
-### Features
-* Custom Prefixes
-* Logging 
-* Music Commands
-* Role on Join
-* Random Generator
-* 8Ball
-* Banning, Kicking, Warning & Muting
-* And a lot more!
 
 ### Planned
-*
+* [ ] Mute Command
+* [ ] Warn Command
+* [ ] More Fun Commands
+* [ ] More Game Stats
+* [ ] More In depth permission system
+* [x] Database
+
+### Discord Server
+https://discord.gg/EEHKTW
+
+### Building // Personal Use
+We provide no support for personal usage, and do not provide any builds of jhobot. 
+You may use some the bot's files, but with credit.
+
 
 ## Commands
 
@@ -73,7 +77,7 @@ j!guildinfo
 ###### Configurable
 none
 
-#### j!userinf0
+#### j!userinfo
 Gives info about a user.
 ###### Usage
 j!kick <@user>
@@ -81,9 +85,40 @@ j!ban <user's name>
 ###### Configurable
 none
 
-### Discord Server
-https://discord.gg/EEHKTW
+#### j!random
+Gives a random value.
+###### Usage
+j!random quote
+j!random number [max]
+###### Configurable
+none
 
-### Building // Personal Use
-We provide no support for personal usage, and do not provide any builds of jhobot. 
-You may use some the bot's files, but with credit.
+#### j!steam
+Gets info from steam.
+###### Usage
+j!steam profile [steam name]
+j!steam csgo [steam name] [kills/maps/lastmatch]
+###### Configurable
+none
+
+#### j!jho
+Gives info about the bot.
+###### Usage
+j!jho
+###### Configurable
+none
+
+#### j!logging
+Administrator Logging.
+###### Usage
+j!logging set [true/false]
+j!logging setchannel [channel name]
+###### Configurable
+Enabled / Disabled, Logging Channel
+
+#### j!prefix
+Set's the server's prefix.
+###### Usage
+j!prefix set [prefix]
+###### Configurable
+Prefix

@@ -77,6 +77,8 @@ public class Kick implements CommandClass {
                     msgs.set(i, user.getName() + msgs.get(i).substring(6));
                 if (msgs.get(i).toLowerCase().contains("&reason&"))
                     msgs.set(i, sb2.toString().trim() + msgs.get(i).substring(8));
+                if (msgs.get(i).toLowerCase().contains("&newline&"))
+                    msgs.set(i, "\n" + msgs.get(i).substring(8));
             }
             StringBuilder sb = new StringBuilder();
             for (String s : msgs)
@@ -91,7 +93,7 @@ public class Kick implements CommandClass {
         {
             reason.add("None");
             m.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
-            m.sendPunishLog("Ban", user, e.getAuthor(), db, e.getGuild(), reason);
+            m.sendPunishLog("Kick", user, e.getAuthor(), db, e.getGuild(), reason);
             return;
         }
         // ban
@@ -103,7 +105,7 @@ public class Kick implements CommandClass {
     @Override
     public void helpCommand(MessageReceivedEvent e, DB db) {
         EmbedBuilder b = new EmbedBuilder();
-        b.withTitle("Help : Ban");
+        b.withTitle("Help : Kick");
         b.appendField(db.getString(e.getGuild(), "prefix") + "kick <user/@user> [reason]", "Kicks a user with a reason.", false);
         b.withFooterText(Util.getTimeStamp());
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));

@@ -52,7 +52,6 @@ public class Messages
         b.withTitle(title);
         b.withDesc(msg);
         b.withFooterText(Util.getTimeStamp());
-
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         RequestBuffer.request(() -> {
             channel.sendMessage(b.build());
@@ -90,6 +89,7 @@ public class Messages
         }
 
         EmbedBuilder b = new EmbedBuilder().withTitle("Punishment : " + punished.getName()).appendField("Punished User", punished.getName(), true).appendField("Moderator", punisher.getName(), true).appendField("Punishment", punishment, true).appendField("Reason", sb.toString().trim(), false).withImage(punished.getAvatarURL()).withFooterText(Util.getTimeStamp());
+        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         try {
             RequestBuffer.request(() -> {
                 g.getChannelByID(Long.parseLong(db.getString(g, "logging_channel"))).sendMessage(b.build());
@@ -108,6 +108,7 @@ public class Messages
             return;
 
         EmbedBuilder b = new EmbedBuilder().withTitle("Config Change : " + changedVal).appendField("New Value", newval, true).appendField("Old Value", oldval, true).appendField("Admin", mod.getName(), true).withFooterText(Util.getTimeStamp());
+        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         try {
             RequestBuffer.request(() -> {
                 g.getChannelByID(Long.parseLong(db.getString(g, "logging_channel"))).sendMessage(b.build());

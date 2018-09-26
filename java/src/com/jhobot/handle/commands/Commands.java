@@ -2,6 +2,7 @@ package com.jhobot.handle.commands;
 
 import com.jhobot.commands.fun.CatFact;
 import com.jhobot.commands.fun.EightBall;
+import com.jhobot.commands.fun.Random;
 import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Prefix;
 import com.jhobot.commands.info.GuildInfo;
@@ -271,6 +272,29 @@ public class Commands
                     }
 
                     kick.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "random":
+                Random rand = new Random();
+                if (rand.botHasPermission(e, db))
+                {
+                    if (!rand.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        rand.helpCommand(e, db);
+                        return;
+                    }
+
+                    rand.onRequest(e, argsList, db);
 
                 }
                 else {

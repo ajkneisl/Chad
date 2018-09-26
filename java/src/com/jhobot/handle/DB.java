@@ -26,6 +26,12 @@ public class DB
         this.col = db.getCollection("bot");
     }
 
+    public DB getSeperateCollection(String colName)
+    {
+        this.col = db.getCollection("bot");
+        return this;
+    }
+
     public MongoClient getClient()
     {
         return this.cli;
@@ -83,5 +89,25 @@ public class DB
     {
         Document get = (Document) col.find(new Document("guildid", guild.getStringID())).first();
         return get != null;
+    }
+
+    public String getStats(String object)
+    {
+        Document get = (Document) col.find(new Document("stats", true)).first();
+
+        if (get == null)
+            return null;
+
+        return (String) get.get(object);
+    }
+
+    public void setStats(String object, String entry)
+    {
+        Document get = (Document) col.find(new Document("stats", true)).first();
+
+        if (get == null)
+            return;
+
+        col.updateOne(get, new Document("$set", new Document(object, entry)));
     }
 }
