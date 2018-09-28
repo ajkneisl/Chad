@@ -21,6 +21,7 @@ public class Jho implements CommandClass
         b.withTitle("jhobot");
         b.withDesc("by sho!");
         b.appendField("Version", JSON.get("version"), true);
+        b.appendField("Up to date", JSON.read("api.shoganeko.me/botversion.json"), true);
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         new Messages(e.getChannel()).sendEmbed(b.build());
     }
