@@ -30,13 +30,14 @@ public class UserInfo implements CommandClass {
             {
                 sb.append(s + " ");
             }
-            
-            u = e.getGuild().getUsersByName(sb.toString().trim()).get(0);
-            
-            if (u == null)
+
+            if (e.getGuild().getUsersByName(sb.toString().trim()).isEmpty())
             {
                 new Messages(e.getChannel()).sendError("Invalid User");
+                return;
             }
+
+            u = e.getGuild().getUsersByName(sb.toString().trim()).get(0);
         } else {
             u = e.getMessage().getMentions().get(0);
         }

@@ -56,6 +56,12 @@ public class Logging implements CommandClass {
                 b.append(s + " ");
             }
 
+            if (e.getGuild().getChannelsByName(b.toString().trim()).isEmpty())
+            {
+                new Messages(e.getChannel()).sendError("Invalid Channel");
+                return;
+            }
+
             IChannel ch = e.getGuild().getChannelsByName(b.toString().trim()).get(0);
 
             if (ch == null)
