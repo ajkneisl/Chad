@@ -17,17 +17,30 @@ import java.util.List;
 import java.util.Random;
 
 public class UserInfo implements CommandClass {
-
+    
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
+        IUser u;
+        
         if (e.getMessage().getMentions().isEmpty())
         {
-            new Messages(e.getChannel()).sendError("Invalid Arguments!");
-            return;
+            StringBuilder sb = new StringBuilder();
+            
+            for (String s : args)
+            {
+                sb.append(s + " ");
+            }
+            
+            u = e.getGuild().getUsersByName(sb.toString().trim());
+            
+            if (u == null)
+            {
+                new Messages(e.getChannel).sendError("Invalid User");
+            }
+        } else {
+            u = e.getMessage().getMentions().get(0);
         }
-
-        IUser u = e.getMessage().getMentions().get(0);
-
+        
         StringBuilder roles = new StringBuilder();
         for (IRole r : u.getRolesForGuild(e.getGuild()))
         {
