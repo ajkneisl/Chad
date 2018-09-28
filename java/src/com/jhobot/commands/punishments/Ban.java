@@ -22,7 +22,7 @@ public class Ban implements CommandClass {
         Messages m = new Messages(e.getChannel());
         IUser user = null;
         List<String> reason = new ArrayList<>();
-        if (!e.getMessage().getMentions().isEmpty() && args.get(0).equalsIgnoreCase( "@" + e.getMessage().getMentions().get(0).getName()))
+        if (!e.getMessage().getMentions().isEmpty() && args.get(0).equalsIgnoreCase(e.getMessage().getMentions().get(1).mention()))
         {
             user = e.getMessage().getMentions().get(0);
             args.remove(0);
