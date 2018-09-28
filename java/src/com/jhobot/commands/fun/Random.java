@@ -34,7 +34,7 @@ public class Random implements CommandClass {
                     
                     if (i2 == 0)
                     {
-                        new Messages(e.getCHannel()).sendError("Cannot use 0!");
+                        new Messages(e.getChannel()).sendError("Cannot use 0!");
                         return;
                     }
 
@@ -58,9 +58,8 @@ public class Random implements CommandClass {
                 b.withTitle("Random Quote");
                 b.appendField("Author", obj.getString("author"), true);
                 // Switches category's first letter to be uppercase
-                String s1 = cat.substring(0, 1).toUpperCase();
-                String cap = s1 + cat.substring(1);
-                
+                String s1 = obj.getString("cat").substring(0, 1).toUpperCase();
+                String cap = s1 + obj.getString("cat").substring(1);
                 b.appendField("Category", cap, true);
                 b.appendField("Quote", obj.getString("quote"), false);
                 b.withFooterText(Util.getTimeStamp());
