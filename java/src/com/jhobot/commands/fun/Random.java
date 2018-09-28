@@ -31,6 +31,12 @@ public class Random implements CommandClass {
             {
                 try {
                     Integer i2 = Integer.parseInt(args.get(1));
+                    
+                    if (i2 == 0)
+                    {
+                        new Messages(e.getCHannel()).sendError("Cannot use 0!");
+                        return;
+                    }
 
                     new Messages(e.getChannel()).send("Number is : " + rand.nextInt(i2), "Random Number");
                 } catch (NumberFormatException ee)
