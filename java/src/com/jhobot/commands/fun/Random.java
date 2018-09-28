@@ -57,7 +57,11 @@ public class Random implements CommandClass {
                 EmbedBuilder b = new EmbedBuilder();
                 b.withTitle("Random Quote");
                 b.appendField("Author", obj.getString("author"), true);
-                b.appendField("Category", obj.getString("cat"), true);
+                // Switches category's first letter to be uppercase
+                String s1 = cat.substring(0, 1).toUpperCase();
+                String cap = s1 + cat.substring(1);
+                
+                b.appendField("Category", cap, true);
                 b.appendField("Quote", obj.getString("quote"), false);
                 b.withFooterText(Util.getTimeStamp());
                 b.withColor(new Color(new java.util.Random().nextFloat(), new java.util.Random().nextFloat(), new java.util.Random().nextFloat()));
