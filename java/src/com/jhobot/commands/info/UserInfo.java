@@ -31,11 +31,11 @@ public class UserInfo implements CommandClass {
                 sb.append(s + " ");
             }
             
-            u = e.getGuild().getUsersByName(sb.toString().trim());
+            u = e.getGuild().getUsersByName(sb.toString().trim()).get(0);
             
             if (u == null)
             {
-                new Messages(e.getChannel).sendError("Invalid User");
+                new Messages(e.getChannel()).sendError("Invalid User");
             }
         } else {
             u = e.getMessage().getMentions().get(0);

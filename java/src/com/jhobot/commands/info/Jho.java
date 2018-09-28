@@ -19,7 +19,7 @@ public class Jho implements CommandClass
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         EmbedBuilder b = new EmbedBuilder();
         b.withTitle("jhobot");
-        b.withDesc("by j9ke and sho!");
+        b.withDesc("by sho!");
         b.appendField("Version", JSON.get("version"), true);
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         new Messages(e.getChannel()).sendEmbed(b.build());
