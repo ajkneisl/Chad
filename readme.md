@@ -9,6 +9,9 @@
 * [ ] More In depth permission system
 * [x] Database
 
+### Current Version
+Non-Stable 0.1
+
 ### Discord Server
 https://discord.gg/EEHKTW
 
