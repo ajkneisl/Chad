@@ -114,7 +114,7 @@ public class Kick implements CommandClass {
 
     @Override
     public boolean botHasPermission(MessageReceivedEvent e, DB db) {
-        return e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK);
+        return e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES) && e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.KICK);
     }
 
     @Override

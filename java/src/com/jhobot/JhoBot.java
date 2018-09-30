@@ -2,13 +2,17 @@ package com.jhobot;
 
 import com.jhobot.handle.DB;
 import com.jhobot.handle.JSON;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.handle.obj.IUser;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JhoBot {
     public static void main(String[] args)
@@ -39,6 +43,25 @@ public class JhoBot {
                     e.printStackTrace();
                 }
             }
+            File dir2 = new File(System.getenv("appdata") + "\\jho\\catpictures");
+            if (!dir2.exists())
+                dir2.mkdirs();
+            File catpic = new File(System.getenv("appdata") + "\\jho\\catpictures.json");
+            if (!catpic.exists())
+            {
+                catpic.createNewFile();
+                JSONObject obj = new JSONObject();
+                obj.put("amount", "0");
+                obj.put("catgallery", new JSONArray());
+                try (FileWriter filew = new FileWriter(catpic))
+                {
+                    filew.write(obj.toJSONString());
+                    filew.flush();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
         } catch (IOException e)
         {
             System.out.println("There was an error creating files during startup!");
@@ -62,5 +85,14 @@ public class JhoBot {
         Stats Handler
          */
         DB db = new DB(JSON.get("uri_link")).getSeperateCollection("stats");
+    }
+
+    public static List<Long> allowedUsers()
+    {
+        // bot staff ? whatever you wanna call it
+        List<Long> l = new ArrayList<>();
+        l.add(Long.parseLong("416399667094618124"));
+        l.add(Long.parseLong("274712215024697345"));
+        return l;
     }
 }

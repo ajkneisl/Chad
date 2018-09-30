@@ -8,6 +8,8 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Random;
 
@@ -117,5 +119,17 @@ public class Messages
         {
             ee.printStackTrace();
         }
+    }
+
+    public void sendFile(File file)
+    {
+        RequestBuffer.request(() -> {
+            try {
+                channel.sendFile(file);
+            } catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+        });
     }
 }

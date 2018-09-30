@@ -2,11 +2,9 @@ package com.jhobot.handle;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import sx.blah.discord.handle.obj.IGuild;
@@ -32,7 +30,7 @@ public class JSON
         return "";
     }
 
-    public static void set(String object, String input) throws IOException
+    static void set(String object, String input) throws IOException
     {
         File file = new File(System.getenv("appdata") + "\\jho\\bot.json");
         String jsonString = Files.toString(file, Charsets.UTF_8);
@@ -45,6 +43,7 @@ public class JSON
 
         Files.write(resultingJson, file, Charsets.UTF_8);
     }
+
 
     public static org.json.JSONObject read(String url) throws IOException, JSONException {
         InputStream is = new URL(url).openStream();

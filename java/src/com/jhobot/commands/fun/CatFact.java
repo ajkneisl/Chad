@@ -39,7 +39,7 @@ public class CatFact implements CommandClass {
 
     @Override
     public boolean botHasPermission(MessageReceivedEvent e, DB db) {
-        return e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.SEND_MESSAGES);
+        return e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES);
     }
 
     @Override

@@ -1,14 +1,9 @@
 package com.jhobot.handle.commands;
 
-import com.jhobot.commands.fun.CatFact;
-import com.jhobot.commands.fun.EightBall;
-import com.jhobot.commands.fun.Random;
+import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Prefix;
-import com.jhobot.commands.info.GuildInfo;
-import com.jhobot.commands.info.Jho;
-import com.jhobot.commands.info.Steam;
-import com.jhobot.commands.info.UserInfo;
+import com.jhobot.commands.info.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
 import com.jhobot.handle.DB;
@@ -301,6 +296,76 @@ public class Commands
                     return;
                 }
                 break;
+            case "updatelog":
+                UpdateLog log = new UpdateLog();
+                if (log.botHasPermission(e, db))
+                {
+                    if (!log.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        log.helpCommand(e, db);
+                        return;
+                    }
+
+                    log.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "catgallery":
+                CatGallery gal = new CatGallery();
+                if (gal.botHasPermission(e, db))
+                {
+                    if (!gal.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        gal.helpCommand(e, db);
+                        return;
+                    }
+
+                    gal.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+            case "rrl":
+                RussianRoulette rrl = new RussianRoulette();
+                if (rrl.botHasPermission(e, db))
+                {
+                    if (!rrl.userHasPermission(e, db))
+                    {
+                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
+                        return;
+                    }
+
+                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
+                    {
+                        rrl.helpCommand(e, db);
+                        return;
+                    }
+
+                    rrl.onRequest(e, argsList, db);
+
+                }
+                else {
+                    return;
+                }
+                break;
+
         }
     }
 }
