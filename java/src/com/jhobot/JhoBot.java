@@ -76,7 +76,7 @@ public class JhoBot {
             System.err.println("No Token!");
             System.exit(1);
         }
-        IDiscordClient cli = new ClientBuilder().withToken(JSON.get("token")).build();
+        IDiscordClient cli = new ClientBuilder().withToken(JSON.get("token")).withRecommendedShardCount().build();
         cli.login();
         cli.getDispatcher().registerListener(new Listener());
 

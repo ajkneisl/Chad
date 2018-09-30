@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Commands
-{
+public class Commands {
     public static void call(MessageReceivedEvent e)
     {
         // database instance, so it doesn't create multiple and slow everything down
@@ -37,335 +36,73 @@ public class Commands
         String commandString = argArray[0].substring(db.getString(e.getGuild(), "prefix").length()).toLowerCase();
 
         // Gets the arguments & removes the command strings
-        List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
-        argsList.remove(0);
+        List<String> args = new ArrayList<>(Arrays.asList(argArray));
+        args.remove(0);
 
-        // switch for commands
+        // command runner
+
         switch (commandString)
         {
-            case "jho":
-                Jho jho = new Jho();
-                if (jho.botHasPermission(e, db))
-                {
-                    if (!jho.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        jho.helpCommand(e, db);
-                        return;
-                    }
-
-                    jho.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "guildinfo":
-                GuildInfo guildinfo = new GuildInfo();
-                if (guildinfo.botHasPermission(e, db))
-                {
-                    if (!guildinfo.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        guildinfo.helpCommand(e, db);
-                        return;
-                    }
-
-                    guildinfo.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "userinfo":
-                UserInfo userinfo = new UserInfo();
-                if (userinfo.botHasPermission(e, db))
-                {
-                    if (!userinfo.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        userinfo.helpCommand(e, db);
-                        return;
-                    }
-
-                    userinfo.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "steam":
-                Steam steam = new Steam();
-                if (steam.botHasPermission(e, db))
-                {
-                    if (!steam.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        steam.helpCommand(e, db);
-                        return;
-                    }
-
-                    steam.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "prefix":
-                Prefix prefix = new Prefix();
-                if (prefix.botHasPermission(e, db))
-                {
-                    if (!prefix.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        prefix.helpCommand(e, db);
-                        return;
-                    }
-
-                    prefix.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "ban":
-                Ban ban = new Ban();
-                if (ban.botHasPermission(e, db))
-                {
-                    if (!ban.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        ban.helpCommand(e, db);
-                        return;
-                    }
-
-                    ban.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "8ball":
-                EightBall ball = new EightBall();
-                if (ball.botHasPermission(e, db))
-                {
-                    if (!ball.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        ball.helpCommand(e, db);
-                        return;
-                    }
-
-                    ball.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
             case "catfact":
-                CatFact catFact = new CatFact();
-                if (catFact.botHasPermission(e, db))
-                {
-                    if (!catFact.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        catFact.helpCommand(e, db);
-                        return;
-                    }
-
-                    catFact.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "logging":
-                Logging logging = new Logging();
-                if (logging.botHasPermission(e, db))
-                {
-                    if (!logging.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        logging.helpCommand(e, db);
-                        return;
-                    }
-
-                    logging.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "kick":
-                Kick kick = new Kick();
-                if (kick.botHasPermission(e, db))
-                {
-                    if (!kick.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        kick.helpCommand(e, db);
-                        return;
-                    }
-
-                    kick.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "random":
-                Random rand = new Random();
-                if (rand.botHasPermission(e, db))
-                {
-                    if (!rand.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        rand.helpCommand(e, db);
-                        return;
-                    }
-
-                    rand.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
-                break;
-            case "updatelog":
-                UpdateLog log = new UpdateLog();
-                if (log.botHasPermission(e, db))
-                {
-                    if (!log.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        log.helpCommand(e, db);
-                        return;
-                    }
-
-                    log.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
+                runCommand(db, e, args, new CatFact());
                 break;
             case "catgallery":
-                CatGallery gal = new CatGallery();
-                if (gal.botHasPermission(e, db))
-                {
-                    if (!gal.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        gal.helpCommand(e, db);
-                        return;
-                    }
-
-                    gal.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
+                runCommand(db, e, args, new CatGallery());
                 break;
-            case "rrl":
-                RussianRoulette rrl = new RussianRoulette();
-                if (rrl.botHasPermission(e, db))
-                {
-                    if (!rrl.userHasPermission(e, db))
-                    {
-                        new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                        return;
-                    }
-
-                    if (argsList.size() == 1 && argsList.get(0).equalsIgnoreCase("help"))
-                    {
-                        rrl.helpCommand(e, db);
-                        return;
-                    }
-
-                    rrl.onRequest(e, argsList, db);
-
-                }
-                else {
-                    return;
-                }
+            case "8ball":
+                runCommand(db, e, args, new EightBall());
                 break;
+            case "random":
+                runCommand(db, e, args, new Random());
+                break;
+            case "logging":
+                runCommand(db, e, args, new Logging());
+                break;
+            case "prefix":
+                runCommand(db, e, args, new Prefix());
+                break;
+            case "guildinfo":
+                runCommand(db, e, args, new GuildInfo());
+                break;
+            case "jho":
+                runCommand(db, e, args, new Jho());
+                break;
+            case "steam":
+                runCommand(db, e, args, new Steam());
+                break;
+            case "updatelog":
+                runCommand(db, e, args, new UpdateLog());
+                break;
+            case "userinfo":
+                runCommand(db, e, args, new UserInfo());
+                break;
+            case "ban":
+                runCommand(db, e, args, new Ban());
+                break;
+            case "kick":
+                runCommand(db, e, args, new Kick());
+                break;
+        }
+    }
 
+    private static void runCommand(DB db, MessageReceivedEvent e, List<String> args, CommandClass c)
+    {
+        Messages m = new Messages(e.getChannel());
+        if (c.botHasPermission(e, db))
+        {
+            if (!c.botHasPermission(e, db))
+            {
+                m.sendError("You don't have permissions for this!");
+                return;
+            }
+
+            if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
+            {
+                c.helpCommand(e, db);
+                return;
+            }
+
+            c.onRequest(e, args, db);
         }
     }
 }

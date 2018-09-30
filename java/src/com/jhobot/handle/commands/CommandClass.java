@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CommandClass
 {
-    public void onRequest(MessageReceivedEvent e, List<String> args, DB db);
-    public void helpCommand(MessageReceivedEvent e, DB db);
-    public boolean botHasPermission(MessageReceivedEvent e, DB db);
-    public boolean userHasPermission(MessageReceivedEvent e, DB db);
+    void onRequest(MessageReceivedEvent e, List<String> args, DB db);
+    void helpCommand(MessageReceivedEvent e, DB db);
+    boolean botHasPermission(MessageReceivedEvent e, DB db);
+    boolean userHasPermission(MessageReceivedEvent e, DB db);
 }

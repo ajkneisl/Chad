@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class CatFact implements CommandClass {
+
     @Override
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         try{
