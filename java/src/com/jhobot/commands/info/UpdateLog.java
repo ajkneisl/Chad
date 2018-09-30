@@ -20,15 +20,15 @@ public class UpdateLog implements CommandClass
         if (args.size() == 0)
         {
             EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Current Version : unstable-0.1.04");
-            b.appendField("Changed", "The way the catgallery gets images. The change should make it faster.", true);
+            b.withTitle("Current Version : unstable-0.1.05");
+            b.appendField("Removed", "Russian Roulette command. It stopped other servers from using commands completely.", true);
             b.withFooterText(Util.getTimeStamp());
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             new Messages(e.getChannel()).sendEmbed(b.build());
             return;
         }
 
-        if (args.size() == 1 && args.get(0).equalsIgnoreCase("unstable-0.01.03"))
+        if (args.size() == 1 && args.get(0).equalsIgnoreCase("unstable-0.01.03")) // unstable-0.01.03
         {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Current Version : unstable-0.1.03");
@@ -42,6 +42,16 @@ public class UpdateLog implements CommandClass
             return;
         }
 
+        if (args.size() == 1 && args.get(0).equalsIgnoreCase("unstable-0.01.03")) // unstable-0.01.04
+        {
+            EmbedBuilder b = new EmbedBuilder();
+            b.withTitle("Current Version : unstable-0.1.04");
+            b.appendField("Changed", "The way the catgallery gets images. The change should make it faster.", true);
+            b.withFooterText(Util.getTimeStamp());
+            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+            new Messages(e.getChannel()).sendEmbed(b.build());
+            return;
+        }
         new Messages(e.getChannel()).sendError("No other versions are available for review.");
     }
 
