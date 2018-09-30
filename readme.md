@@ -1,6 +1,5 @@
 # jhobot!
 
-
 ### Planned
 * [ ] Mute Command
 * [ ] Warn Command
@@ -9,7 +8,8 @@
 * [x] Database
 
 ### Current Version
-Non-Stable 0.1
+unstable-0.1.03
+~~unstable-0.1.02~~
 
 ### Discord Server
 https://discord.gg/EEHKTW
