@@ -34,7 +34,7 @@ public class JhoBot {
                 obj.put("playing", "");
                 obj.put("default_prefix", "");
                 obj.put("steam_api_token", "");
-                obj.put("version", "unstable-0.1.03");
+                obj.put("version", "unstable-0.1.04");
                 obj.put("uri_link", "");
                 try (FileWriter filew = new FileWriter(bot)) {
                     filew.write(obj.toJSONString());

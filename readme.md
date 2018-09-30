@@ -8,7 +8,8 @@
 * [x] Database
 
 ### Current Version
-unstable-0.1.03
+unstable-0.1.04<br />
+~~unstable-0.1.03~~<br />
 ~~unstable-0.1.02~~
 
 ### Discord Server

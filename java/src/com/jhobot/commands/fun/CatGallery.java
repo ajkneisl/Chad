@@ -22,38 +22,8 @@ public class CatGallery implements CommandClass {
     public void onRequest(MessageReceivedEvent e, List<String> args, DB db) {
         if (args.size() == 0)
         {
-            new Messages(e.getChannel()).sendFile(db.getRandomCatPicture());
-            return;
-        }
-
-        if (args.size() == 2 && args.get(0).equalsIgnoreCase("add")) // j!catgallery add [path] [category]
-        {
-            Boolean allowed = false;
-            for (Long lon : JhoBot.allowedUsers())
-            {
-                if (e.getAuthor().getLongID() == lon)
-                    allowed = true;
-            }
-
-            if (!allowed)
-            {
-                new Messages(e.getChannel()).sendError("You don't have permissions for this!");
-                return;
-            }
-            String path = args.get(1);
-
-
-            File f = new File(System.getenv("appdata") + "\\jho\\catpictures\\" + path);
-
-            if (!f.exists())
-            {
-                new Messages(e.getChannel()).sendError("Image doesn't exists!");
-                return;
-            }
-
-            db.addPictureToArray(path);
-
-            new Messages(e.getChannel()).send("Added image!", "Gat Gallery");
+            File[] files = new File(System.getenv("appdata") + "\\jho\\catpictures\\").listFiles();
+            new Messages(e.getChannel()).sendFile(files[new Random().nextInt(files.length)]);
             return;
         }
 

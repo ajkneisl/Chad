@@ -116,41 +116,4 @@ public class DB
 
         col.updateOne(get, new Document("$set", new Document(object, entry)));
     }
-
-    public ArrayList<String> getPicArray()
-    {
-        getSeperateCollection("catgallery");
-        Document get = (Document) col.find(new Document("use", "gal")).first();
-
-        return (ArrayList<String>) get.get("pic");
-    }
-
-    public File getRandomCatPicture()
-    {
-        getSeperateCollection("catgallery");
-        Document get = (Document) col.find(new Document("use", "gal")).first();
-
-        int i = new Random().nextInt(Integer.parseInt((String) get.get("amount")));
-
-        return new File(System.getenv("appdata") + "\\jho\\catpictures\\" + getPicArray().get(i));
-    }
-
-    public void addPictureToArray(String file)
-    {
-        getSeperateCollection("catgallery");
-        Document get = (Document) col.find(new Document("use", "gal")).first();
-
-        List<String> oof = new ArrayList<>(getPicArray());
-        oof.add(file);
-        col.updateOne(get, new Document("$set", new Document("pic", oof)));
-        updateAmount();
-    }
-
-    public void updateAmount()
-    {
-        getSeperateCollection("catgallery");
-        Document get = (Document) col.find(new Document("use", "gal")).first();
-
-        col.updateOne(get, new Document("$set", new Document("amount", Integer.toString(Integer.parseInt((String) get.get("amount")) + 1))));
-    }
 }

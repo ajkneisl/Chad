@@ -20,6 +20,17 @@ public class UpdateLog implements CommandClass
         if (args.size() == 0)
         {
             EmbedBuilder b = new EmbedBuilder();
+            b.withTitle("Current Version : unstable-0.1.04");
+            b.appendField("Changed", "The way the catgallery gets images. The change should make it faster.", true);
+            b.withFooterText(Util.getTimeStamp());
+            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+            new Messages(e.getChannel()).sendEmbed(b.build());
+            return;
+        }
+
+        if (args.size() == 1 && args.get(0).equalsIgnoreCase("unstable-0.01.03"))
+        {
+            EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Current Version : unstable-0.1.03");
             b.appendField("Fixed", "An error where if you put 0 as a random number entry it did nothing.", true);
             b.appendField("Added", "This command.", true);
