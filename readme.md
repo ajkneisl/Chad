@@ -6,7 +6,6 @@
 * [ ] Warn Command
 * [ ] More Fun Commands
 * [ ] More Game Stats
-* [ ] More In depth permission system
 * [x] Database
 
 ### Current Version
