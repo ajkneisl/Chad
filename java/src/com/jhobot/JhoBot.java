@@ -17,6 +17,25 @@ import java.util.List;
 public class JhoBot {
     public static void main(String[] args)
     {
+        if (args[0].equalsIgnoreCase("updatever"))
+        {
+            if (args[1].equalsIgnoreCase("current"))
+            {
+                try {
+                    JSON.set("version", "unstable-0.1.05");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                try {
+                    JSON.set("version", args[1]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return;
+        }
         /*
         File Checking
          */

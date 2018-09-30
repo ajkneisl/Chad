@@ -30,7 +30,7 @@ public class JSON
         return "";
     }
 
-    static void set(String object, String input) throws IOException
+    public static void set(String object, String input) throws IOException
     {
         File file = new File(System.getenv("appdata") + "\\jho\\bot.json");
         String jsonString = Files.toString(file, Charsets.UTF_8);
