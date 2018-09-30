@@ -44,6 +44,6 @@ public class CatFact implements CommandClass {
 
     @Override
     public boolean userHasPermission(MessageReceivedEvent e, DB db) {
-        return e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.SEND_MESSAGES);
+        return true;
     }
 }
