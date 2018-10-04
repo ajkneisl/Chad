@@ -21,5 +21,9 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="JRAW-1.1.0" level="project" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="library" name="ca.uhn.hapi.fhir:hapi-fhir-client-okhttp:3.5.0" level="project" />
+    <orderEntry type="library" name="com.squareup.moshi:moshi:1.7.0" level="project" />
   </component>
 </module>

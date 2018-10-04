@@ -24,7 +24,8 @@ public class JhoBot {
                 if (args[1].equalsIgnoreCase("current"))
                 {
                     try {
-                        JSON.set("version", "unstable-0.1.05");
+                        JSON.set("version", "unstable-0.1.06");
+                        System.out.println("Updated to 'unstable-0.1.06'");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -32,6 +33,7 @@ public class JhoBot {
                 else {
                     try {
                         JSON.set("version", args[1]);
+                        System.out.println("Updated to '" + args[1] + "'");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -39,6 +41,7 @@ public class JhoBot {
                 return;
             }
         }
+
         /*
         File Checking
          */
@@ -56,7 +59,7 @@ public class JhoBot {
                 obj.put("playing", "");
                 obj.put("default_prefix", "");
                 obj.put("steam_api_token", "");
-                obj.put("version", "unstable-0.1.04");
+                obj.put("version", "unstable-0.1.06");
                 obj.put("uri_link", "");
                 try (FileWriter filew = new FileWriter(bot)) {
                     filew.write(obj.toJSONString());
@@ -65,6 +68,9 @@ public class JhoBot {
                     e.printStackTrace();
                 }
             }
+            File imgdir = new File(System.getenv("appdata") + "\\jho\\imgcache");
+            if (!imgdir.exists())
+                imgdir.mkdirs();
             File dir2 = new File(System.getenv("appdata") + "\\jho\\catpictures");
             if (!dir2.exists())
                 dir2.mkdirs();

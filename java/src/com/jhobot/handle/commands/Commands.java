@@ -82,6 +82,9 @@ public class Commands {
             case "kick":
                 runCommand(db, e, args, new Kick());
                 break;
+            case "pe":
+                runCommand(db, e, args, new PhotoEditor());
+                break;
         }
     }
 
