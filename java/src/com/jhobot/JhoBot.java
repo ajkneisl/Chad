@@ -21,22 +21,14 @@ public class JhoBot {
         {
             if (args[0].equalsIgnoreCase("updatever"))
             {
-                if (args[1].equalsIgnoreCase("current"))
-                {
-                    try {
-                        JSON.set("version", "unstable-0.1.06");
-                        System.out.println("Updated to 'unstable-0.1.06'");
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                try {
+                    if (JSON.read("api.shoganeko.me/files/jhobot.json").getString("current_version").equalsIgnoreCase(JSON.get("version")));
+                    {
+                        System.err.println("Outdated version!");
+                        return;
                     }
-                }
-                else {
-                    try {
-                        JSON.set("version", args[1]);
-                        System.out.println("Updated to '" + args[1] + "'");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 return;
             }
@@ -47,6 +39,10 @@ public class JhoBot {
          */
         try
         {
+            if (!JSON.get("version").equalsIgnoreCase(JSON.read("api.shoganeko.me/files/jhobot.json").getString("current_version")))
+            {
+                JSON.set("version", JSON.read("api.shoganeko.me/files/jhobot.json").getString("current_version"));
+            }
             File dir = new File(System.getenv("appdata") + "\\jho");
             if (!dir.exists())
                 dir.mkdirs();
