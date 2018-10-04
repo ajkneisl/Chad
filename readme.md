@@ -19,6 +19,5 @@ Made the command parser better. (Commands.java)
 ### Discord Server
 https://discord.gg/EEHKTW
 
-### Building // Personal Use
-We provide no support for personal usage, and do not provide any builds of jhobot. 
-You may use some the bot's files, but with credit.
+### Personal Use
+We do not provide any support for personal usage of the bot. There's no point of using the bot for personal usage, or at least the provided jar(s) due to watermarks. If you plan to use part of the bot, credit would be greatly appreciated. 
