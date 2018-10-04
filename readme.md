@@ -6,16 +6,11 @@
 * [ ] More Fun Commands
 * [ ] More Game Stats
 * [x] Database
+* [ ] In depth permission system
+    * [ ] Per command permissions
 
 ### Current Version
-unstable-0.1.05<br />
-~~unstable-0.1.04~~<br />
-~~unstable-0.1.03~~<br />
-~~unstable-0.1.02~~
-##### Change Notes
-Removed Russian Roulette (it stopped any other commands on any other server from running)<br />
-Made the command parser better. (Commands.java)
-
+unstable-0.1.06
 ### Discord Server
 https://discord.gg/EEHKTW
 
