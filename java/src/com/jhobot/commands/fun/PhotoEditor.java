@@ -46,7 +46,7 @@ public class PhotoEditor implements CommandClass {
                 float[] matrix = new float[400];
                 for (int i = 0; i < 400; i++)
                     matrix[i] = 1.0f/400.0f;
-                BufferedImageOp op = new ConvolveOp( new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null );
+                BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null );
 
                 BufferedImage i = null;
 
@@ -57,13 +57,6 @@ public class PhotoEditor implements CommandClass {
                 e1.printStackTrace();
             }
 
-            if (f.delete())
-                System.err.println("Failed to delete file " + f.getPath());
-            return;
-        }
-
-        if (args.get(0).equalsIgnoreCase("mess"))
-        {
             if (f.delete())
                 System.err.println("Failed to delete file " + f.getPath());
             return;
