@@ -1,5 +1,9 @@
 # jhobot!
 
+### Current Build
+You can find the current build's code at the branch "beta".
+The master branch is only updated on full updates. 
+ex: v1.0 -> v1.1
 ### Planned
 * [ ] Mute Command
 * [ ] Warn Command
@@ -13,7 +17,6 @@
 
 ### Known Bugs
 * [ ] Requests from a file that doesn't exist (1st startup)
-
 
 ### Current Version
 v0.2 BETA
