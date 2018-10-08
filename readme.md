@@ -9,7 +9,7 @@
 * [ ] In depth permission system
     * [ ] Per command permissions
 * [ ] More PhotoEditor options
-* [*] Faster
+* [x] Faster
 
 ### Known Bugs
 * [ ] Requests from a file that doesn't exist (1st startup)
