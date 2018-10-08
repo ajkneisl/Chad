@@ -4,6 +4,7 @@ import com.jhobot.handle.commands.Commands;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.JSON;
 import com.jhobot.handle.Util;
+import org.bson.BsonArray;
 import org.bson.Document;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -11,8 +12,12 @@ import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.handle.obj.StatusType;
-import sx.blah.discord.util.RequestBuffer;
+
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Listener
 {
@@ -32,6 +37,10 @@ public class Listener
 
             doc.append("guildid", e.getGuild().getStringID());
             doc.append("prefix", "j!");
+            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
+                doc.append("muted_role", "none_np");
+            else
+                doc.append("muted_role", "none");
             doc.append("muted_role", "none");
             doc.append("logging", false);
             doc.append("logging_channel", "none");
@@ -54,7 +63,7 @@ public class Listener
     public void leaveGuild(GuildLeaveEvent e)
     {
         DB db = new DB(JSON.get("uri_link"));
-        Document get = (Document) db.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
+        Document get = db.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
         if (get == null)
             return;
@@ -67,6 +76,15 @@ public class Listener
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
-        e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "hello!");
+        JhoBot.exec.execute(() -> {
+            Timer t = new Timer();
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    String[] ar = {"hello!", "gamers", "epic gamers", "a bad game", "j!help", "j!prefix set *", "what's going on gamers", "invite me please"};
+                    e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ar[new Random().nextInt(ar.length)]);
+                }
+            }, 0, 60000*5);
+        });
     }
 }

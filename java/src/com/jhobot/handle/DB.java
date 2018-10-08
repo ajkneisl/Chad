@@ -1,28 +1,18 @@
 package com.jhobot.handle;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.BsonArray;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import sx.blah.discord.handle.obj.IGuild;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class DB
 {
     private MongoClient cli;
-    private MongoCollection col;
+    private MongoCollection<Document> col;
     private MongoDatabase db;
 
     public DB(String URI)
@@ -42,7 +32,7 @@ public class DB
     {
         return this.cli;
     }
-    public MongoCollection getCollection()
+    public MongoCollection<Document> getCollection()
     {
         return this.col;
     }
@@ -51,9 +41,17 @@ public class DB
         return this.db;
     }
 
+    public ArrayList<String> getArray(IGuild guild, String object)
+    {
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
+
+        if (get == null) return null;
+
+        return (ArrayList<String>) get.get(object);
+    }
     public boolean getBoolean(IGuild guild, String object)
     {
-        Document get = (Document) col.find(new Document("guildid", guild.getStringID())).first();
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
         if (get == null)
             return false;
@@ -63,7 +61,7 @@ public class DB
 
     public String getString(IGuild guild, String object)
     {
-        Document get = (Document) col.find(new Document("guildid", guild.getStringID())).first();
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
         if (get == null)
             return null;
@@ -73,7 +71,7 @@ public class DB
 
     public void set(IGuild guild, String object, String entry)
     {
-        Document get = (Document) col.find(new Document("guildid", guild.getStringID())).first();
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
         if (get == null)
             return;
@@ -83,7 +81,7 @@ public class DB
 
     public void set(IGuild guild, String object, Boolean entry)
     {
-        Document get = (Document) col.find(new Document("guildid", guild.getStringID())).first();
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
         if (get == null)
             return;
@@ -93,13 +91,13 @@ public class DB
 
     public boolean exists(IGuild guild)
     {
-        Document get = (Document) col.find(new Document("guildid", guild.getStringID())).first();
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
         return get != null;
     }
 
     public String getStats(String object)
     {
-        Document get = (Document) col.find(new Document("stats", true)).first();
+        Document get = col.find(new Document("stats", true)).first();
 
         if (get == null)
             return null;
@@ -109,7 +107,7 @@ public class DB
 
     public void setStats(String object, String entry)
     {
-        Document get = (Document) col.find(new Document("stats", true)).first();
+        Document get = col.find(new Document("stats", true)).first();
 
         if (get == null)
             return;

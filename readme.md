@@ -8,9 +8,12 @@
 * [x] Database
 * [ ] In depth permission system
     * [ ] Per command permissions
+* [ ] More PhotoEditor options
+
 
 ### Current Version
 unstable-0.1.06
+
 ### Discord Server
 https://discord.gg/EEHKTW
 

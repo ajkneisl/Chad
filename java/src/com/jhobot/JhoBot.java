@@ -13,8 +13,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class JhoBot {
+    public static DB db = new DB(JSON.get("uri_link"));
+    public static ExecutorService exec = Executors.newFixedThreadPool(15);
+
     public static void main(String[] args)
     {
         if (args.length == 2)
@@ -22,7 +27,7 @@ public class JhoBot {
             if (args[0].equalsIgnoreCase("updatever"))
             {
                 try {
-                    if (JSON.read("api.shoganeko.me/files/jhobot.json").getString("current_version").equalsIgnoreCase(JSON.get("version")));
+                    if (JSON.read("http://api.shoganeko.me/files/jhobot.json").getString("current_version").equalsIgnoreCase(JSON.get("version")));
                     {
                         System.err.println("Outdated version!");
                         return;
@@ -39,9 +44,9 @@ public class JhoBot {
          */
         try
         {
-            if (!JSON.get("version").equalsIgnoreCase(JSON.read("api.shoganeko.me/files/jhobot.json").getString("current_version")))
+            if (!JSON.get("version").equalsIgnoreCase(JSON.read("http://api.shoganeko.me/files/jhobot.json").getString("current_version")))
             {
-                JSON.set("version", JSON.read("api.shoganeko.me/files/jhobot.json").getString("current_version"));
+                JSON.set("version", JSON.read("http://api.shoganeko.me/files/jhobot.json").getString("current_version"));
             }
             File dir = new File(System.getenv("appdata") + "\\jho");
             if (!dir.exists())
