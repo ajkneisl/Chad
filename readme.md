@@ -10,9 +10,12 @@
     * [ ] Per command permissions
 * [ ] More PhotoEditor options
 
+### Known Bugs
+* [ ] Requests from a file that doesn't exist (1st startup)
+
 
 ### Current Version
-unstable-0.1.06
+unstable-0.2 (in progress)
 
 ### Discord Server
 https://discord.gg/EEHKTW
