@@ -14,12 +14,12 @@
 ### Known Bugs
 * [ ] Requests from a file that doesn't exist (1st startup)
 
-
 ### Current Version
 v0.2.1 BETA
-
-### Discord Server
+##### Change Log
+- 
+##### Discord Server
 https://discord.gg/EEHKTW
 
-### Personal Use
+###### Personal Use
 We do not provide any support for personal usage of the bot. There's no point of using the bot for personal usage, or at least the provided jar(s) due to watermarks. If you plan to use part of the bot, credit would be greatly appreciated. 
