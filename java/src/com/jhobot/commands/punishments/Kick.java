@@ -69,6 +69,13 @@ public class Kick implements Command {
                 m.sendError("Bot can't do this!");
                 return;
             }
+            
+            
+            if (PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.KICK)
+            {
+                m.sendError("Bot can't do this!");
+                return;
+            }
 
             StringBuilder sb2 = new StringBuilder();
             for (String s : reason)
@@ -108,8 +115,12 @@ public class Kick implements Command {
                 m.sendPunishLog("Kick", user, e.getAuthor(), JhoBot.db, e.getGuild(), reason);
                 return;
             }
-            // ban
-            e.getGuild().banUser(user);
+            // 
+                
+                
+                
+               
+            e.getGuild().kickUser(user);
             m.send("Successfully kicked " + user.getName() + " for " + sb2.toString().trim() + ".", "Kicked User");
             m.sendPunishLog("Kick", user, e.getAuthor(), JhoBot.db, e.getGuild(), reason);
         };
