@@ -22,6 +22,16 @@ public class Kick implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             Messages m = new Messages(e.getChannel());
+            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild).contains(Permissions.KICK))
+            {
+                m.sendError("The bot doesn't have permissions for this!");
+                return;
+            }
+            if (!e.getAuthor().getPermissionsForGuild(e.getGuild).contains(Permissions.KICK))
+            {
+                m.sendError("You don't have permissions for this!");
+                return;
+            }
             IUser user = null;
             List<String> reason = new ArrayList<>();
             if (!e.getMessage().getMentions().isEmpty() && args.get(0).equalsIgnoreCase(e.getMessage().getMentions().get(1).mention()))
