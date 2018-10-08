@@ -20,6 +20,11 @@ public class Logging implements Command {
         return () -> {
             Messages m = new Messages(e.getChannel());
 
+            if (e.getAuthor().getPermissionsForGuild(e.getGuild).contains(Permissions.ADMINISTRATOR))
+            {
+                m.sendError("You don't have permissions for this!");
+                return;
+            }
             if (args.size() == 0)
             {
                 help(e, args);
