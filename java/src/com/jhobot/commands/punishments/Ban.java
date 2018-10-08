@@ -73,6 +73,12 @@ public class Ban implements Command {
                 m.sendError("Bot can't do this!");
                 return;
             }
+            
+            if (PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.BAN)
+            {
+                m.sendError("Bot can't do this!");
+                return;
+            }
 
             StringBuilder sb2 = new StringBuilder();
             for (String s : reason)
@@ -111,14 +117,7 @@ public class Ban implements Command {
                 return;
             }
             // ban
-            if (PermissionUtils.hasHierarchicalPermissions(e.getGuild(), user, e.getClient().getOurUser()))
-            {
-                System.out.println("YES");
-            }
-            else
-            {
-                System.out.println("NO");
-            }
+            e.getGuild().banUser(user);
             m.send("Successfully banned " + user.getName() + " for " + sb2.toString().trim() + ".", "Banned User");
             m.sendPunishLog("Ban", user, e.getAuthor(), JhoBot.db, e.getGuild(), reason);
         };
