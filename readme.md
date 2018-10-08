@@ -9,13 +9,14 @@
 * [ ] In depth permission system
     * [ ] Per command permissions
 * [ ] More PhotoEditor options
+* [*] Faster
 
 ### Known Bugs
 * [ ] Requests from a file that doesn't exist (1st startup)
 
 
 ### Current Version
-unstable-0.2 (in progress)
+v0.2 BETA
 
 ### Discord Server
 https://discord.gg/EEHKTW
