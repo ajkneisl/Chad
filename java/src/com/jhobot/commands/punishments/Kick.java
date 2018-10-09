@@ -10,6 +10,7 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
+import sx.blah.discord.util.PermissionUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,12 +23,12 @@ public class Kick implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             Messages m = new Messages(e.getChannel());
-            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild).contains(Permissions.KICK))
+            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK))
             {
                 m.sendError("The bot doesn't have permissions for this!");
                 return;
             }
-            if (!e.getAuthor().getPermissionsForGuild(e.getGuild).contains(Permissions.KICK))
+            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK))
             {
                 m.sendError("You don't have permissions for this!");
                 return;
@@ -71,7 +72,7 @@ public class Kick implements Command {
             }
             
             
-            if (PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.KICK)
+            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.KICK))
             {
                 m.sendError("Bot can't do this!");
                 return;
@@ -110,6 +111,7 @@ public class Kick implements Command {
 
             if (reason.isEmpty())
             {
+                e.getGuild().kickUser(user);
                 reason.add("None");
                 m.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
                 m.sendPunishLog("Kick", user, e.getAuthor(), JhoBot.db, e.getGuild(), reason);

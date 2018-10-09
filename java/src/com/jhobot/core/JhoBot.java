@@ -19,35 +19,13 @@ import java.util.concurrent.Executors;
 public class JhoBot {
     public static DB db = new DB(JSON.get("uri_link"));
     public static ExecutorService exec = Executors.newFixedThreadPool(15);
-
     public static void main(String[] args)
     {
-        if (args.length == 2)
-        {
-            if (args[0].equalsIgnoreCase("updatever"))
-            {
-                try {
-                    if (JSON.read("http://api.shoganeko.me/files/jhobot.json").getString("current_version").equalsIgnoreCase(JSON.get("version")));
-                    {
-                        System.err.println("Outdated version!");
-                        return;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return;
-            }
-        }
-
         /*
         File Checking
          */
         try
         {
-            if (!JSON.get("version").equalsIgnoreCase(JSON.read("http://api.shoganeko.me/files/jhobot.json").getString("current_version")))
-            {
-                JSON.set("version", JSON.read("http://api.shoganeko.me/files/jhobot.json").getString("current_version"));
-            }
             File dir = new File(System.getenv("appdata") + "\\jho");
             if (!dir.exists())
                 dir.mkdirs();
@@ -107,13 +85,7 @@ public class JhoBot {
         }
         IDiscordClient cli = new ClientBuilder().withToken(JSON.get("token")).withRecommendedShardCount().build();
         cli.login();
-        cli.getDispatcher().registerListener(new Listener());
-
-
-        /*
-        Stats Handler
-         */
-        DB db = new DB(JSON.get("uri_link")).getSeperateCollection("stats");
+        cli.getDispatcher().registerListener(new com.jhobot.Listener());
     }
 
     public static List<Long> allowedUsers()

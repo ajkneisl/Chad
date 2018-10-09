@@ -30,6 +30,12 @@ public class PhotoEditor implements Command {
                 m.sendError("No file was found!");
             }
 
+            if (args.size() == 0)
+            {
+                m.sendError("Invalid Arguments!");
+                return;
+            }
+
             System.setProperty("http.agent", "Chrome");
             BufferedImage im = null;
             try {

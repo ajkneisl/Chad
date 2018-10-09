@@ -20,14 +20,14 @@ public class Logging implements Command {
         return () -> {
             Messages m = new Messages(e.getChannel());
 
-            if (e.getAuthor().getPermissionsForGuild(e.getGuild).contains(Permissions.ADMINISTRATOR))
+            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
             {
                 m.sendError("You don't have permissions for this!");
                 return;
             }
             if (args.size() == 0)
             {
-                help(e, args);
+                m.sendError("Invalid Arguments!");
                 return;
             }
 
@@ -75,7 +75,13 @@ public class Logging implements Command {
                     return;
                 }
 
-                m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(JhoBot.db.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild(), JhoBot.db);
+                if (JhoBot.db.getString(e.getGuild(), "logging_channel").equalsIgnoreCase("none"))
+                {
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild(), JhoBot.db);
+                }
+                else {
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(JhoBot.db.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild(), JhoBot.db);
+                }
                 m.send("Changed logging channel to " + b.toString().trim(), "Changed Logging Channel");
                 JhoBot.db.set(e.getGuild(), "logging_channel", ch.getStringID());
                 return;
