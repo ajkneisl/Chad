@@ -1,6 +1,6 @@
 # Jho
 ## Want the bot in your own discord server?
-https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permissions=2146958839&scope=bot <br />
+[Click Here](https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permissions=2146958839&scope=bot)<br />
 If you don't like the bot having some of the permissions, feel free to remove them. The bot will automatically check for them,
 and if it doesn't have it it will notify.
 
