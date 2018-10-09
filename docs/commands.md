@@ -29,7 +29,7 @@ Command | Main Function
 Logging | Adjusts the logging functionality
 Prefix | Sets the prefix do your choosing
 
-### Info
+#### Info
 
 Command | Main Function
 ---|---
@@ -41,7 +41,7 @@ Steam | Gets statistics from Steam, with CSGO stats as well
 UpdateLog | Gives an update log of the most recent update
 UserInfo | Get a user's info from the current server
 
-### Punishments
+#### Punishments
 
 Command | Main Function
 ---|---
