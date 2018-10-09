@@ -1,7 +1,7 @@
 # jhobot!
 https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permissions=2146958839&scope=bot
 
-## Links
+### Links
 [Commands](docs/commands.md)
 [Planned/Bugs](docs/plansandbugs.md)
 
