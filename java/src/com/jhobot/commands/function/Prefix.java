@@ -18,7 +18,7 @@ public class Prefix implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             Messages m = new Messages(e.getChannel());
-            if (!e.getAuthor().getPermissionsForGuild(e.getGuild).contains(Permissions.ADMINISTRATOR))
+            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
             {
                 m.sendError("You don't have permission for this!");
                 return;

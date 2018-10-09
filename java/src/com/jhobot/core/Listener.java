@@ -11,9 +11,8 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.ActivityType;
-import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.handle.obj.StatusType;
+import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.util.RequestBuffer;
 
 import java.util.Random;
 import java.util.Timer;
@@ -76,13 +75,39 @@ public class Listener
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
-        JhoBot.exec.execute(() -> {
+        com.jhobot.JhoBot.exec.execute(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     String[] ar = {"hello!", "gamers", "epic gamers", "a bad game", "j!help", "j!prefix set *", "what's going on gamers", "invite me please"};
                     e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ar[new Random().nextInt(ar.length)]);
+                }
+            }, 0, 60000*5);
+        });
+
+        com.jhobot.JhoBot.exec.execute(() -> {
+            Timer t = new Timer();
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("---< STATS >---");
+                    System.out.println("Guilds > "+ RequestBuffer.request(() -> {
+                        return e.getClient().getGuilds().size();
+                    }).get());
+                    int i = 0;
+                    for (IGuild g : RequestBuffer.request(() -> {
+                        return e.getClient().getGuilds();
+                    }).get())
+                    {
+                        for (IUser u : RequestBuffer.request(() -> {
+                            return g.getUsers();
+                        }).get())
+                        {
+                            i++;
+                        }
+                    }
+                    System.out.println("Total Users in Guilds > " + i);
                 }
             }, 0, 60000*5);
         });

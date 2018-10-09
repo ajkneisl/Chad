@@ -54,8 +54,7 @@ public class Commands {
         hash.put("8ball", new EightBall());
         hash.put("catgallery", new CatGallery());
         hash.put("catfact", new CatFact());
-        hash.put("test1", new TestingCommand1());
-        hash.put("test2", new TestingCommand2());
+        hash.put("help", new Help());
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {

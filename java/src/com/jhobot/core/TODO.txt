@@ -1,0 +1,8 @@
+beta-tree version -> v0.2.1 beta
+
+current to do ->
+  # do file checking before json requesting
+  # make russian roulette again
+  # clean up code
+  # fix bug report (instead of changing all ids, change none, just add a var of "lastid")
+  # fill catgallery

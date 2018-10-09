@@ -35,7 +35,6 @@ public class CatGallery implements Command {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Help : Cat Gallery");
             b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "catgallery", "Gives you a random cat picture.", false);
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "catgallery [keyword]", "Gives you a random cat picture within that category.", false);
             b.withFooterText(Util.getTimeStamp());
             b.withColor(new Color(new java.util.Random().nextFloat(), new java.util.Random().nextFloat(), new Random().nextFloat()));
             new Messages(e.getChannel()).sendEmbed(b.build());

@@ -9,4 +9,9 @@ public class Util
     {
         return new SimpleDateFormat("MM/dd/yyyy:  HH:mm").format(Calendar.getInstance().getTime());
     }
+
+    public static String getCurrentVersion()
+    {
+        return "v0.2 BETA";
+    }
 }

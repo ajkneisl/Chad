@@ -74,7 +74,7 @@ public class Ban implements Command {
                 return;
             }
             
-            if (PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.BAN)
+            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.BAN))
             {
                 m.sendError("Bot can't do this!");
                 return;
@@ -87,7 +87,7 @@ public class Ban implements Command {
             }
 
             String ban_message = JhoBot.db.getString(e.getGuild(), "ban_message");
-            if (!ban_message.equalsIgnoreCase("&disabled&") || !ban_message.toLowerCase().contains("&disabled&") && !user.isBot())
+            if (!ban_message.equalsIgnoreCase("&disabled&") || !ban_message.toLowerCase().contains("&disabled&"))
             {
                 String[] msgsArray = JhoBot.db.getString(e.getGuild(), "ban_message").split(" ");
                 List<String> msgs = Arrays.asList(msgsArray);
@@ -106,11 +106,13 @@ public class Ban implements Command {
                     sb.append(s + " ");
                 }
 
-                new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(sb.toString().trim()).build();
+                if (!user.isBot())
+                    new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(sb.toString().trim()).build();
             }
 
             if (reason.isEmpty())
             {
+                e.getGuild().banUser(user);
                 reason.add("None");
                 m.send("Successfully banned " + user.getName() + " for no reason.", "Banned User");
                 m.sendPunishLog("Ban", user, e.getAuthor(), JhoBot.db, e.getGuild(), reason);

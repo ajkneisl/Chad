@@ -18,7 +18,7 @@ import java.util.Random;
 public class BugReport implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
-        return () -> {
+        return null;/*() -> {
             Messages m = new Messages(e.getChannel());
             if (args.size() == 0)
             {
@@ -230,7 +230,7 @@ public class BugReport implements Command {
             }
 
             help(e, args);
-        };
+        };*/
     }
 
     @Override
