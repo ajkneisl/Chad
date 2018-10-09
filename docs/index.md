@@ -1,4 +1,4 @@
-# jhobot
+# Jho
 https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permissions=2146958839&scope=bot
 ## Want the bot in your own discord server?
 https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permissions=2146958839&scope=bot <br />
