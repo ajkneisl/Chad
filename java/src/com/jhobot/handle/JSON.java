@@ -17,6 +17,17 @@ import java.nio.charset.Charset;
 public class JSON
 {
     // Handles JSON data, including the bot.json files and reading from network
+    
+    public JSON()
+    {
+        super();
+    }
+    
+    public JSON check()
+    {
+        // TODO check files
+        return this;
+    }
 
     public static String get(String entry)
     {
