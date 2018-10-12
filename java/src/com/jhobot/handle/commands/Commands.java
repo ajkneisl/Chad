@@ -55,6 +55,7 @@ public class Commands {
         hash.put("catgallery", new CatGallery());
         hash.put("catfact", new CatFact());
         hash.put("help", new Help());
+        hash.put("rrl", new RussianRoulette());
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {

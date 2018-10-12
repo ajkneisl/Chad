@@ -18,7 +18,10 @@ public class Help implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             IMessage m = RequestBuffer.request(() -> {
-                return e.getChannel().sendMessage("Fun : ```catfact, catgallery, 8ball, pe, random```\nFunction / Admin: ```logging, prefix```\nInfo : ```bug, guildinfo, help, jho, steam, updatelog, userinfo```\nPunishments : ```ban, kick```");
+                return e.getChannel().sendMessage("Fun : `catfact`, `catgallery`, `8ball`, `pe`, `random`, `rrl`\n" +
+                        "Function / Admin: `logging`, `prefix`\n" +
+                        "Info : `bug`, `guildinfo`, `help`, `jho`, `steam`, `updatelog`, `userinfo`\n" +
+                        "Punishments : `ban`, `kick`");
             }).get();
        };
     }
