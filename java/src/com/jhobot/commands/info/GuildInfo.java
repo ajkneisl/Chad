@@ -5,6 +5,7 @@ import com.jhobot.handle.Messages;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
@@ -14,6 +15,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -54,13 +56,9 @@ public class GuildInfo implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : GuildInfo");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "guildinfo", "Gives information about the current guild.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("logging set <true/false>", "Toggles the logging functionality.");
+        st.put("logging setchannel <channel name>", "Sets the logging channel.");
+        return HelpHandler.helpCommand(st, "Message", e);
     }
 }

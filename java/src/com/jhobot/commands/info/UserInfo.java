@@ -5,6 +5,7 @@ import com.jhobot.handle.Messages;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -14,6 +15,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -73,13 +75,8 @@ public class UserInfo implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : GuildInfo");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "userinfo <user>", "Gives information about the mentioned user.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("userinfo <user>", "Gives information about the mentioned user.");
+        return HelpHandler.helpCommand(st, "User Info", e);
     }
 }

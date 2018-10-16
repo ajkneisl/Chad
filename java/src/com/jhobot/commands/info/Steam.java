@@ -5,6 +5,7 @@ import com.jhobot.handle.Messages;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -13,6 +14,7 @@ import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -167,16 +169,10 @@ public class Steam implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : Steam");
-            b.withDesc("Remember: Steam Profile must be public!");
-            b.appendField(new DB(JSON.get("uri_link")).getString(e.getGuild(), "prefix") + "steam profile <steam name>", "Gets a steam user's profile.", false);
-            b.appendField(new DB(JSON.get("uri_link")).getString(e.getGuild(), "prefix") + "steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CSGO stats.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("steam profile <steam name>", "Gets a steam user's profile.");
+        st.put("steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CS:GO stats.");
+        return HelpHandler.helpCommand(st, "Steam", e);
     }
 }
 

@@ -6,3 +6,8 @@ current to do ->
   # clean up code
   # fix bug report (instead of changing all ids, change none, just add a var of "lastid")
   # fill catgallery
+
+  # create a join message command
+  # create a leave message command
+  ->
+    # add blocked channels to it

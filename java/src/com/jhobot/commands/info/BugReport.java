@@ -5,6 +5,7 @@ import com.jhobot.handle.DB;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -12,6 +13,7 @@ import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -235,13 +237,9 @@ public class BugReport implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : Bug Report");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "bug <details> [image]", "Reports a bug!", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("bug <detatils>", "Reports a bug with details.");
+        st.put("bug <details> <image>", "Reports a bug with details and an image.");
+        return HelpHandler.helpCommand(st, "Bug Report", e);
     }
 }

@@ -3,7 +3,9 @@ package com.jhobot.handle.commands;
 import com.jhobot.JhoBot;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.Logging;
+import com.jhobot.commands.function.Message;
 import com.jhobot.commands.function.Prefix;
+import com.jhobot.commands.function.Purge;
 import com.jhobot.commands.info.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
@@ -14,10 +16,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class Commands {
+public class CommandHandler {
     public static void call(MessageReceivedEvent e)
     {
-
         // Gets the message, then splits all the different parts with a space.
         String[] argArray = e.getMessage().getContent().split(" ");
 
@@ -25,12 +26,14 @@ public class Commands {
         if (argArray.length == 0)
             return;
 
+        String prefix = JhoBot.db.getString(e.getGuild(), "prefix"); // to prevent multiple requests
+
         // If the prefix isn't jho! it returns
-        if (!argArray[0].startsWith(JhoBot.db.getString(e.getGuild(), "prefix")))
+        if (!argArray[0].startsWith(prefix))
             return;
 
         // Gets the command string aka stuff after jho!
-        String commandString = argArray[0].substring(JhoBot.db.getString(e.getGuild(), "prefix").length()).toLowerCase();
+        String commandString = argArray[0].substring(prefix.length()).toLowerCase();
 
         // Gets the arguments & removes the command strings
         List<String> args = new ArrayList<>(Arrays.asList(argArray));
@@ -56,6 +59,8 @@ public class Commands {
         hash.put("catfact", new CatFact());
         hash.put("help", new Help());
         hash.put("rrl", new RussianRoulette());
+        hash.put("purge", new Purge());
+        hash.put("im", new Message());
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {

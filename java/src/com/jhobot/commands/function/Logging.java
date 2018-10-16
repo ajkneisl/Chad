@@ -5,12 +5,14 @@ import com.jhobot.handle.DB;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -45,6 +47,7 @@ public class Logging implements Command {
                     return;
                 }
 
+                JhoBot.db.set(e.getGuild(), "logging", Boolean.parseBoolean(bool));
                 m.sendConfigLog("Logging", bool, Boolean.toString(JhoBot.db.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild(), JhoBot.db);
                 m.send("Changed logging to " + bool, "Changed Logging");
 
@@ -93,14 +96,9 @@ public class Logging implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : Logging");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "logging set <true/false>", "Gives information about the mentioned user.", false);
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "logging setchannel <channel name>", "Gives information about the mentioned user.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("logging set <true/false>", "Toggles the logging functionality.");
+        st.put("logging setchannel <channel name>", "Sets the logging channel.");
+        return HelpHandler.helpCommand(st, "Logging", e);
     }
 }

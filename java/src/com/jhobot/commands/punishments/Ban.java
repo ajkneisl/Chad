@@ -5,6 +5,7 @@ import com.jhobot.handle.DB;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -13,10 +14,8 @@ import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.PermissionUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class Ban implements Command {
     @Override
@@ -127,13 +126,9 @@ public class Ban implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : Ban");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "ban <user/@user> [reason]", "Gives information about the mentioned user.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("ban <user>", "Bans a user with no reason.");
+        st.put("ban <user> <reason>", "Bans a user with a specified reason.");
+        return HelpHandler.helpCommand(st, "User Info", e);
     }
 }
