@@ -1,4 +1,4 @@
-package com.jhobot;
+package com.jhobot.core;
 
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.commands.CommandHandler;
@@ -43,11 +43,11 @@ public class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Join Time", format.format(date), true);
 
-        m.sendLog(b.build(), com.jhobot.JhoBot.db, g);
+        m.sendLog(b.build(), JhoBot.db, g);
 
-        String joinMsgCh = com.jhobot.JhoBot.db.getString(e.getGuild(), "join_message_ch");
+        String joinMsgCh = JhoBot.db.getString(e.getGuild(), "join_message_ch");
 
-        if (!com.jhobot.JhoBot.db.getBoolean(e.getGuild(), "join_msg_on"))
+        if (!JhoBot.db.getBoolean(e.getGuild(), "join_msg_on"))
             return;
         if (joinMsgCh.equalsIgnoreCase("none"))
             return;
@@ -58,7 +58,7 @@ public class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = com.jhobot.JhoBot.db.getString(e.getGuild(), "join_message");
+        String msg = JhoBot.db.getString(e.getGuild(), "join_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
         new Messages(ch).sendMessage(msg);
     }
@@ -77,11 +77,11 @@ public class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Leave Time", format.format(date), true);
 
-        m.sendLog(b.build(), com.jhobot.JhoBot.db, g);
+        m.sendLog(b.build(), JhoBot.db, g);
 
-        String leaveMsgCh = com.jhobot.JhoBot.db.getString(e.getGuild(), "leave_message_ch");
+        String leaveMsgCh = JhoBot.db.getString(e.getGuild(), "leave_message_ch");
 
-        if (!com.jhobot.JhoBot.db.getBoolean(e.getGuild(), "leave_msg_on"))
+        if (!JhoBot.db.getBoolean(e.getGuild(), "leave_msg_on"))
             return;
         if (leaveMsgCh.equalsIgnoreCase("none"))
             return;
@@ -92,7 +92,7 @@ public class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = com.jhobot.JhoBot.db.getString(e.getGuild(), "join_message");
+        String msg = JhoBot.db.getString(e.getGuild(), "leave_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
         new Messages(ch).sendMessage(msg);
     }
@@ -126,6 +126,8 @@ public class Listener
             doc.append("leave_message", "`&user&` has left the guild!");
             doc.append("join_msg_on", false);
             doc.append("leave_msg_on", false);
+            doc.append("ban_msg_on", true);
+            doc.append("kick_msg_on", true);
             doc.append("join_message_ch", "none");
             doc.append("leave_message_ch", "none");
 
@@ -152,7 +154,7 @@ public class Listener
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
-        com.jhobot.JhoBot.exec.execute(() -> {
+        JhoBot.exec.execute(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
@@ -163,23 +165,17 @@ public class Listener
             }, 0, 60000*5);
         });
 
-        com.jhobot.JhoBot.exec.execute(() -> {
+        JhoBot.exec.execute(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     System.out.println("Stat ->");
-                    System.out.println("Guilds : "+ RequestBuffer.request(() -> {
-                        return e.getClient().getGuilds().size();
-                    }).get());
+                    System.out.println("Guilds : "+ RequestBuffer.request(() -> e.getClient().getGuilds().size()).get());
                     int i = 0;
-                    for (IGuild g : RequestBuffer.request(() -> {
-                        return e.getClient().getGuilds();
-                    }).get())
+                    for (IGuild g : RequestBuffer.request(() -> e.getClient().getGuilds()).get())
                     {
-                        for (IUser u : RequestBuffer.request(() -> {
-                            return g.getUsers();
-                        }).get())
+                        for (IUser u : RequestBuffer.request(g::getUsers).get())
                         {
                             i++;
                         }

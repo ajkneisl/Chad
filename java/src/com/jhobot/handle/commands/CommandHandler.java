@@ -1,6 +1,5 @@
 package com.jhobot.handle.commands;
 
-import com.jhobot.JhoBot;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Message;
@@ -9,6 +8,7 @@ import com.jhobot.commands.function.Purge;
 import com.jhobot.commands.info.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
+import com.jhobot.core.JhoBot;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.ArrayList;

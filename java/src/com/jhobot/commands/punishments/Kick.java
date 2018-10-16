@@ -1,6 +1,6 @@
 package com.jhobot.commands.punishments;
 
-import com.jhobot.JhoBot;
+import com.jhobot.core.JhoBot;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
@@ -46,7 +46,7 @@ public class Kick implements Command {
                 {
                     if (user == null)
                     {
-                        sb.append(s + " ");
+                        sb.append(s).append(" ");
                         if (!e.getGuild().getUsersByName(sb.toString().trim()).isEmpty())
                         {
                             user = e.getGuild().getUsersByName(sb.toString().trim()).get(0);
@@ -80,32 +80,14 @@ public class Kick implements Command {
             StringBuilder sb2 = new StringBuilder();
             for (String s : reason)
             {
-                sb2.append(s + " ");
+                sb2.append(s).append(" ");
             }
 
-            String ban_message = JhoBot.db.getString(e.getGuild(), "kick_message");
-            if (!ban_message.toLowerCase().contains("&disabled&") && !user.isBot())
+            if (JhoBot.db.getBoolean(e.getGuild(), "kick_msg_on"))
             {
-                String[] msgsArray = JhoBot.db.getString(e.getGuild(), "kick_message").split(" ");
-                List<String> msgs = Arrays.asList(msgsArray);
-                for (int i = 0; msgs.size() > i; i++)
-                {
-                    if (msgs.get(i).toLowerCase().contains("&guild&"))
-                        msgs.set(i, e.getGuild().getName() + msgs.get(i).substring(7));
-                    if (msgs.get(i).toLowerCase().contains("&user&"))
-                        msgs.set(i, user.getName() + msgs.get(i).substring(6));
-                    if (msgs.get(i).toLowerCase().contains("&reason&"))
-                        msgs.set(i, sb2.toString().trim() + msgs.get(i).substring(8));
-                    if (msgs.get(i).toLowerCase().contains("&newline&"))
-                        msgs.set(i, "\n" + msgs.get(i).substring(8));
-                }
-                StringBuilder sb = new StringBuilder();
-                for (String s : msgs)
-                {
-                    sb.append(s + " ");
-                }
-
-                new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(sb.toString().trim()).build();
+                String msg = JhoBot.db.getString(e.getGuild(), "kick_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
+                if (!user.isBot())
+                    new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(msg).build();
             }
 
             if (reason.isEmpty())
@@ -116,11 +98,7 @@ public class Kick implements Command {
                 m.sendPunishLog("Kick", user, e.getAuthor(), JhoBot.db, e.getGuild(), reason);
                 return;
             }
-            // 
-                
-                
-                
-               
+
             e.getGuild().kickUser(user);
             m.send("Successfully kicked " + user.getName() + " for " + sb2.toString().trim() + ".", "Kicked User");
             m.sendPunishLog("Kick", user, e.getAuthor(), JhoBot.db, e.getGuild(), reason);
