@@ -49,7 +49,6 @@ public class CommandHandler {
         hash.put("steam", new Steam());
         hash.put("jho", new Jho());
         hash.put("guildinfo", new GuildInfo());
-        hash.put("bugreport", new BugReport());
         hash.put("prefix", new Prefix());
         hash.put("logging", new Logging());
         hash.put("random", new Random());
