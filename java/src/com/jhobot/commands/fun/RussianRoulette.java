@@ -1,9 +1,10 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.JhoBot;
+import com.jhobot.core.JhoBot;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -15,6 +16,7 @@ import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -23,14 +25,9 @@ public class RussianRoulette implements Command
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args)
     {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : Russian Roulette");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "rrl @user", "Plays russian roulette with a selected user.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new java.util.Random().nextFloat(), new java.util.Random().nextFloat(), new java.util.Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("rrl <user>", "Plays russian roulette with a selected user.");
+        return HelpHandler.helpCommand(st, "Russian Roulette", e);
     }
 
     @Override
@@ -44,7 +41,7 @@ public class RussianRoulette implements Command
 
                 for (String s : args)
                 {
-                    b.append(s + " ");
+                    b.append(s).append(" ");
                     if (!e.getGuild().getUsersByName(b.toString().trim()).isEmpty())
                         u = e.getGuild().getUsersByName(b.toString().trim()).get(0);
                 }
@@ -68,9 +65,7 @@ public class RussianRoulette implements Command
             final IUser u2 = u;
 
 
-            IMessage m2 = RequestBuffer.request(() -> {
-                return e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + u2.getName() + "`?");
-            }).get();
+            IMessage m2 = RequestBuffer.request(() -> e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + u2.getName() + "`?")).get();
 
             RequestBuilder rb = new RequestBuilder(e.getClient());
             rb.shouldBufferRequests(true);
@@ -99,13 +94,9 @@ public class RussianRoulette implements Command
 
                 timeout++;
 
-                IReaction y = RequestBuffer.request(() -> {
-                    return m2.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"));
-                }).get();
+                IReaction y = RequestBuffer.request(() -> m2.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))).get();
 
-                IReaction n = RequestBuffer.request(() -> {
-                    return m2.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"));
-                }).get();
+                IReaction n = RequestBuffer.request(() -> m2.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))).get();
 
                 if (y.getUserReacted(u2))
                     reacted = false;

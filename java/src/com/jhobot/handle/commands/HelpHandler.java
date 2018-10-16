@@ -1,6 +1,6 @@
 package com.jhobot.handle.commands;
 
-import com.jhobot.JhoBot;
+import com.jhobot.core.JhoBot;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;

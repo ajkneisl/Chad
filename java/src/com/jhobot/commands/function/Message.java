@@ -1,6 +1,6 @@
 package com.jhobot.commands.function;
 
-import com.jhobot.JhoBot;
+import com.jhobot.core.JhoBot;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;

@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Messages
 {
-    private IChannel channel;
+    private final IChannel channel;
     public Messages(IChannel ch)
     {
         this.channel = ch;
@@ -87,7 +87,7 @@ public class Messages
         StringBuilder sb = new StringBuilder();
         for (String s : reason)
         {
-            sb.append(s + " ");
+            sb.append(s).append(" ");
         }
 
         EmbedBuilder b = new EmbedBuilder().withTitle("Punishment : " + punished.getName()).appendField("Punished User", punished.getName(), true).appendField("Moderator", punisher.getName(), true).appendField("Punishment", punishment, true).appendField("Reason", sb.toString().trim(), false).withImage(punished.getAvatarURL()).withFooterText(Util.getTimeStamp());

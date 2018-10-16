@@ -7,7 +7,6 @@ import com.jhobot.handle.JSON;
 import com.jhobot.handle.Util;
 import org.bson.Document;
 import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
@@ -21,7 +20,7 @@ import sx.blah.discord.util.RequestBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Listener
+class Listener
 {
     @EventSubscriber
     public void messageRecieved(MessageReceivedEvent e)

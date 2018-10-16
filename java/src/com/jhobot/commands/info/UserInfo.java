@@ -1,15 +1,12 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.JhoBot;
 import com.jhobot.handle.Messages;
-import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
@@ -31,7 +28,7 @@ public class UserInfo implements Command {
 
                 for (String s : args)
                 {
-                    sb.append(s + " ");
+                    sb.append(s).append(" ");
                 }
 
                 if (e.getGuild().getUsersByName(sb.toString().trim()).isEmpty())
@@ -48,7 +45,7 @@ public class UserInfo implements Command {
             StringBuilder roles = new StringBuilder();
             for (IRole r : u.getRolesForGuild(e.getGuild()))
             {
-                roles.append(r.getName() + ", ");
+                roles.append(r.getName()).append(", ");
             }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("User : " + u.getName());

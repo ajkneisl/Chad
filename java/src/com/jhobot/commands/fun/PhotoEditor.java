@@ -1,12 +1,11 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.JhoBot;
-import com.jhobot.handle.DB;
+import com.jhobot.core.JhoBot;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import javax.imageio.ImageIO;
@@ -18,9 +17,11 @@ import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 public class PhotoEditor implements Command {
+
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -73,13 +74,8 @@ public class PhotoEditor implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : Random");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "pe blur [photo]", "Blurs a photo.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new java.util.Random().nextFloat(), new java.util.Random().nextFloat(), new java.util.Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("pe blur <image>", "Blurs a photo.");
+        return HelpHandler.helpCommand(st, "Photo Editor", e);
     }
 }

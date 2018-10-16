@@ -3,24 +3,20 @@ package com.jhobot.core;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.JSON;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.handle.obj.IUser;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class JhoBot {
-    public String confirmJson = new JSON().check() + "";
-    public static DB db = new DB(JSON.get("uri_link"));
-    public static ExecutorService exec = Executors.newFixedThreadPool(15);
+    public static final DB db = new DB(JSON.get("uri_link"));
+    public static final ExecutorService exec = Executors.newFixedThreadPool(15);
     public static void main(String[] args)
     {
         /*

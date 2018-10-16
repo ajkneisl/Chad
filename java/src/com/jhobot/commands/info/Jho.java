@@ -1,14 +1,10 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.JhoBot;
-import com.jhobot.handle.JSON;
 import com.jhobot.handle.Messages;
-import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;

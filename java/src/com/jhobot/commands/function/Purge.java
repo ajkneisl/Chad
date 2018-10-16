@@ -1,28 +1,16 @@
 package com.jhobot.commands.function;
 
-import com.jhobot.JhoBot;
 import com.jhobot.handle.Messages;
-import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
-import sun.misc.Request;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
-import java.awt.*;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Purge implements Command {
@@ -60,7 +48,7 @@ public class Purge implements Command {
                 for (String s : args)
                 {
                     i++;
-                    sb.append(s + " ");
+                    sb.append(s).append(" ");
                     if (!e.getGuild().getChannelsByName(sb.toString().trim()).isEmpty())
                         ch = e.getGuild().getChannelsByName(sb.toString().trim()).get(0);
                 }
@@ -105,9 +93,7 @@ public class Purge implements Command {
 
                 final IChannel ch2 = ch;
                 RequestBuffer.request(() -> ch2.getMessageHistory(Integer.parseInt(args.get(0))).bulkDelete());
-                IMessage m2 = RequestBuffer.request(() -> {
-                    return e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+ch2.getName()+"`");
-                }).get();
+                IMessage m2 = RequestBuffer.request(() -> e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+ch2.getName()+"`")).get();
                 if (silent)
                 {
                     try {
@@ -129,7 +115,7 @@ public class Purge implements Command {
                 for (String s : args)
                 {
                     i++;
-                    sb.append(s + " ");
+                    sb.append(s).append(" ");
                     if (!e.getGuild().getChannelsByName(sb.toString().trim()).isEmpty())
                         ch = e.getGuild().getChannelsByName(sb.toString().trim()).get(0);
                 }
@@ -180,9 +166,7 @@ public class Purge implements Command {
                             m9.delete();
                     }
                 });
-                IMessage m2 = RequestBuffer.request(() -> {
-                    return e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+e.getMessage().getMentions().get(0).getName()+"` in channel `"+ch2.getName()+"`");
-                }).get();
+                IMessage m2 = RequestBuffer.request(() -> e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+e.getMessage().getMentions().get(0).getName()+"` in channel `"+ch2.getName()+"`")).get();
                 if (silent)
                 {
                     try {
@@ -193,7 +177,6 @@ public class Purge implements Command {
                     RequestBuffer.request(e.getMessage()::delete);
                     RequestBuffer.request(m2::delete);
                 }
-                return;
             }
         };
     }

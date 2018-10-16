@@ -1,18 +1,18 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.JhoBot;
-import com.jhobot.handle.DB;
+import com.jhobot.core.JhoBot;
 import com.jhobot.handle.JSON;
 import com.jhobot.handle.Messages;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class Random implements Command {
@@ -32,7 +32,7 @@ public class Random implements Command {
                 if (args.size() == 2)
                 {
                     try {
-                        Integer i2 = Integer.parseInt(args.get(1));
+                        int i2 = Integer.parseInt(args.get(1));
 
                         if (i2 == 0)
                         {
@@ -81,14 +81,10 @@ public class Random implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : Random");
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "random number [max]", "Gives random number.", false);
-            b.appendField(JhoBot.db.getString(e.getGuild(), "prefix") + "random quote", "Gives random quote.", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new java.util.Random().nextFloat(), new java.util.Random().nextFloat(), new java.util.Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
-        };
+        HashMap<String, String> st = new HashMap<>();
+        st.put("random quote", "Gives random quote.");
+        st.put("random number [max]", "Gives random number with an optional max value.");
+        return HelpHandler.helpCommand(st, "Random", e);
+
     }
 }

@@ -3,12 +3,9 @@ package com.jhobot.handle;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.gson.*;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import sx.blah.discord.handle.obj.IGuild;
 
 import java.io.*;
 import java.net.URL;
@@ -58,18 +55,14 @@ public class JSON
 
 
     public static org.json.JSONObject read(String url) throws IOException, JSONException {
-        InputStream is = new URL(url).openStream();
-        try {
+        try (InputStream is = new URL(url).openStream()) {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             StringBuilder sb = new StringBuilder();
             int cp;
             while ((cp = rd.read()) != -1) {
                 sb.append((char) cp);
             }
-            org.json.JSONObject json = new org.json.JSONObject(sb.toString());
-            return json;
-        } finally {
-            is.close();
+            return new org.json.JSONObject(sb.toString());
         }
     }
 }

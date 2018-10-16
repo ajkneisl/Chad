@@ -2,14 +2,12 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.JSON;
 import com.jhobot.handle.Messages;
-import com.jhobot.handle.DB;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
@@ -178,8 +176,8 @@ public class Steam implements Command {
 
 interface SteamProfile
 {
-    public String getName();
-    public String getID();
-    public JSONArray getCSGOStats();
-    public JSONObject getProfileObj();
+    String getName();
+    String getID();
+    JSONArray getCSGOStats();
+    JSONObject getProfileObj();
 }

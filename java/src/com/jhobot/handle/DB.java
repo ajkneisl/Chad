@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class DB
 {
-    private MongoClient cli;
+    private final MongoClient cli;
     private MongoCollection<Document> col;
-    private MongoDatabase db;
+    private final MongoDatabase db;
 
     public DB(String URI)
     {
@@ -41,13 +41,17 @@ public class DB
         return this.db;
     }
 
+    @SuppressWarnings("unchecked")
     public ArrayList<String> getArray(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
         if (get == null) return null;
 
-        return (ArrayList<String>) get.get(object);
+        ArrayList<String> ar = (ArrayList<String>) get.get(object);
+        if (ar == null)
+            return null;
+        return ar;
     }
     public boolean getBoolean(IGuild guild, String object)
     {
