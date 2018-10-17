@@ -5,6 +5,7 @@ import com.jhobot.handle.commands.CommandHandler;
 import com.jhobot.handle.DB;
 import com.jhobot.handle.JSON;
 import com.jhobot.handle.Util;
+import com.jhobot.handle.ui.UIHandler;
 import org.bson.Document;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -17,8 +18,11 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Timer;
 
 class Listener
 {
@@ -166,22 +170,14 @@ class Listener
 
         JhoBot.exec.execute(() -> {
             Timer t = new Timer();
+            UIHandler ui = new UIHandler(e.getClient());
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    System.out.println("Stat ->");
-                    System.out.println("Guilds : "+ RequestBuffer.request(() -> e.getClient().getGuilds().size()).get());
-                    int i = 0;
-                    for (IGuild g : RequestBuffer.request(() -> e.getClient().getGuilds()).get())
-                    {
-                        for (IUser u : RequestBuffer.request(g::getUsers).get())
-                        {
-                            i++;
-                        }
-                    }
-                    System.out.println("Total Users in Guilds : " + i);
+                    ui.update();
                 }
-            }, 0, 60000*15);
+            }, 0, 60000*5);
+            ui.getPanel().getRefreshButton().addActionListener((ActionEvent) ->  ui.update());
         });
     }
 }
