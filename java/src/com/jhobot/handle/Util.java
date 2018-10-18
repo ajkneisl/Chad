@@ -12,6 +12,6 @@ public class Util
 
     public static String getCurrentVersion()
     {
-        return "v0.3";
+        return "v0.3.2";
     }
 }

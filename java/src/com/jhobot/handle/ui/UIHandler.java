@@ -14,7 +14,8 @@ public class UIHandler
     {
         this.frame.setVisible(true);
         this.frame.add(this.panel);
-        this.frame.pack();
+        this.frame.setSize(411, 300);
+        this.frame.setResizable(false);
         this.cli = cli;
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // makes it look better :)

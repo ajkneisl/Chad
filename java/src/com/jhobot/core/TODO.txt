@@ -1,4 +1,9 @@
-v0.3.0
+v0.3.2
 
 known bugs >
 none yet? pog!~
+
+wanted commands >
+warning
+    ->
+        on a specific amount of warnings -> do selected punishment
