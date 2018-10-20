@@ -4,7 +4,7 @@
 If you don't like the bot having some of the permissions, feel free to remove them. The bot will automatically check for them,
 and if it doesn't have it it will notify.
 
-## Links
+##### Links
 [Commands](commands.md)
 [Planned/Bugs](plansandbugs.md)
 
