@@ -6,6 +6,6 @@
 ## Known Bugs
 - [ ] A user can have infinite threads running, resulting in worker threads being in use, and disallowing any other threads to continue their workload.
 
-###### Links
+##### Links
 [Commands](commands.md)
 [Home](index.md)
