@@ -54,6 +54,6 @@ Command | Main Function
 Ban | Bans a user from the server with logging (if enabled)
 Kick | Kicks a user from the server with logging (if enabled)
 
-###### Links
+##### Links
 [Main](index.md)
 [Planned/Bugs](plansandbugs.md)
