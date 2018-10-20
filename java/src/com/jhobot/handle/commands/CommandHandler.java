@@ -26,7 +26,7 @@ public class CommandHandler {
         if (argArray.length == 0)
             return;
 
-        String prefix = JhoBot.db.getString(e.getGuild(), "prefix"); // to prevent multiple requests
+        String prefix = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"); // to prevent multiple requests
 
         // If the prefix isn't jho! it returns
         if (!argArray[0].startsWith(prefix))

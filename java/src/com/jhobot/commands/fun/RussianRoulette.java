@@ -1,8 +1,6 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.core.JhoBot;
-import com.jhobot.handle.Messages;
-import com.jhobot.handle.Util;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -10,12 +8,10 @@ import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +29,7 @@ public class RussianRoulette implements Command
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
+            MessageHandler m = new MessageHandler(e.getChannel());
             IUser u = null;
             if (e.getMessage().getMentions().isEmpty())
             {

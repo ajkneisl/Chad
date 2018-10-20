@@ -1,6 +1,6 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -23,7 +23,7 @@ public class Jho implements Command
             b.appendField("Version", Util.getCurrentVersion(), true);
             b.appendField("GitHub", "https://github.com/shoganeko/jhobot", true);
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new Messages(e.getChannel()).sendEmbed(b.build());
+            new MessageHandler(e.getChannel()).sendEmbed(b.build());
         };
     }
 

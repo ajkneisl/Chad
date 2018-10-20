@@ -1,7 +1,8 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.handle.JSON;
-import com.jhobot.handle.Messages;
+import com.jhobot.core.JhoBot;
+import com.jhobot.handle.JSONHandler;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -20,8 +21,8 @@ public class Steam implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
-            String key = JSON.get("steam_api_token");
+            MessageHandler m = new MessageHandler(e.getChannel());
+            String key = JhoBot.JSON_HANDLER.get("steam_api_token");
 
             if (args.size() == 0 || args.size() == 1)
             {
@@ -32,7 +33,7 @@ public class Steam implements Command {
             try {
                 // builds steam profile
                 String arg = args.get(0);
-                int success = JSON.read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + key + "&vanityurl=" + args.get(1)).getJSONObject("response").getInt("success");
+                int success = JhoBot.JSON_HANDLER.read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + key + "&vanityurl=" + args.get(1)).getJSONObject("response").getInt("success");
 
                 if (success != 1)
                 {
@@ -40,8 +41,8 @@ public class Steam implements Command {
                     return;
                 }
 
-                String steamid = JSON.read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + key + "&vanityurl=" + args.get(1)).getJSONObject("response").getString("steamid");
-                JSONObject obj = JSON.read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamid).getJSONObject("response").getJSONArray("players").getJSONObject(0);
+                String steamid = JhoBot.JSON_HANDLER.read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + key + "&vanityurl=" + args.get(1)).getJSONObject("response").getString("steamid");
+                JSONObject obj = JhoBot.JSON_HANDLER.read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamid).getJSONObject("response").getJSONArray("players").getJSONObject(0);
                 SteamProfile profile = new SteamProfile() {
                     @Override
                     public String getName() {
@@ -56,7 +57,7 @@ public class Steam implements Command {
                     @Override
                     public JSONArray getCSGOStats() {
                         try {
-                            return JSON.read("https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=" + key + "&steamid=" + steamid).getJSONObject("playerstats").getJSONArray("stats");
+                            return JhoBot.JSON_HANDLER.read("https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=" + key + "&steamid=" + steamid).getJSONObject("playerstats").getJSONArray("stats");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -66,7 +67,7 @@ public class Steam implements Command {
                     @Override
                     public JSONObject getProfileObj() {
                         try {
-                            return JSON.read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamid).getJSONObject("response").getJSONArray("players").getJSONObject(0);
+                            return JhoBot.JSON_HANDLER.read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamid).getJSONObject("response").getJSONArray("players").getJSONObject(0);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

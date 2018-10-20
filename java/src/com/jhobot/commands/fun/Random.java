@@ -1,8 +1,8 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.core.JhoBot;
-import com.jhobot.handle.JSON;
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.JSONHandler;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -19,7 +19,7 @@ public class Random implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
+            MessageHandler m = new MessageHandler(e.getChannel());
             if (args.size() == 0)
             {
                 help(e, args);
@@ -43,7 +43,7 @@ public class Random implements Command {
                         m.send("Number is : " + rand.nextInt(i2), "Random Number");
                     } catch (NumberFormatException ee)
                     {
-                        new Messages(e.getChannel()).sendError("Invalid Number");
+                        new MessageHandler(e.getChannel()).sendError("Invalid Number");
                     }
                     return;
                 }
@@ -55,7 +55,7 @@ public class Random implements Command {
             if (args.get(0).equalsIgnoreCase("quote"))
             {
                 try {
-                    JSONObject obj = JSON.read("https://talaikis.com/api/quotes/random/");
+                    JSONObject obj = JhoBot.JSON_HANDLER.read("https://talaikis.com/api/quotes/random/");
                     EmbedBuilder b = new EmbedBuilder();
                     b.withTitle("Random Quote");
                     b.appendField("Author", obj.getString("author"), true);

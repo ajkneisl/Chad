@@ -1,9 +1,9 @@
 package com.jhobot.core;
 
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.JSONHandler;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.CommandHandler;
-import com.jhobot.handle.DB;
-import com.jhobot.handle.JSON;
+import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.ui.UIHandler;
 import org.bson.Document;
@@ -18,8 +18,6 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Timer;
@@ -36,7 +34,7 @@ class Listener
     public void userJoin(UserJoinEvent e)
     {
         IGuild g = e.getGuild();
-        Messages m = new Messages(null);
+        MessageHandler m = new MessageHandler(null);
         EmbedBuilder b = new EmbedBuilder();
         Date date = Date.from(e.getGuild().getCreationDate());
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -46,11 +44,11 @@ class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Join Time", format.format(date), true);
 
-        m.sendLog(b.build(), JhoBot.db, g);
+        m.sendLog(b.build(), JhoBot.DATABASE_HANDLER, g);
 
-        String joinMsgCh = JhoBot.db.getString(e.getGuild(), "join_message_ch");
+        String joinMsgCh = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
 
-        if (!JhoBot.db.getBoolean(e.getGuild(), "join_msg_on"))
+        if (!JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "join_msg_on"))
             return;
         if (joinMsgCh.equalsIgnoreCase("none"))
             return;
@@ -61,16 +59,16 @@ class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = JhoBot.db.getString(e.getGuild(), "join_message");
+        String msg = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-        new Messages(ch).sendMessage(msg);
+        new MessageHandler(ch).sendMessage(msg);
     }
 
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
     {
         IGuild g = e.getGuild();
-        Messages m = new Messages(null);
+        MessageHandler m = new MessageHandler(null);
         EmbedBuilder b = new EmbedBuilder();
         Date date = Date.from(e.getGuild().getCreationDate());
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -80,11 +78,11 @@ class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Leave Time", format.format(date), true);
 
-        m.sendLog(b.build(), JhoBot.db, g);
+        m.sendLog(b.build(), JhoBot.DATABASE_HANDLER, g);
 
-        String leaveMsgCh = JhoBot.db.getString(e.getGuild(), "leave_message_ch");
+        String leaveMsgCh = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
 
-        if (!JhoBot.db.getBoolean(e.getGuild(), "leave_msg_on"))
+        if (!JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
             return;
         if (leaveMsgCh.equalsIgnoreCase("none"))
             return;
@@ -95,15 +93,15 @@ class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = JhoBot.db.getString(e.getGuild(), "leave_message");
+        String msg = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-        new Messages(ch).sendMessage(msg);
+        new MessageHandler(ch).sendMessage(msg);
     }
 
     @EventSubscriber
     public void joinGuild(GuildCreateEvent e)
     {
-        DB dbb = new DB(JSON.get("uri_link"));
+        DatabaseHandler dbb = JhoBot.DATABASE_HANDLER;
         if (!dbb.exists(e.getGuild()))
         {
             Document doc = new Document();
@@ -143,13 +141,13 @@ class Listener
     @EventSubscriber
     public void leaveGuild(GuildLeaveEvent e)
     {
-        DB db = new DB(JSON.get("uri_link"));
-        Document get = db.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
+        DatabaseHandler databaseHandler = JhoBot.DATABASE_HANDLER;
+        Document get = databaseHandler.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
         if (get == null)
             return;
 
-        db.getCollection().deleteOne(get);
+        databaseHandler.getCollection().deleteOne(get);
 
         System.out.println(Util.getTimeStamp() + " <" + e.getGuild().getStringID() + "> Left Guild");
     }

@@ -9,20 +9,20 @@ import sx.blah.discord.handle.obj.IGuild;
 
 import java.util.ArrayList;
 
-public class DB
+public class DatabaseHandler
 {
     private final MongoClient cli;
     private MongoCollection<Document> col;
     private final MongoDatabase db;
 
-    public DB(String URI)
+    public DatabaseHandler(String URI)
     {
         this.cli = new MongoClient(new MongoClientURI(URI));
         this.db = cli.getDatabase("Database");
         this.col = db.getCollection("bot");
     }
 
-    public DB getSeperateCollection(String colName)
+    public DatabaseHandler getSeperateCollection(String colName)
     {
         this.col = db.getCollection(colName);
         return this;
