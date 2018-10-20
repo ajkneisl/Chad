@@ -1,5 +1,5 @@
 # All Commands
-## for version v0.2
+## for version v0.3.3
 
 #### Guild Configurable
 What you can change per guild. <br />
@@ -11,6 +11,12 @@ Logging | Enables or disables the logging feature
 Logging Channel | The channel the bot logs to
 Ban Message | What message the banned user gets sent
 Kick Message | What message the kicked user gets sent
+Join Message | What message gets sent when a user joins
+Leave Message | What message gets sent when a user leaves
+Join Channel | Where the messages for joins gets sent
+Leave Channel | Where the message for leaving users gets sent
+Toggle Join | Toggles whether join messages get sent
+Toggle Leave | Toggles whether leave messages get sent
 
 #### Fun Commands
 
@@ -21,7 +27,7 @@ CatGallery | Gives a random picture of a cat
 8ball | It gives an eightball-like response to your question
 PE (PhotoEditor) | Changes your photo with preset options
 Random | Gets a random number or quote
-
+RRL (Russian Roulette) | Play russian roulette with another user in the guild
 #### Function / Admin
 
 Command | Main Function
@@ -48,3 +54,6 @@ Command | Main Function
 Ban | Bans a user from the server with logging (if enabled)
 Kick | Kicks a user from the server with logging (if enabled)
 
+###### Links
+[Main](index.md)
+[Planned/Bugs](plansandbugs.md)
