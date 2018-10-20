@@ -28,6 +28,7 @@ CatGallery | Gives a random picture of a cat
 PE (PhotoEditor) | Changes your photo with preset options
 Random | Gets a random number or quote
 RRL (Russian Roulette) | Play russian roulette with another user in the guild
+
 #### Function / Admin
 
 Command | Main Function
