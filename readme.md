@@ -5,7 +5,7 @@ https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permiss
 [Commands](docs/commands.md)
 [Planned/Bugs](docs/plansandbugs.md)
 ##### Current Version
-v0.2 BETA
+v0.3.3 BETA
 
 ##### Support Server / Testing Server
 https://discord.gg/EEHKTW
