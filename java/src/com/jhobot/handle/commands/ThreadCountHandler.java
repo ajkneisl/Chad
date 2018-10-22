@@ -31,7 +31,7 @@ public class ThreadCountHandler
             if (!this.THREADS.isEmpty())
             {
                 this.THREADS.forEach((k, v) -> {
-                    if (k.isDone() == true)
+                    if (k.isDone())
                     {
                         this.COUNT.put(v, this.COUNT.get(v)-1);
                         this.THREADS.remove(k);
