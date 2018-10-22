@@ -1,11 +1,20 @@
 package com.jhobot.core;
 
-import com.jhobot.handle.JSONHandler;
+import com.jhobot.commands.fun.*;
+import com.jhobot.commands.function.Logging;
+import com.jhobot.commands.function.Message;
+import com.jhobot.commands.function.Prefix;
+import com.jhobot.commands.function.Purge;
+import com.jhobot.commands.info.*;
+import com.jhobot.commands.punishments.Ban;
+import com.jhobot.commands.punishments.Kick;
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.CommandHandler;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
+import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.ThreadCountHandler;
 import com.jhobot.handle.ui.UIHandler;
+import com.sun.corba.se.impl.activation.CommandHandler;
 import org.bson.Document;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -20,14 +29,72 @@ import sx.blah.discord.util.RequestBuffer;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Random;
 import java.util.Timer;
+import java.util.concurrent.Future;
 
 class Listener
 {
+    @SuppressWarnings({"unchecked", "LoopStatementThatDoesntLoop"})
     @EventSubscriber
     public void messageRecieved(MessageReceivedEvent e)
     {
-        CommandHandler.call(e);
+        // Gets the message, then splits all the different parts with a space.
+        String[] argArray = e.getMessage().getContent().split(" ");
+
+        // Returns if there are no arguments
+        if (argArray.length == 0)
+            return;
+
+        String prefix = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"); // to prevent multiple requests
+
+        // If the prefix isn't jho! it returns
+        if (!argArray[0].startsWith(prefix))
+            return;
+
+        // Gets the command string aka stuff after jho!
+        String commandString = argArray[0].substring(prefix.length()).toLowerCase();
+
+        // Gets the arguments & removes the command strings
+        List<String> args = new ArrayList<>(Arrays.asList(argArray));
+        args.remove(0);
+
+        if (!ThreadCountHandler.HANDLER.allowThread(e.getAuthor()))
+            return;
+
+        // command runner
+        HashMap<String, Command> hash = new HashMap<>();
+
+        hash.put("userinfo", new UserInfo());
+        hash.put("kick", new Kick());
+        hash.put("ban", new Ban());
+        hash.put("updatelog", new UpdateLog());
+        hash.put("steam", new Steam());
+        hash.put("jho", new Jho());
+        hash.put("guildinfo", new GuildInfo());
+        hash.put("prefix", new Prefix());
+        hash.put("logging", new Logging());
+        hash.put("random", new com.jhobot.commands.fun.Random());
+        hash.put("pe", new PhotoEditor());
+        hash.put("8ball", new EightBall());
+        hash.put("catgallery", new CatGallery());
+        hash.put("catfact", new CatFact());
+        hash.put("help", new Help());
+        hash.put("rrl", new RussianRoulette());
+        hash.put("purge", new Purge());
+        hash.put("im", new Message());
+        hash.forEach((k, v) -> {
+            if (commandString.equalsIgnoreCase(k))
+            {
+                Future<?> th;
+                if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
+                    th = JhoBot.EXECUTOR.submit(v.help(e, args));
+                else
+                    th = JhoBot.EXECUTOR.submit(v.run(e, args));
+
+                ThreadCountHandler.HANDLER.addThread(th, e.getAuthor());
+            }
+        });
     }
 
     @EventSubscriber
@@ -152,10 +219,36 @@ class Listener
         System.out.println(Util.getTimeStamp() + " <" + e.getGuild().getStringID() + "> Left Guild");
     }
 
+
+
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
-        JhoBot.exec.execute(() -> {
+        JhoBot.EXECUTOR.submit(() -> {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> {
+                        System.out.print("\n" + k.getName() + " " + v);
+                    });
+                }
+            }, 0, 1000);
+        });
+        JhoBot.EXECUTOR.submit(() -> new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!ThreadCountHandler.HANDLER.getMap().isEmpty())
+                {
+                    ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> {
+                        if (v == 0)
+                            ThreadCountHandler.HANDLER.getMap().remove(k);
+                    });
+                }
+            }
+        }, 0, 1000));
+
+        // automatic presence updater
+        JhoBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
@@ -166,7 +259,8 @@ class Listener
             }, 0, 60000*5);
         });
 
-        JhoBot.exec.execute(() -> {
+        // automatic ui updater
+        JhoBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();
             UIHandler ui = new UIHandler(e.getClient());
             t.schedule(new TimerTask() {

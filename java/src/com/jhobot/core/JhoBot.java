@@ -2,6 +2,7 @@ package com.jhobot.core;
 
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.JSONHandler;
+import com.jhobot.handle.commands.ThreadCountHandler;
 import org.json.JSONObject;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -17,10 +18,9 @@ import java.util.concurrent.Executors;
 public class JhoBot {
     public static final JSONHandler JSON_HANDLER = new JSONHandler().forceCheck();
     public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
-    public static final ExecutorService exec = Executors.newCachedThreadPool();
+    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(30);
     public static void main(String[] args)
     {
-
         /*
         Creates bot
          */
@@ -34,12 +34,12 @@ public class JhoBot {
         cli.getDispatcher().registerListener(new Listener());
     }
 
-    public static List<Long> allowedUsers()
+    public static ArrayList<Long> allowedUsers()
     {
         // bot staff ? whatever you wanna call it
-        List<Long> l = new ArrayList<>();
-        l.add(Long.parseLong("416399667094618124"));
-        l.add(Long.parseLong("274712215024697345"));
-        return l;
+        ArrayList<Long> ar = new ArrayList<>();
+        ar.add(Long.parseLong("274712215024697345"));
+        ar.add(Long.parseLong("274712215024697345"));
+        return ar;
     }
 }
