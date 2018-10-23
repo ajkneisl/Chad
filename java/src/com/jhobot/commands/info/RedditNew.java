@@ -28,14 +28,14 @@ public class RedditNew implements Command {
             JSONObject post = null;
             try {
                 int index = 0;
-                post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=new")
+                post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
                         .getJSONObject("data");
                 while (post.getBoolean("stickied")) {
                     index++;
-                    post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=new")
+                    post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)
