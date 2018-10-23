@@ -18,12 +18,13 @@ public class ThreadCountHandler
     private ThreadCountHandler()
     {
         this.COUNT = new HashMap<>();
-        new Thread(() -> new Timer().schedule(new TimerTask() {
+        Thread th = new Thread(() -> new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 constant();
             }
-        }, 0, 1000)).start();
+        }, 0, 1000));
+        JhoBot.EXECUTOR.submit(th);
     }
 
     @SuppressWarnings("all")
@@ -32,7 +33,6 @@ public class ThreadCountHandler
         if (!this.COUNT.isEmpty())
         {
             this.COUNT.forEach((k, v) -> {
-                System.out.println(k.getName() + " " + v);
                 if (v.size() != 0)
                 {
                     for (int i = 0; v.size() > i; i++)
@@ -44,7 +44,12 @@ public class ThreadCountHandler
                         }
                     }
                 }
+                else if (v.size() == 0)
+                {
+                    v.remove(k);
+                }
             });
+
         }
     }
 

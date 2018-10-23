@@ -40,6 +40,7 @@ public class JhoBot {
         ArrayList<Long> ar = new ArrayList<>();
         ar.add(Long.parseLong("274712215024697345"));
         ar.add(Long.parseLong("274712215024697345"));
+        ar.add(Long.parseLong("173495550467899402"));
         return ar;
     }
 }
