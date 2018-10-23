@@ -14,13 +14,16 @@ public class CurrentThreads implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            System.setProperty("http.agent", "Chrome");
             MessageHandler m = new MessageHandler(e.getChannel());
+            if (!JhoBot.allowedUsers().contains(e.getAuthor().getLongID()))
+            {
+                m.sendError("You don't have permissions for this!");
+                return;
+            }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Current Threads Running");
-            ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> {
-                b.appendField(k.getName(), Integer.toString(v.size()), true);
-            });
+            ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> b.appendField(k.getName(), Integer.toString(v.size()), true));
+            m.sendEmbed(b.build());
         };
     }
 
