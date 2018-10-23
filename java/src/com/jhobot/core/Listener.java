@@ -91,7 +91,8 @@ class Listener
                     thread = new Thread(v.help(e, args));
                 else
                     thread = new Thread(v.run(e, args));
-                JhoBot.EXECUTOR.submit(thread);
+                thread.start();
+                //JhoBot.EXECUTOR.submit(thread);
                 ThreadCountHandler.HANDLER.addThread(thread, e.getAuthor());
             }
         });
