@@ -4,6 +4,7 @@ import com.jhobot.core.JhoBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
@@ -239,5 +240,10 @@ public class Message implements Command {
         st.put("im setchannel <join/leave> <channel name>", "Toggles the join/leave messages.");
         st.put("Variables", "&guild&, &user&, &reason& (punishment)");
         return HelpHandler.helpCommand(st, "Message", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.ADMINISTRATOR;
     }
 }

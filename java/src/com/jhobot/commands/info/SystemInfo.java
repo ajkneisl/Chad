@@ -4,6 +4,7 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -50,5 +51,10 @@ public class SystemInfo implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("systeminfo", "Displays system/connectivity information about the bot server.");
         return HelpHandler.helpCommand(st, "System Information", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }

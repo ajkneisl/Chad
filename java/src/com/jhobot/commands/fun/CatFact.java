@@ -5,6 +5,7 @@ import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.io.IOException;
@@ -31,5 +32,10 @@ public class CatFact implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("catfact", "Gives you a random catfact.");
         return HelpHandler.helpCommand(st, "Cat Fact", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }

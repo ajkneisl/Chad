@@ -4,6 +4,7 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -75,5 +76,10 @@ public class UserInfo implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("userinfo <user>", "Gives information about the mentioned user.");
         return HelpHandler.helpCommand(st, "User Info", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MODERATOR;
     }
 }

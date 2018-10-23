@@ -9,5 +9,6 @@ public interface Command
 {
     Runnable run(MessageReceivedEvent e, List<String> args);
     Runnable help(MessageReceivedEvent e, List<String> args);
+    PermissionLevels level();
 
 }

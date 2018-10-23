@@ -1,6 +1,9 @@
 package com.jhobot.core;
 
 import com.jhobot.commands.admin.CurrentThreads;
+import com.jhobot.commands.admin.GetLevel;
+import com.jhobot.commands.admin.ModifyPresence;
+import com.jhobot.commands.admin.SetLevel;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Message;
@@ -84,14 +87,19 @@ class Listener
         hash.put("rrl", new RussianRoulette());
         hash.put("purge", new Purge());
         hash.put("im", new Message());
-        hash.put("threads", new CurrentThreads());
+        hash.put("threads", new CurrentThreads()); // admin only/debug
         hash.put("rtop", new RedditTop());
         hash.put("rnew", new RedditNew());
         hash.put("systeminfo", new SystemInfo());
+        hash.put("modpresence", new ModifyPresence()); // admin only
+        hash.put("setlevel", new SetLevel());
+        hash.put("getlevel", new GetLevel());
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
                 Future<?> thread;
+                if (!JhoBot.PERMISSIONS_HANDLER.hasPermission(e.getAuthor(), v.level()))
+                    new MessageHandler(e.getChannel()).sendError("You do not have permission to access this command!");
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
                     thread = JhoBot.EXECUTOR.submit(v.help(e, args));
                 else

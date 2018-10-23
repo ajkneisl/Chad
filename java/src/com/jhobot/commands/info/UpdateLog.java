@@ -4,6 +4,7 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -40,5 +41,10 @@ public class UpdateLog implements Command
         HashMap<String, String> st = new HashMap<>();
         st.put("updatelog", "Gives you info about the most recent update.");
         return HelpHandler.helpCommand(st, "Update Log", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }

@@ -5,6 +5,7 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -63,5 +64,10 @@ public class RedditNew implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("rnew <subreddit>", "Displays the most recent post from a subreddit.");
         return HelpHandler.helpCommand(st, "Reddit New", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }
