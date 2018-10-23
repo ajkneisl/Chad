@@ -67,7 +67,7 @@ public class Random implements Command {
                     b.withFooterText(Util.getTimeStamp());
                     b.withColor(new Color(new java.util.Random().nextFloat(), new java.util.Random().nextFloat(), new java.util.Random().nextFloat()));
                     m.sendEmbed(b.build());
-                } catch (IOException ee)
+                } catch (Exception ee)
                 {
                     ee.printStackTrace();
                     m.sendError("API Exception!");
