@@ -98,8 +98,11 @@ class Listener
             if (commandString.equalsIgnoreCase(k))
             {
                 Future<?> thread;
-                if (!JhoBot.PERMISSIONS_HANDLER.hasPermission(e.getAuthor(), v.level()))
+                // if the user doesnt have the required permission level, deny them access to the command
+                if (!JhoBot.PERMISSIONS_HANDLER.hasPermission(e.getAuthor(), v.level())) {
                     new MessageHandler(e.getChannel()).sendError("You do not have permission to access this command!");
+                    return;
+                }
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
                     thread = JhoBot.EXECUTOR.submit(v.help(e, args));
                 else
