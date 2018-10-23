@@ -1,18 +1,2 @@
-v0.3.3 (working on)
-
-known bugs >
-none yet? pog!~
-
-wanted commands >
-warning
-    ->
-        on a specific amount of warnings -> do selected punishment
-change log ->
-    changed file names
-    fixed file checking
-    made json an instance
-    added gamehandler
-    changed executor to cached pool
-    added reddithot
-
+v0.3.31
 

@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
 public class Purge implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
-        return () -> {
+        return null;
+        /*return () -> {
             MessageHandler m = new MessageHandler(e.getChannel());
             if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
             {
@@ -175,11 +176,8 @@ public class Purge implements Command {
                         e1.printStackTrace();
                     }
                     RequestBuffer.request(e.getMessage()::delete);
-                    RequestBuffer.request(m2::delete);
-                }
-            }
+                    RequestBuffer.request(m2::delete);*/
         };
-    }
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
