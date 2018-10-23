@@ -3,11 +3,11 @@ package com.jhobot.commands.info;
 import com.jhobot.core.JhoBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
+import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -16,29 +16,36 @@ public class RedditTop implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            String link = null;
+            JSONObject post = null;
             try {
-                System.out.println("Before http request");
-
-                String link = JhoBot.JSON_HANDLER.read("http://reddit.com/r/" + args.get(0) + ".json")
-                        .getJSONObject("")
+                int index = 0;
+                post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=hot")
                         .getJSONObject("data")
                         .getJSONArray("children")
-                        .getJSONObject(0)
-                        .getJSONObject("data")
-                        .getString("permalink");
-
-                System.out.println("After http request");
-                System.out.println("RedditTop (link=" + link + ")");
-
-                EmbedBuilder b = new EmbedBuilder();
-                b.withTitle("Reddit");
-                b.withDesc("Top posts");
-                b.appendField("r/" + args.get(0), link, false);
-                b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-                new MessageHandler(e.getChannel()).sendEmbed(b.build());
-            } catch (IOException e1) {
-                e1.printStackTrace();
+                        .getJSONObject(index)
+                        .getJSONObject("data");
+                while (post.getBoolean("stickied")) {
+                    index++;
+                    post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=hot")
+                            .getJSONObject("data")
+                            .getJSONArray("children")
+                            .getJSONObject(index)
+                            .getJSONObject("data");
+                }
+            } catch (Exception e1) {
+                new MessageHandler(e.getChannel()).sendError("Invalid subreddit.");
+                return;
             }
+
+            EmbedBuilder b = new EmbedBuilder();
+            b.withTitle("Reddit");
+            b.withDesc("Top post");
+            b.appendField("Title", post.getString("title"), false);
+            b.appendField("Link", "https://reddit.com" + post.getString("permalink"), false);
+            b.withImage(post.getString("url"));
+            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+            new MessageHandler(e.getChannel()).sendEmbed(b.build());
         };
     }
 

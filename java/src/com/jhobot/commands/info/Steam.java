@@ -58,7 +58,7 @@ public class Steam implements Command {
                     public JSONArray getCSGOStats() {
                         try {
                             return JhoBot.JSON_HANDLER.read("https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=" + key + "&steamid=" + steamid).getJSONObject("playerstats").getJSONArray("stats");
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         return null;
@@ -68,7 +68,7 @@ public class Steam implements Command {
                     public JSONObject getProfileObj() {
                         try {
                             return JhoBot.JSON_HANDLER.read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamid).getJSONObject("response").getJSONArray("players").getJSONObject(0);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         return null;
@@ -153,7 +153,7 @@ public class Steam implements Command {
                 } else {
                     m.sendError("Invalid Arguments!");
                 }
-            } catch (IOException ee)
+            } catch (Exception ee)
             {
                 if (ee.getMessage().contains("429"))
                 {

@@ -18,7 +18,7 @@ public class CatFact implements Command {
             try{
                 String fact = JhoBot.JSON_HANDLER.read("https://catfact.ninja/fact").getString("fact");
                 new MessageHandler(e.getChannel()).send(fact, "Cat Fact");
-            } catch (IOException ee)
+            } catch (Exception ee)
             {
                 ee.printStackTrace();
                 new MessageHandler(e.getChannel()).sendError("There was an internal error.");

@@ -87,15 +87,7 @@ public class JSONHandler
     }
 
 
-    public org.json.JSONObject read(String url) throws IOException, JSONException {
-        try (InputStream is = new URL(url).openStream()) {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            StringBuilder sb = new StringBuilder();
-            int cp;
-            while ((cp = rd.read()) != -1) {
-                sb.append((char) cp);
-            }
-            return new org.json.JSONObject(sb.toString());
-        }
+    public org.json.JSONObject read(String url) throws JSONException {
+        return new org.json.JSONObject(Util.httpGet(url));
     }
 }
