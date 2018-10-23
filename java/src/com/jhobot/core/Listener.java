@@ -1,5 +1,6 @@
 package com.jhobot.core;
 
+import com.jhobot.commands.admin.CurrentThreads;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Message;
@@ -83,6 +84,7 @@ class Listener
         hash.put("rrl", new RussianRoulette());
         hash.put("purge", new Purge());
         hash.put("im", new Message());
+        hash.put("threads", new CurrentThreads());
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {

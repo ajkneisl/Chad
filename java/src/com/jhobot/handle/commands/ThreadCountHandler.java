@@ -32,7 +32,7 @@ public class ThreadCountHandler
         if (!this.COUNT.isEmpty())
         {
             this.COUNT.forEach((k, v) -> {
-                System.out.println("\n" + k.getName() + " " + v);
+                System.out.println(k.getName() + " " + v);
                 if (v.size() != 0)
                 {
                     for (int i = 0; v.size() > i; i++)
@@ -40,10 +40,6 @@ public class ThreadCountHandler
                         if (v.get(i).isDone())
                         {
                             v.remove(v.get(i));
-                            if (v.size() == 0)
-                            {
-                                this.COUNT.remove(k);
-                            }
                             continue;
                         }
                     }
