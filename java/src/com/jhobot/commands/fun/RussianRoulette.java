@@ -116,6 +116,7 @@ public class RussianRoulette implements Command
             }
 
             MessageBuilder b = new MessageBuilder(e.getClient()).withChannel(e.getChannel()).withContent("`" +win.getName()+"` is the winner! \n`"+loser.getName()+"`\uD83D\uDD2B");
+            System.out.println("Debug: " + r);
             RequestBuffer.request(b::build);
             Thread.currentThread().interrupt();
         };
