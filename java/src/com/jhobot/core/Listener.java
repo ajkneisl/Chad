@@ -223,18 +223,6 @@ class Listener
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
-        // logger!
-        JhoBot.EXECUTOR.submit(() -> {
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> {
-                        System.out.print("\n" + k.getName() + " " + v.size());
-                    });
-                }
-            }, 0, 1000);
-        });
-
         // automatic presence updater
         JhoBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();

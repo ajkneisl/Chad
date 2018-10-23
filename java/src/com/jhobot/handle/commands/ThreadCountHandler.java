@@ -35,11 +35,15 @@ public class ThreadCountHandler
                 System.out.println("\n" + k.getName() + " " + v);
                 if (v.size() != 0)
                 {
-                    for (Future<?> th : v)
+                    for (int i = 0; v.size() > i; i++)
                     {
-                        if (th.isDone())
+                        if (v.get(i).isDone())
                         {
-                            v.remove(th);
+                            v.remove(v.get(i));
+                            if (v.size() == 0)
+                            {
+                                this.COUNT.remove(k);
+                            }
                             continue;
                         }
                     }
