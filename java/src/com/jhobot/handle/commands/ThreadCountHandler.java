@@ -12,14 +12,11 @@ public class ThreadCountHandler
 {
     public static ThreadCountHandler HANDLER = new ThreadCountHandler();
 
-    private Map<IUser, Integer> COUNT;
-    private Map<Future<?>, IUser> THREADS;
+    private Map<IUser, ArrayList<Thread>> COUNT;
 
-    @SuppressWarnings("InfiniteLoopStatement")
     private ThreadCountHandler()
     {
         this.COUNT = new HashMap<>();
-        this.THREADS = new HashMap<>();
         JhoBot.EXECUTOR.execute(this::constant);
     }
 
@@ -28,13 +25,15 @@ public class ThreadCountHandler
     {
         while (true)
         {
-            if (!this.THREADS.isEmpty())
+            if (!this.COUNT.isEmpty())
             {
-                this.THREADS.forEach((k, v) -> {
-                    if (k.isDone() == true)
+                this.COUNT.forEach((k, v) -> {
+                    for (Thread th : v)
                     {
-                        this.COUNT.put(v, this.COUNT.get(v)-1);
-                        this.THREADS.remove(k);
+                        if (!th.isAlive())
+                        {
+                            v.remove(th);
+                        }
                     }
                 });
             }
@@ -48,17 +47,26 @@ public class ThreadCountHandler
         {
             return true;
         }
-        else return this.COUNT.get(user) < 3;
+        else return this.COUNT.get(user).size() < 3;
     }
 
-    public Map<IUser, Integer> getMap()
+    public Map<IUser, ArrayList<Thread>> getMap()
     {
         return this.COUNT;
     }
 
-    public void addThread(Future<?> thread, IUser user)
+    public void addThread(Thread thread, IUser user)
     {
-        this.COUNT.merge(user, 1, (a, b) -> a + b);
-        this.THREADS.put(thread, user);
+        if (this.COUNT.containsKey(user))
+        {
+            ArrayList<Thread> th = this.COUNT.get(user);
+            th.add(thread);
+            this.COUNT.put(user, th);
+        }
+        else {
+            ArrayList<Thread> th = new ArrayList<>();
+            th.add(thread);
+            this.COUNT.put(user, th);
+        }
     }
 }

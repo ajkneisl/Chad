@@ -86,13 +86,13 @@ class Listener
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
-                Future<?> th;
+                Thread thread;
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
-                    th = JhoBot.EXECUTOR.submit(v.help(e, args));
+                    thread = new Thread(v.help(e, args));
                 else
-                    th = JhoBot.EXECUTOR.submit(v.run(e, args));
-
-                ThreadCountHandler.HANDLER.addThread(th, e.getAuthor());
+                    thread = new Thread(v.run(e, args));
+                JhoBot.EXECUTOR.submit(thread);
+                ThreadCountHandler.HANDLER.addThread(thread, e.getAuthor());
             }
         });
     }
@@ -229,7 +229,7 @@ class Listener
                 @Override
                 public void run() {
                     ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> {
-                        System.out.print("\n" + k.getName() + " " + v);
+                        System.out.print("\n" + k.getName() + " " + v.size());
                     });
                 }
             }, 0, 1000);
@@ -240,7 +240,7 @@ class Listener
                 if (!ThreadCountHandler.HANDLER.getMap().isEmpty())
                 {
                     ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> {
-                        if (v == 0)
+                        if (v.size() == 0)
                             ThreadCountHandler.HANDLER.getMap().remove(k);
                     });
                 }
