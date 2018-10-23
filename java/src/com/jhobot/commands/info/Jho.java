@@ -20,7 +20,7 @@ public class Jho implements Command
         return () -> {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("jhobot");
-            b.withDesc("by sho!");
+            b.withDesc("by sho and CodeBase!");
             b.appendField("Version", Util.getCurrentVersion(), true);
             b.appendField("GitHub", "https://github.com/shoganeko/jhobot", true);
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));

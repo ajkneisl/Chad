@@ -94,6 +94,7 @@ class Listener
         hash.put("modpresence", new ModifyPresence()); // admin only
         hash.put("setlevel", new SetLevel());
         hash.put("getlevel", new GetLevel());
+        //System.out.println(e.getAuthor().getStringID() + " - " + Long.toString(e.getAuthor().getLongID()));
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
