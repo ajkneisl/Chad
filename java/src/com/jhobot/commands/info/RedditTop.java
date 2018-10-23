@@ -3,11 +3,13 @@ package com.jhobot.commands.info;
 import com.jhobot.core.JhoBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -51,6 +53,8 @@ public class RedditTop implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("rtop <subreddit>", "Displays a post from that subreddit.");
+        return HelpHandler.helpCommand(st, "Reddit Top", e);
     }
 }

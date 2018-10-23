@@ -13,5 +13,6 @@ change log ->
     made json an instance
     added gamehandler
     changed executor to cached pool
+    added reddithot
 
 

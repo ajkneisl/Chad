@@ -34,13 +34,4 @@ public class JhoBot {
         cli.getDispatcher().registerListener(new Listener());
     }
 
-    public static ArrayList<Long> allowedUsers()
-    {
-        // bot staff ? whatever you wanna call it
-        ArrayList<Long> ar = new ArrayList<>();
-        ar.add(Long.parseLong("274712215024697345"));
-        ar.add(Long.parseLong("274712215024697345"));
-        ar.add(Long.parseLong("173495550467899402"));
-        return ar;
-    }
 }

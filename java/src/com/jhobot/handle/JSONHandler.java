@@ -33,11 +33,9 @@ public class JSONHandler
                 System.out.println("Created Bot Directory : " + bot.createNewFile());
                 org.json.JSONObject obj = new org.json.JSONObject();
                 obj.put("token", "");
-                obj.put("playing", "");
-                obj.put("default_prefix", "");
                 obj.put("steam_api_token", "");
-                obj.put("version", "unstable-0.1.06");
                 obj.put("uri_link", "");
+                obj.put("admins", "173495550467899402 274712215024697345 416399667094618124");
                 try (FileWriter filew = new FileWriter(bot)) {
                     filew.write(obj.toString());
                     filew.flush();
