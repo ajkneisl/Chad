@@ -86,13 +86,11 @@ class Listener
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
-                Thread thread;
+                Future<?> thread;
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
-                    thread = new Thread(v.help(e, args));
+                    thread = JhoBot.EXECUTOR.submit(v.help(e, args));
                 else
-                    thread = new Thread(v.run(e, args));
-                thread.start();
-                //JhoBot.EXECUTOR.submit(thread);
+                    thread = JhoBot.EXECUTOR.submit(v.run(e, args));
                 ThreadCountHandler.HANDLER.addThread(thread, e.getAuthor());
             }
         });
@@ -225,6 +223,7 @@ class Listener
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
+        // logger!
         JhoBot.EXECUTOR.submit(() -> {
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -235,18 +234,6 @@ class Listener
                 }
             }, 0, 1000);
         });
-        JhoBot.EXECUTOR.submit(() -> new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!ThreadCountHandler.HANDLER.getMap().isEmpty())
-                {
-                    ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> {
-                        if (v.size() == 0)
-                            ThreadCountHandler.HANDLER.getMap().remove(k);
-                    });
-                }
-            }
-        }, 0, 1000));
 
         // automatic presence updater
         JhoBot.EXECUTOR.submit(() -> {
