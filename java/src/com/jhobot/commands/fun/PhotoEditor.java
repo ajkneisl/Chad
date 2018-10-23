@@ -42,26 +42,27 @@ public class PhotoEditor implements Command {
             }
             File f = new File(System.getenv("appdata") + "\\jho\\imgcache\\img" + new java.util.Random().nextInt(2000) + ".png");
 
-            if (args.get(0).equalsIgnoreCase("blur"))
+            switch (args.get(0).toLowerCase())
             {
-                try {
-                    float[] matrix = new float[400];
-                    for (int i = 0; i < 400; i++)
-                        matrix[i] = 1.0f/400.0f;
-                    BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null );
+                case "blur":
+                    try {
+                        float[] matrix = new float[400];
+                        for (int i = 0; i < 400; i++)
+                            matrix[i] = 1.0f/400.0f;
+                        BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null );
 
-                    BufferedImage i = null;
+                        BufferedImage i = null;
 
-                    ImageIO.write(op.filter(im, i), "png", f);
+                        ImageIO.write(op.filter(im, i), "png", f);
 
-                    m.sendFile(f);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                        m.sendFile(f);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
 
-                if (f.delete())
-                    System.err.println("Failed to delete file " + f.getPath());
-                return;
+                    if (f.delete())
+                        System.err.println("Failed to delete file " + f.getPath());
+                    return;
             }
 
             help(e, args);

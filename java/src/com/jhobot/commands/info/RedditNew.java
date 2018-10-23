@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class RedditTop implements Command {
+public class RedditNew implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -27,14 +27,14 @@ public class RedditTop implements Command {
             JSONObject post = null;
             try {
                 int index = 0;
-                post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=hot")
+                post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=new")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
                         .getJSONObject("data");
                 while (post.getBoolean("stickied")) {
                     index++;
-                    post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=hot")
+                    post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + ".json?sort=new")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)
@@ -61,7 +61,7 @@ public class RedditTop implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("rtop <subreddit>", "Displays the hottest post from a subreddit.");
-        return HelpHandler.helpCommand(st, "Reddit Top", e);
+        st.put("rnew <subreddit>", "Displays the most recent post from a subreddit.");
+        return HelpHandler.helpCommand(st, "Reddit New", e);
     }
 }

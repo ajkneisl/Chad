@@ -86,6 +86,7 @@ class Listener
         hash.put("im", new Message());
         hash.put("threads", new CurrentThreads());
         hash.put("rtop", new RedditTop());
+        hash.put("rnew", new RedditNew());
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
