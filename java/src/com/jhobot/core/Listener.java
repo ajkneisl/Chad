@@ -83,6 +83,7 @@ class Listener
         hash.put("rrl", new RussianRoulette());
         hash.put("purge", new Purge());
         hash.put("im", new Message());
+        hash.put("rtop", new RedditTop());
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
