@@ -21,17 +21,21 @@ public class JhoBot {
     public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
     public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(30);
     public static final PermissionsHandler PERMISSIONS_HANDLER = new PermissionsHandler();
-    public static final IDiscordClient cli = new ClientBuilder().withToken(JhoBot.JSON_HANDLER.get("token")).withRecommendedShardCount().build();
-    public static void main(String[] args)
-    {
-        /*
-        Creates bot
-         */
+    
+    // Checks if there's a token in the bot.json (if not it exits the program)
+    static {
         if (JhoBot.JSON_HANDLER.get("token").equals(""))
         {
-            System.err.println("No Token!");
+            System.out.println("No Token!");
             System.exit(1);
         }
+    }
+    
+    public static final IDiscordClient cli = new ClientBuilder().withToken(JhoBot.JSON_HANDLER.get("token")).withRecommendedShardCount().build();
+    
+    public static void main(String[] args)
+    {
+        // logs in and registers the listener
         cli.login();
         cli.getDispatcher().registerListener(new Listener());
     }
