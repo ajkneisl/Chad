@@ -4,12 +4,14 @@ import com.jhobot.core.JhoBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.ThreadCountHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +37,8 @@ public class CurrentThreads implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("threads", "Displays all running threads for users.");
+        return HelpHandler.helpCommand(st, "Current Threads", e);
     }
 }
