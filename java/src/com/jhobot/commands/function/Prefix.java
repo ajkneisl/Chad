@@ -1,7 +1,7 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.JhoBot;
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -18,7 +18,7 @@ public class Prefix implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
+            MessageHandler m = new MessageHandler(e.getChannel());
             if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
             {
                 m.sendError("You don't have permission for this!");
@@ -27,7 +27,7 @@ public class Prefix implements Command {
             if (args.size() == 0) {
                 EmbedBuilder b = new EmbedBuilder();
                 b.withTitle("Prefix");
-                b.withDesc("Your prefix is " + JhoBot.db.getString(e.getGuild(), "prefix"));
+                b.withDesc("Your prefix is " + JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"));
                 b.withFooterText(Util.getTimeStamp());
                 b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
                 m.sendEmbed(b.build());
@@ -38,10 +38,10 @@ public class Prefix implements Command {
             {
                 if (args.get(1).length() > 12)
                 {
-                    new Messages(e.getChannel()).sendError("Prefix can't be over 12 characters long!");
+                    new MessageHandler(e.getChannel()).sendError("Prefix can't be over 12 characters long!");
                 }
-                m.sendConfigLog("Prefix", args.get(1), JhoBot.db.getString(e.getGuild(), "prefix"), e.getAuthor(), e.getGuild(), JhoBot.db);
-                JhoBot.db.set(e.getGuild(), "prefix", args.get(1));
+                m.sendConfigLog("Prefix", args.get(1), JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
+                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "prefix", args.get(1));
                 m.send("Your prefix is now " + args.get(1), "Changed Prefix");
                 return;
             }

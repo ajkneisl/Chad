@@ -16,7 +16,7 @@ public class Help implements Command {
             IMessage m = RequestBuffer.request(() -> e.getChannel().sendMessage
                     (
                             "Fun : `catfact`, `catgallery`, `8ball`, `pe`, `random`, `rrl`\n" +
-                            "Function / Admin: `logging`, `prefix`\n" +
+                            "Function / Admin: `logging`, `prefix`, `purge`\n" +
                             "Info : `bug`, `guildinfo`, `help`, `jho`, `steam`, `updatelog`, `userinfo`\n" +
                             "Punishments : `ban`, `kick`"
                     )).get();

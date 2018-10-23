@@ -1,11 +1,21 @@
 package com.jhobot.core;
 
-import com.jhobot.handle.Messages;
-import com.jhobot.handle.commands.CommandHandler;
-import com.jhobot.handle.DB;
-import com.jhobot.handle.JSON;
+import com.jhobot.commands.admin.CurrentThreads;
+import com.jhobot.commands.fun.*;
+import com.jhobot.commands.function.Logging;
+import com.jhobot.commands.function.Message;
+import com.jhobot.commands.function.Prefix;
+import com.jhobot.commands.function.Purge;
+import com.jhobot.commands.info.*;
+import com.jhobot.commands.punishments.Ban;
+import com.jhobot.commands.punishments.Kick;
+import com.jhobot.handle.MessageHandler;
+import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
+import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.ThreadCountHandler;
 import com.jhobot.handle.ui.UIHandler;
+import com.sun.corba.se.impl.activation.CommandHandler;
 import org.bson.Document;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -18,25 +28,82 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Random;
 import java.util.Timer;
+import java.util.concurrent.Future;
 
 class Listener
 {
+    @SuppressWarnings({"unchecked", "LoopStatementThatDoesntLoop"})
     @EventSubscriber
     public void messageRecieved(MessageReceivedEvent e)
     {
-        CommandHandler.call(e);
+        // Gets the message, then splits all the different parts with a space.
+        String[] argArray = e.getMessage().getContent().split(" ");
+
+        // Returns if there are no arguments
+        if (argArray.length == 0)
+            return;
+
+        String prefix = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"); // to prevent multiple requests
+
+        // If the prefix isn't jho! it returns
+        if (!argArray[0].startsWith(prefix))
+            return;
+
+        // Gets the command string aka stuff after jho!
+        String commandString = argArray[0].substring(prefix.length()).toLowerCase();
+
+        // Gets the arguments & removes the command strings
+        List<String> args = new ArrayList<>(Arrays.asList(argArray));
+        args.remove(0);
+
+        if (!ThreadCountHandler.HANDLER.allowThread(e.getAuthor()))
+            return;
+
+        // command runner
+        HashMap<String, Command> hash = new HashMap<>();
+
+        hash.put("userinfo", new UserInfo());
+        hash.put("kick", new Kick());
+        hash.put("ban", new Ban());
+        hash.put("updatelog", new UpdateLog());
+        hash.put("steam", new Steam());
+        hash.put("jho", new Jho());
+        hash.put("guildinfo", new GuildInfo());
+        hash.put("prefix", new Prefix());
+        hash.put("logging", new Logging());
+        hash.put("random", new com.jhobot.commands.fun.Random());
+        hash.put("pe", new PhotoEditor());
+        hash.put("8ball", new EightBall());
+        hash.put("catgallery", new CatGallery());
+        hash.put("catfact", new CatFact());
+        hash.put("help", new Help());
+        hash.put("rrl", new RussianRoulette());
+        hash.put("purge", new Purge());
+        hash.put("im", new Message());
+        hash.put("threads", new CurrentThreads());
+        hash.put("rtop", new RedditTop());
+        hash.forEach((k, v) -> {
+            if (commandString.equalsIgnoreCase(k))
+            {
+                Future<?> thread;
+                if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
+                    thread = JhoBot.EXECUTOR.submit(v.help(e, args));
+                else
+                    thread = JhoBot.EXECUTOR.submit(v.run(e, args));
+                ThreadCountHandler.HANDLER.addThread(thread, e.getAuthor());
+            }
+        });
     }
 
     @EventSubscriber
     public void userJoin(UserJoinEvent e)
     {
         IGuild g = e.getGuild();
-        Messages m = new Messages(null);
+        MessageHandler m = new MessageHandler(null);
         EmbedBuilder b = new EmbedBuilder();
         Date date = Date.from(e.getGuild().getCreationDate());
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -46,11 +113,11 @@ class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Join Time", format.format(date), true);
 
-        m.sendLog(b.build(), JhoBot.db, g);
+        m.sendLog(b.build(), JhoBot.DATABASE_HANDLER, g);
 
-        String joinMsgCh = JhoBot.db.getString(e.getGuild(), "join_message_ch");
+        String joinMsgCh = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
 
-        if (!JhoBot.db.getBoolean(e.getGuild(), "join_msg_on"))
+        if (!JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "join_msg_on"))
             return;
         if (joinMsgCh.equalsIgnoreCase("none"))
             return;
@@ -61,16 +128,16 @@ class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = JhoBot.db.getString(e.getGuild(), "join_message");
+        String msg = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-        new Messages(ch).sendMessage(msg);
+        new MessageHandler(ch).sendMessage(msg);
     }
 
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
     {
         IGuild g = e.getGuild();
-        Messages m = new Messages(null);
+        MessageHandler m = new MessageHandler(null);
         EmbedBuilder b = new EmbedBuilder();
         Date date = Date.from(e.getGuild().getCreationDate());
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -80,11 +147,11 @@ class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Leave Time", format.format(date), true);
 
-        m.sendLog(b.build(), JhoBot.db, g);
+        m.sendLog(b.build(), JhoBot.DATABASE_HANDLER, g);
 
-        String leaveMsgCh = JhoBot.db.getString(e.getGuild(), "leave_message_ch");
+        String leaveMsgCh = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
 
-        if (!JhoBot.db.getBoolean(e.getGuild(), "leave_msg_on"))
+        if (!JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
             return;
         if (leaveMsgCh.equalsIgnoreCase("none"))
             return;
@@ -95,15 +162,15 @@ class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = JhoBot.db.getString(e.getGuild(), "leave_message");
+        String msg = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-        new Messages(ch).sendMessage(msg);
+        new MessageHandler(ch).sendMessage(msg);
     }
 
     @EventSubscriber
     public void joinGuild(GuildCreateEvent e)
     {
-        DB dbb = new DB(JSON.get("uri_link"));
+        DatabaseHandler dbb = JhoBot.DATABASE_HANDLER;
         if (!dbb.exists(e.getGuild()))
         {
             Document doc = new Document();
@@ -143,21 +210,24 @@ class Listener
     @EventSubscriber
     public void leaveGuild(GuildLeaveEvent e)
     {
-        DB db = new DB(JSON.get("uri_link"));
-        Document get = db.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
+        DatabaseHandler databaseHandler = JhoBot.DATABASE_HANDLER;
+        Document get = databaseHandler.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
         if (get == null)
             return;
 
-        db.getCollection().deleteOne(get);
+        databaseHandler.getCollection().deleteOne(get);
 
         System.out.println(Util.getTimeStamp() + " <" + e.getGuild().getStringID() + "> Left Guild");
     }
 
+
+
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
-        JhoBot.exec.execute(() -> {
+        // automatic presence updater
+        JhoBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
@@ -168,7 +238,8 @@ class Listener
             }, 0, 60000*5);
         });
 
-        JhoBot.exec.execute(() -> {
+        // automatic ui updater
+        JhoBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();
             UIHandler ui = new UIHandler(e.getClient());
             t.schedule(new TimerTask() {

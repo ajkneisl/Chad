@@ -1,6 +1,7 @@
 package com.jhobot.handle.commands;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IUser;
 
 import java.util.List;
 
