@@ -4,8 +4,10 @@ import com.jhobot.core.JhoBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
@@ -16,6 +18,11 @@ public class Message implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler m = new MessageHandler(e.getChannel());
+            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+            {
+                m.sendError("You don't have permissions for this!");
+                return;
+            }
             if (args.size() == 0)
             {
                 m.sendError("Invalid Arguments!");
@@ -233,5 +240,10 @@ public class Message implements Command {
         st.put("im setchannel <join/leave> <channel name>", "Toggles the join/leave messages.");
         st.put("Variables", "&guild&, &user&, &reason& (punishment)");
         return HelpHandler.helpCommand(st, "Message", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.ADMINISTRATOR;
     }
 }

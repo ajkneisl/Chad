@@ -4,6 +4,7 @@ import com.jhobot.core.JhoBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
@@ -95,5 +96,10 @@ public class Logging implements Command {
         st.put("logging set <true/false>", "Toggles the logging functionality.");
         st.put("logging setchannel <channel name>", "Sets the logging channel.");
         return HelpHandler.helpCommand(st, "Logging", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.ADMINISTRATOR;
     }
 }

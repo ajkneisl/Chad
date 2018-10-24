@@ -4,6 +4,7 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -19,7 +20,7 @@ public class Jho implements Command
         return () -> {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("jhobot");
-            b.withDesc("by sho!");
+            b.withDesc("by sho and CodeBase!");
             b.appendField("Version", Util.getCurrentVersion(), true);
             b.appendField("GitHub", "https://github.com/shoganeko/jhobot", true);
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
@@ -32,5 +33,10 @@ public class Jho implements Command
         HashMap<String, String> st = new HashMap<>();
         st.put("jho", "Gives information about the bot.");
         return HelpHandler.helpCommand(st, "Jho", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }

@@ -31,8 +31,11 @@ public class Util
             //add request header
             con.setRequestProperty("User-Agent", USER_AGENT);
             int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'GET' request to URL : " + url);
-            System.out.println("Response Code : " + responseCode);
+            if (responseCode != 200)
+            {
+                System.out.println("\nThere was an error sending a request to url : " + url);
+                System.out.println("Response Code : " + responseCode);
+            }
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -46,5 +49,13 @@ public class Util
             e.printStackTrace();
             return "";
         }
+    }
+
+    public static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }

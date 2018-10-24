@@ -4,6 +4,7 @@ import com.jhobot.core.JhoBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -108,5 +109,10 @@ public class Ban implements Command {
         st.put("ban <user>", "Bans a user with no reason.");
         st.put("ban <user> <reason>", "Bans a user with a specified reason.");
         return HelpHandler.helpCommand(st, "User Info", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MODERATOR;
     }
 }

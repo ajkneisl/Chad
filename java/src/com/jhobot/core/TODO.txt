@@ -1,18 +1,11 @@
-v0.3.3 (working on)
+v0.3.31
 
-known bugs >
-none yet? pog!~
-
-wanted commands >
-warning
-    ->
-        on a specific amount of warnings -> do selected punishment
-change log ->
-    changed file names
-    fixed file checking
-    made json an instance
-    added gamehandler
-    changed executor to cached pool
-    added reddithot
-
-
+Improved permissions checking for commands
+More Reddit commands
+Fix russian roulette
+PUBG stats
+Tic tac toe
+Rich presence message modification system
+System information command
+For fucks sake comment code you kikes (except sho hes a r/niceguys)
+Better debug features/debug mode

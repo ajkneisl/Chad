@@ -88,4 +88,32 @@ public class JSONHandler
     public org.json.JSONObject read(String url) throws JSONException {
         return new org.json.JSONObject(Util.httpGet(url));
     }
+
+    public org.json.JSONObject readFile(String file)
+    {
+        JSONParser parser = new JSONParser();
+        try {
+            Object obj = parser.parse(new FileReader(System.getenv("appdata") + "\\jho\\" + file));
+            org.json.JSONObject jsonObject  = (org.json.JSONObject) obj;
+            return jsonObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("readFile failed, returning null");
+        return null;
+    }
+
+    public void writeFile(String filep, String object, String input) throws IOException
+    {
+        File file = new File(System.getenv("appdata") + "\\jho\\" + filep);
+        String jsonString = Files.toString(file, Charsets.UTF_8);
+        JsonElement jelement = new JsonParser().parse(jsonString);
+        JsonObject jobject = jelement.getAsJsonObject();
+        jobject.addProperty(object, input);
+        Gson gson = new Gson();
+
+        String resultingJson = gson.toJson(jelement);
+
+        Files.write(resultingJson, file, Charsets.UTF_8);
+    }
 }

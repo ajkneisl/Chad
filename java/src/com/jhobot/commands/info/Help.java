@@ -2,6 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.RequestBuffer;
@@ -28,5 +29,10 @@ public class Help implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("help", "Displays all commands Jho has to offer.");
         return HelpHandler.helpCommand(st, "Help", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }

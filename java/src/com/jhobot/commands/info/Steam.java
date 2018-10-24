@@ -6,6 +6,7 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -172,6 +173,11 @@ public class Steam implements Command {
         st.put("steam profile <steam name>", "Gets a steam user's profile.");
         st.put("steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CS:GO stats.");
         return HelpHandler.helpCommand(st, "Steam", e);
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }
 

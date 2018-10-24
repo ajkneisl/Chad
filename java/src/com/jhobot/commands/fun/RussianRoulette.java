@@ -3,6 +3,7 @@ package com.jhobot.commands.fun;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -103,21 +104,30 @@ public class RussianRoulette implements Command
                     return;
                 }
             }
-            int r = new java.util.Random().nextInt(100);
             IUser win = null;
             IUser loser = null;
-            if (r >= 50) {
+
+            int r1 = new java.util.Random().nextInt(100);
+            int r2 = new java.util.Random().nextInt(100);
+
+            if (r1 > r2) {
                 win = e.getAuthor();
                 loser = u2;
             }
-            if (r < 50) {
+            if (r2 > r1) {
                 win = u2;
                 loser = e.getAuthor();
             }
 
             MessageBuilder b = new MessageBuilder(e.getClient()).withChannel(e.getChannel()).withContent("`" +win.getName()+"` is the winner! \n`"+loser.getName()+"`\uD83D\uDD2B");
+            //System.out.println("Debug: " + r);
             RequestBuffer.request(b::build);
             Thread.currentThread().interrupt();
         };
+    }
+
+    @Override
+    public PermissionLevels level() {
+        return PermissionLevels.MEMBER;
     }
 }

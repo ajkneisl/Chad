@@ -1,6 +1,9 @@
 package com.jhobot.core;
 
 import com.jhobot.commands.admin.CurrentThreads;
+import com.jhobot.commands.admin.GetLevel;
+import com.jhobot.commands.admin.ModifyPresence;
+import com.jhobot.commands.admin.SetLevel;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Message;
@@ -13,7 +16,9 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.PermissionsHandler;
 import com.jhobot.handle.commands.ThreadCountHandler;
+import com.jhobot.handle.commands.permissions.PermissionHandler;
 import com.jhobot.handle.ui.UIHandler;
 import com.sun.corba.se.impl.activation.CommandHandler;
 import org.bson.Document;
@@ -84,12 +89,24 @@ class Listener
         hash.put("rrl", new RussianRoulette());
         hash.put("purge", new Purge());
         hash.put("im", new Message());
-        hash.put("threads", new CurrentThreads());
+        hash.put("threads", new CurrentThreads()); // admin only/debug
         hash.put("rtop", new RedditTop());
+        hash.put("rnew", new RedditNew());
+        hash.put("systeminfo", new SystemInfo());
+        hash.put("modpresence", new ModifyPresence()); // admin only
+        hash.put("setlevel", new SetLevel());
+        hash.put("getlevel", new GetLevel());
+        hash.put("perms", new com.jhobot.commands.function.Permissions());
+        //System.out.println(e.getAuthor().getStringID() + " - " + Long.toString(e.getAuthor().getLongID()));
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
                 Future<?> thread;
+                // if the user doesnt have the required permission level, deny them access to the command
+                /*if (!PermissionHandler.HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+                {
+                    new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
+                }*/
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
                     thread = JhoBot.EXECUTOR.submit(v.help(e, args));
                 else
