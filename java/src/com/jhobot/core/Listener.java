@@ -16,7 +16,9 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.PermissionsHandler;
 import com.jhobot.handle.commands.ThreadCountHandler;
+import com.jhobot.handle.commands.permissions.PermissionHandler;
 import com.jhobot.handle.ui.UIHandler;
 import com.sun.corba.se.impl.activation.CommandHandler;
 import org.bson.Document;
@@ -94,16 +96,17 @@ class Listener
         hash.put("modpresence", new ModifyPresence()); // admin only
         hash.put("setlevel", new SetLevel());
         hash.put("getlevel", new GetLevel());
+        hash.put("perms", new com.jhobot.commands.function.Permissions());
         //System.out.println(e.getAuthor().getStringID() + " - " + Long.toString(e.getAuthor().getLongID()));
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
                 Future<?> thread;
                 // if the user doesnt have the required permission level, deny them access to the command
-                if (!JhoBot.PERMISSIONS_HANDLER.hasPermission(e.getAuthor(), v.level())) {
-                    new MessageHandler(e.getChannel()).sendError("You do not have permission to access this command!");
-                    return;
-                }
+                /*if (!PermissionHandler.HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+                {
+                    new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
+                }*/
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
                     thread = JhoBot.EXECUTOR.submit(v.help(e, args));
                 else
