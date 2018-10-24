@@ -1,6 +1,6 @@
 package com.jhobot.commands.function;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
@@ -28,7 +28,7 @@ public class Prefix implements Command {
             if (args.size() == 0) {
                 EmbedBuilder b = new EmbedBuilder();
                 b.withTitle("Prefix");
-                b.withDesc("Your prefix is " + JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"));
+                b.withDesc("Your prefix is " + ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"));
                 b.withFooterText(Util.getTimeStamp());
                 b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
                 m.sendEmbed(b.build());
@@ -41,8 +41,8 @@ public class Prefix implements Command {
                 {
                     new MessageHandler(e.getChannel()).sendError("Prefix can't be over 12 characters long!");
                 }
-                m.sendConfigLog("Prefix", args.get(1), JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
-                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "prefix", args.get(1));
+                m.sendConfigLog("Prefix", args.get(1), ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"), e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                ChadBot.DATABASE_HANDLER.set(e.getGuild(), "prefix", args.get(1));
                 m.send("Your prefix is now " + args.get(1), "Changed Prefix");
                 return;
             }

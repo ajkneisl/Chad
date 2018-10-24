@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class JhoBot {
+public class ChadBot {
     public static final JSONHandler JSON_HANDLER = new JSONHandler().forceCheck();
     public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
     public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(30);
@@ -24,14 +24,14 @@ public class JhoBot {
     
     // Checks if there's a token in the bot.json (if not it exits the program)
     static {
-        if (JhoBot.JSON_HANDLER.get("token").equals(""))
+        if (ChadBot.JSON_HANDLER.get("token").equals(""))
         {
             System.out.println("No Token!");
             System.exit(1);
         }
     }
     
-    public static final IDiscordClient cli = new ClientBuilder().withToken(JhoBot.JSON_HANDLER.get("token")).withRecommendedShardCount().build();
+    public static final IDiscordClient cli = new ClientBuilder().withToken(ChadBot.JSON_HANDLER.get("token")).withRecommendedShardCount().build();
     
     public static void main(String[] args)
     {

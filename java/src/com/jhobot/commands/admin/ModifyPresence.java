@@ -1,6 +1,6 @@
 package com.jhobot.commands.admin;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -17,7 +17,7 @@ public class ModifyPresence implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            JhoBot.cli.changePresence(StatusType.ONLINE, ActivityType.PLAYING, args.get(0));
+            ChadBot.cli.changePresence(StatusType.ONLINE, ActivityType.PLAYING, args.get(0));
 
             new MessageHandler(e.getChannel()).sendMessage("Changed presence to \"" + args.get(0) + "\"");
         };

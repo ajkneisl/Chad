@@ -1,6 +1,6 @@
 package com.jhobot.handle.commands.permissions;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.commands.Command;
 import org.bson.BsonArray;
 import org.bson.Document;
@@ -27,9 +27,9 @@ public class PermissionHandler
     {
         for (IRole r : user.getRolesForGuild(g))
         {
-            if (JhoBot.DATABASE_HANDLER.getArray(g, r.getStringID()) != null)
+            if (ChadBot.DATABASE_HANDLER.getArray(g, r.getStringID()) != null)
             {
-                if (JhoBot.DATABASE_HANDLER.getArray(g, r.getStringID()).contains(command))
+                if (ChadBot.DATABASE_HANDLER.getArray(g, r.getStringID()).contains(command))
                     return true;
             }
         }
@@ -41,24 +41,24 @@ public class PermissionHandler
         if (!parseCommands(commands))
             return false;
 
-        if (JhoBot.DATABASE_HANDLER.getString(role.getGuild(), role.getStringID()) == null)
+        if (ChadBot.DATABASE_HANDLER.getString(role.getGuild(), role.getStringID()) == null)
         {
-            Document get = JhoBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+            Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
 
             if (get == null)
                 return false;
 
             ArrayList<String> ar = new ArrayList<>(Arrays.asList(commands));
-            JhoBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), Arrays.asList(commands))));
+            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), Arrays.asList(commands))));
             return true;
         }
         else {
-            Document get = JhoBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+            Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
 
             if (get == null)
                 return false;
 
-            JhoBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), JhoBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).addAll(Arrays.asList(commands)))));
+            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).addAll(Arrays.asList(commands)))));
             return true;
         }
     }
@@ -68,15 +68,15 @@ public class PermissionHandler
         if (!parseCommands(commands))
             return false;
 
-        if (JhoBot.DATABASE_HANDLER.getString(role.getGuild(), role.getStringID()) == null)
+        if (ChadBot.DATABASE_HANDLER.getString(role.getGuild(), role.getStringID()) == null)
             return false;
         else {
-            Document get = JhoBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+            Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
 
             if (get == null)
                 return false;
 
-            JhoBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), JhoBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).removeAll(Arrays.asList(commands)))));
+            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).removeAll(Arrays.asList(commands)))));
             return true;
         }
 

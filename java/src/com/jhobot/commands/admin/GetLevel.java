@@ -1,6 +1,6 @@
 package com.jhobot.commands.admin;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -15,7 +15,7 @@ public class GetLevel implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            new MessageHandler(e.getChannel()).send(JhoBot.PERMISSIONS_HANDLER.getLevel(e.getAuthor()).toString(), e.getAuthor().getName());
+            new MessageHandler(e.getChannel()).send(ChadBot.PERMISSIONS_HANDLER.getLevel(e.getAuthor()).toString(), e.getAuthor().getName());
         };
     }
 

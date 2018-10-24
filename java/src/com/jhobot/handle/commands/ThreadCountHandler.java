@@ -1,6 +1,6 @@
 package com.jhobot.handle.commands;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import org.checkerframework.checker.units.qual.C;
 import sx.blah.discord.handle.obj.IUser;
 
@@ -24,7 +24,7 @@ public class ThreadCountHandler
                 constant();
             }
         }, 0, 1000));
-        JhoBot.EXECUTOR.submit(th);
+        ChadBot.EXECUTOR.submit(th);
     }
 
     @SuppressWarnings("all")

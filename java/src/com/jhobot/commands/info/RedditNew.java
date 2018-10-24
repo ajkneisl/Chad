@@ -1,6 +1,6 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
@@ -28,14 +28,14 @@ public class RedditNew implements Command {
             JSONObject post = null;
             try {
                 int index = 0;
-                post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                post = ChadBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
                         .getJSONObject("data");
                 while (post.getBoolean("stickied")) {
                     index++;
-                    post = JhoBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                    post = ChadBot.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)
