@@ -6,6 +6,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Chad</title>
+    <style>
+        $('#le').hover(
+       function(){ $(this).addClass('active') },
+       function(){ $(this).removeClass('active') }
+       )
+    </style>
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -49,10 +55,10 @@
             <h4 class="col-sm">The features for Chad.</h4>
             <br />
             <div class="list-group">
-            <a href="#punishments" class="list-group-item list-group-item-action">Punishments</a>
-            <a href="#fun" class="list-group-item list-group-item-action">Fun Commands</a>
-            <a href="#infocmd" class="list-group-item list-group-item-action">Informational Commands</a>
-            <a href="#funccmds" class="list-group-item list-group-item-action">Function Commands</a>
+            <a href="#punishments" id="le" class="list-group-item list-group-item-action">Punishments</a>
+            <a href="#fun" id="le" class="list-group-item list-group-item-action">Fun Commands</a>
+            <a href="#infocmd" id="le" class="list-group-item list-group-item-action">Informational Commands</a>
+            <a href="#funccmds" id="le" class="list-group-item list-group-item-action">Function Commands</a>
             </div>
         </div>
     </div>
