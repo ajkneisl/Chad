@@ -1,6 +1,6 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -47,7 +47,7 @@ public class GuildInfo implements Command {
             b.withImage(e.getGuild().getIconURL());
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
-            new Messages(e.getChannel()).sendEmbed(b.build());
+            new MessageHandler(e.getChannel()).sendEmbed(b.build());
         };
     }
 

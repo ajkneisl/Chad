@@ -1,7 +1,7 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.JhoBot;
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -15,7 +15,7 @@ public class Message implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
+            MessageHandler m = new MessageHandler(e.getChannel());
             if (args.size() == 0)
             {
                 m.sendError("Invalid Arguments!");
@@ -31,10 +31,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = JhoBot.db.getString(e.getGuild(), "join_message");
-                JhoBot.db.set(e.getGuild(), "join_message", sb.toString().trim());
+                String old = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
+                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "join_message", sb.toString().trim());
                 m.sendMessage("Set the guild's join message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Join Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.db);
+                m.sendConfigLog("Join Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                 return;
             }
 
@@ -47,10 +47,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = JhoBot.db.getString(e.getGuild(), "leave_message");
-                JhoBot.db.set(e.getGuild(), "leave_message", sb.toString().trim());
+                String old = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
+                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "leave_message", sb.toString().trim());
                 m.sendMessage("Set the guild's leave message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Leave Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.db);
+                m.sendConfigLog("Leave Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                 return;
             }
             if (args.size() >= 2 && args.get(0).equalsIgnoreCase("ban"))
@@ -62,10 +62,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = JhoBot.db.getString(e.getGuild(), "ban_message");
-                JhoBot.db.set(e.getGuild(), "ban_message", sb.toString().trim());
+                String old = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "ban_message");
+                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "ban_message", sb.toString().trim());
                 m.sendMessage("Set the guild's ban message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Ban Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.db);
+                m.sendConfigLog("Ban Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                 return;
             }
 
@@ -78,10 +78,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = JhoBot.db.getString(e.getGuild(), "kick_message");
-                JhoBot.db.set(e.getGuild(), "kick_message", sb.toString().trim());
+                String old = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "kick_message");
+                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "kick_message", sb.toString().trim());
                 m.sendMessage("Set the guild's kick message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Kick Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.db);
+                m.sendConfigLog("Kick Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                 return;
             }
 
@@ -101,29 +101,29 @@ public class Message implements Command {
                 if (args.get(1).equalsIgnoreCase("join"))
                 {
                     m.sendMessage("Set the guild's join message toggle to `"+set+"`");
-                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.db.getBoolean(e.getGuild(),"join_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.db);
-                    JhoBot.db.set(e.getGuild(), "join_msg_on", set);
+                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"join_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
+                    JhoBot.DATABASE_HANDLER.set(e.getGuild(), "join_msg_on", set);
                     return;
                 }
                 if (args.get(1).equalsIgnoreCase("ban"))
                 {
                     m.sendMessage("Set the guild's ban message toggle to `"+set+"`");
-                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.db.getBoolean(e.getGuild(),"ban_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.db);
-                    JhoBot.db.set(e.getGuild(), "ban_msg_on", set);
+                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"ban_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
+                    JhoBot.DATABASE_HANDLER.set(e.getGuild(), "ban_msg_on", set);
                     return;
                 }
                 if (args.get(1).equalsIgnoreCase("kick"))
                 {
                     m.sendMessage("Set the guild's kick message toggle to `"+set+"`");
-                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.db.getBoolean(e.getGuild(),"kick_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.db);
-                    JhoBot.db.set(e.getGuild(), "kick_msg_on", set);
+                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"kick_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
+                    JhoBot.DATABASE_HANDLER.set(e.getGuild(), "kick_msg_on", set);
                     return;
                 }
                 if (args.get(1).equalsIgnoreCase("leave"))
                 {
                     m.sendMessage("Set the guild's leave message toggle to `"+set+"`");
-                    m.sendConfigLog("Leave Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.db.getBoolean(e.getGuild(),"leave_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.db);
-                    JhoBot.db.set(e.getGuild(), "leave_msg_on", set);
+                    m.sendConfigLog("Leave Message Toggle", Boolean.toString(set), Boolean.toString(JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"leave_msg_on")), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
+                    JhoBot.DATABASE_HANDLER.set(e.getGuild(), "leave_msg_on", set);
                     return;
                 }
                 m.sendError("Invalid Type!");
@@ -137,7 +137,7 @@ public class Message implements Command {
                     String oldName;
                     IChannel newChannel;
                     IChannel oldChannel;
-                    String channelString = JhoBot.db.getString(e.getGuild(), "join_message_ch");
+                    String channelString = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
 
                     if (channelString.equalsIgnoreCase("none"))
                         oldName = "none";
@@ -168,9 +168,9 @@ public class Message implements Command {
 
                     newChannel = l.get(0);
 
-                    JhoBot.db.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
+                    JhoBot.DATABASE_HANDLER.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
                     m.sendMessage("Set the guild's join channel to `"+newChannel.getName()+"`");
-                    m.sendConfigLog("Join Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), JhoBot.db);
+                    m.sendConfigLog("Join Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                     return;
                 }
 
@@ -180,7 +180,7 @@ public class Message implements Command {
                     String oldName;
                     IChannel newChannel;
                     IChannel oldChannel;
-                    String channelString = JhoBot.db.getString(e.getGuild(), "leave_message_ch");
+                    String channelString = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
 
                     if (channelString.equalsIgnoreCase("none"))
                         oldName = "none";
@@ -211,9 +211,9 @@ public class Message implements Command {
 
                     newChannel = l.get(0);
 
-                    JhoBot.db.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
+                    JhoBot.DATABASE_HANDLER.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
                     m.sendMessage("Set the guild's leave channel to `"+newChannel.getName()+"`");
-                    m.sendConfigLog("Leave Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), JhoBot.db);
+                    m.sendConfigLog("Leave Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                     return;
                 }
                 m.sendError("Invalid Type!");

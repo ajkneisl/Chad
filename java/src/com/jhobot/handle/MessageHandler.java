@@ -13,10 +13,10 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Random;
 
-public class Messages
+public class MessageHandler
 {
     private final IChannel channel;
-    public Messages(IChannel ch)
+    public MessageHandler(IChannel ch)
     {
         this.channel = ch;
     }
@@ -60,16 +60,16 @@ public class Messages
         });
     }
 
-    public void sendLog(EmbedObject e, DB db, IGuild g)
+    public void sendLog(EmbedObject e, DatabaseHandler databaseHandler, IGuild g)
     {
-        if (!db.getBoolean(g, "logging"))
+        if (!databaseHandler.getBoolean(g, "logging"))
             return;
-        if (db.getString(g, "logging_channel").equalsIgnoreCase("none"))
+        if (databaseHandler.getString(g, "logging_channel").equalsIgnoreCase("none"))
             return;
 
         try {
             RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(db.getString(g, "logging_channel"))).sendMessage(e);
+                g.getChannelByID(Long.parseLong(databaseHandler.getString(g, "logging_channel"))).sendMessage(e);
             });
         } catch (NumberFormatException ee)
         {
@@ -77,11 +77,11 @@ public class Messages
         }
     }
 
-    public void sendPunishLog(String punishment, IUser punished, IUser punisher, DB db, IGuild g, List<String> reason)
+    public void sendPunishLog(String punishment, IUser punished, IUser punisher, DatabaseHandler databaseHandler, IGuild g, List<String> reason)
     {
-        if (!db.getBoolean(g, "logging"))
+        if (!databaseHandler.getBoolean(g, "logging"))
             return;
-        if (db.getString(g, "logging_channel").equalsIgnoreCase("none"))
+        if (databaseHandler.getString(g, "logging_channel").equalsIgnoreCase("none"))
             return;
 
         StringBuilder sb = new StringBuilder();
@@ -94,7 +94,7 @@ public class Messages
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         try {
             RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(db.getString(g, "logging_channel"))).sendMessage(b.build());
+                g.getChannelByID(Long.parseLong(databaseHandler.getString(g, "logging_channel"))).sendMessage(b.build());
             });
         } catch (NumberFormatException ee)
         {
@@ -102,18 +102,18 @@ public class Messages
         }
     }
 
-    public void sendConfigLog(String changedVal, String newval, String oldval, IUser mod, IGuild g, DB db)
+    public void sendConfigLog(String changedVal, String newval, String oldval, IUser mod, IGuild g, DatabaseHandler databaseHandler)
     {
-        if (!db.getBoolean(g, "logging"))
+        if (!databaseHandler.getBoolean(g, "logging"))
             return;
-        if (db.getString(g, "logging_channel").equalsIgnoreCase("none"))
+        if (databaseHandler.getString(g, "logging_channel").equalsIgnoreCase("none"))
             return;
 
         EmbedBuilder b = new EmbedBuilder().withTitle("Config Change : " + changedVal).appendField("New Value", newval, true).appendField("Old Value", oldval, true).appendField("Admin", mod.getName(), true).withFooterText(Util.getTimeStamp());
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         try {
             RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(db.getString(g, "logging_channel"))).sendMessage(b.build());
+                g.getChannelByID(Long.parseLong(databaseHandler.getString(g, "logging_channel"))).sendMessage(b.build());
             });
         } catch (NumberFormatException ee)
         {

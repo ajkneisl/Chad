@@ -1,6 +1,6 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -33,7 +33,7 @@ public class UserInfo implements Command {
 
                 if (e.getGuild().getUsersByName(sb.toString().trim()).isEmpty())
                 {
-                    new Messages(e.getChannel()).sendError("Invalid User");
+                    new MessageHandler(e.getChannel()).sendError("Invalid User");
                     return;
                 }
 
@@ -66,7 +66,7 @@ public class UserInfo implements Command {
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
 
-            new Messages(e.getChannel()).sendEmbed(b.build());
+            new MessageHandler(e.getChannel()).sendEmbed(b.build());
         };
     }
 

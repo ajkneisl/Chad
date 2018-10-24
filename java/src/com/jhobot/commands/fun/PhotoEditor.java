@@ -1,15 +1,11 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.core.JhoBot;
-import com.jhobot.handle.Messages;
-import com.jhobot.handle.Util;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.util.EmbedBuilder;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
@@ -25,7 +21,7 @@ public class PhotoEditor implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
+            MessageHandler m = new MessageHandler(e.getChannel());
             if (e.getMessage().getAttachments().isEmpty())
             {
                 m.sendError("No file was found!");

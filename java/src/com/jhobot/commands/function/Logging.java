@@ -1,7 +1,7 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.JhoBot;
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -15,7 +15,7 @@ public class Logging implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
+            MessageHandler m = new MessageHandler(e.getChannel());
 
             if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
             {
@@ -42,8 +42,8 @@ public class Logging implements Command {
                     return;
                 }
 
-                JhoBot.db.set(e.getGuild(), "logging", Boolean.parseBoolean(bool));
-                m.sendConfigLog("Logging", bool, Boolean.toString(JhoBot.db.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild(), JhoBot.db);
+                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "logging", Boolean.parseBoolean(bool));
+                m.sendConfigLog("Logging", bool, Boolean.toString(JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                 m.send("Changed logging to " + bool, "Changed Logging");
 
                 return;
@@ -61,7 +61,7 @@ public class Logging implements Command {
 
                 if (e.getGuild().getChannelsByName(b.toString().trim()).isEmpty())
                 {
-                    new Messages(e.getChannel()).sendError("Invalid Channel");
+                    new MessageHandler(e.getChannel()).sendError("Invalid Channel");
                     return;
                 }
 
@@ -73,15 +73,15 @@ public class Logging implements Command {
                     return;
                 }
 
-                if (JhoBot.db.getString(e.getGuild(), "logging_channel").equalsIgnoreCase("none"))
+                if (JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel").equalsIgnoreCase("none"))
                 {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild(), JhoBot.db);
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                 }
                 else {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(JhoBot.db.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild(), JhoBot.db);
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild(), JhoBot.DATABASE_HANDLER);
                 }
                 m.send("Changed logging channel to " + b.toString().trim(), "Changed Logging Channel");
-                JhoBot.db.set(e.getGuild(), "logging_channel", ch.getStringID());
+                JhoBot.DATABASE_HANDLER.set(e.getGuild(), "logging_channel", ch.getStringID());
                 return;
             }
 

@@ -1,6 +1,6 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.handle.Messages;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -17,7 +17,7 @@ public class UpdateLog implements Command
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            Messages m = new Messages(e.getChannel());
+            MessageHandler m = new MessageHandler(e.getChannel());
             if (args.size() == 0)
             {
                 EmbedBuilder b = new EmbedBuilder();
