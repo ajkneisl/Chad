@@ -7,9 +7,10 @@ and if it doesn't have it it will notify.
 ##### Links
 [Commands](commands.md)
 [Planned/Bugs](plansandbugs.md)
+[Permissions](permissions.md)
 
 ##### Current Version
-v0.3.3
+v0.4.0 BETA
 
 ##### Support Server / Testing Server
 https://discord.gg/EEHKTW
