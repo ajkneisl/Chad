@@ -42,6 +42,11 @@ public class PhotoEditor implements Command {
                 e1.printStackTrace();
             }
             File f = new File(System.getenv("appdata") + "\\jho\\imgcache\\img" + new java.util.Random().nextInt(2000) + ".png");
+            
+            while (f.exists())
+            {
+                f = new File(System.getenv("appdata") + "\\jho\\imgcache\\img" + new java.util.Random().nextInt(2000) + ".png");
+            }
 
             switch (args.get(0).toLowerCase())
             {
