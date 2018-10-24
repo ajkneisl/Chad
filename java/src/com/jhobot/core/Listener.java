@@ -52,7 +52,7 @@ class Listener
         if (argArray.length == 0)
             return;
 
-        String prefix = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"); // to prevent multiple requests
+        String prefix = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix"); // to prevent multiple requests
 
         // If the prefix isn't jho! it returns
         if (!argArray[0].startsWith(prefix))
@@ -76,7 +76,7 @@ class Listener
         hash.put("ban", new Ban());
         hash.put("updatelog", new UpdateLog());
         hash.put("steam", new Steam());
-        hash.put("jho", new Jho());
+        hash.put("chad", new Chad());
         hash.put("guildinfo", new GuildInfo());
         hash.put("prefix", new Prefix());
         hash.put("logging", new Logging());
@@ -108,9 +108,9 @@ class Listener
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
                 }*/
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
-                    thread = JhoBot.EXECUTOR.submit(v.help(e, args));
+                    thread = ChadBot.EXECUTOR.submit(v.help(e, args));
                 else
-                    thread = JhoBot.EXECUTOR.submit(v.run(e, args));
+                    thread = ChadBot.EXECUTOR.submit(v.run(e, args));
                 ThreadCountHandler.HANDLER.addThread(thread, e.getAuthor());
             }
         });
@@ -130,11 +130,11 @@ class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Join Time", format.format(date), true);
 
-        m.sendLog(b.build(), JhoBot.DATABASE_HANDLER, g);
+        m.sendLog(b.build(), ChadBot.DATABASE_HANDLER, g);
 
-        String joinMsgCh = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
+        String joinMsgCh = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
 
-        if (!JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "join_msg_on"))
+        if (!ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "join_msg_on"))
             return;
         if (joinMsgCh.equalsIgnoreCase("none"))
             return;
@@ -145,7 +145,7 @@ class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
+        String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
         new MessageHandler(ch).sendMessage(msg);
     }
@@ -164,11 +164,11 @@ class Listener
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Leave Time", format.format(date), true);
 
-        m.sendLog(b.build(), JhoBot.DATABASE_HANDLER, g);
+        m.sendLog(b.build(), ChadBot.DATABASE_HANDLER, g);
 
-        String leaveMsgCh = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
+        String leaveMsgCh = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
 
-        if (!JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
+        if (!ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
             return;
         if (leaveMsgCh.equalsIgnoreCase("none"))
             return;
@@ -179,7 +179,7 @@ class Listener
         if (ch.isDeleted())
             return;
 
-        String msg = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
+        String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
         msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
         new MessageHandler(ch).sendMessage(msg);
     }
@@ -187,7 +187,7 @@ class Listener
     @EventSubscriber
     public void joinGuild(GuildCreateEvent e)
     {
-        DatabaseHandler dbb = JhoBot.DATABASE_HANDLER;
+        DatabaseHandler dbb = ChadBot.DATABASE_HANDLER;
         if (!dbb.exists(e.getGuild()))
         {
             Document doc = new Document();
@@ -227,7 +227,7 @@ class Listener
     @EventSubscriber
     public void leaveGuild(GuildLeaveEvent e)
     {
-        DatabaseHandler databaseHandler = JhoBot.DATABASE_HANDLER;
+        DatabaseHandler databaseHandler = ChadBot.DATABASE_HANDLER;
         Document get = databaseHandler.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
         if (get == null)
@@ -244,7 +244,7 @@ class Listener
     public void onReadyEvent(ReadyEvent e)
     {
         // automatic presence updater
-        JhoBot.EXECUTOR.submit(() -> {
+        ChadBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
@@ -256,7 +256,7 @@ class Listener
         });
 
         // automatic ui updater
-        JhoBot.EXECUTOR.submit(() -> {
+        ChadBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();
             UIHandler ui = new UIHandler(e.getClient());
             t.schedule(new TimerTask() {

@@ -1,6 +1,6 @@
 package com.jhobot.commands.admin;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.PermissionLevels;
@@ -16,7 +16,7 @@ public class SetLevel implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
             IUser user = e.getMessage().getMentions().get(0);
-            JhoBot.PERMISSIONS_HANDLER.setPermission(user, PermissionLevels.valueOf(args.get(1)));
+            ChadBot.PERMISSIONS_HANDLER.setPermission(user, PermissionLevels.valueOf(args.get(1)));
         };
     }
 

@@ -13,16 +13,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class Jho implements Command
+public class Chad implements Command
 {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("jhobot");
+            b.withTitle("Chad");
             b.withDesc("by sho and CodeBase!");
             b.appendField("Version", Util.getCurrentVersion(), true);
-            b.appendField("GitHub", "https://github.com/shoganeko/jhobot", true);
+            b.appendField("GitHub", "https://github.com/shoganeko/Chad", true);
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
         };
@@ -31,8 +31,8 @@ public class Jho implements Command
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("jho", "Gives information about the bot.");
-        return HelpHandler.helpCommand(st, "Jho", e);
+        st.put("chad", "Gives information about the bot.");
+        return HelpHandler.helpCommand(st, "Chad", e);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.jhobot.commands.punishments;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
@@ -80,9 +80,9 @@ public class Kick implements Command {
                 sb2.append(s).append(" ");
             }
 
-            if (JhoBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "kick_msg_on"))
+            if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "kick_msg_on"))
             {
-                String msg = JhoBot.DATABASE_HANDLER.getString(e.getGuild(), "kick_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
+                String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "kick_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
                 if (!user.isBot())
                     new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(msg).build();
             }
@@ -92,13 +92,13 @@ public class Kick implements Command {
                 e.getGuild().kickUser(user);
                 reason.add("None");
                 m.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
-                m.sendPunishLog("Kick", user, e.getAuthor(), JhoBot.DATABASE_HANDLER, e.getGuild(), reason);
+                m.sendPunishLog("Kick", user, e.getAuthor(), ChadBot.DATABASE_HANDLER, e.getGuild(), reason);
                 return;
             }
 
             e.getGuild().kickUser(user);
             m.send("Successfully kicked " + user.getName() + " for " + sb2.toString().trim() + ".", "Kicked User");
-            m.sendPunishLog("Kick", user, e.getAuthor(), JhoBot.DATABASE_HANDLER, e.getGuild(), reason);
+            m.sendPunishLog("Kick", user, e.getAuthor(), ChadBot.DATABASE_HANDLER, e.getGuild(), reason);
         };
     }
 

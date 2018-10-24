@@ -1,6 +1,6 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.core.JhoBot;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
@@ -56,7 +56,7 @@ public class Random implements Command {
             if (args.get(0).equalsIgnoreCase("quote"))
             {
                 try {
-                    JSONObject obj = JhoBot.JSON_HANDLER.read("https://talaikis.com/api/quotes/random/");
+                    JSONObject obj = ChadBot.JSON_HANDLER.read("https://talaikis.com/api/quotes/random/");
                     EmbedBuilder b = new EmbedBuilder();
                     b.withTitle("Random Quote");
                     b.appendField("Author", obj.getString("author"), true);
