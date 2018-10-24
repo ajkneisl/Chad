@@ -1,5 +1,7 @@
 package com.jhobot.commands.function;
 
+import com.jhobot.core.ChadBot;
+import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.PermissionLevels;
@@ -18,6 +20,7 @@ public class Permissions implements Command {
         return () -> {
             MessageHandler m = new MessageHandler(e.getChannel());
             // j!perms role <role> add <perm>
+            System.out.println("Permissions.run");
             if (args.size() >= 4 && args.get(0).equalsIgnoreCase("role"))
             {
                 args.remove(0);
@@ -38,6 +41,7 @@ public class Permissions implements Command {
                 if (r == null)
                 {
                     m.sendError("Invalid Role!");
+                    ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid Role!", LogLevel.WARNING);
                     return;
                 }
 
@@ -55,17 +59,22 @@ public class Permissions implements Command {
                     b.withTitle("Permissions : " + r.getName());
                     h.forEach((k, v) -> {
                         String s = "";
-                        if (v)
+                        if (v) {
                             s = "Successfully added!";
-                        else
+                            ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Successfully added!", LogLevel.INFO);
+                        } else {
                             s = "Invalid";
+                            ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid", LogLevel.WARNING);
+                        }
                         b.appendField(k, s, true);
                     });
                     m.sendEmbed(b.build());
                 }
                 m.sendError("Invalid Arguments!");
+                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid Arguments!", LogLevel.WARNING);
             }
             m.sendError("Invalid Arguments");
+            ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid Arguments", LogLevel.WARNING);
         };
     }
 
@@ -76,6 +85,6 @@ public class Permissions implements Command {
 
     @Override
     public PermissionLevels level() {
-        return PermissionLevels.MEMBER;
+        return PermissionLevels.SYSTEM_ADMINISTRATOR;
     }
 }

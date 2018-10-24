@@ -9,6 +9,7 @@ import com.jhobot.commands.function.Purge;
 import com.jhobot.commands.info.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
+import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
@@ -99,6 +100,7 @@ class Listener
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
+                ChadBot.DEBUG_HANDLER.internalLog("chad.internal.listener", "Running command: " + k, LogLevel.INFO);
                 Future<?> thread;
                 // if the user doesnt have the required permission level, deny them access to the command
                 /*if (!PermissionHandler.HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))

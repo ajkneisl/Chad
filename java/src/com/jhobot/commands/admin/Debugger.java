@@ -22,9 +22,8 @@ public class Debugger implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
             String domain = args.get(0);
-            LogLevel level = LogLevel.INFO;
             if (args.size() > 1) {
-                level = LogLevel.valueOf(args.get(1));
+                LogLevel level = LogLevel.valueOf(args.get(1).toUpperCase());
                 List<Log> logs = ChadBot.DEBUG_HANDLER.getLogs(domain, level);
                 EmbedBuilder b = new EmbedBuilder();
                 b.withTitle("Internal Log");
@@ -38,7 +37,17 @@ public class Debugger implements Command {
                 new MessageHandler(e.getChannel()).sendEmbed(b.build());
                 return;
             }
-            List<Log> logs = ChadBot.DEBUG_HANDLER.getLogs(domain, level);
+            List<Log> logs = ChadBot.DEBUG_HANDLER.getLogs(domain);
+            EmbedBuilder b = new EmbedBuilder();
+            b.withTitle("Internal Log");
+            b.withDesc(domain);
+            for (Log log : logs) {
+                b.appendField("Level", log.level.toString(), false);
+                b.appendField("Message", log.message, false);
+            }
+            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+            b.withFooterText(Util.getTimeStamp());
+            new MessageHandler(e.getChannel()).sendEmbed(b.build());
         };
     }
 
