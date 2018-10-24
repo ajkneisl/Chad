@@ -1,6 +1,7 @@
 package com.jhobot.core;
 
 import com.jhobot.handle.DatabaseHandler;
+import com.jhobot.handle.DebugHandler;
 import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.commands.PermissionsHandler;
 import com.jhobot.handle.commands.ThreadCountHandler;
@@ -21,6 +22,7 @@ public class ChadBot {
     public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
     public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(30);
     public static final PermissionsHandler PERMISSIONS_HANDLER = new PermissionsHandler();
+    public static final DebugHandler DEBUG_HANDLER = new DebugHandler();
     
     // Checks if there's a token in the bot.json (if not it exits the program)
     static {

@@ -1,9 +1,6 @@
 package com.jhobot.core;
 
-import com.jhobot.commands.admin.CurrentThreads;
-import com.jhobot.commands.admin.GetLevel;
-import com.jhobot.commands.admin.ModifyPresence;
-import com.jhobot.commands.admin.SetLevel;
+import com.jhobot.commands.admin.*;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.Logging;
 import com.jhobot.commands.function.Message;
@@ -97,6 +94,7 @@ class Listener
         hash.put("setlevel", new SetLevel());
         hash.put("getlevel", new GetLevel());
         hash.put("perms", new com.jhobot.commands.function.Permissions());
+        hash.put("debugger", new Debugger());
         //System.out.println(e.getAuthor().getStringID() + " - " + Long.toString(e.getAuthor().getLongID()));
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
