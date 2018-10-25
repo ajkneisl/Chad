@@ -119,6 +119,7 @@ class Listener
     @EventSubscriber
     public void userJoin(UserJoinEvent e)
     {
+        // for logging
         IGuild g = e.getGuild();
         MessageHandler m = new MessageHandler(null);
         EmbedBuilder b = new EmbedBuilder();
@@ -132,27 +133,28 @@ class Listener
 
         m.sendLog(b.build(), ChadBot.DATABASE_HANDLER, g);
 
-        String joinMsgCh = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
 
-        if (!ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "join_msg_on"))
-            return;
-        if (joinMsgCh.equalsIgnoreCase("none"))
-            return;
+        if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "join_msg_on"))
+        {
+            String joinMsgCh = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
+            if (!joinMsgCh.equalsIgnoreCase("none")) {
+                Long id = Long.parseLong(joinMsgCh);
+                IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
+                if (!ch.isDeleted())
+                {
+                    String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
+                    msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
+                    new MessageHandler(ch).sendMessage(msg);
+                }
+            }
+        }
 
-        Long id = Long.parseLong(joinMsgCh);
-        IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
-
-        if (ch.isDeleted())
-            return;
-
-        String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
-        msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-        new MessageHandler(ch).sendMessage(msg);
     }
 
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
     {
+        // for logging
         IGuild g = e.getGuild();
         MessageHandler m = new MessageHandler(null);
         EmbedBuilder b = new EmbedBuilder();
@@ -166,22 +168,21 @@ class Listener
 
         m.sendLog(b.build(), ChadBot.DATABASE_HANDLER, g);
 
-        String leaveMsgCh = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
-
-        if (!ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
-            return;
-        if (leaveMsgCh.equalsIgnoreCase("none"))
-            return;
-
-        Long id = Long.parseLong(leaveMsgCh);
-        IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
-
-        if (ch.isDeleted())
-            return;
-
-        String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
-        msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-        new MessageHandler(ch).sendMessage(msg);
+        if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
+        {
+            String leaveMsgCh = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
+            if (!leaveMsgCh.equalsIgnoreCase("none"))
+            {
+                Long id = Long.parseLong(leaveMsgCh);
+                IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
+                if (!ch.isDeleted())
+                {
+                    String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
+                    msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
+                    new MessageHandler(ch).sendMessage(msg);
+                }
+            }
+        }
     }
 
     @EventSubscriber
