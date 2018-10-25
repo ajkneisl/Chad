@@ -1,21 +1,21 @@
 package com.jhobot.handle.commands.permissions;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.Listener;
 import com.jhobot.handle.commands.Command;
-import org.bson.BsonArray;
+import com.jhobot.handle.commands.PermissionLevels;
 import org.bson.Document;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class PermissionHandler
 {
     public static PermissionHandler HANDLER = new PermissionHandler();
     private ArrayList<String> CMD;
+    public static Map<String, PermissionLevels> GLOBAL_PERMISSIONS = new HashMap<String, PermissionLevels>();
     public PermissionHandler()
     {
         this.CMD = new ArrayList<>();
@@ -23,8 +23,17 @@ public class PermissionHandler
         this.CMD.addAll(Arrays.asList(cm));
     }
 
+    public boolean userIsDeveloper(IUser user) {
+        return GLOBAL_PERMISSIONS.get(user.getStringID()) == PermissionLevels.SYSTEM_ADMINISTRATOR;
+    }
+
     public boolean userHasPermission(String command, IUser user, IGuild g)
     {
+        Command cmd = Listener.hash.get(command);
+
+        if (cmd.level().equals(PermissionLevels.SYSTEM_ADMINISTRATOR) && userIsDeveloper(user))
+            return true;
+
         for (IRole r : user.getRolesForGuild(g))
         {
             if (ChadBot.DATABASE_HANDLER.getArray(g, r.getStringID()) != null)

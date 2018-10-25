@@ -14,6 +14,7 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.PermissionLevels;
 import com.jhobot.handle.commands.PermissionsHandler;
 import com.jhobot.handle.commands.ThreadCountHandler;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
@@ -37,8 +38,10 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.concurrent.Future;
 
-class Listener
+public class Listener
 {
+    public static HashMap<String, Command> hash = new HashMap<>();
+
     @SuppressWarnings({"unchecked", "LoopStatementThatDoesntLoop"})
     @EventSubscriber
     public void messageRecieved(MessageReceivedEvent e)
@@ -67,7 +70,8 @@ class Listener
             return;
 
         // command runner
-        HashMap<String, Command> hash = new HashMap<>();
+        // this is now statically defined
+       // HashMap<String, Command> hash = new HashMap<>();
 
         hash.put("userinfo", new UserInfo());
         hash.put("kick", new Kick());
@@ -102,11 +106,19 @@ class Listener
             {
                 ChadBot.DEBUG_HANDLER.internalLog("chad.internal.listener", "Running command: " + k, LogLevel.INFO);
                 Future<?> thread;
-                // if the user doesnt have the required permission level, deny them access to the command
-                /*if (!PermissionHandler.HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+                // if the command is system administrator only, and the user isnt a system administrator, deny them access
+                if (v.level() == PermissionLevels.SYSTEM_ADMINISTRATOR && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
-                }*/
+                    return;
+                }
+
+                // if the user doesnt have the required permission level, deny them access to the command
+                if (!PermissionHandler.HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+                {
+                    new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
+                    return;
+                }
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
                     thread = ChadBot.EXECUTOR.submit(v.help(e, args));
                 else

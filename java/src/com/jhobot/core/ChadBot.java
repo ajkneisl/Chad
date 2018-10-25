@@ -3,8 +3,10 @@ package com.jhobot.core;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.DebugHandler;
 import com.jhobot.handle.JSONHandler;
+import com.jhobot.handle.commands.PermissionLevels;
 import com.jhobot.handle.commands.PermissionsHandler;
 import com.jhobot.handle.commands.ThreadCountHandler;
+import com.jhobot.handle.commands.permissions.PermissionHandler;
 import org.json.JSONObject;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -37,6 +39,10 @@ public class ChadBot {
     
     public static void main(String[] args)
     {
+        // add developer ids to the permissions handler
+        PermissionHandler.GLOBAL_PERMISSIONS.put("173495550467899402", PermissionLevels.SYSTEM_ADMINISTRATOR);
+        PermissionHandler.GLOBAL_PERMISSIONS.put("416399667094618124", PermissionLevels.SYSTEM_ADMINISTRATOR);
+
         // logs in and registers the listener
         cli.login();
         cli.getDispatcher().registerListener(new Listener());
