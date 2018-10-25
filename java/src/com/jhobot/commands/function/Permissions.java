@@ -18,9 +18,9 @@ public class Permissions implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
+            ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Entry point reached, command executed.", LogLevel.INFO);
             MessageHandler m = new MessageHandler(e.getChannel());
             // j!perms role <role> add <perm>
-            System.out.println("Permissions.run");
             if (args.size() >= 4 && args.get(0).equalsIgnoreCase("role"))
             {
                 args.remove(0);
@@ -33,10 +33,12 @@ public class Permissions implements Command {
                     if (!e.getGuild().getRolesByName(sb.toString().trim()).isEmpty())
                         r = e.getGuild().getRolesByName(sb.toString().trim()).get(0);
                 }
+                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "'role' argument processing complete.", LogLevel.INFO);
 
                 for (int i = 0; i < i2; i++)
                 {
                     args.remove(i);
+                    i--;
                 }
                 if (r == null)
                 {
@@ -45,6 +47,7 @@ public class Permissions implements Command {
                     return;
                 }
 
+                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Starting 'add' argument processing.");
                 if (args.get(0).equalsIgnoreCase("add"))
                 {
                     args.remove(0);

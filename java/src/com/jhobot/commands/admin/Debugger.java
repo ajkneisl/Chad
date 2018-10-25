@@ -21,6 +21,19 @@ public class Debugger implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            String subcmd = args.get(0);
+
+            switch (subcmd) {
+                default: // subcmd is the domain
+                    break;
+                case "addlog":
+                    String domain = args.get(1);
+                    String logmsg = args.get(2);
+                    LogLevel loglvl = LogLevel.valueOf(args.get(3).toUpperCase());
+                    ChadBot.DEBUG_HANDLER.internalLog(domain, logmsg, loglvl);
+                    return;
+            }
+
             String domain = args.get(0);
             if (args.size() > 1) {
                 LogLevel level = LogLevel.valueOf(args.get(1).toUpperCase());
@@ -32,7 +45,7 @@ public class Debugger implements Command {
                     b.appendField("Level", log.level.toString(), false);
                     b.appendField("Message", log.message, false);
                 }
-                b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+                b.withColor(60, 0, 70);
                 b.withFooterText(Util.getTimeStamp());
                 new MessageHandler(e.getChannel()).sendEmbed(b.build());
                 return;
@@ -45,7 +58,7 @@ public class Debugger implements Command {
                 b.appendField("Level", log.level.toString(), false);
                 b.appendField("Message", log.message, false);
             }
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+            b.withColor(60, 0, 70);
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
         };
