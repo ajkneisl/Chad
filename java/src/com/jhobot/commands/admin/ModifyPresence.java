@@ -2,6 +2,7 @@ package com.jhobot.commands.admin;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.PermissionLevels;
@@ -17,9 +18,12 @@ public class ModifyPresence implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            ChadBot.cli.changePresence(StatusType.ONLINE, ActivityType.PLAYING, args.get(0));
-
-            new MessageHandler(e.getChannel()).sendMessage("Changed presence to \"" + args.get(0) + "\"");
+            StringBuilder sb = new StringBuilder();
+            for (String str : args) {
+                sb.append(str + " ");
+            }
+            ChadBot.cli.changePresence(StatusType.ONLINE, ActivityType.PLAYING, sb.toString().trim());
+            new MessageHandler(e.getChannel()).sendMessage("Changed presence to \"" + sb.toString().trim() + "\"");
         };
     }
 
@@ -33,5 +37,10 @@ public class ModifyPresence implements Command {
     @Override
     public PermissionLevels level() {
         return PermissionLevels.SYSTEM_ADMINISTRATOR;
+    }
+
+    @Override
+    public Category category() {
+        return Category.ADMIN;
     }
 }

@@ -1,8 +1,13 @@
 package com.jhobot.commands.info;
 
+import com.jhobot.core.ChadBot;
+import com.jhobot.core.Listener;
+import com.jhobot.handle.Util;
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.permissions.PermissionHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.RequestBuffer;
@@ -14,13 +19,27 @@ public class Help implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            IMessage m = RequestBuffer.request(() -> e.getChannel().sendMessage
-                    (
-                            "Fun : `catfact`, `catgallery`, `8ball`, `pe`, `random`, `rrl`\n" +
-                            "Function / Admin: `logging`, `prefix`, `purge`\n" +
-                            "Info : `bug`, `guildinfo`, `help`, `jho`, `steam`, `updatelog`, `userinfo`\n" +
-                            "Punishments : `ban`, `kick`"
-                    )).get();
+            StringBuilder sb = new StringBuilder();
+            // go through each category and add all its commands to the help string
+            for (Category category : Category.values()) {
+                if (category == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // no admin commands (unless admin)
+                    continue;
+                int index = 0;
+                sb.append("\n" + Util.fixEnumString(category.toString().toLowerCase()) + ": ");
+                StringBuilder scuffed_builder = new StringBuilder();
+                for (String k : Listener.hash.keySet()) {
+                    Command v = Listener.hash.get(k);
+                    if (v.category() == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
+                        continue;
+                    if (v.category() != category)
+                        continue;
+                    String str = "`" + k + "`, ";
+                    scuffed_builder.append(str);
+                    index++;
+                }
+                sb.append(scuffed_builder.toString().replaceAll(", $", ""));
+            }
+            IMessage msg = RequestBuffer.request(() -> e.getChannel().sendMessage(sb.toString())).get();
        };
     }
 
@@ -34,5 +53,10 @@ public class Help implements Command {
     @Override
     public PermissionLevels level() {
         return PermissionLevels.MEMBER;
+    }
+
+    @Override
+    public Category category() {
+        return Category.INFO;
     }
 }

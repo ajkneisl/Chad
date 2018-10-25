@@ -2,6 +2,7 @@ package com.jhobot.commands.punishments;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.PermissionLevels;
@@ -113,5 +114,10 @@ public class Kick implements Command {
     @Override
     public PermissionLevels level() {
         return PermissionLevels.MODERATOR;
+    }
+
+    @Override
+    public Category category() {
+        return Category.PUNISHMENTS;
     }
 }

@@ -1,6 +1,7 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.handle.MessageHandler;
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.PermissionLevels;
@@ -42,5 +43,10 @@ public class CatGallery implements Command {
     @Override
     public PermissionLevels level() {
         return PermissionLevels.MEMBER;
+    }
+
+    @Override
+    public Category category() {
+        return Category.FUN;
     }
 }

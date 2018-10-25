@@ -72,34 +72,6 @@ public class Listener
         // command runner
         // this is now statically defined
        // HashMap<String, Command> hash = new HashMap<>();
-
-        hash.put("userinfo", new UserInfo());
-        hash.put("kick", new Kick());
-        hash.put("ban", new Ban());
-        hash.put("updatelog", new UpdateLog());
-        hash.put("steam", new Steam());
-        hash.put("chad", new Chad());
-        hash.put("guildinfo", new GuildInfo());
-        hash.put("prefix", new Prefix());
-        hash.put("logging", new Logging());
-        hash.put("random", new com.jhobot.commands.fun.Random());
-        hash.put("pe", new PhotoEditor());
-        hash.put("8ball", new EightBall());
-        hash.put("catgallery", new CatGallery());
-        hash.put("catfact", new CatFact());
-        hash.put("help", new Help());
-        hash.put("rrl", new RussianRoulette());
-        hash.put("purge", new Purge());
-        hash.put("im", new Message());
-        hash.put("threads", new CurrentThreads()); // admin only/debug
-        hash.put("rtop", new RedditTop());
-        hash.put("rnew", new RedditNew());
-        hash.put("systeminfo", new SystemInfo());
-        hash.put("modpresence", new ModifyPresence()); // admin only
-        hash.put("setlevel", new SetLevel());
-        hash.put("getlevel", new GetLevel());
-        hash.put("perms", new com.jhobot.commands.function.Permissions());
-        hash.put("debugger", new Debugger());
         //System.out.println(e.getAuthor().getStringID() + " - " + Long.toString(e.getAuthor().getLongID()));
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))

@@ -2,10 +2,7 @@ package com.jhobot.commands.admin;
 
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
-import com.jhobot.handle.commands.ThreadCountHandler;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -51,5 +48,10 @@ public class CurrentThreads implements Command {
     @Override
     public PermissionLevels level() {
         return PermissionLevels.SYSTEM_ADMINISTRATOR;
+    }
+
+    @Override
+    public Category category() {
+        return Category.ADMIN;
     }
 }

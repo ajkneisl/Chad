@@ -1,5 +1,6 @@
 package com.jhobot.commands.fun;
 
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -36,5 +37,10 @@ public class TicTacToe implements Command {
     @Override
     public PermissionLevels level() {
         return null;
+    }
+
+    @Override
+    public Category category() {
+        return Category.FUN;
     }
 }

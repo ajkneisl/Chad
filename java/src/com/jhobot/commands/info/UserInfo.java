@@ -2,6 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.PermissionLevels;
@@ -81,5 +82,10 @@ public class UserInfo implements Command {
     @Override
     public PermissionLevels level() {
         return PermissionLevels.MODERATOR;
+    }
+
+    @Override
+    public Category category() {
+        return Category.INFO;
     }
 }

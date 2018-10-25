@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util
 {
@@ -57,5 +59,26 @@ public class Util
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public static String fixEnumString(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
+    public static String replaceLast(String input, String regex, String replacement) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        if (!matcher.find()) {
+            return input;
+        }
+        int lastMatchStart=0;
+        do {
+            lastMatchStart=matcher.start();
+        } while (matcher.find());
+        matcher.find(lastMatchStart);
+        StringBuffer sb = new StringBuffer(input.length());
+        matcher.appendReplacement(sb, replacement);
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 }

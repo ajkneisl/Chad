@@ -5,16 +5,15 @@ import com.jhobot.handle.Log;
 import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.HelpHandler;
 import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class Debugger implements Command {
 
@@ -41,10 +40,11 @@ public class Debugger implements Command {
                 EmbedBuilder b = new EmbedBuilder();
                 b.withTitle("Internal Log");
                 b.withDesc(domain);
+                StringBuilder sb = new StringBuilder();
                 for (Log log : logs) {
-                    b.appendField("Level", log.level.toString(), false);
-                    b.appendField("Message", log.message, false);
+                    sb.append("(" + log.level.toString() + ") " + log.message + "\n");
                 }
+                b.appendField("Logs", sb.toString(), false);
                 b.withColor(60, 0, 70);
                 b.withFooterText(Util.getTimeStamp());
                 new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -54,10 +54,11 @@ public class Debugger implements Command {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Internal Log");
             b.withDesc(domain);
+            StringBuilder sb = new StringBuilder();
             for (Log log : logs) {
-                b.appendField("Level", log.level.toString(), false);
-                b.appendField("Message", log.message, false);
+                sb.append("(" + log.level.toString() + ") " + log.message + "\n");
             }
+            b.appendField("Logs", sb.toString(), false);
             b.withColor(60, 0, 70);
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -74,5 +75,10 @@ public class Debugger implements Command {
     @Override
     public PermissionLevels level() {
         return PermissionLevels.SYSTEM_ADMINISTRATOR;
+    }
+
+    @Override
+    public Category category() {
+        return Category.ADMIN;
     }
 }
