@@ -1,9 +1,6 @@
 package com.jhobot.core;
 
-import com.jhobot.handle.LogLevel;
-import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.DatabaseHandler;
-import com.jhobot.handle.Util;
+import com.jhobot.handle.*;
 import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import com.jhobot.handle.ui.UIHandler;
@@ -30,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class Listener
 {
     public static HashMap<String, Command> hash = new HashMap<>();
+    public static HashMap<String, MetaData> metaData = new HashMap<>();
 
     @SuppressWarnings({"unchecked", "LoopStatementThatDoesntLoop"})
     @EventSubscriber
@@ -65,22 +63,12 @@ public class Listener
         hash.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k)) // comment for commit
             {
-                ChadBot.DEBUG_HANDLER.internalLog("chad.internal.listener", "Running command: " + k, LogLevel.INFO);
                 Future<?> thread;
-                Method run;
-                try {
-                    run = v.getClass().getMethod("run", MessageReceivedEvent.class, List.class);
-                } catch (NoSuchMethodException e1) {
-                    e1.printStackTrace();
-                    return;
-                }
-                DefineCommand a = run.getAnnotation(DefineCommand.class);
 
-                if (a == null)
-                    return;
+                MetaData meta = metaData.get(k);
 
                 // if the command is system administrator only, and the user isnt a system administrator, deny them access
-                if (a.devOnly() && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
+                if (meta.isDevOnly && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
                     return;

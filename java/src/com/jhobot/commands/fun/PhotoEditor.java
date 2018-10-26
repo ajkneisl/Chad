@@ -17,7 +17,6 @@ import java.util.List;
 
 public class PhotoEditor implements Command {
 
-    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

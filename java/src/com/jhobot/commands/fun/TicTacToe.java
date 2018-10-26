@@ -1,8 +1,6 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.DefineCommand;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -13,7 +11,6 @@ import java.util.List;
 
 public class TicTacToe implements Command {
 
-    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {

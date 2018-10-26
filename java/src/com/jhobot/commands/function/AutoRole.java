@@ -18,7 +18,6 @@ import java.util.List;
 
 public class AutoRole implements Command {
 
-    @DefineCommand(category = Category.FUNCTION, devOnly = false)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {

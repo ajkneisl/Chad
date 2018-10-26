@@ -14,7 +14,6 @@ import java.util.Random;
 
 public class SystemInfo implements Command {
 
-    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {

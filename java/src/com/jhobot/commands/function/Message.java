@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Message implements Command {
-    @DefineCommand(category = Category.FUNCTION)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

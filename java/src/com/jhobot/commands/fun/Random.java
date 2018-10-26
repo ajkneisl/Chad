@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Random implements Command {
-    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

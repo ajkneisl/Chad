@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Random;
 
 public class CatGallery implements Command {
-    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

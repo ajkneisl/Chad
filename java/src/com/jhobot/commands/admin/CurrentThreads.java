@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 public class CurrentThreads implements Command {
-    @DefineCommand(category = Category.ADMIN, devOnly = true)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

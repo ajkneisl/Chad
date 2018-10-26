@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 public class GuildInfo implements Command {
-    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

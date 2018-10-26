@@ -12,7 +12,6 @@ import sx.blah.discord.util.PermissionUtils;
 import java.util.*;
 
 public class Ban implements Command {
-    @DefineCommand(category = Category.PUNISHMENTS)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

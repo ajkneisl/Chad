@@ -1,10 +1,12 @@
 package com.jhobot.commands.function;
 
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
@@ -14,11 +16,15 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("all")
 public class Purge implements Command {
 
-    @DefineCommand(category = Category.FUNCTION)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         //return null;
         return() -> {
+            if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES)) {
+                new MessageHandler(e.getChannel()).sendError("Bot can't manage messages.");
+                return;
+            }
+
             boolean silent = false;
 
             if (e.getMessage().getContent().endsWith("-s")) {

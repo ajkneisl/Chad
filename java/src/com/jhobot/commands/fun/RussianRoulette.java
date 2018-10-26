@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 public class RussianRoulette implements Command
 {
-    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args)
     {

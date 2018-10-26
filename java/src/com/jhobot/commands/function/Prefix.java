@@ -14,7 +14,6 @@ import java.util.Random;
 
 public class Prefix implements Command {
 
-    @DefineCommand(category = Category.FUNCTION)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

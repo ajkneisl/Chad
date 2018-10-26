@@ -1,6 +1,7 @@
 package com.jhobot.commands.info;
 
 import com.jhobot.core.Listener;
+import com.jhobot.handle.MetaData;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Help implements Command {
-    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -27,16 +27,10 @@ public class Help implements Command {
                 StringBuilder scuffed_builder = new StringBuilder();
                 for (String k : Listener.hash.keySet()) {
                     Command v = Listener.hash.get(k);
-                    Method m;
-                    try {
-                        m = v.getClass().getMethod("run", MessageReceivedEvent.class, List.class);
-                    } catch (NoSuchMethodException e1) {
-                        e1.printStackTrace();
-                        return;
-                    }
-                    if (m.getAnnotation(DefineCommand.class).category() == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
+                    MetaData meta = Listener.metaData.get(k);
+                    if (meta.category == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
                         continue;
-                    if (m.getAnnotation(DefineCommand.class).category() != category)
+                    if (meta.category != category)
                         continue;
                     String str = "`" + k + "`, ";
                     scuffed_builder.append(str);

@@ -13,7 +13,6 @@ import sx.blah.discord.util.EmbedBuilder;
 import java.util.List;
 
 public class Contributors implements Command {
-    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
