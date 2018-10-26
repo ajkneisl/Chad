@@ -67,14 +67,14 @@ public class Permissions implements Command {
                     case "remove":
                         int rem = PermissionHandler.HANDLER.removeCommandFromRole(role, args.get(0));
                         if (rem == 6) {
-                            m.send("Permissions", "Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.");
+                            m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
                             m.sendError(PermissionHandler.HANDLER.parseErrorCode(rem));
                         }
                         break;
                     case "view":
                         System.out.println("view1");
-                        if (ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null) {
+                        if (ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null || ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).size() == 0) {
                             m.sendError("There's no permissions there!");
                             return;
                         }

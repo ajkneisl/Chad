@@ -69,17 +69,29 @@ public class Ban implements Command {
                 m.sendError("Bot can't do this!");
                 return;
             }
-            
-            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.BAN))
+
+            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), user, Permissions.BAN))
             {
                 m.sendError("Bot can't do this!");
                 return;
             }
 
-            StringBuilder sb2 = new StringBuilder();
-            for (String s : reason)
+            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), user, Permissions.BAN))
             {
-                sb2.append(s).append(" ");
+                m.sendError("You can't do this!");
+                return;
+            }
+
+            StringBuilder sb2 = new StringBuilder();
+            if (reason.size() != 0)
+            {
+                for (String s : reason)
+                {
+                    sb2.append(s).append(" ");
+                }
+            }
+            else {
+                sb2.append("no reason");
             }
 
             if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "ban_msg_on"))

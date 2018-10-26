@@ -29,6 +29,8 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Random;
@@ -75,15 +77,25 @@ public class Listener
             {
                 ChadBot.DEBUG_HANDLER.internalLog("chad.internal.listener", "Running command: " + k, LogLevel.INFO);
                 Future<?> thread;
-                DefineCommand a = k.getClass().getAnnotation(DefineCommand.class);
+                Method run;
+                try {
+                    run = v.getClass().getMethod("run", MessageReceivedEvent.class, List.class);
+                } catch (NoSuchMethodException e1) {
+                    e1.printStackTrace();
+                    return;
+                }
+                DefineCommand a = run.getAnnotation(DefineCommand.class);
+
+                if (a == null)
+                    return;
+
                 // if the command is system administrator only, and the user isnt a system administrator, deny them access
-                if (v.level() == PermissionLevels.SYSTEM_ADMINISTRATOR && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
+                if (a.devOnly() && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
                     return;
                 }
 
-                // if the user doesnt have the required permission level, deny them access to the command
                 if (!PermissionHandler.HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");

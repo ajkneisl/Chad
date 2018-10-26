@@ -52,8 +52,8 @@ public class ChadBot {
         registerCommands();
 
         // add developer ids to the permissions handler
-        PermissionHandler.GLOBAL_PERMISSIONS.put("173495550467899402", PermissionLevels.SYSTEM_ADMINISTRATOR);
-        PermissionHandler.GLOBAL_PERMISSIONS.put("416399667094618124", PermissionLevels.SYSTEM_ADMINISTRATOR);
+        PermissionHandler.GLOBAL_PERMISSIONS.put("173495550467899402", PermissionLevels.SYSTEM_ADMINISTRATOR); //CodeBase
+        PermissionHandler.GLOBAL_PERMISSIONS.put("416399667094618124", PermissionLevels.SYSTEM_ADMINISTRATOR); // sho
 
         // logs in and registers the listener
         cli.login();

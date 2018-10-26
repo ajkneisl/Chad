@@ -25,14 +25,9 @@ public class Kick implements Command {
                 m.sendError("The bot doesn't have permissions for this!");
                 return;
             }
-            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK))
-            {
-                m.sendError("You don't have permissions for this!");
-                return;
-            }
             IUser user = null;
             List<String> reason = new ArrayList<>();
-            if (!e.getMessage().getMentions().isEmpty() && args.get(0).equalsIgnoreCase(e.getMessage().getMentions().get(1).mention()))
+            if (!e.getMessage().getMentions().isEmpty() && args.get(0).equalsIgnoreCase(e.getMessage().getMentions().get(0).mention()))
             {
                 user = e.getMessage().getMentions().get(0);
                 args.remove(0);
@@ -69,16 +64,28 @@ public class Kick implements Command {
             }
             
             
-            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), e.getAuthor(), Permissions.KICK))
+            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), user, Permissions.KICK))
             {
                 m.sendError("Bot can't do this!");
                 return;
             }
 
-            StringBuilder sb2 = new StringBuilder();
-            for (String s : reason)
+            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), user, Permissions.KICK))
             {
-                sb2.append(s).append(" ");
+                m.sendError("You can't do this!");
+                return;
+            }
+
+            StringBuilder sb2 = new StringBuilder();
+            if (reason.size() != 0)
+            {
+                for (String s : reason)
+                {
+                    sb2.append(s).append(" ");
+                }
+            }
+            else {
+                sb2.append("no reason");
             }
 
             if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "kick_msg_on"))
