@@ -15,8 +15,8 @@ public class PermissionHandler
 {
     public static PermissionHandler HANDLER = new PermissionHandler();
     private ArrayList<String> CMD;
-    public static Map<String, PermissionLevels> GLOBAL_PERMISSIONS = new HashMap<String, PermissionLevels>();
-    public PermissionHandler()
+    public static Map<String, PermissionLevels> GLOBAL_PERMISSIONS = new HashMap<>();
+    private PermissionHandler()
     {
         this.CMD = new ArrayList<>();
         String[] cm = {"catfact", "catgallery", "eightball", "photoeditor", "random", "russianroulette", "logging", "im", "prefix", "guildinfo", "help", "redditnew", "reddittop", "steam", "updatelog", "userinfo", "kick", "ban"};
@@ -30,6 +30,11 @@ public class PermissionHandler
     public boolean userHasPermission(String command, IUser user, IGuild g)
     {
         Command cmd = Listener.hash.get(command);
+
+        if (cmd == null)
+        {
+            return false; // just in case
+        }
 
         if (cmd.level().equals(PermissionLevels.SYSTEM_ADMINISTRATOR) && userIsDeveloper(user))
             return true;
@@ -45,62 +50,81 @@ public class PermissionHandler
         return false;
     }
 
-    public boolean addCommandToRole(IRole role, String... commands)
+    public int addCommandToRole(IRole role, String command)
     {
-        if (!parseCommands(commands))
-            return false;
+        if (!parseCommand(command))
+            return 0;
+
+        System.out.println("for logging purposes, does it get past parsing?");
+
+
+        Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+        if (get == null)
+            return 1;
+        if (ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()) == null || ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).isEmpty())
+        {
+            ArrayList<String> ar = new ArrayList<>();
+            ar.add(command);
+            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            return 6;
+        }
+        else {
+            if (ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).contains(command))
+                return 2;
+            ArrayList<String> ar = ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID());
+            ar.add(command);
+            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            return 6;
+        }
+    }
+
+    public int removeCommandFromRole(IRole role, String command)
+    {
+        if (!parseCommand(command))
+            return 0;
 
         if (ChadBot.DATABASE_HANDLER.getString(role.getGuild(), role.getStringID()) == null)
-        {
-            Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
-
-            if (get == null)
-                return false;
-
-            ArrayList<String> ar = new ArrayList<>(Arrays.asList(commands));
-            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), Arrays.asList(commands))));
-            return true;
-        }
+            return 4;
         else {
             Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
 
             if (get == null)
-                return false;
+                return 1;
 
-            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).addAll(Arrays.asList(commands)))));
-            return true;
-        }
-    }
-
-    public boolean removeCommandFromRole(IRole role, String... commands)
-    {
-        if (!parseCommands(commands))
-            return false;
-
-        if (ChadBot.DATABASE_HANDLER.getString(role.getGuild(), role.getStringID()) == null)
-            return false;
-        else {
-            Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
-
-            if (get == null)
-                return false;
-
-            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).removeAll(Arrays.asList(commands)))));
-            return true;
+            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).remove(command))));
+            return 6;
         }
 
     }
 
-    private boolean parseCommands(String... args)
+    private boolean parseCommand(String arg)
     {
-        List<Boolean> l = new ArrayList<>();
-        for (int i = 0; i < args.length; i++)
+        for (String s : Listener.hash.keySet())
         {
-            if (this.CMD.contains(args[i].toLowerCase()))
-                l.set(i, true);
-            else
-                l.set(i, false);
+            if (s.equalsIgnoreCase(arg))
+                return true;
         }
-        return !l.contains(false);
+        return false;
+    }
+
+    public String parseErrorCode(int i)
+    {
+        if (i == 1)
+        {
+            return "An internal error has occurred!";
+        }
+        else if (i == 2)
+        {
+            return "Command is already entered!";
+        }
+        else if (i == 0)
+        {
+            return "Invalid Command!";
+        }
+        else if (i == 4)
+        {
+            return "There's nothing to remove!";
+        }
+        return "An internal error has occurred!";
     }
 }

@@ -3,13 +3,12 @@ package com.jhobot.commands.function;
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
+import sx.blah.discord.util.RequestBuffer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,71 +18,78 @@ public class Permissions implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Entry point reached, command executed.", LogLevel.INFO);
             MessageHandler m = new MessageHandler(e.getChannel());
             // j!perms role <role> add <perm>
-            if (args.size() >= 4 && args.get(0).equalsIgnoreCase("role"))
+            if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role"))
             {
-                //args.remove(0);
-                StringBuilder sb = new StringBuilder();
-                IRole r = null;
-                if (!e.getGuild().getRolesByName(args.get(1).trim()).isEmpty())
-                    r = e.getGuild().getRolesByName(args.get(1).trim()).get(0);
-
-                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "'role' argument processing complete.", LogLevel.INFO);
-
-                try
+                args.remove(0); // removes so it can get role name
+                StringBuilder b = new StringBuilder();
+                List<IRole> r = new ArrayList<>();
+                int i = 0;
+                int i1 = 0;
+                for (String s : args)
                 {
-                    if (r == null)
+                    i++;
+                    b.append(s).append(" ");
+
+                    r = RequestBuffer.request(() -> e.getGuild().getRolesByName(b.toString().trim())).get();
+                    if (!r.isEmpty()) break;
+                }
+
+                if (args.size() == i)
+                {
+                    m.sendError("Invalid Role");
+                    return;
+                }
+                IRole role = r.get(0);
+
+                // isolates next arguments
+                while (i > i1)
+                {
+                    i1++;
+                    args.remove(0);
+                }
+
+                String nextArg = args.get(0);
+                args.remove(0); // isolates again
+                if (nextArg.equalsIgnoreCase("add") && args.size() >= 4)
+                {
+                    int add = PermissionHandler.HANDLER.addCommandToRole(role, args.get(0));
+                    System.out.println(add);
+                    if (add == 6)
                     {
-                        m.sendError("Invalid Role!");
-                        ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid Role!", LogLevel.WARNING);
+                        m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                    }
+                    else {
+                        m.sendError(PermissionHandler.HANDLER.parseErrorCode(add));
+                    }
+                }
+                else if (nextArg.equalsIgnoreCase("remove") && args.size() >= 4)
+                {
+                    int rem = PermissionHandler.HANDLER.removeCommandFromRole(role, args.get(0));
+                    if (rem == 6)
+                    {
+                        m.send("Permissions", "Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.");
+                    }
+                    else {
+                        m.sendError(PermissionHandler.HANDLER.parseErrorCode(rem));
+                    }
+                }
+                else if (nextArg.equalsIgnoreCase("view"))
+                {
+                    if (ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null)
+                    {
+                        m.sendError("There's no permissions there!");
                         return;
                     }
+                    EmbedBuilder b2 = new EmbedBuilder();
+                    b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
+                    StringBuilder b3 = new StringBuilder();
+                    ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
+                    b2.withDesc(b3.toString().substring(b3.toString().length(), b3.toString().length()-2));
+                    m.sendEmbed(b2.build());
                 }
-                catch (Exception ex)
-                {
-                    ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", ex.getMessage(), LogLevel.EXCEPTION);
-                }
-
-                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Starting 'add' argument processing.", LogLevel.INFO);
-                try
-                {
-                    if (args.get(2).equalsIgnoreCase("add"))
-                    {
-                        args.remove(0);
-
-                        HashMap<String, Boolean> h = new HashMap<>();
-                        for (String arg : args)
-                        {
-                            h.put(arg, PermissionHandler.HANDLER.addCommandToRole(r, arg));
-                        }
-
-                        EmbedBuilder b = new EmbedBuilder();
-                        b.withTitle("Permissions : " + r.getName());
-                        h.forEach((k, v) -> {
-                            String s = "";
-                            if (v) {
-                                s = "Successfully added!";
-                                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Successfully added!", LogLevel.INFO);
-                            } else {
-                                s = "Invalid";
-                                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid", LogLevel.WARNING);
-                            }
-                            b.appendField(k, s, true);
-                        });
-                        m.sendEmbed(b.build());
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", ex.getMessage(), LogLevel.EXCEPTION);
-                }
-                m.sendError("Invalid Arguments!");
-                ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid Arguments!", LogLevel.WARNING);
             }
-            m.sendError("Invalid Arguments");
-            ChadBot.DEBUG_HANDLER.internalLog("chad.function.permissions", "Invalid Arguments", LogLevel.WARNING);
         };
     }
 
@@ -102,3 +108,4 @@ public class Permissions implements Command {
         return Category.FUNCTION;
     }
 }
+

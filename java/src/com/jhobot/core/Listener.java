@@ -13,10 +13,7 @@ import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.PermissionLevels;
-import com.jhobot.handle.commands.PermissionsHandler;
-import com.jhobot.handle.commands.ThreadCountHandler;
+import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import com.jhobot.handle.ui.UIHandler;
 import com.sun.corba.se.impl.activation.CommandHandler;
@@ -78,6 +75,7 @@ public class Listener
             {
                 ChadBot.DEBUG_HANDLER.internalLog("chad.internal.listener", "Running command: " + k, LogLevel.INFO);
                 Future<?> thread;
+                DefineCommand a = k.getClass().getAnnotation(DefineCommand.class);
                 // if the command is system administrator only, and the user isnt a system administrator, deny them access
                 if (v.level() == PermissionLevels.SYSTEM_ADMINISTRATOR && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
                 {
