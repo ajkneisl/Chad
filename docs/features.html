@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <meta name="description" content="Chad, the Alpha Discord bot">
+    <meta name="author" content="Chad Team">
+    <title>Chad's Features</title>
+</head>
+<body>
+<!--Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Chad</a>
+        <a class="badge badge-primary md-4 col-md-offset-1" href="https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permissions=2146958839&scope=bot">Invite</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="features.html">Features
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main -->
+
+<div class="container">
+    <div class="col-lg-12 text-center">
+        <h1 class="mt-5">Features</h1>
+        <br />
+        <h4 class="col-sm">The features for Chad.</h4>
+        <br />
+        <!-- warnings -->
+        <div class="row">
+            <p class="col"><span class="badge badge-dark">!</span> Arguments surrounded by [] are required, {} is not. </p>
+            <p class="col"><span class="badge badge-dark">!</span> Make sure to replace <code>j!</code> with your guild's prefix.</p>
+            <p class="col"><span class="badge badge-dark">!</span> For extra help with each command, add <code>help</code> at the end of it.</p>
+        </div>
+        <br />
+
+        <!-- start commands -->
+
+        <!-- punishments -->
+        <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center">
+            <h5 class="col" id="punishments">Punishments</h5>
+            <p class="col-6 col-sm">
+                <b>Ban : <br /> </b>
+                Bans the selected user.<br/>
+                <code>j!ban [@user/username] {reason}</code></p>
+            <p class="col-6 col-sm">
+                <b>Kick : <br /> </b>
+                Kicks the selected user.<br/>
+                <code>j!kick [@user/username] {reason}</code></p>
+        </div>
+
+
+        <!-- fun commands -->
+        <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center row-bordered">
+            <h5 class="col">Fun Commands</h5>
+            <p class="col-6 col-sm">
+                <b>Cat Fact : <br /> </b>
+                Gets a random cat fact.<br/>
+                <code>j!catfact</code></p>
+            <p class="col-6 col-sm">
+                <b>Cat Gallery : <br /> </b>
+                Gets a random cat picture.<br/>
+                <code>j!catgallery</code></p>
+            <p class="col-6 col-sm">
+                <b>Eight Ball : <br /> </b>
+                Responds to your questions.<br/>
+                <code>j!8ball [question] </code></p>
+            <p class="col-6 col-sm">
+                <b>PhotoEditor : <br /> </b>
+                Edits your photos, for you.<br/>
+                <code>j!pe [blur] (include photo in message)</code></p>
+            <p class="col-6 col-sm">
+                <b>Russian Roulette : <br /> </b>
+                Russian Roulette another user.<br/>
+                <code>j!rrl [@user/username]</code></p>
+            <p class="col-6 col-sm">
+                <b>Random : <br /> </b>
+                Gets a random quote, or a random number.<br/>
+                <code>j!random [number/quote] {max value for number}</code></p>
+        </div>
+
+        <!-- func commands -->
+        <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center">
+            <h5 class="col">Functional Commands</h5>
+            <p class="col-6 col-sm">
+                <b>Logging : <br /> </b>
+                Sets up logging for your guild.<br/>
+                <code>j!logging setchannel [name] // j!logging set [true/false]</code></p>
+            <p class="col-6 col-sm">
+                <b>Interactive Message : <br /> </b>
+                Adjusts the dynamic messages.<br/>
+                <code>j!im toggle [ban/kick/join/leave] <br /> j!im setchannel [leave/join] [channel name] <br /> j!im [join/leave/ban/kick] [message] <br /> <i>Variables : &guild&, &user&, &reason& (punishments)</i> </code></p>
+        </div>
+
+        <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center">
+            <h5 class="col" id="fun">Informational Commands</h5>
+            <p class="col-6 col-sm">
+                <b>Guild Info : <br /> </b>
+                Gets information about the guild.<br/>
+                <code>j!guilfinfo</code></p>
+            <p class="col-6 col-sm">
+                <b>Help : <br /> </b>
+                Gets all Chad's commands.<br/>
+                <code>j!help</code></p>
+            <p class="col-6 col-sm">
+                <b>Chad : <br /> </b>
+                Information about Chad.<br/>
+                <code>j!chad</code></p>
+            <p class="col-6 col-sm">
+                <b>Reddit Top : <br /> </b>
+                Gets a top reddit post from the selected subreddit.<br/>
+                <code>j!rtop [subreddit]</code></p>
+            <p class="col-6 col-sm">
+                <b>Reddit New : <br /> </b>
+                Gets a new reddit post from the selected subreddit.<br/>
+                <code>j!rnew [subreddit]</code></p>
+            <p class="col-6 col-sm">
+                <b>Steam : <br /> </b>
+                Gets statistics from Steam.<br/>
+                <code>
+                    j!steam profile [steam name]
+                    <br />
+                    j!steam csgo [steam name] {lastmatch/kills/maps}
+                </code></p>
+            <p class="col-6 col-sm">
+                <b>User Info : <br /> </b>
+                Gets information about a user.<br/>
+                <code>j!userinfo [@user/username]</code></p>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
