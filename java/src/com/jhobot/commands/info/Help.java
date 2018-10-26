@@ -3,19 +3,18 @@ package com.jhobot.commands.info;
 import com.jhobot.core.ChadBot;
 import com.jhobot.core.Listener;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.RequestBuffer;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
 public class Help implements Command {
+    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -29,9 +28,16 @@ public class Help implements Command {
                 StringBuilder scuffed_builder = new StringBuilder();
                 for (String k : Listener.hash.keySet()) {
                     Command v = Listener.hash.get(k);
-                    if (v.category() == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
+                    Method m;
+                    try {
+                        m = v.getClass().getMethod("run", MessageReceivedEvent.class, List.class);
+                    } catch (NoSuchMethodException e1) {
+                        e1.printStackTrace();
+                        return;
+                    }
+                    if (m.getAnnotation(DefineCommand.class).category() == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
                         continue;
-                    if (v.category() != category)
+                    if (m.getAnnotation(DefineCommand.class).category() != category)
                         continue;
                     String str = "`" + k + "`, ";
                     scuffed_builder.append(str);
@@ -48,15 +54,5 @@ public class Help implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("help", "Displays all commands Jho has to offer.");
         return HelpHandler.helpCommand(st, "Help", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.MEMBER;
-    }
-
-    @Override
-    public Category category() {
-        return Category.INFO;
     }
 }

@@ -5,10 +5,7 @@ import com.jhobot.handle.Log;
 import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -17,6 +14,7 @@ import java.util.List;
 
 public class Debugger implements Command {
 
+    @DefineCommand(category = Category.ADMIN, devOnly = true)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
@@ -70,15 +68,5 @@ public class Debugger implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("debugger <domain> [level]", "Displays the internal logs for the specified domain.");
         return HelpHandler.helpCommand(st, "Debugger", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.SYSTEM_ADMINISTRATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.ADMIN;
     }
 }

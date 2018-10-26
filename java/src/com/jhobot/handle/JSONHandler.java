@@ -88,6 +88,9 @@ public class JSONHandler
     public org.json.JSONObject read(String url) throws JSONException {
         return new org.json.JSONObject(Util.httpGet(url));
     }
+    public org.json.JSONArray readArray(String url) throws JSONException {
+        return new org.json.JSONArray(Util.httpGet(url));
+    }
 
     public org.json.JSONObject readFile(String file)
     {

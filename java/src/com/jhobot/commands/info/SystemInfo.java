@@ -2,10 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -18,6 +15,7 @@ import java.util.Random;
 
 public class SystemInfo implements Command {
 
+    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
@@ -52,15 +50,5 @@ public class SystemInfo implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("systeminfo", "Displays system/connectivity information about the bot server.");
         return HelpHandler.helpCommand(st, "System Information", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.MEMBER;
-    }
-
-    @Override
-    public Category category() {
-        return Category.INFO;
     }
 }

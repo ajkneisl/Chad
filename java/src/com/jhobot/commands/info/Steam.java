@@ -4,10 +4,7 @@ import com.jhobot.core.ChadBot;
 import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -20,6 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Steam implements Command {
+    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -174,16 +172,6 @@ public class Steam implements Command {
         st.put("steam profile <steam name>", "Gets a steam user's profile.");
         st.put("steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CS:GO stats.");
         return HelpHandler.helpCommand(st, "Steam", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.MEMBER;
-    }
-
-    @Override
-    public Category category() {
-        return Category.INFO;
     }
 }
 

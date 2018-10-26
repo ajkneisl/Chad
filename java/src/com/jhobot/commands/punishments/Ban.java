@@ -2,10 +2,7 @@ package com.jhobot.commands.punishments;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -15,6 +12,7 @@ import sx.blah.discord.util.PermissionUtils;
 import java.util.*;
 
 public class Ban implements Command {
+    @DefineCommand(category = Category.PUNISHMENTS)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -122,15 +120,5 @@ public class Ban implements Command {
         st.put("ban <user>", "Bans a user with no reason.");
         st.put("ban <user> <reason>", "Bans a user with a specified reason.");
         return HelpHandler.helpCommand(st, "User Info", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.MODERATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.PUNISHMENTS;
     }
 }

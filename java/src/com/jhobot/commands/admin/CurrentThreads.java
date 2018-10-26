@@ -46,13 +46,4 @@ public class CurrentThreads implements Command {
         return HelpHandler.helpCommand(st, "Current Threads", e);
     }
 
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.SYSTEM_ADMINISTRATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.ADMIN;
-    }
 }

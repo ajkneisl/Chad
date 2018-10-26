@@ -3,12 +3,15 @@ package com.jhobot.handle.commands.permissions;
 import com.jhobot.core.ChadBot;
 import com.jhobot.core.Listener;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.DefineCommand;
 import com.jhobot.handle.commands.PermissionLevels;
 import org.bson.Document;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class PermissionHandler
@@ -36,7 +39,14 @@ public class PermissionHandler
             return false; // just in case
         }
 
-        if (cmd.level().equals(PermissionLevels.SYSTEM_ADMINISTRATOR) && userIsDeveloper(user))
+        Method m;
+        try {
+            m = cmd.getClass().getMethod("run", MessageReceivedEvent.class, List.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            return false;
+        }
+        if (m.getAnnotation(DefineCommand.class).devOnly() && userIsDeveloper(user))
             return true;
 
         for (IRole r : user.getRolesForGuild(g))

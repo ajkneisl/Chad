@@ -2,10 +2,7 @@ package com.jhobot.commands.admin;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
@@ -15,6 +12,7 @@ import java.util.List;
 
 public class ModifyPresence implements Command {
 
+    @DefineCommand(category = Category.ADMIN, devOnly = true)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
@@ -32,15 +30,5 @@ public class ModifyPresence implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("modpresence <string>", "Changes the bots rich presence message.");
         return HelpHandler.helpCommand(st, "Modify Presence", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.SYSTEM_ADMINISTRATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.ADMIN;
     }
 }

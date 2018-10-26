@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Permissions implements Command {
+    @DefineCommand(category = Category.FUNCTION)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -96,16 +97,6 @@ public class Permissions implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         return null;
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.SYSTEM_ADMINISTRATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.FUNCTION;
     }
 }
 

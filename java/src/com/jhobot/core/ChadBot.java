@@ -86,5 +86,6 @@ public class ChadBot {
         Listener.hash.put("modpresence", new ModifyPresence()); // admin only
         Listener.hash.put("perms", new com.jhobot.commands.function.Permissions());
         Listener.hash.put("debugger", new Debugger());
+        Listener.hash.put("contributions", new Contributors());
     }
 }

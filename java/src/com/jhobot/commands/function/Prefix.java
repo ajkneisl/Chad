@@ -3,10 +3,7 @@ package com.jhobot.commands.function;
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
@@ -17,6 +14,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Prefix implements Command {
+
+    @DefineCommand(category = Category.FUNCTION)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -53,15 +52,5 @@ public class Prefix implements Command {
         st.put("prefix", "Your prefix.");
         st.put("prefix set <string>", "Sets the prefix.");
         return HelpHandler.helpCommand(st, "Prefix", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.ADMINISTRATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.FUNCTION;
     }
 }

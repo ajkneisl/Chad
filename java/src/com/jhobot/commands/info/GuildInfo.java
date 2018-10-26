@@ -2,10 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
@@ -19,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 public class GuildInfo implements Command {
+    @DefineCommand(category = Category.INFO)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -59,15 +57,5 @@ public class GuildInfo implements Command {
         st.put("logging set <true/false>", "Toggles the logging functionality.");
         st.put("logging setchannel <channel name>", "Sets the logging channel.");
         return HelpHandler.helpCommand(st, "Message", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.ADMINISTRATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.INFO;
     }
 }

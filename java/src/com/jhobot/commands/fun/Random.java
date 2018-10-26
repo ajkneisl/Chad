@@ -4,10 +4,7 @@ import com.jhobot.core.ChadBot;
 import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -18,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Random implements Command {
+    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -88,15 +86,5 @@ public class Random implements Command {
         st.put("random number [max]", "Gives random number with an optional max value.");
         return HelpHandler.helpCommand(st, "Random", e);
 
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.MEMBER;
-    }
-
-    @Override
-    public Category category() {
-        return Category.FUN;
     }
 }

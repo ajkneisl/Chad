@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CatFact implements Command {
+    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -30,15 +31,5 @@ public class CatFact implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("catfact", "Gives you a random catfact.");
         return HelpHandler.helpCommand(st, "Cat Fact", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.MEMBER;
-    }
-
-    @Override
-    public Category category() {
-        return Category.FUN;
     }
 }

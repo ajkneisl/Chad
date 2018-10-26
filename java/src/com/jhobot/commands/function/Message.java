@@ -2,10 +2,7 @@ package com.jhobot.commands.function;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
@@ -15,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Message implements Command {
+    @DefineCommand(category = Category.FUNCTION)
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -241,15 +239,5 @@ public class Message implements Command {
         st.put("im setchannel <join/leave> <channel name>", "Toggles the join/leave messages.");
         st.put("Variables", "&guild&, &user&, &reason& (punishment)");
         return HelpHandler.helpCommand(st, "Message", e);
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.ADMINISTRATOR;
-    }
-
-    @Override
-    public Category category() {
-        return Category.FUNCTION;
     }
 }

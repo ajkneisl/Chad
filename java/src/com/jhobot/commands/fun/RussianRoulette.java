@@ -1,10 +1,7 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -20,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RussianRoulette implements Command
 {
+    @DefineCommand(category = Category.FUN)
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args)
     {
@@ -125,15 +123,5 @@ public class RussianRoulette implements Command
             RequestBuffer.request(b::build);
             Thread.currentThread().interrupt();
         };
-    }
-
-    @Override
-    public PermissionLevels level() {
-        return PermissionLevels.MEMBER;
-    }
-
-    @Override
-    public Category category() {
-        return Category.FUN;
     }
 }
