@@ -143,6 +143,14 @@ public class Listener
             }
         }
 
+        if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "role_on_join")) {
+            String roleid_string = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_role");
+            if (roleid_string != "none") {
+                Long roleid = Long.parseLong(roleid_string);
+                IRole role = e.getGuild().getRoleByID(roleid);
+                e.getUser().addRole(role);
+            }
+        }
     }
 
     @EventSubscriber
