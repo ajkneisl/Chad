@@ -50,7 +50,7 @@ public class PermissionHandler
         return false;
     }
 
-    public int addCommandToRole(IRole role, String command)
+    public int addCommandToRole(IRole role, String command) throws IndexOutOfBoundsException
     {
         if (!parseCommand(command))
             return 0;

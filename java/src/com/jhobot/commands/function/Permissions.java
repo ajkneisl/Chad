@@ -51,17 +51,15 @@ public class Permissions implements Command {
                 }
 
                 String nextArg = args.get(0);
+                System.out.println(nextArg);
                 args.remove(0); // isolates again
-                if (nextArg.equalsIgnoreCase("add") && args.size() >= 4)
+                if (nextArg.equalsIgnoreCase("add"))
                 {
-                    int add = PermissionHandler.HANDLER.addCommandToRole(role, args.get(0));
-                    System.out.println(add);
-                    if (add == 6)
-                    {
+                    try {
+                        PermissionHandler.HANDLER.addCommandToRole(role, args.get(0));
                         m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
-                    }
-                    else {
-                        m.sendError(PermissionHandler.HANDLER.parseErrorCode(add));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
                 }
                 else if (nextArg.equalsIgnoreCase("remove") && args.size() >= 4)
