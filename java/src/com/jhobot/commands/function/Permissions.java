@@ -53,39 +53,40 @@ public class Permissions implements Command {
                 String nextArg = args.get(0);
                 System.out.println(nextArg);
                 args.remove(0); // isolates again
-                if (nextArg.equalsIgnoreCase("add"))
-                {
-                    try {
-                        PermissionHandler.HANDLER.addCommandToRole(role, args.get(0));
-                        m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                else if (nextArg.equalsIgnoreCase("remove") && args.size() >= 4)
-                {
-                    int rem = PermissionHandler.HANDLER.removeCommandFromRole(role, args.get(0));
-                    if (rem == 6)
-                    {
-                        m.send("Permissions", "Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.");
-                    }
-                    else {
-                        m.sendError(PermissionHandler.HANDLER.parseErrorCode(rem));
-                    }
-                }
-                else if (nextArg.equalsIgnoreCase("view"))
-                {
-                    if (ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null)
-                    {
-                        m.sendError("There's no permissions there!");
-                        return;
-                    }
-                    EmbedBuilder b2 = new EmbedBuilder();
-                    b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
-                    StringBuilder b3 = new StringBuilder();
-                    ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
-                    b2.withDesc(b3.toString().substring(b3.toString().length(), b3.toString().length()-2));
-                    m.sendEmbed(b2.build());
+                switch (nextArg.toLowerCase()) {
+                    default:
+                        break;
+                    case "add":
+                        int add = PermissionHandler.HANDLER.addCommandToRole(role, args.get(0));
+                        if (add == 6) {
+                            m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                        } else {
+                            m.sendError(PermissionHandler.HANDLER.parseErrorCode(add));
+                        }
+                        break;
+                    case "remove":
+                        int rem = PermissionHandler.HANDLER.removeCommandFromRole(role, args.get(0));
+                        if (rem == 6) {
+                            m.send("Permissions", "Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.");
+                        } else {
+                            m.sendError(PermissionHandler.HANDLER.parseErrorCode(rem));
+                        }
+                        break;
+                    case "view":
+                        System.out.println("view1");
+                        if (ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null) {
+                            m.sendError("There's no permissions there!");
+                            return;
+                        }
+                        System.out.println("view2");
+                        EmbedBuilder b2 = new EmbedBuilder();
+                        b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
+                        StringBuilder b3 = new StringBuilder();
+                        ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
+                        b2.withDesc(b3.toString());
+                        m.sendEmbed(b2.build());
+                        System.out.println("view3");
+                        break;
                 }
             }
         };
