@@ -1,9 +1,8 @@
 # Chad, the alpha bot
 Invite to your server [here](
 https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permissions=2146958839&scope=bot)!
-### Links
-[Commands](docs/commands.md)
-[Planned/Bugs](docs/plansandbugs.md)
+## Site
+[Chad's Site](https://bot.shoganeko.me)
 ##### Current Version
 v0.3.3 BETA
 
