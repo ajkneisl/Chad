@@ -1,12 +1,10 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.core.ChadBot;
-import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 

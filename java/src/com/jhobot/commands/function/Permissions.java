@@ -1,7 +1,6 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.ChadBot;
-import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
@@ -11,7 +10,6 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Permissions implements Command {

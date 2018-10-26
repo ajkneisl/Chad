@@ -3,13 +3,13 @@ package com.jhobot.handle;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("SameReturnValue")
 public class Util
 {
     private static final String USER_AGENT = "Mozilla/5.0";

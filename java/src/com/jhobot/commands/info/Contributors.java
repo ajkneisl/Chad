@@ -5,13 +5,10 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.DefineCommand;
-import com.jhobot.handle.commands.PermissionLevels;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.MessageBuilder;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.core.ChadBot;
-import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;
@@ -10,7 +9,6 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 

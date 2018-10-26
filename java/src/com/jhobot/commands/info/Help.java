@@ -1,6 +1,5 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.core.ChadBot;
 import com.jhobot.core.Listener;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;

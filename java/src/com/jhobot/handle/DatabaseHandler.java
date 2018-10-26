@@ -24,12 +24,14 @@ public class DatabaseHandler
         this.col = db.getCollection("bot");
     }
 
+    @SuppressWarnings("unused")
     public DatabaseHandler getSeperateCollection(String colName)
     {
         this.col = db.getCollection(colName);
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MongoClient getClient()
     {
         return this.cli;
@@ -38,6 +40,7 @@ public class DatabaseHandler
     {
         return this.col;
     }
+    @SuppressWarnings("unused")
     public MongoDatabase getDatabase()
     {
         return this.db;
@@ -122,6 +125,7 @@ public class DatabaseHandler
         return get != null;
     }
 
+    @SuppressWarnings("unused")
     public String getStats(String object)
     {
         Document get = col.find(new Document("stats", true)).first();
@@ -132,6 +136,7 @@ public class DatabaseHandler
         return (String) get.get(object);
     }
 
+    @SuppressWarnings("unused")
     public void setStats(String object, String entry)
     {
         Document get = col.find(new Document("stats", true)).first();

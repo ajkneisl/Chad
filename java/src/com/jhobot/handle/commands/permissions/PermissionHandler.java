@@ -14,6 +14,7 @@ import sx.blah.discord.handle.obj.IUser;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "CanBeFinal"})
 public class PermissionHandler
 {
     public static PermissionHandler HANDLER = new PermissionHandler();

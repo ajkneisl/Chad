@@ -1,18 +1,17 @@
 package com.jhobot.handle.ui;
 
-import sx.blah.discord.handle.obj.IGuild;
-
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings({"FieldCanBeLocal", "CanBeFinal"})
 public class StatPanel extends JPanel {
     public StatPanel() {
-        label1 = new JLabel();
-        label2 = new JLabel();
-        label3 = new JLabel();
-        label4 = new JLabel();
-        label5 = new JLabel();
-        label6 = new JLabel();
+        JLabel label1 = new JLabel();
+        JLabel label2 = new JLabel();
+        JLabel label3 = new JLabel();
+        JLabel label4 = new JLabel();
+        JLabel label5 = new JLabel();
+        JLabel label6 = new JLabel();
         label7 = new JLabel();
         label8 = new JLabel();
         label9 = new JLabel();
@@ -100,12 +99,7 @@ public class StatPanel extends JPanel {
             setPreferredSize(preferredSize);
         }
     }
-    private JLabel label1;
-    private JLabel label2;
-    private JLabel label3;
-    private JLabel label4;
-    private JLabel label5;
-    private JLabel label6;
+
     private JLabel label7;
     private JLabel label8;
     private JLabel label9;

@@ -10,7 +10,6 @@ import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.PermissionUtils;
 
 import java.util.*;
-import java.util.List;
 
 public class Kick implements Command {
     @DefineCommand(category = Category.PUNISHMENTS)

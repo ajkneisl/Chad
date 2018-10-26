@@ -1,14 +1,5 @@
 package com.jhobot.core;
 
-import com.jhobot.commands.admin.*;
-import com.jhobot.commands.fun.*;
-import com.jhobot.commands.function.Logging;
-import com.jhobot.commands.function.Message;
-import com.jhobot.commands.function.Prefix;
-import com.jhobot.commands.function.Purge;
-import com.jhobot.commands.info.*;
-import com.jhobot.commands.punishments.Ban;
-import com.jhobot.commands.punishments.Kick;
 import com.jhobot.handle.LogLevel;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.DatabaseHandler;
@@ -16,7 +7,6 @@ import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import com.jhobot.handle.ui.UIHandler;
-import com.sun.corba.se.impl.activation.CommandHandler;
 import org.bson.Document;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -29,14 +19,14 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Random;
-import java.util.Timer;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("CanBeFinal")
 public class Listener
 {
     public static HashMap<String, Command> hash = new HashMap<>();
@@ -241,21 +231,27 @@ public class Listener
         System.out.println(Util.getTimeStamp() + " <" + e.getGuild().getStringID() + "> Left Guild");
     }
 
-
+    public static int ROTATION_TIME = 60000*5; // 5 minutes
+    public static boolean ROTATE_PRESENCE = true;
+    public static List<String> PRESENCE_ROTATION = new ArrayList();
 
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
         // automatic presence updater
+        //TODO: put this in its own thread class so i can change the timings on it
         ChadBot.EXECUTOR.submit(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    String[] ar = {"hello!", "gamers", "epic gamers", "a bad game", "j!help", "j!prefix set *", "what's going on gamers", "invite me please"};
-                    e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ar[new Random().nextInt(ar.length)]);
+                    if (!ROTATE_PRESENCE)
+                        return;
+                    Object[] ar = PRESENCE_ROTATION.toArray();
+                    int rotation = ar.length;
+                    e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, (String)ar[new Random().nextInt(rotation)]);
                 }
-            }, 0, 60000*5);
+            }, 0, ROTATION_TIME); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work
         });
 
         // automatic ui updater

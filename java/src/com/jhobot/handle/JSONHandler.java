@@ -8,9 +8,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.*;
-import java.net.URL;
-import java.nio.charset.Charset;
 
+@SuppressWarnings({"ALL", "deprecation"})
 public class JSONHandler
 {
     // Handles JSONHandler data, including the bot.json files and reading from network
@@ -106,6 +105,7 @@ public class JSONHandler
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     public void writeFile(String filep, String object, String input) throws IOException
     {
         File file = new File(System.getenv("appdata") + "\\jho\\" + filep);
@@ -117,6 +117,7 @@ public class JSONHandler
 
         String resultingJson = gson.toJson(jelement);
 
+        //noinspection deprecation
         Files.write(resultingJson, file, Charsets.UTF_8);
     }
 }

@@ -3,7 +3,6 @@ package com.jhobot.commands.fun;
 import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.DefineCommand;
-import com.jhobot.handle.commands.PermissionLevels;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;

@@ -14,20 +14,14 @@ import com.jhobot.handle.DebugHandler;
 import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.commands.PermissionLevels;
 import com.jhobot.handle.commands.PermissionsHandler;
-import com.jhobot.handle.commands.ThreadCountHandler;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
-import org.json.JSONObject;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ChadBot {
     public static final JSONHandler JSON_HANDLER = new JSONHandler().forceCheck();
     public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
@@ -50,6 +44,9 @@ public class ChadBot {
     {
         // register commands
         registerCommands();
+
+        // register presence rotation
+        registerPresenceRotation();
 
         // add developer ids to the permissions handler
         PermissionHandler.GLOBAL_PERMISSIONS.put("173495550467899402", PermissionLevels.SYSTEM_ADMINISTRATOR); //CodeBase
@@ -87,5 +84,16 @@ public class ChadBot {
         Listener.hash.put("perms", new com.jhobot.commands.function.Permissions());
         Listener.hash.put("debugger", new Debugger());
         Listener.hash.put("contributions", new Contributors());
+    }
+
+    public static void registerPresenceRotation() {
+        Listener.PRESENCE_ROTATION.add("hello!");
+        Listener.PRESENCE_ROTATION.add("gamers");
+        Listener.PRESENCE_ROTATION.add("epic gamers");
+        Listener.PRESENCE_ROTATION.add("a bad game");
+        Listener.PRESENCE_ROTATION.add("j!help");
+        Listener.PRESENCE_ROTATION.add("j!prefix set *");
+        Listener.PRESENCE_ROTATION.add("what's going on gamers");
+        Listener.PRESENCE_ROTATION.add("invite me please");
     }
 }

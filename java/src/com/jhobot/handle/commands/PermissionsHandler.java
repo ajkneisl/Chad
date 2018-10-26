@@ -3,6 +3,7 @@ package com.jhobot.handle.commands;
 import com.jhobot.core.ChadBot;
 import sx.blah.discord.handle.obj.IUser;
 
+@SuppressWarnings("RedundantIfStatement")
 public class PermissionsHandler {
     public PermissionsHandler() {}
 

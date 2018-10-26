@@ -8,7 +8,6 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
-import com.sun.management.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;

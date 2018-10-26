@@ -5,7 +5,6 @@ import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
