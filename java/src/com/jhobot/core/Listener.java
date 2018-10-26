@@ -77,7 +77,7 @@ public class Listener
                 Future<?> thread;
                 DefineCommand a = k.getClass().getAnnotation(DefineCommand.class);
                 // if the command is system administrator only, and the user isnt a system administrator, deny them access
-                /*if (v.level() == PermissionLevels.SYSTEM_ADMINISTRATOR && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
+                if (v.level() == PermissionLevels.SYSTEM_ADMINISTRATOR && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor()))
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
                     return;
@@ -88,7 +88,7 @@ public class Listener
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
                     return;
-                }*/
+                }
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
                     thread = ChadBot.EXECUTOR.submit(v.help(e, args));
                 else
