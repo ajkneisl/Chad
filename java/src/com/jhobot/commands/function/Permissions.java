@@ -83,6 +83,7 @@ public class Permissions implements Command {
                         b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
                         StringBuilder b3 = new StringBuilder();
                         ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
+                        System.out.println(b3);
                         b2.withDesc(b3.toString());
                         m.sendEmbed(b2.build());
                         System.out.println("view3");

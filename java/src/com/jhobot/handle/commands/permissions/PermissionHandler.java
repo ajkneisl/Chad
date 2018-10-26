@@ -83,7 +83,7 @@ public class PermissionHandler
         if (!parseCommand(command))
             return 0;
 
-        if (ChadBot.DATABASE_HANDLER.getString(role.getGuild(), role.getStringID()) == null)
+        if (ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()) == null)
             return 4;
         else {
             Document get = ChadBot.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
@@ -91,7 +91,9 @@ public class PermissionHandler
             if (get == null)
                 return 1;
 
-            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).remove(command))));
+            ArrayList<String> ar = ChadBot.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID());
+            ar.remove(command);
+            ChadBot.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
             return 6;
         }
 
@@ -99,12 +101,7 @@ public class PermissionHandler
 
     private boolean parseCommand(String arg)
     {
-        for (String s : Listener.hash.keySet())
-        {
-            if (s.equalsIgnoreCase(arg))
-                return true;
-        }
-        return false;
+        return this.CMD.contains(arg.toLowerCase());
     }
 
     public String parseErrorCode(int i)
