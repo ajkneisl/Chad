@@ -2,10 +2,7 @@ package com.jhobot.core;
 
 import com.jhobot.commands.admin.*;
 import com.jhobot.commands.fun.*;
-import com.jhobot.commands.function.Logging;
-import com.jhobot.commands.function.Message;
-import com.jhobot.commands.function.Prefix;
-import com.jhobot.commands.function.Purge;
+import com.jhobot.commands.function.*;
 import com.jhobot.commands.info.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
@@ -84,6 +81,7 @@ public class ChadBot {
         Listener.hash.put("perms", new com.jhobot.commands.function.Permissions());
         Listener.hash.put("debugger", new Debugger());
         Listener.hash.put("contributions", new Contributors());
+        Listener.hash.put("autorole", new AutoRole());
     }
 
     public static void registerPresenceRotation() {

@@ -133,12 +133,43 @@ public class Listener
             }
         }
 
+        // does the bot have MANAGE_ROLES?
+        if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES)) {
+            new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Bot doesn't have permission: MANAGE_ROLES.");
+            return;
+        }
+
+        // you probably shouldnt put code below this comment
+
+        String joinRoleStringID = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_role");
+        Long joinRoleID = Long.parseLong(joinRoleStringID);
+        List<IRole> botRoles = ChadBot.cli.getOurUser().getRolesForGuild(e.getGuild());
+        IRole joinRole = e.getGuild().getRoleByID(joinRoleID);
+
+        // get the bots highest role position in the guild
+        int botPosition = 0;
+        for (IRole role : botRoles) {
+            if (role.getPosition() > botPosition) {
+                botPosition = role.getPosition();
+            }
+        }
+
+        // can the bot assign the user the configured role?
+        if (joinRole.getPosition() > botPosition) {
+            new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.");
+            return;
+        }
+
+        // is the role @everyone?
+        if (joinRole.isEveryoneRole()) {
+            new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Misconfigured role.");
+            return;
+        }
+
+        // assign the role
         if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "role_on_join")) {
-            String roleid_string = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_role");
-            if (roleid_string != "none") {
-                Long roleid = Long.parseLong(roleid_string);
-                IRole role = e.getGuild().getRoleByID(roleid);
-                e.getUser().addRole(role);
+            if (joinRoleStringID != "none") {
+                e.getUser().addRole(joinRole);
             }
         }
     }
