@@ -71,7 +71,7 @@ public class Listener
        // HashMap<String, Command> hash = new HashMap<>();
         //System.out.println(e.getAuthor().getStringID() + " - " + Long.toString(e.getAuthor().getLongID()));
         hash.forEach((k, v) -> {
-            if (commandString.equalsIgnoreCase(k))
+            if (commandString.equalsIgnoreCase(k)) // comment for commit
             {
                 ChadBot.DEBUG_HANDLER.internalLog("chad.internal.listener", "Running command: " + k, LogLevel.INFO);
                 Future<?> thread;
