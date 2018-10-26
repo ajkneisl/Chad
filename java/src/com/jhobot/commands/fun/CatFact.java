@@ -1,13 +1,10 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.core.JhoBot;
-import com.jhobot.handle.JSONHandler;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,7 +13,7 @@ public class CatFact implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             try{
-                String fact = JhoBot.JSON_HANDLER.read("https://catfact.ninja/fact").getString("fact");
+                String fact = ChadBot.JSON_HANDLER.read("https://catfact.ninja/fact").getString("fact");
                 new MessageHandler(e.getChannel()).send(fact, "Cat Fact");
             } catch (Exception ee)
             {

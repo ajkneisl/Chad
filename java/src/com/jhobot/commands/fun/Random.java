@@ -1,17 +1,14 @@
 package com.jhobot.commands.fun;
 
-import com.jhobot.core.JhoBot;
-import com.jhobot.handle.JSONHandler;
+import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.*;
 import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,7 +52,7 @@ public class Random implements Command {
             if (args.get(0).equalsIgnoreCase("quote"))
             {
                 try {
-                    JSONObject obj = JhoBot.JSON_HANDLER.read("https://talaikis.com/api/quotes/random/");
+                    JSONObject obj = ChadBot.JSON_HANDLER.read("https://talaikis.com/api/quotes/random/");
                     EmbedBuilder b = new EmbedBuilder();
                     b.withTitle("Random Quote");
                     b.appendField("Author", obj.getString("author"), true);

@@ -8,6 +8,7 @@ import sx.blah.discord.util.RequestBuffer;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public class StatsHandler
 {
     public static HashMap<String, String> getStats(IDiscordClient cli)

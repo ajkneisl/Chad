@@ -12,15 +12,15 @@ import sx.blah.discord.util.RequestBuilder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings({"FieldCanBeLocal", "WeakerAccess", "CanBeFinal"})
 public class GameHandler
 {
-    private IChannel ch;
     private ReactionEmoji yes = ReactionEmoji.of("\uD83C\uDDFE");
     private ReactionEmoji no = ReactionEmoji.of("\uD83C\uDDF3");
 
     public GameHandler(IChannel channel)
     {
-        this.ch = channel;
+        IChannel ch = channel;
     }
 
     public IUser getOtherUser(MessageReceivedEvent e, List<String> args)

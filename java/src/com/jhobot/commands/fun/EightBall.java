@@ -1,8 +1,7 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;

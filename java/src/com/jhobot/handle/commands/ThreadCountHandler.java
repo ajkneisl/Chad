@@ -1,14 +1,12 @@
 package com.jhobot.handle.commands;
 
-import com.jhobot.core.JhoBot;
-import org.checkerframework.checker.units.qual.C;
+import com.jhobot.core.ChadBot;
 import sx.blah.discord.handle.obj.IUser;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("CanBeFinal")
 public class ThreadCountHandler
 {
     public static ThreadCountHandler HANDLER = new ThreadCountHandler();
@@ -24,7 +22,7 @@ public class ThreadCountHandler
                 constant();
             }
         }, 0, 1000));
-        JhoBot.EXECUTOR.submit(th);
+        ChadBot.EXECUTOR.submit(th);
     }
 
     @SuppressWarnings("all")

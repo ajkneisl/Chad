@@ -5,17 +5,18 @@ import sx.blah.discord.api.IDiscordClient;
 import javax.swing.*;
 import java.util.HashMap;
 
+@SuppressWarnings({"FieldCanBeLocal", "CanBeFinal"})
 public class UIHandler
 {
-    private JFrame frame = new JFrame("JhoBot : Statistics");
     private StatPanel panel = new StatPanel();
     private IDiscordClient cli;
     public UIHandler(IDiscordClient cli)
     {
-        this.frame.setVisible(true);
-        this.frame.add(this.panel);
-        this.frame.setSize(411, 300);
-        this.frame.setResizable(false);
+        JFrame frame = new JFrame("JhoBot : Statistics");
+        frame.setVisible(true);
+        frame.add(this.panel);
+        frame.setSize(411, 300);
+        frame.setResizable(false);
         this.cli = cli;
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // makes it look better :)

@@ -1,11 +1,13 @@
 package com.jhobot.handle;
 
+import com.jhobot.handle.commands.PermissionLevels;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IUser;
 
 import java.util.ArrayList;
 
@@ -22,12 +24,14 @@ public class DatabaseHandler
         this.col = db.getCollection("bot");
     }
 
+    @SuppressWarnings("unused")
     public DatabaseHandler getSeperateCollection(String colName)
     {
         this.col = db.getCollection(colName);
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MongoClient getClient()
     {
         return this.cli;
@@ -36,9 +40,31 @@ public class DatabaseHandler
     {
         return this.col;
     }
+    @SuppressWarnings("unused")
     public MongoDatabase getDatabase()
     {
         return this.db;
+    }
+
+    public PermissionLevels getPermissionLevel(IUser user)
+    {
+        Document get = col.find(new Document("userid", Long.toString(user.getLongID()))).first();
+
+        // if they dont have a permission level, return member
+        if (get == null)
+            return PermissionLevels.MEMBER;
+
+        return PermissionLevels.valueOf(get.getString("level"));
+    }
+
+    public void setPermissionLevel(IUser user, PermissionLevels level)
+    {
+        Document get = col.find(new Document("userid", Long.toString(user.getLongID()))).first();
+
+        if (get == null)
+            return;
+
+        col.updateOne(get, new Document("$set", new Document("level", level.toString())));
     }
 
     @SuppressWarnings("unchecked")
@@ -99,6 +125,7 @@ public class DatabaseHandler
         return get != null;
     }
 
+    @SuppressWarnings("unused")
     public String getStats(String object)
     {
         Document get = col.find(new Document("stats", true)).first();
@@ -109,6 +136,7 @@ public class DatabaseHandler
         return (String) get.get(object);
     }
 
+    @SuppressWarnings("unused")
     public void setStats(String object, String entry)
     {
         Document get = col.find(new Document("stats", true)).first();

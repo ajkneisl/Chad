@@ -2,8 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;

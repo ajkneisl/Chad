@@ -1,8 +1,7 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.HelpHandler;
+import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.imageio.ImageIO;
@@ -41,27 +40,33 @@ public class PhotoEditor implements Command {
                 e1.printStackTrace();
             }
             File f = new File(System.getenv("appdata") + "\\jho\\imgcache\\img" + new java.util.Random().nextInt(2000) + ".png");
-
-            if (args.get(0).equalsIgnoreCase("blur"))
+            
+            while (f.exists())
             {
-                try {
-                    float[] matrix = new float[400];
-                    for (int i = 0; i < 400; i++)
-                        matrix[i] = 1.0f/400.0f;
-                    BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null );
+                f = new File(System.getenv("appdata") + "\\jho\\imgcache\\img" + new java.util.Random().nextInt(2000) + ".png");
+            }
 
-                    BufferedImage i = null;
+            switch (args.get(0).toLowerCase())
+            {
+                case "blur":
+                    try {
+                        float[] matrix = new float[400];
+                        for (int i = 0; i < 400; i++)
+                            matrix[i] = 1.0f/400.0f;
+                        BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null );
 
-                    ImageIO.write(op.filter(im, i), "png", f);
+                        BufferedImage i = null;
 
-                    m.sendFile(f);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                        ImageIO.write(op.filter(im, i), "png", f);
 
-                if (f.delete())
-                    System.err.println("Failed to delete file " + f.getPath());
-                return;
+                        m.sendFile(f);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    if (f.delete())
+                        System.err.println("Failed to delete file " + f.getPath());
+                    return;
             }
 
             help(e, args);
