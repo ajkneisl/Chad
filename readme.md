@@ -7,9 +7,6 @@ https://discordapp.com/api/oauth2/authorize?client_id=490728748501434369&permiss
 ##### Current Version
 v0.3.3 BETA
 
-##### Support Server / Testing Server
-https://discord.gg/EEHKTW
-
 ##### Personal Use
 We do not provide any support for personal usage of the bot. There's no point of using the bot for personal usage, or at least the provided jar(s) due to watermarks. If you plan to use part of the bot, credit would be greatly appreciated. 
 
