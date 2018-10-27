@@ -21,7 +21,7 @@ public class Util
 
     public static String getCurrentVersion()
     {
-        return "v0.3.3";
+        return "v0.4.0";
     }
 
     public static String httpGet(String url) {
