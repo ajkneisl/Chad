@@ -71,7 +71,8 @@ public class AutoRole implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("autorole <[options]>", "Configures the automatic role assignment feature.");
+        st.put("autorole [on/off]", "Toggles automatic role assignment features.");
+        st.put("autorole set [role name]", "Sets role.");
         return HelpHandler.helpCommand(st, "Auto Role", e);
     }
 }

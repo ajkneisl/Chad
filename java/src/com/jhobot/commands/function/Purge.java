@@ -18,20 +18,20 @@ public class Purge implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
-        //return null;
         return() -> {
             if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES)) {
                 new MessageHandler(e.getChannel()).sendError("Bot can't manage messages.");
                 return;
             }
-
-            boolean silent = false;
-
-            if (e.getMessage().getContent().endsWith("-s")) {
-                silent = true;
+            if (args.size() >= 1)
+            {
+                new MessageHandler(e.getChannel()).sendError("Invalid Arguments!");
             }
 
+            boolean silent = e.getMessage().getContent().endsWith("-s");
+
             int requestedAmount = Integer.parseInt(args.get(0));
+
             if (requestedAmount > 100) {
                 new MessageHandler(e.getChannel()).sendError("You can only delete 100 messages or less.");
                 return;
@@ -56,8 +56,7 @@ public class Purge implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("purge this", "Removes 500 messages from the current channel.");
-        st.put("purge <channel name> <amount of messages>", "Removes a specific amount of messages from a defined channel.");
+        st.put("purge <amount of messages>", "Removes a specific amount of messages from a defined channel.");
         st.put("For silent deletions", "Add -s to the end of the command.");
         return HelpHandler.helpCommand(st, "Purge", e);
     }

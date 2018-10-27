@@ -36,9 +36,9 @@ public class ChadBot {
             System.exit(1);
         }
     }
-    
+
     public static final IDiscordClient cli = new ClientBuilder().withToken(ChadBot.JSON_HANDLER.get("token")).withRecommendedShardCount().build();
-    
+
     public static void main(String[] args)
     {
         // register commands
@@ -85,8 +85,6 @@ public class ChadBot {
         Listener.metaData.put("rtop", new MetaData(Category.INFO, false)); // RedditTop
         Listener.hash.put("rnew", new RedditNew());
         Listener.metaData.put("rnew", new MetaData(Category.INFO, false)); // ReditNew
-        Listener.hash.put("systeminfo", new SystemInfo());
-        Listener.metaData.put("systeminfo", new MetaData(Category.INFO, false)); // SystemInfo
         Listener.hash.put("contributions", new Contributors());
         Listener.metaData.put("contributions", new MetaData(Category.INFO, false)); // Contributors
         Listener.hash.put("updatelog", new UpdateLog());
@@ -114,6 +112,8 @@ public class ChadBot {
         Listener.metaData.put("threads", new MetaData(Category.ADMIN, true)); // Threads
         Listener.hash.put("modpresence", new ModifyPresence());
         Listener.metaData.put("modpresence", new MetaData(Category.ADMIN, true)); // ModifyPresence
+        Listener.hash.put("systeminfo", new SystemInfo());
+        Listener.metaData.put("systeminfo", new MetaData(Category.INFO, true)); // SystemInfo
     }
 
     public static void registerPresenceRotation() {
