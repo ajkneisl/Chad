@@ -41,6 +41,9 @@ public class PermissionHandler
         MetaData meta = Listener.metaData.get(command);
         if (meta.isDevOnly && userIsDeveloper(user))
             return true;
+        
+        if (meta.category() == Category.INFO || meta.category() == Category.FUN)
+            return true;
 
         for (IRole r : user.getRolesForGuild(g))
         {
