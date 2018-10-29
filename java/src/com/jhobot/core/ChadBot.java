@@ -1,9 +1,12 @@
 package com.jhobot.core;
 
-import com.jhobot.commands.admin.*;
+import com.jhobot.commands.admin.CurrentThreads;
+import com.jhobot.commands.admin.ModifyPresence;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.*;
 import com.jhobot.commands.info.*;
+import com.jhobot.commands.info.SystemInfo;
+import com.jhobot.commands.nsfw.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
 import com.jhobot.handle.DatabaseHandler;
@@ -87,8 +90,6 @@ public class ChadBot {
         Listener.metaData.put("rnew", new MetaData(Category.INFO, false)); // ReditNew
         Listener.hash.put("contributions", new Contributors());
         Listener.metaData.put("contributions", new MetaData(Category.INFO, false)); // Contributors
-        Listener.hash.put("updatelog", new UpdateLog());
-        Listener.metaData.put("updatelog", new MetaData(Category.INFO, false)); // UpdateLog
         // punishments
         Listener.hash.put("kick", new Kick());
         Listener.metaData.put("kick", new MetaData(Category.PUNISHMENTS, false)); // Kick
@@ -107,6 +108,35 @@ public class ChadBot {
         Listener.metaData.put("autorole", new MetaData(Category.FUNCTION, false)); // AutoRole
         Listener.hash.put("perms", new com.jhobot.commands.function.Permissions());
         Listener.metaData.put("perms", new MetaData(Category.FUNCTION, false)); // Permissions
+        //nsfw
+        Listener.hash.put("4k", new nb4k());
+        Listener.metaData.put("4k", new MetaData(Category.NSFW, false)); // 4k
+        Listener.hash.put("hentai", new nbhentai());
+        Listener.metaData.put("hentai", new MetaData(Category.NSFW, false)); // hentai
+        Listener.hash.put("holo", new nbholo());
+        Listener.metaData.put("holo", new MetaData(Category.NSFW, false)); // holo
+        Listener.hash.put("lewdneko", new nblewdneko());
+        Listener.metaData.put("lewdneko", new MetaData(Category.NSFW, false)); // lewdneko
+        Listener.hash.put("neko", new nbneko());
+        Listener.metaData.put("neko", new MetaData(Category.NSFW, false)); // neko
+        Listener.hash.put("lewdkitsune", new nblewdkitsune());
+        Listener.metaData.put("lewdkitsune", new MetaData(Category.NSFW, false)); // lewdkitsune
+        Listener.hash.put("kemonomimi", new nbkemonomimi());
+        Listener.metaData.put("kemonomimi", new MetaData(Category.NSFW, false)); // kemonomimi
+        Listener.hash.put("anal", new nbanal());
+        Listener.metaData.put("anal", new MetaData(Category.NSFW, false)); // anal
+        Listener.hash.put("hentai_anal", new nbhentaianal());
+        Listener.metaData.put("hentai_anal", new MetaData(Category.NSFW, false)); // hentai anal
+        Listener.hash.put("gonewild", new nbgonewild());
+        Listener.metaData.put("gonewild", new MetaData(Category.NSFW, false)); // gone wild
+        Listener.hash.put("kanna", new nbkanna());
+        Listener.metaData.put("kanna", new MetaData(Category.NSFW, false)); // kanna
+        Listener.hash.put("ass", new nbass());
+        Listener.metaData.put("ass", new MetaData(Category.NSFW, false)); // ass
+        Listener.hash.put("pussy", new nbpussy());
+        Listener.metaData.put("pussy", new MetaData(Category.NSFW, false)); // pussy
+        Listener.hash.put("thigh", new nbthigh());
+        Listener.metaData.put("thigh", new MetaData(Category.NSFW, false)); // thigh
         // admin
         Listener.hash.put("threads", new CurrentThreads());
         Listener.metaData.put("threads", new MetaData(Category.ADMIN, true)); // Threads

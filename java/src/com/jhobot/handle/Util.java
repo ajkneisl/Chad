@@ -1,13 +1,14 @@
 package com.jhobot.handle;
 
+import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
+import java.awt.*;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @SuppressWarnings("SameReturnValue")
 public class Util
@@ -65,7 +66,7 @@ public class Util
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
-    public static String replaceLast(String input, String regex, String replacement) {
+    /*public static String replaceLast(String input, String regex, String replacement) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         if (!matcher.find()) {
@@ -80,5 +81,5 @@ public class Util
         matcher.appendReplacement(sb, replacement);
         matcher.appendTail(sb);
         return sb.toString();
-    }
+    }*/
 }
