@@ -1,6 +1,7 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
@@ -26,7 +27,7 @@ public class AutoRole implements Command {
                 default:
                     break;
                 case "on":
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", true);
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", true);
                     EmbedBuilder on_emb = new EmbedBuilder();
                     on_emb.withTitle("Auto Role");
                     on_emb.withDesc("Auto Role enabled.");
@@ -34,7 +35,7 @@ public class AutoRole implements Command {
                     m.sendEmbed(on_emb.build());
                     break;
                 case "off":
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", false);
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", false);
                     EmbedBuilder off_emb = new EmbedBuilder();
                     off_emb.withTitle("Auto Role");
                     off_emb.withDesc("Auto Role disabled.");
@@ -44,7 +45,7 @@ public class AutoRole implements Command {
                 case "set":
                     args.remove(0); // remove option argument
                     StringBuilder sb = new StringBuilder();
-                    List<IRole> roles = new ArrayList();
+                    List<IRole> roles = new ArrayList<>();
                     for (String s : args) {
                         sb.append(s).append(" ");
                         roles = RequestBuffer.request(() -> e.getGuild().getRolesByName(sb.toString().trim())).get();
@@ -55,7 +56,7 @@ public class AutoRole implements Command {
                         m.sendError("Invalid role.");
                         return;
                     }
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "join_role", set_role.getStringID());
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "join_role", set_role.getStringID());
                     EmbedBuilder set_emb = new EmbedBuilder();
                     set_emb.withTitle("Auto Role");
                     set_emb.withDesc("New users will now automatically receive the role: " + set_role.getName());

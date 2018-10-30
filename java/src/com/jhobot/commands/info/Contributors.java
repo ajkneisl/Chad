@@ -1,6 +1,7 @@
 package com.jhobot.commands.info;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
 import org.json.JSONArray;
@@ -18,7 +19,7 @@ public class Contributors implements Command {
             JSONArray o = null;
             b.withTitle("Contributors for Chad");
             try {
-                o = ChadBot.JSON_HANDLER.readArray("https://api.github.com/repos/shoganeko/chad/contributors");
+                o = ChadVar.JSON_HANDLER.readArray("https://api.github.com/repos/shoganeko/chad/contributors");
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }

@@ -1,6 +1,7 @@
 package com.jhobot.commands.fun;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -13,7 +14,7 @@ public class CatFact implements Command {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             try{
-                String fact = ChadBot.JSON_HANDLER.read("https://catfact.ninja/fact").getString("fact");
+                String fact = ChadVar.JSON_HANDLER.read("https://catfact.ninja/fact").getString("fact");
                 new MessageHandler(e.getChannel()).send(fact, "Cat Fact");
             } catch (Exception ee)
             {

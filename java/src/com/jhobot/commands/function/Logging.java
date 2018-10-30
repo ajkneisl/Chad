@@ -1,6 +1,7 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -41,8 +42,8 @@ public class Logging implements Command {
                     return;
                 }
 
-                ChadBot.DATABASE_HANDLER.set(e.getGuild(), "logging", Boolean.parseBoolean(bool));
-                m.sendConfigLog("Logging", bool, Boolean.toString(ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                ChadVar.DATABASE_HANDLER.set(e.getGuild(), "logging", Boolean.parseBoolean(bool));
+                m.sendConfigLog("Logging", bool, Boolean.toString(ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                 m.send("Changed logging to " + bool, "Changed Logging");
 
                 return;
@@ -72,15 +73,15 @@ public class Logging implements Command {
                     return;
                 }
 
-                if (ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel").equalsIgnoreCase("none"))
+                if (ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel").equalsIgnoreCase("none"))
                 {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                 }
                 else {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                 }
                 m.send("Changed logging channel to " + b.toString().trim(), "Changed Logging Channel");
-                ChadBot.DATABASE_HANDLER.set(e.getGuild(), "logging_channel", ch.getStringID());
+                ChadVar.DATABASE_HANDLER.set(e.getGuild(), "logging_channel", ch.getStringID());
                 return;
             }
 

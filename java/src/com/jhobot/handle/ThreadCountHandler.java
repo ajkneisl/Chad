@@ -1,6 +1,7 @@
 package com.jhobot.handle;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import sx.blah.discord.handle.obj.IUser;
 
 import java.util.*;
@@ -9,11 +10,9 @@ import java.util.concurrent.Future;
 @SuppressWarnings("CanBeFinal")
 public class ThreadCountHandler
 {
-    public static ThreadCountHandler HANDLER = new ThreadCountHandler();
-
     private Map<IUser, ArrayList<Future<?>>> COUNT;
 
-    private ThreadCountHandler()
+    public ThreadCountHandler()
     {
         this.COUNT = new HashMap<>();
         Thread th = new Thread(() -> new Timer().schedule(new TimerTask() {
@@ -22,7 +21,7 @@ public class ThreadCountHandler
                 constant();
             }
         }, 0, 1000));
-        ChadBot.EXECUTOR.submit(th);
+        ChadVar.EXECUTOR_POOL.submit(th);
     }
 
     @SuppressWarnings("all")

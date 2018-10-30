@@ -1,6 +1,7 @@
 package com.jhobot.commands.punishments;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -84,9 +85,9 @@ public class Kick implements Command {
                 sb2.append("no reason");
             }
 
-            if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "kick_msg_on"))
+            if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "kick_msg_on"))
             {
-                String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "kick_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
+                String msg = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "kick_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
                 if (!user.isBot())
                     new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(msg).build();
             }
@@ -96,13 +97,13 @@ public class Kick implements Command {
                 e.getGuild().kickUser(user);
                 reason.add("None");
                 m.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
-                m.sendPunishLog("Kick", user, e.getAuthor(), ChadBot.DATABASE_HANDLER, e.getGuild(), reason);
+                m.sendPunishLog("Kick", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
                 return;
             }
 
             e.getGuild().kickUser(user);
             m.send("Successfully kicked " + user.getName() + " for " + sb2.toString().trim() + ".", "Kicked User");
-            m.sendPunishLog("Kick", user, e.getAuthor(), ChadBot.DATABASE_HANDLER, e.getGuild(), reason);
+            m.sendPunishLog("Kick", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
         };
     }
 

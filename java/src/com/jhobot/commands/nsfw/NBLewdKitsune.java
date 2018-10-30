@@ -1,6 +1,7 @@
 package com.jhobot.commands.nsfw;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.Command;
@@ -25,7 +26,7 @@ public class NBLewdKitsune implements Command {
             }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Lewd Kitsune [NSFW]");
-            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=lewdkitsune").getString("message"));
+            b.withImage(ChadVar.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=lewdkitsune").getString("message"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());

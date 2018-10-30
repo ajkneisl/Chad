@@ -1,6 +1,7 @@
 package com.jhobot.handle.commands;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.Util;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -15,7 +16,7 @@ public class HelpHandler
     public static Runnable helpCommand(HashMap<String, String> cmds, String commandName, MessageReceivedEvent e)
     {
         return () -> {
-            String prefix = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "prefix");
+            String prefix = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "prefix");
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Help : " + commandName);
             cmds.forEach((k, v) -> b.appendField(prefix+k, v, false));

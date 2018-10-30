@@ -1,6 +1,7 @@
 package com.jhobot.commands.punishments;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -91,9 +92,9 @@ public class Ban implements Command {
                 sb2.append("no reason");
             }
 
-            if (ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(), "ban_msg_on"))
+            if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "ban_msg_on"))
             {
-                String msg = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "ban_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
+                String msg = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "ban_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
                 if (!user.isBot())
                     new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(msg).build();
             }
@@ -103,13 +104,13 @@ public class Ban implements Command {
                 e.getGuild().banUser(user);
                 reason.add("None");
                 m.send("Successfully banned " + user.getName() + " for no reason.", "Banned User");
-                m.sendPunishLog("Ban", user, e.getAuthor(), ChadBot.DATABASE_HANDLER, e.getGuild(), reason);
+                m.sendPunishLog("Ban", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
                 return;
             }
 
             e.getGuild().banUser(user);
             m.send("Successfully banned " + user.getName() + " for " + sb2.toString().trim() + ".", "Banned User");
-            m.sendPunishLog("Ban", user, e.getAuthor(), ChadBot.DATABASE_HANDLER, e.getGuild(), reason);
+            m.sendPunishLog("Ban", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
         };
     }
 

@@ -1,6 +1,7 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
@@ -55,24 +56,24 @@ public class Permissions implements Command {
                     default:
                         break;
                     case "add":
-                        int add = PermissionHandler.HANDLER.addCommandToRole(role, args.get(0));
+                        int add = ChadVar.PERMISSION_HANDLER.addCommandToRole(role, args.get(0));
                         if (add == 6) {
                             m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
-                            m.sendError(PermissionHandler.HANDLER.parseErrorCode(add));
+                            m.sendError(ChadVar.PERMISSION_HANDLER.parseErrorCode(add));
                         }
                         break;
                     case "remove":
-                        int rem = PermissionHandler.HANDLER.removeCommandFromRole(role, args.get(0));
+                        int rem = ChadVar.PERMISSION_HANDLER.removeCommandFromRole(role, args.get(0));
                         if (rem == 6) {
                             m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
-                            m.sendError(PermissionHandler.HANDLER.parseErrorCode(rem));
+                            m.sendError(ChadVar.PERMISSION_HANDLER.parseErrorCode(rem));
                         }
                         break;
                     case "view":
                         System.out.println("view1");
-                        if (ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null || ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).size() == 0) {
+                        if (ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null || ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).size() == 0) {
                             m.sendError("There's no permissions there!");
                             return;
                         }
@@ -80,7 +81,7 @@ public class Permissions implements Command {
                         EmbedBuilder b2 = new EmbedBuilder();
                         b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
                         StringBuilder b3 = new StringBuilder();
-                        ChadBot.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
+                        ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
                         System.out.println(b3);
                         b2.withDesc(b3.toString());
                         m.sendEmbed(b2.build());

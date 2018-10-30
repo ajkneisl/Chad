@@ -1,6 +1,7 @@
 package com.jhobot.commands.function;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -36,10 +37,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
-                ChadBot.DATABASE_HANDLER.set(e.getGuild(), "join_message", sb.toString().trim());
+                String old = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
+                ChadVar.DATABASE_HANDLER.set(e.getGuild(), "join_message", sb.toString().trim());
                 m.sendMessage("Set the guild's join message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Join Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                m.sendConfigLog("Join Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                 return;
             }
 
@@ -52,10 +53,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
-                ChadBot.DATABASE_HANDLER.set(e.getGuild(), "leave_message", sb.toString().trim());
+                String old = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
+                ChadVar.DATABASE_HANDLER.set(e.getGuild(), "leave_message", sb.toString().trim());
                 m.sendMessage("Set the guild's leave message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Leave Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                m.sendConfigLog("Leave Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                 return;
             }
             if (args.size() >= 2 && args.get(0).equalsIgnoreCase("ban"))
@@ -67,10 +68,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "ban_message");
-                ChadBot.DATABASE_HANDLER.set(e.getGuild(), "ban_message", sb.toString().trim());
+                String old = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "ban_message");
+                ChadVar.DATABASE_HANDLER.set(e.getGuild(), "ban_message", sb.toString().trim());
                 m.sendMessage("Set the guild's ban message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Ban Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                m.sendConfigLog("Ban Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                 return;
             }
 
@@ -83,10 +84,10 @@ public class Message implements Command {
                     sb.append(s).append(" ");
                 }
 
-                String old = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "kick_message");
-                ChadBot.DATABASE_HANDLER.set(e.getGuild(), "kick_message", sb.toString().trim());
+                String old = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "kick_message");
+                ChadVar.DATABASE_HANDLER.set(e.getGuild(), "kick_message", sb.toString().trim());
                 m.sendMessage("Set the guild's kick message to `"+sb.toString().trim().replaceAll("```", "<large code-block>").replaceAll("`", "<small code-block>")+"`");
-                m.sendConfigLog("Kick Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                m.sendConfigLog("Kick Message", sb.toString().trim(), old, e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                 return;
             }
 
@@ -106,29 +107,29 @@ public class Message implements Command {
                 if (args.get(1).equalsIgnoreCase("join"))
                 {
                     m.sendMessage("Set the guild's join message toggle to `"+set+"`");
-                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"join_msg_on")), e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "join_msg_on", set);
+                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(),"join_msg_on")), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "join_msg_on", set);
                     return;
                 }
                 if (args.get(1).equalsIgnoreCase("ban"))
                 {
                     m.sendMessage("Set the guild's ban message toggle to `"+set+"`");
-                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"ban_msg_on")), e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "ban_msg_on", set);
+                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(),"ban_msg_on")), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "ban_msg_on", set);
                     return;
                 }
                 if (args.get(1).equalsIgnoreCase("kick"))
                 {
                     m.sendMessage("Set the guild's kick message toggle to `"+set+"`");
-                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"kick_msg_on")), e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "kick_msg_on", set);
+                    m.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(),"kick_msg_on")), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "kick_msg_on", set);
                     return;
                 }
                 if (args.get(1).equalsIgnoreCase("leave"))
                 {
                     m.sendMessage("Set the guild's leave message toggle to `"+set+"`");
-                    m.sendConfigLog("Leave Message Toggle", Boolean.toString(set), Boolean.toString(ChadBot.DATABASE_HANDLER.getBoolean(e.getGuild(),"leave_msg_on")), e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "leave_msg_on", set);
+                    m.sendConfigLog("Leave Message Toggle", Boolean.toString(set), Boolean.toString(ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(),"leave_msg_on")), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "leave_msg_on", set);
                     return;
                 }
                 m.sendError("Invalid Type!");
@@ -142,7 +143,7 @@ public class Message implements Command {
                     String oldName;
                     IChannel newChannel;
                     IChannel oldChannel;
-                    String channelString = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
+                    String channelString = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
 
                     if (channelString.equalsIgnoreCase("none"))
                         oldName = "none";
@@ -173,9 +174,9 @@ public class Message implements Command {
 
                     newChannel = l.get(0);
 
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
                     m.sendMessage("Set the guild's join channel to `"+newChannel.getName()+"`");
-                    m.sendConfigLog("Join Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                    m.sendConfigLog("Join Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                     return;
                 }
 
@@ -185,7 +186,7 @@ public class Message implements Command {
                     String oldName;
                     IChannel newChannel;
                     IChannel oldChannel;
-                    String channelString = ChadBot.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
+                    String channelString = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
 
                     if (channelString.equalsIgnoreCase("none"))
                         oldName = "none";
@@ -216,9 +217,9 @@ public class Message implements Command {
 
                     newChannel = l.get(0);
 
-                    ChadBot.DATABASE_HANDLER.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
+                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
                     m.sendMessage("Set the guild's leave channel to `"+newChannel.getName()+"`");
-                    m.sendConfigLog("Leave Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), ChadBot.DATABASE_HANDLER);
+                    m.sendConfigLog("Leave Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
                     return;
                 }
                 m.sendError("Invalid Type!");

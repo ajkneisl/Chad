@@ -1,5 +1,6 @@
 package com.jhobot.commands.admin;
 
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.ThreadCountHandler;
 import com.jhobot.handle.Util;
@@ -22,7 +23,7 @@ public class CurrentThreads implements Command {
 
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withTitle("Current Threads Running");
-            ThreadCountHandler.HANDLER.getMap().forEach((k, v) -> b.appendField(k.getName() + " [" + k.getLongID() + "]", Integer.toString(v.size()), false));
+            ChadVar.THREAD_HANDLER.getMap().forEach((k, v) -> b.appendField(k.getName() + " [" + k.getLongID() + "]", Integer.toString(v.size()), false));
             m.sendEmbed(b.build());
         };
     }

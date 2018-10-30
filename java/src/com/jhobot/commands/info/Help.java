@@ -1,7 +1,7 @@
 package com.jhobot.commands.info;
 
-import com.jhobot.core.Listener;
-import com.jhobot.handle.commands.MetaData;
+import com.jhobot.core.ChadVar;
+import com.jhobot.handle.commands.CommandData;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
@@ -19,15 +19,14 @@ public class Help implements Command {
             StringBuilder sb = new StringBuilder();
             // go through each category and add all its commands to the help string
             for (Category category : Category.values()) {
-                if (category == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // no admin commands (unless admin)
+                if (category == Category.ADMIN && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor())) // no admin commands (unless admin)
                     continue;
                 int index = 0;
                 sb.append("\n" + Util.fixEnumString(category.toString().toLowerCase()) + ": ");
                 StringBuilder scuffed_builder = new StringBuilder();
-                for (String k : Listener.hash.keySet()) {
-                    Command v = Listener.hash.get(k);
-                    MetaData meta = Listener.metaData.get(k);
-                    if (meta.category == Category.ADMIN && !PermissionHandler.HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
+                for (String k : ChadVar.COMMANDS.keySet()) {
+                    CommandData meta = ChadVar.COMMANDS.get(k);
+                    if (meta.category == Category.ADMIN && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
                         continue;
                     if (meta.category != category)
                         continue;
