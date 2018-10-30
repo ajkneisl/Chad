@@ -2,9 +2,7 @@ package com.jhobot.commands.info;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.handle.MessageHandler;
-import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.DefineCommand;
 import org.json.JSONArray;
 import org.json.JSONException;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;

@@ -1,6 +1,7 @@
 package com.jhobot.commands.admin;
 
 import com.jhobot.handle.MessageHandler;
+import com.jhobot.handle.ThreadCountHandler;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;

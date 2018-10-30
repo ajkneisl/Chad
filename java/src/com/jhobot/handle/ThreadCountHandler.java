@@ -1,4 +1,4 @@
-package com.jhobot.handle.commands;
+package com.jhobot.handle;
 
 import com.jhobot.core.ChadBot;
 import sx.blah.discord.handle.obj.IUser;

@@ -1,5 +1,8 @@
 package com.jhobot.handle;
 
+import com.jhobot.handle.logging.Log;
+import com.jhobot.handle.logging.LogLevel;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;

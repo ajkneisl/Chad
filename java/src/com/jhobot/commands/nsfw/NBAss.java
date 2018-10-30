@@ -13,14 +13,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class nbanal implements Command {
+public class NBAss implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            if (!e.getChannel().isNSFW())
+            {
+                new MessageHandler(e.getChannel()).sendError("This isn't an NSFW channel!");
+                return;
+            }
             EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Anal");
-            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=anal").getString("message"));
+            b.withTitle("Ass [NSFW]");
+            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=ass").getString("message"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -30,7 +35,7 @@ public class nbanal implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("anal", "nsfw anal");
-        return HelpHandler.helpCommand(st, "Anal", e);
+        st.put("ass", "Gets NSFW Ass images");
+        return HelpHandler.helpCommand(st, "ass", e);
     }
 }

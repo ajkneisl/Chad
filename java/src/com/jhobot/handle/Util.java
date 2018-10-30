@@ -22,7 +22,7 @@ public class Util
 
     public static String getCurrentVersion()
     {
-        return "v0.4.0";
+        return "v0.5.0";
     }
 
     public static String httpGet(String url) {

@@ -1,11 +1,1 @@
-v0.3.31
-
-Improved permissions checking for commands
-More Reddit commands
-Fix russian roulette
-PUBG stats
-Tic tac toe
-Rich presence message modification system
-System information command
-For fucks sake comment code you kikes (except sho hes a r/niceguys)
-Better debug features/debug mode
+woah this is empty

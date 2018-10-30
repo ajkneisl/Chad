@@ -13,14 +13,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class nblewdneko implements Command {
+public class NBHentaiAnal implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            if (!e.getChannel().isNSFW())
+            {
+                new MessageHandler(e.getChannel()).sendError("This isn't an NSFW channel!");
+                return;
+            }
             EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Lewd Neko");
-            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=lewdneko").getString("message"));
+            b.withTitle("Hentai Anal [NSFW]");
+            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=hentai_anal").getString("message"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -30,7 +35,7 @@ public class nblewdneko implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("lewdneko", "nsfw lewdneko");
-        return HelpHandler.helpCommand(st, "lewdneko", e);
+        st.put("hentai_anal", "Gets NSFW Hentai Anal");
+        return HelpHandler.helpCommand(st, "Hentai Anal", e);
     }
 }

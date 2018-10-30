@@ -16,12 +16,10 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Random;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("CanBeFinal")
 public class Listener
@@ -252,7 +250,9 @@ public class Listener
 
     public static int ROTATION_TIME = 60000*5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
-    public static List<String> PRESENCE_ROTATION = new ArrayList();
+    public static List<String> PRESENCE_ROTATION = new ArrayList<>();
+
+    static boolean ALLOWUI = false;
 
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
@@ -273,17 +273,20 @@ public class Listener
             }, 0, ROTATION_TIME); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work
         });
 
-        // automatic ui updater
-        ChadBot.EXECUTOR.submit(() -> {
-            Timer t = new Timer();
-            UIHandler ui = new UIHandler(e.getClient());
-            t.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    ui.update();
-                }
-            }, 0, 60000*5);
-            ui.getPanel().getRefreshButton().addActionListener((ActionEvent) ->  ui.update());
-        });
+        // UI Updater
+        if (ALLOWUI)
+        {
+            UIHandler h = new UIHandler(e.getClient());
+            ChadBot.EXECUTOR.submit(() -> {
+                java.util.Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        h.update();
+                    }
+                }, 0, 60000*5);
+                h.getPanel().getRefreshButton().addActionListener((ActionEvent) ->  h.update());
+            });
+        }
     }
 }

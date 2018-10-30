@@ -2,9 +2,8 @@ package com.jhobot.handle.commands.permissions;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.core.Listener;
-import com.jhobot.handle.MetaData;
+import com.jhobot.handle.commands.MetaData;
 import com.jhobot.handle.commands.Command;
-import com.jhobot.handle.commands.PermissionLevels;
 import org.bson.Document;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;

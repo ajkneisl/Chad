@@ -1,7 +1,7 @@
 package com.jhobot.commands.info;
 
 import com.jhobot.core.Listener;
-import com.jhobot.handle.MetaData;
+import com.jhobot.handle.commands.MetaData;
 import com.jhobot.handle.Util;
 import com.jhobot.handle.commands.*;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
@@ -9,7 +9,6 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.RequestBuffer;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 

@@ -51,7 +51,7 @@ public class StatPanel extends JPanel {
 
         //---- label6 ----
         label6.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        label6.setText("http://shoganeko.me");
+        label6.setText("http://bot.shoganeko.me");
         add(label6);
         label6.setBounds(230, 235, 165, 20);
 

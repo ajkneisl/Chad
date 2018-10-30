@@ -1,4 +1,4 @@
-package com.jhobot.handle.commands;
+package com.jhobot.handle.commands.permissions;
 
 public enum PermissionLevels
 {

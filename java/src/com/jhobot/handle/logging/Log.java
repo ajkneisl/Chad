@@ -1,4 +1,4 @@
-package com.jhobot.handle;
+package com.jhobot.handle.logging;
 
 @SuppressWarnings("CanBeFinal")
 public class Log {

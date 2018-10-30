@@ -13,14 +13,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class nbhentai implements Command {
+public class NBNeko implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            if (!e.getChannel().isNSFW())
+            {
+                new MessageHandler(e.getChannel()).sendError("This isn't an NSFW channel!");
+                return;
+            }
             EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Hentai");
-            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=hentai").getString("message"));
+            b.withTitle("Neko [NSFW]");
+            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=neko").getString("message"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -30,7 +35,7 @@ public class nbhentai implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("hentai", "nsfw hentai");
-        return HelpHandler.helpCommand(st, "hentai", e);
+        st.put("neko", "Gets a Neko");
+        return HelpHandler.helpCommand(st, "neko", e);
     }
 }

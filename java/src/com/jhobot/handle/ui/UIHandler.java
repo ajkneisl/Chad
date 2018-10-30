@@ -1,9 +1,12 @@
 package com.jhobot.handle.ui;
 
+import com.jhobot.core.ChadBot;
 import sx.blah.discord.api.IDiscordClient;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SuppressWarnings({"FieldCanBeLocal", "CanBeFinal"})
 public class UIHandler
@@ -12,7 +15,7 @@ public class UIHandler
     private IDiscordClient cli;
     public UIHandler(IDiscordClient cli)
     {
-        JFrame frame = new JFrame("JhoBot : Statistics");
+        JFrame frame = new JFrame("Chad : Statistics");
         frame.setVisible(true);
         frame.add(this.panel);
         frame.setSize(411, 300);

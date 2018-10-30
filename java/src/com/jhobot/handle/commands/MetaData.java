@@ -1,6 +1,4 @@
-package com.jhobot.handle;
-
-import com.jhobot.handle.commands.Category;
+package com.jhobot.handle.commands;
 
 public class MetaData {
     public Category category;

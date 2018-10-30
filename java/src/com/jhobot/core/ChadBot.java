@@ -12,10 +12,9 @@ import com.jhobot.commands.punishments.Kick;
 import com.jhobot.handle.DatabaseHandler;
 import com.jhobot.handle.DebugHandler;
 import com.jhobot.handle.JSONHandler;
-import com.jhobot.handle.MetaData;
+import com.jhobot.handle.commands.MetaData;
 import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.PermissionLevels;
-import com.jhobot.handle.commands.PermissionsHandler;
+import com.jhobot.handle.commands.permissions.PermissionLevels;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -28,7 +27,6 @@ public class ChadBot {
     public static final JSONHandler JSON_HANDLER = new JSONHandler().forceCheck();
     public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
     public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(30);
-    public static final PermissionsHandler PERMISSIONS_HANDLER = new PermissionsHandler();
     public static final DebugHandler DEBUG_HANDLER = new DebugHandler();
 
     // Checks if there's a token in the bot.json (if not it exits the program)
@@ -44,6 +42,10 @@ public class ChadBot {
 
     public static void main(String[] args)
     {
+        if (args.length == 1 && args[0].equalsIgnoreCase("denyui"))
+        {
+            Listener.ALLOWUI = false;
+        }
         // register commands
         registerCommands();
 
@@ -109,33 +111,35 @@ public class ChadBot {
         Listener.hash.put("perms", new com.jhobot.commands.function.Permissions());
         Listener.metaData.put("perms", new MetaData(Category.FUNCTION, false)); // Permissions
         //nsfw
-        Listener.hash.put("4k", new nb4k());
+        Listener.hash.put("nsfw", new NSFW());
+        Listener.metaData.put("nsfw", new MetaData(Category.NSFW, false)); // NSFW toggler
+        Listener.hash.put("4k", new NB4K());
         Listener.metaData.put("4k", new MetaData(Category.NSFW, false)); // 4k
-        Listener.hash.put("hentai", new nbhentai());
+        Listener.hash.put("hentai", new NBHentai());
         Listener.metaData.put("hentai", new MetaData(Category.NSFW, false)); // hentai
-        Listener.hash.put("holo", new nbholo());
+        Listener.hash.put("holo", new NBHolo());
         Listener.metaData.put("holo", new MetaData(Category.NSFW, false)); // holo
-        Listener.hash.put("lewdneko", new nblewdneko());
+        Listener.hash.put("lewdneko", new NBLewdNeko());
         Listener.metaData.put("lewdneko", new MetaData(Category.NSFW, false)); // lewdneko
-        Listener.hash.put("neko", new nbneko());
+        Listener.hash.put("neko", new NBNeko());
         Listener.metaData.put("neko", new MetaData(Category.NSFW, false)); // neko
-        Listener.hash.put("lewdkitsune", new nblewdkitsune());
+        Listener.hash.put("lewdkitsune", new NBLewdKitsune());
         Listener.metaData.put("lewdkitsune", new MetaData(Category.NSFW, false)); // lewdkitsune
-        Listener.hash.put("kemonomimi", new nbkemonomimi());
+        Listener.hash.put("kemonomimi", new NBKemonomimi());
         Listener.metaData.put("kemonomimi", new MetaData(Category.NSFW, false)); // kemonomimi
-        Listener.hash.put("anal", new nbanal());
+        Listener.hash.put("anal", new NBAnal());
         Listener.metaData.put("anal", new MetaData(Category.NSFW, false)); // anal
-        Listener.hash.put("hentai_anal", new nbhentaianal());
+        Listener.hash.put("hentai_anal", new NBHentaiAnal());
         Listener.metaData.put("hentai_anal", new MetaData(Category.NSFW, false)); // hentai anal
-        Listener.hash.put("gonewild", new nbgonewild());
+        Listener.hash.put("gonewild", new NBGoneWild());
         Listener.metaData.put("gonewild", new MetaData(Category.NSFW, false)); // gone wild
-        Listener.hash.put("kanna", new nbkanna());
+        Listener.hash.put("kanna", new NBKanna());
         Listener.metaData.put("kanna", new MetaData(Category.NSFW, false)); // kanna
-        Listener.hash.put("ass", new nbass());
+        Listener.hash.put("ass", new NBAss());
         Listener.metaData.put("ass", new MetaData(Category.NSFW, false)); // ass
-        Listener.hash.put("pussy", new nbpussy());
+        Listener.hash.put("pussy", new NBPussy());
         Listener.metaData.put("pussy", new MetaData(Category.NSFW, false)); // pussy
-        Listener.hash.put("thigh", new nbthigh());
+        Listener.hash.put("thigh", new NBThigh());
         Listener.metaData.put("thigh", new MetaData(Category.NSFW, false)); // thigh
         // admin
         Listener.hash.put("threads", new CurrentThreads());

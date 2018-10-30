@@ -23,9 +23,11 @@ public class Purge implements Command {
                 new MessageHandler(e.getChannel()).sendError("Bot can't manage messages.");
                 return;
             }
-            if (args.size() >= 1)
+
+            if (!(args.size() >= 1))
             {
                 new MessageHandler(e.getChannel()).sendError("Invalid Arguments!");
+                return;
             }
 
             boolean silent = e.getMessage().getContent().endsWith("-s");

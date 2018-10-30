@@ -13,14 +13,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class nbgonewild implements Command {
+public class NBLewdKitsune implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            if (!e.getChannel().isNSFW())
+            {
+                new MessageHandler(e.getChannel()).sendError("This isn't an NSFW channel!");
+                return;
+            }
             EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Gone Wild");
-            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=gonewild").getString("message"));
+            b.withTitle("Lewd Kitsune [NSFW]");
+            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=lewdkitsune").getString("message"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -30,7 +35,7 @@ public class nbgonewild implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("gonewild", "nsfw gonewild");
-        return HelpHandler.helpCommand(st, "Gone Wild", e);
+        st.put("lewdkitsune", "Gets NSFW Kitsune");
+        return HelpHandler.helpCommand(st, "Lewd Kitsune", e);
     }
 }

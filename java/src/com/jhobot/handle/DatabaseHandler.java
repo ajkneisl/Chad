@@ -1,6 +1,6 @@
 package com.jhobot.handle;
 
-import com.jhobot.handle.commands.PermissionLevels;
+import com.jhobot.handle.commands.permissions.PermissionLevels;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;

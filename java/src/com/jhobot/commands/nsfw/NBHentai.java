@@ -13,14 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class nbneko implements Command {
+public class NBHentai implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
             EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Neko");
-            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=neko").getString("message"));
+            b.withTitle("Hentai");
+            b.withImage(ChadBot.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=hentai").getString("message"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -30,7 +30,7 @@ public class nbneko implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("neko", "nsfw neko");
-        return HelpHandler.helpCommand(st, "neko", e);
+        st.put("hentai", "nsfw hentai");
+        return HelpHandler.helpCommand(st, "hentai", e);
     }
 }
