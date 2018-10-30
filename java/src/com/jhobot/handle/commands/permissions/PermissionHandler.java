@@ -2,6 +2,7 @@ package com.jhobot.handle.commands.permissions;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.core.ChadVar;
+import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.CommandData;
 import com.jhobot.handle.commands.Command;
 import org.bson.Document;
@@ -39,6 +40,9 @@ public class PermissionHandler
 
         CommandData meta = ChadVar.COMMANDS.get(command);
         if (meta.isDevOnly && userIsDeveloper(user))
+            return true;
+
+        if (meta.category == Category.FUN || meta.category == Category.INFO)
             return true;
 
         for (IRole r : user.getRolesForGuild(g))
