@@ -36,7 +36,7 @@ public class Permissions implements Command {
 
                 if (args.size() == i)
                 {
-                    m.sendError("Invalid Role");
+                    m.sendError(ChadVar.getString("chad.function.permissions.role.invalid"));
                     return;
                 }
                 IRole role = r.get(0);
@@ -53,7 +53,7 @@ public class Permissions implements Command {
                 args.remove(0); // isolates again
                 switch (nextArg.toLowerCase()) {
                     default:
-                        m.sendError("Invalid Arguments");
+                        m.sendError(ChadVar.getString("arguments.invalid"));
                         break;
                     case "add":
                         int add = ChadVar.PERMISSION_HANDLER.addCommandToRole(role, args.get(0));
@@ -73,7 +73,7 @@ public class Permissions implements Command {
                         break;
                     case "view":
                         if (ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null || ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).size() == 0) {
-                            m.sendError("There's no permissions there!");
+                            m.sendError(ChadVar.getString("chad.function.permissions.none"));
                             return;
                         }
                         EmbedBuilder b2 = new EmbedBuilder();
@@ -85,7 +85,7 @@ public class Permissions implements Command {
                         break;
                 }
             }
-            m.sendError("Invalid Arguments");
+            m.sendError(ChadVar.getString("arguments.invalid"));
         };
     }
 

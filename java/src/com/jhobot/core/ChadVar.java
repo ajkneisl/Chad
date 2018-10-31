@@ -49,6 +49,23 @@ public class ChadVar
     // count handler
     public static ThreadCountHandler THREAD_HANDLER = new ThreadCountHandler();
 
+    // strings
+    public static HashMap<String, String> STRINGS = new HashMap();
+
+    // add strings
+    static {
+        STRINGS.put("error.generic", "An unknown error has occurred.");
+        STRINGS.put("error.internal", "An internal error has occurred.");
+        STRINGS.put("arguments.invalid", "Invalid arguments.");
+        STRINGS.put("arguments.more", "Not enough arguments.");
+        STRINGS.put("arguments.less", "Too many arguments.");
+        STRINGS.put("denied.generic", "No access. Contact a system administrator for assistance.");
+        STRINGS.put("denied.permission.generic", "You don't have permission for this!");
+        STRINGS.put("denied.permission.command", "You don't have permission to access this command!");
+        STRINGS.put("denied.permission.developer", "Oh noes! Looks like you're not a developer, too bad.");
+        STRINGS.put("chad.function.permissions.none", "There's no permissions there!");
+        STRINGS.put("chad.function.permissions.role.invalid", "Invalid role!");
+    }
 
     // add in rotation
     static {
@@ -128,5 +145,10 @@ public class ChadVar
         COMMANDS.put("threads", new CommandData(Category.ADMIN, true, new CurrentThreads()));
         COMMANDS.put("modpresence", new CommandData(Category.ADMIN, true, new ModifyPresence()));
         COMMANDS.put("systeminfo", new CommandData(Category.ADMIN, true, new SystemInfo()));
+    }
+
+    // get a string from STRINGS
+    public static String getString(String key) {
+        return ChadVar.STRINGS.get(key);
     }
 }

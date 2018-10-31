@@ -55,14 +55,14 @@ public class MessageRecieved
                 // if the command is developer only, and the user is NOT a developer, deny them access
                 if (v.isDevOnly && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor()))
                 {
-                    new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
+                    new MessageHandler(e.getChannel()).sendError(ChadVar.getString("denied.permission.developer"));
                     return;
                 }
 
                 // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
                 if (!ChadVar.PERMISSION_HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
-                    new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
+                    new MessageHandler(e.getChannel()).sendError(ChadVar.getString("denied.permission.command"));
                     return;
                 }
 

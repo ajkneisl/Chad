@@ -1,6 +1,5 @@
 package com.jhobot.handle.commands.permissions;
 
-import com.jhobot.core.ChadBot;
 import com.jhobot.core.ChadVar;
 import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.CommandData;
@@ -24,27 +23,31 @@ public class PermissionHandler
         });
     }
 
-
+    // check if the user is in the list of developers
     public boolean userIsDeveloper(IUser user) {
         return ChadVar.GLOBAL_PERMISSIONS.get(user.getStringID()) == PermissionLevels.SYSTEM_ADMINISTRATOR;
     }
 
+    // check if the user has permission for the specified command
     public boolean userHasPermission(String command, IUser user, IGuild g)
     {
         Command cmd = ChadVar.COMMANDS.get(command).commandClass;
 
         if (cmd == null)
         {
-            return false; // just in case
+            return false; // return false if the command doesnt exist
         }
 
         CommandData meta = ChadVar.COMMANDS.get(command);
+        // developers should always have permission for developer commands
         if (meta.isDevOnly && userIsDeveloper(user))
             return true;
 
+        // all users should have access to commands in the fun and info category
         if (meta.category == Category.FUN || meta.category == Category.INFO)
             return true;
 
+        // loop through the users roles, if the role has permission for the command, return true
         for (IRole r : user.getRolesForGuild(g))
         {
             if (ChadVar.DATABASE_HANDLER.getArray(g, r.getStringID()) != null)
@@ -53,14 +56,15 @@ public class PermissionHandler
                     return true;
             }
         }
+        // return false if none of the users roles have permission for the command
         return false;
     }
 
+    // grants the specified role access to the specified command in the guild the role belongs to
     public int addCommandToRole(IRole role, String command) throws IndexOutOfBoundsException
     {
         if (!parseCommand(command))
             return 0;
-
 
         Document get = ChadVar.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
         if (get == null)
@@ -82,6 +86,7 @@ public class PermissionHandler
         }
     }
 
+    // wadya get if you turn #addCommandToRole() upside down?
     public int removeCommandFromRole(IRole role, String command)
     {
         if (!parseCommand(command))
@@ -103,16 +108,18 @@ public class PermissionHandler
 
     }
 
+    // this method is poorly named as it doesnt actually parse the command. i think it checks to see if its a valid command /shrug
     private boolean parseCommand(String arg)
     {
         return this.CMD.contains(arg.toLowerCase());
     }
 
+    // this is only used for a select few commands, but it has its moments.
     public String parseErrorCode(int i)
     {
         if (i == 1)
         {
-            return "An internal error has occurred!";
+            return ChadVar.getString("error.internal");
         }
         else if (i == 2)
         {
