@@ -7,8 +7,14 @@
     <meta name="description" content="Chad, the Alpha Discord bot">
     <meta name="author" content="Chad Team">
     <title>Chad's Features</title>
+    <script>
+    function hideDiv()
+    {
+      $('#nsfwdiv').hide();
+    }
+    </script>
 </head>
-<body>
+<body onload="hideDiv();">
 <!--Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
@@ -41,7 +47,7 @@
     <div class="col-lg-12 text-center">
         <h1 class="mt-5">Features</h1>
         <br />
-        <h4 class="col-sm">The features for Chad.</h4>
+        <h4 class="">The features for Chad.</h4>
         <br />
         <!-- warnings -->
         <div class="row">
@@ -50,17 +56,17 @@
             <p class="col"><span class="badge badge-dark">!</span> For extra help with each command, add <code>help</code> at the end of it.</p>
         </div>
         <br />
-
+<a class="row btn btn-primary" href="javascript:togglensfw();">Toggle NSFW Commands</a>
         <!-- start commands -->
 
         <!-- punishments -->
         <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center">
             <h5 class="col" id="punishments">Punishments</h5>
-            <p class="col-6 col-sm">
+            <p class="col-4 ">
                 <b>Ban : <br /> </b>
                 Bans the selected user.<br/>
                 <code>j!ban [@user/username] {reason}</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-4 ">
                 <b>Kick : <br /> </b>
                 Kicks the selected user.<br/>
                 <code>j!kick [@user/username] {reason}</code></p>
@@ -70,27 +76,27 @@
         <!-- fun commands -->
         <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center row-bordered">
             <h5 class="col">Fun Commands</h5>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Cat Fact : <br /> </b>
                 Gets a random cat fact.<br/>
                 <code>j!catfact</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Cat Gallery : <br /> </b>
                 Gets a random cat picture.<br/>
                 <code>j!catgallery</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Eight Ball : <br /> </b>
                 Responds to your questions.<br/>
                 <code>j!8ball [question] </code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>PhotoEditor : <br /> </b>
                 Edits your photos, for you.<br/>
                 <code>j!pe [blur] (include photo in message)</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Russian Roulette : <br /> </b>
                 Russian Roulette another user.<br/>
                 <code>j!rrl [@user/username]</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Random : <br /> </b>
                 Gets a random quote, or a random number.<br/>
                 <code>j!random [number/quote] {max value for number}</code></p>
@@ -99,31 +105,31 @@
         <!-- func commands -->
         <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center">
             <h5 class="col">Functional Commands</h5>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Logging : <br /> </b>
                 Sets up logging for your guild.<br/>
                 <code>j!logging setchannel [name] // j!logging set [true/false]</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Interactive Message : <br /> </b>
                 Adjusts the dynamic messages.<br/>
                 <code>j!im toggle [ban/kick/join/leave] <br /> j!im setchannel [leave/join] [channel name] <br /> j!im [join/leave/ban/kick] [message] <br /> <i>Variables : &guild&, &user&, &reason& (punishments)</i> </code>
             </p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
               <b>AutoRole : <br/> </b>
               Joining users get automatically get assigned a role.<br/>
               <code>j!autorole [on/off] <br/> j!autorole set [role name]</code>
             </p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
               <b>Prefix : <br/> </b>
               Adjust your guild's prefix.<br/>
               <code>j!prefix set [new prefix]</code>
             </p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
               <b>Permissions : <br/> </b>
               Your guild's permissions.<br/>
               For more information, go <a href="permissions.md">here</a>.
             </p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
               <b>Purge : <br/> </b>
               Remove a defined amount of messages from a channel.<br/>To make the message silent, add -s to the end of the command.<br/>
               <code>j!purge [amount of messages]</code>
@@ -132,29 +138,30 @@
 
         </div>
 
+        <!--start info cmds-->
         <div style="border-bottom: 2px solid gray;" class="row float-left align-items-center">
             <h5 class="col" id="fun">Informational Commands</h5>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Guild Info : <br /> </b>
                 Gets information about the guild.<br/>
                 <code>j!guilfinfo</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Help : <br /> </b>
                 Gets all Chad's commands.<br/>
                 <code>j!help</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Chad : <br /> </b>
                 Information about Chad.<br/>
                 <code>j!chad</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Reddit Top : <br /> </b>
                 Gets a top reddit post from the selected subreddit.<br/>
                 <code>j!rtop [subreddit]</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Reddit New : <br /> </b>
                 Gets a new reddit post from the selected subreddit.<br/>
                 <code>j!rnew [subreddit]</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>Steam : <br /> </b>
                 Gets statistics from Steam.<br/>
                 <code>
@@ -162,16 +169,110 @@
                     <br />
                     j!steam csgo [steam name] {lastmatch/kills/maps}
                 </code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
                 <b>User Info : <br /> </b>
                 Gets information about a user.<br/>
                 <code>j!userinfo [@user/username]</code></p>
-            <p class="col-6 col-sm">
+            <p class="col-6 ">
               <b>Contributors : <br/> </b>
               Gets all contributors to Chad on GitHub.<br/>
               <code>j!contributors</code>
             </p>
         </div>
+
+        <script>
+        var allowNSFW = false;
+        function togglensfw() {
+          if (allowNSFW == true)
+          {
+            $('#nsfwdiv').hide();
+            allowNSFW = false;
+          }
+          else {
+            $('#nsfwdiv').show();
+            allowNSFW = true;
+          }
+        }
+        </script>
+        <!-- nsfw -->
+        <div id="nsfwdiv" style="border-bottom: 2px solid gray;" class="row float-left align-items-center">
+            <h5 class="col" id="punishments">NSFW</h5>
+            <p class="col-6 ">
+                <b>Ass : <br /> </b>
+                Gets you a picture of an ass.<br/>
+                <code>j!ass</code></p>
+            <p class="col-6 ">
+                <b>Gone Wild : <br /> </b>
+                Gets NSFW Gone Wild.<br/>
+                <code>j!gonewild</code>
+            </p>
+            <p class="col-6 ">
+                <b>Thigh : <br /> </b>
+                Gets you a picture of some thighs.<br/>
+                <code>j!thigh</code>
+            </p>
+            <p class="col-6 ">
+                <b>Hentai : <br /> </b>
+                Gets NSFW Hentai.<br/>
+                <code>j!hentai</code>
+            </p>
+            <p class="col-6 ">
+                <b>Hentai Anal : <br /> </b>
+                Gets NSFW Hentai, but with anal.<br/>
+                <code>j!hentaianal</code>
+            </p>
+            <p class="col-6 ">
+                <b>Gone Wild : <br /> </b>
+                Gets NSFW Gone Wild.<br/>
+                <code>j!gonewild</code>
+            </p>
+            <p class="col-6 ">
+                <b>Lewd Kitsune : <br /> </b>
+                Gets Lewd Kitsune.<br/>
+                <code>j!lewdkitsune</code>
+            </p>
+            <p class="col-6 ">
+                <b>Pussy : <br /> </b>
+                Gets you a picture of pussy, not the cat though.<br/>
+                <code>j!pussy</code>
+            </p>
+            <p class="col-6 ">
+                <b>Kemonomimi : <br /> </b>
+                Gets NSFW Kemonomimi.<br/>
+                <code>j!kemonomimi</code>
+            </p>
+            <p class="col-6 ">
+                <b>Kanna : <br /> </b>
+                Gets a Kanna.<br/>
+                <code>j!kanna</code>
+            </p>
+            <p class="col-6 ">
+                <b>Lewd Neko : <br /> </b>
+                Gets a lewd neko.<br/>
+                <code>j!lewdneko</code>
+            </p>
+            <p class="col-6 ">
+                <b>4k : <br /> </b>
+                Gets porn, at 4k.<br/>
+                <code>j!4k</code>
+            </p>
+            <p class="col-6 ">
+                <b>Holo : <br /> </b>
+                I don't even know what this is, all I do know though is that it's NSFW.<br/>
+                <code>j!holo</code>
+            </p>
+            <p class="col-6 ">
+                <b>4k : <br /> </b>
+                Gets porn, at 4k.<br/>
+                <code>j!4k</code>
+            </p>
+            <p class="col-6 ">
+                <b>Anal : <br /> </b>
+                Gets anal porn.<br/>
+                <code>j!anal</code>
+            </p>
+        </div>
+
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
