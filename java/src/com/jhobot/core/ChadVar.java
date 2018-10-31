@@ -98,8 +98,8 @@ public class ChadVar
         COMMANDS.put("hentai", new CommandData(Category.NSFW, false, new NBHentai()));
         COMMANDS.put("holo", new CommandData(Category.NSFW, false, new NBHolo()));
         COMMANDS.put("lewdneko", new CommandData(Category.NSFW, false, new NBLewdNeko()));
-        COMMANDS.put("lewdkitsune", new CommandData(Category.NSFW, false, new NBKemonomimi()));
-        COMMANDS.put("kemonomimi", new CommandData(Category.NSFW, false, new NSFW()));
+        COMMANDS.put("lewdkitsune", new CommandData(Category.NSFW, false, new NBLewdKitsune()));
+        COMMANDS.put("kemonomimi", new CommandData(Category.NSFW, false, new NBKemonomimi()));
         COMMANDS.put("anal", new CommandData(Category.NSFW, false, new NBAnal()));
         COMMANDS.put("hentaianal", new CommandData(Category.NSFW, false, new NBHentaiAnal()));
         COMMANDS.put("gonewild", new CommandData(Category.NSFW, false, new NBGoneWild()));
@@ -107,6 +107,7 @@ public class ChadVar
         COMMANDS.put("ass", new CommandData(Category.NSFW, false, new NBAss()));
         COMMANDS.put("pussy", new CommandData(Category.NSFW, false, new NBPussy()));
         COMMANDS.put("thigh", new CommandData(Category.NSFW, false, new NBThigh()));
+        COMMANDS.put("neko", new CommandData(Category.NSFW, false, new NBNeko()));
 
         // ADMIN!
         COMMANDS.put("threads", new CommandData(Category.ADMIN, true, new CurrentThreads()));

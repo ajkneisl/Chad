@@ -19,7 +19,6 @@ public class Chad implements Command
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Chad");
             b.withDesc("by sho and CodeBase!");
-            b.appendField("Version", Util.getCurrentVersion(), true);
             b.appendField("GitHub", "https://github.com/shoganeko/Chad", true);
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             new MessageHandler(e.getChannel()).sendEmbed(b.build());

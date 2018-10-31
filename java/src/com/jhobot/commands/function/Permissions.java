@@ -11,6 +11,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Permissions implements Command {
@@ -54,6 +55,7 @@ public class Permissions implements Command {
                 args.remove(0); // isolates again
                 switch (nextArg.toLowerCase()) {
                     default:
+                        m.sendError("Invalid Arguments");
                         break;
                     case "add":
                         int add = ChadVar.PERMISSION_HANDLER.addCommandToRole(role, args.get(0));
@@ -89,12 +91,15 @@ public class Permissions implements Command {
                         break;
                 }
             }
+            m.sendError("Invalid Arguments");
         };
     }
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("View at website", "https://bot.shoganeko.me/permissions");
+        return HelpHandler.helpCommand(st, "Permissions", e);
     }
 }
 

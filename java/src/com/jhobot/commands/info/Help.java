@@ -43,7 +43,7 @@ public class Help implements Command {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("help", "Displays all commands Jho has to offer.");
+        st.put("help", "Displays all commands Chad has to offer.");
         return HelpHandler.helpCommand(st, "Help", e);
     }
 }
