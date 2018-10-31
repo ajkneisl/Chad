@@ -48,26 +48,30 @@ public class MessageRecieved
             return;
 
         COMMANDS.forEach((k, v) -> {
-            if (commandString.equalsIgnoreCase(k)) // comment for commit
+            if (commandString.equalsIgnoreCase(k))
             {
                 Future<?> thread;
 
-
+                // if the command is developer only, and the user is NOT a developer, deny them access
                 if (v.isDevOnly && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor()))
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
                     return;
                 }
 
+                // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
                 if (!ChadVar.PERMISSION_HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
                     new MessageHandler(e.getChannel()).sendError("You don't have permission for this!");
                     return;
                 }
+
+                // if there is only 1 argument, and its equal to "help", show the commands help information
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
                     thread = ChadVar.EXECUTOR_POOL.submit(v.commandClass.help(e, args));
-                else
+                else // otherwise, run the command
                     thread = ChadVar.EXECUTOR_POOL.submit(v.commandClass.run(e, args));
+                // add the command thread to the handler
                 ChadVar.THREAD_HANDLER.addThread(thread, e.getAuthor());
             }
         });
