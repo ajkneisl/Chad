@@ -60,9 +60,24 @@ public class ChadVar
         PRESENCE_ROTATION.add("j!prefix set *");
         PRESENCE_ROTATION.add("what's going on gamers");
         PRESENCE_ROTATION.add("invite me please");
+        PRESENCE_ROTATION.add("yeet");
+        PRESENCE_ROTATION.add("yeet yote yeet yote");
+        PRESENCE_ROTATION.add("chad is a kike");
+        PRESENCE_ROTATION.add("my mom beats me");
+        PRESENCE_ROTATION.add("chad till your dead");
+        PRESENCE_ROTATION.add("chad for life");
+        PRESENCE_ROTATION.add("suck my chad");
+        PRESENCE_ROTATION.add("git push you off the swing");
+        PRESENCE_ROTATION.add("git pull my dick");
+        PRESENCE_ROTATION.add("git reword essay");
+        PRESENCE_ROTATION.add("r/rule34");
+        PRESENCE_ROTATION.add("sneeki breeki");
+        PRESENCE_ROTATION.add("someone stole my sweet role");
+        PRESENCE_ROTATION.add("j!lewdneko... FBI open up!");
     }
 
     static {
+        // FUN!
         COMMANDS.put("random", new CommandData(Category.FUN, false, new Random()));
         COMMANDS.put("pe", new CommandData(Category.FUN, false, new PhotoEditor()));
         COMMANDS.put("8ball", new CommandData(Category.FUN, false, new EightBall()));

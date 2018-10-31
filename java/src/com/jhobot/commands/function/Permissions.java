@@ -1,10 +1,8 @@
 package com.jhobot.commands.function;
 
-import com.jhobot.core.ChadBot;
 import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
-import com.jhobot.handle.commands.permissions.PermissionHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -74,20 +72,16 @@ public class Permissions implements Command {
                         }
                         break;
                     case "view":
-                        System.out.println("view1");
                         if (ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null || ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).size() == 0) {
                             m.sendError("There's no permissions there!");
                             return;
                         }
-                        System.out.println("view2");
                         EmbedBuilder b2 = new EmbedBuilder();
                         b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
                         StringBuilder b3 = new StringBuilder();
                         ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
-                        System.out.println(b3);
                         b2.withDesc(b3.toString());
                         m.sendEmbed(b2.build());
-                        System.out.println("view3");
                         break;
                 }
             }
