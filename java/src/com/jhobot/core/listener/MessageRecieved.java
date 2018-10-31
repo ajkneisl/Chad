@@ -18,8 +18,6 @@ import java.util.concurrent.Future;
 
 public class MessageRecieved
 {
-    private HashMap<String, CommandData> COMMANDS = ChadVar.COMMANDS;
-
     @EventSubscriber
     public void messageRecieved(MessageReceivedEvent e)
     {
@@ -30,7 +28,7 @@ public class MessageRecieved
         if (argArray.length == 0)
             return;
 
-        String prefix = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "prefix"); // to prevent multiple requests
+        String prefix = ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc().getString("prefix");
 
         // If the prefix isn't jho! it returns
         if (!argArray[0].startsWith(prefix))
@@ -47,7 +45,7 @@ public class MessageRecieved
         if (!ChadVar.THREAD_HANDLER.allowThread(e.getAuthor()))
             return;
 
-        COMMANDS.forEach((k, v) -> {
+        ChadVar.COMMANDS.forEach((k, v) -> {
             if (commandString.equalsIgnoreCase(k))
             {
                 Future<?> thread;

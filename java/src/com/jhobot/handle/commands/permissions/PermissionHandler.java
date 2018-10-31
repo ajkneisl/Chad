@@ -18,9 +18,7 @@ public class PermissionHandler
     public PermissionHandler()
     {
         this.CMD = new ArrayList<>();
-        ChadVar.COMMANDS.forEach((k, v) -> {
-            this.CMD.add(k);
-        });
+        ChadVar.COMMANDS.forEach((k, v) -> this.CMD.add(k.toLowerCase()));
     }
 
     // check if the user is in the list of developers

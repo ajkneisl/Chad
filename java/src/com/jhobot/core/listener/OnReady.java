@@ -16,6 +16,8 @@ public class OnReady
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
+        // cache o
+        ChadVar.CACHE_DEVICE.cacheAll();
         // automatic presence updater
         //TODO: put this in its own thread class so i can change the timings on it
         ChadVar.EXECUTOR_POOL.submit(() -> {

@@ -1,5 +1,6 @@
 package com.jhobot.core;
 
+import com.jhobot.commands.admin.CacheStatus;
 import com.jhobot.commands.admin.CurrentThreads;
 import com.jhobot.commands.admin.ModifyPresence;
 import com.jhobot.commands.fun.*;
@@ -9,25 +10,26 @@ import com.jhobot.commands.info.SystemInfo;
 import com.jhobot.commands.nsfw.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
-import com.jhobot.handle.DatabaseHandler;
-import com.jhobot.handle.DebugHandler;
-import com.jhobot.handle.JSONHandler;
-import com.jhobot.handle.ThreadCountHandler;
+import com.jhobot.handle.*;
 import com.jhobot.handle.commands.Category;
-import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.commands.CommandData;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import com.jhobot.handle.commands.permissions.PermissionLevels;
+import sx.blah.discord.handle.obj.IGuild;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ChadVar
 {
+    // caching
+    public static CachingHandler CACHE_DEVICE;
+
     // main
     public static final JSONHandler JSON_HANDLER = new JSONHandler().forceCheck();
     public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
@@ -36,7 +38,7 @@ public class ChadVar
 
     // else
     public static boolean ALLOW_UI = true;
-    public static HashMap<String, CommandData> COMMANDS = new HashMap<>();
+    public static final HashMap<String, CommandData> COMMANDS = new HashMap<>();
     // presence rotation stuff
     public static int ROTATION_TIME = 60000*5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
@@ -49,8 +51,11 @@ public class ChadVar
     // count handler
     public static ThreadCountHandler THREAD_HANDLER = new ThreadCountHandler();
 
+    // caching
+    public static ConcurrentHashMap<IGuild, CachingHandler.CachedGuild> GUILD_CACHE = new ConcurrentHashMap<>();
+
     // strings
-    public static HashMap<String, String> STRINGS = new HashMap();
+    public static ConcurrentHashMap<String, String> STRINGS = new ConcurrentHashMap<>();
 
     // add strings
     static {
@@ -145,6 +150,12 @@ public class ChadVar
         COMMANDS.put("threads", new CommandData(Category.ADMIN, true, new CurrentThreads()));
         COMMANDS.put("modpresence", new CommandData(Category.ADMIN, true, new ModifyPresence()));
         COMMANDS.put("systeminfo", new CommandData(Category.ADMIN, true, new SystemInfo()));
+        COMMANDS.put("cachestatus", new CommandData(Category.ADMIN, true, new CacheStatus()));
+    }
+
+    static void setCacheDevice()
+    {
+        CACHE_DEVICE = new CachingHandler(ChadBot.cli);
     }
 
     // get a string from STRINGS

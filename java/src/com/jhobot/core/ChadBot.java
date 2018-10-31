@@ -27,6 +27,8 @@ public class ChadBot {
             ChadVar.ALLOW_UI = false;
         }
 
+        ChadVar.setCacheDevice();
+
         // add developer ids to the permissions handler
         ChadVar.GLOBAL_PERMISSIONS.put("173495550467899402", PermissionLevels.SYSTEM_ADMINISTRATOR); //CodeBase
         ChadVar.GLOBAL_PERMISSIONS.put("416399667094618124", PermissionLevels.SYSTEM_ADMINISTRATOR); // sho
