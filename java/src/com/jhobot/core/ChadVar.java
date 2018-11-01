@@ -25,8 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ChadVar
-{
+public class ChadVar {
     // caching
     public static CachingHandler CACHE_DEVICE;
 
@@ -40,7 +39,7 @@ public class ChadVar
     public static boolean ALLOW_UI = true;
     public static final HashMap<String, CommandData> COMMANDS = new HashMap<>();
     // presence rotation stuff
-    public static int ROTATION_TIME = 60000*5; // 5 minutes
+    public static int ROTATION_TIME = 60000 * 5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
     public static List<String> PRESENCE_ROTATION = new ArrayList<>();
 
@@ -151,10 +150,10 @@ public class ChadVar
         COMMANDS.put("modpresence", new CommandData(Category.ADMIN, true, new ModifyPresence()));
         COMMANDS.put("systeminfo", new CommandData(Category.ADMIN, true, new SystemInfo()));
         COMMANDS.put("cachestatus", new CommandData(Category.ADMIN, true, new CacheStatus()));
+        COMMANDS.put("Invite", new CommandData(Category.ADMIN,false, new Invite()));
     }
 
-    static void setCacheDevice()
-    {
+    static void setCacheDevice() {
         CACHE_DEVICE = new CachingHandler(ChadBot.cli);
     }
 
