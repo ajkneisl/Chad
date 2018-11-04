@@ -34,7 +34,7 @@ public class ChadVar
     public static CachingHandler CACHE_DEVICE;
 
     // main
-    public static final JSONHandler JSON_HANDLER = new JSONHandler().forceCheck();
+    public static JSONHandler JSON_HANDLER;
     public static DatabaseHandler DATABASE_HANDLER;
     public static final ExecutorService EXECUTOR_POOL = Executors.newFixedThreadPool(30);
     public static final DebugHandler DEBUG_HANDLER = new DebugHandler();
@@ -170,6 +170,11 @@ public class ChadVar
     static void setDatabaseHandler()
     {
         DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
+    }
+
+    static void setJsonHandler()
+    {
+        JSON_HANDLER = new JSONHandler().forceCheck();
     }
 
     // get a string from STRINGS

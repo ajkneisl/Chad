@@ -41,6 +41,7 @@ public class ChadBot {
             ChadVar.ALLOW_UI = false;
         }
 
+        ChadVar.setJsonHandler();
         ChadVar.setDatabaseHandler();
         ChadVar.setCacheDevice();
 
