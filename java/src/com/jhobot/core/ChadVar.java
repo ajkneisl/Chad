@@ -3,10 +3,13 @@ package com.jhobot.core;
 import com.jhobot.commands.admin.Cache;
 import com.jhobot.commands.admin.CurrentThreads;
 import com.jhobot.commands.admin.ModifyPresence;
+import com.jhobot.commands.admin.Shutdown;
 import com.jhobot.commands.fun.*;
 import com.jhobot.commands.function.*;
 import com.jhobot.commands.info.*;
 import com.jhobot.commands.info.SystemInfo;
+import com.jhobot.commands.music.Leave;
+import com.jhobot.commands.music.Play;
 import com.jhobot.commands.nsfw.*;
 import com.jhobot.commands.punishments.Ban;
 import com.jhobot.commands.punishments.Kick;
@@ -59,6 +62,9 @@ public class ChadVar
 
     // strings
     public static ConcurrentHashMap<String, String> STRINGS = new ConcurrentHashMap<>();
+
+    // music handlers
+    public static Map<IGuild, MusicHandler> musicHandlers = new HashMap<>();
 
     // add strings
     static {
@@ -154,7 +160,11 @@ public class ChadVar
         COMMANDS.put("modpresence", new CommandData(Category.ADMIN, true, new ModifyPresence()));
         COMMANDS.put("systeminfo", new CommandData(Category.ADMIN, true, new SystemInfo()));
         COMMANDS.put("cache", new CommandData(Category.ADMIN, true, new Cache()));
-        COMMANDS.put("Invite", new CommandData(Category.ADMIN,false, new Invite()));
+        COMMANDS.put("shutdown", new CommandData(Category.ADMIN,true, new Shutdown()));
+
+        // MUSIC!
+        COMMANDS.put("play", new CommandData(Category.MUSIC, false, new Play()));
+        COMMANDS.put("leave", new CommandData(Category.MUSIC, false, new Leave()));
     }
 
     static void setCacheDevice()

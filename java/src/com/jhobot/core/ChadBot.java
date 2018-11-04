@@ -1,6 +1,5 @@
 package com.jhobot.core;
 
-import com.jhobot.commands.nsfw.NSFW;
 import com.jhobot.core.listener.GuildJoinLeave;
 import com.jhobot.core.listener.MessageRecieved;
 import com.jhobot.core.listener.OnReady;
@@ -36,7 +35,8 @@ public class ChadBot {
     }
     public static final IDiscordClient cli = new ClientBuilder().withToken(new JSONHandler().forceCheck().get("token")).withRecommendedShardCount().build();
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         if (args.length == 1 && args[0].equalsIgnoreCase("denyui")) {
             ChadVar.ALLOW_UI = false;
         }
@@ -48,7 +48,7 @@ public class ChadBot {
         // add developer ids to the permissions handler
         ChadVar.GLOBAL_PERMISSIONS.put("173495550467899402", PermissionLevels.SYSTEM_ADMINISTRATOR); //CodeBase
         ChadVar.GLOBAL_PERMISSIONS.put("416399667094618124", PermissionLevels.SYSTEM_ADMINISTRATOR); // sho
-        ChadVar.GLOBAL_PERMISSIONS.put("507406219485380609", PermissionLevels.SYSTEM_ADMINISTRATOR); //Styx
+        ChadVar.GLOBAL_PERMISSIONS.put("163777083418345473", PermissionLevels.SYSTEM_ADMINISTRATOR); //Styx
 
         // logs in and registers the listener
         cli.login();
