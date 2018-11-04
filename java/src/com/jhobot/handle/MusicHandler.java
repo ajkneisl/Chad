@@ -1,49 +1,47 @@
 package com.jhobot.handle;
 
+import com.jhobot.handle.ui.ChadException;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import sx.blah.discord.handle.obj.IGuild;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class MusicHandler extends AudioEventAdapter {
+public class MusicHandler {
     public IGuild guild;
     public Queue<AudioTrack> queue = new LinkedList<>();
-    public AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-    public AudioPlayer player = playerManager.createPlayer();
+    public AudioPlayerManager playerManager;
+    public AudioPlayer player;
+    public TrackScheduler scheduler;
     public boolean currentlyPlaying = false;
 
     public MusicHandler(IGuild guild)
     {
-        try {
-            this.guild = guild;
-            this.guild.getAudioManager().setAudioProvider(getAudioProvider());
+        ChadException.error("new MusicHandler");
 
-            AudioSourceManagers.registerRemoteSources(playerManager);
-            AudioSourceManagers.registerLocalSource(playerManager);
-            player.addListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+        this.guild = guild;
+        this.guild.getAudioManager().setAudioProvider(getAudioProvider());
+        this.playerManager = new DefaultAudioPlayerManager();
 
-    @Override
-    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
-    {
-        if (endReason.mayStartNext && !queue.isEmpty())
-        {
-            nextTrack();
-            System.out.println("Track ended, starting next one");
-        }
+        if (this.playerManager == null)
+            ChadException.error("playerManager is null");
+
+        this.player = playerManager.createPlayer();
+        this.scheduler = new TrackScheduler(this, player);
+
+        AudioSourceManagers.registerRemoteSources(playerManager);
+        AudioSourceManagers.registerLocalSource(playerManager);
+        player.addListener(scheduler);
+
+        if (this.player == null)
+            ChadException.error("player is null");
     }
 
     /*
@@ -55,14 +53,13 @@ public class MusicHandler extends AudioEventAdapter {
             playerManager.loadItemOrdered(this, identifier, new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
-                    enqueue(track);
-                    System.out.println("Enqueued track: " + identifier);
+                    scheduler.queue(track);
                 }
 
                 @Override
                 public void playlistLoaded(AudioPlaylist playlist) {
                     for (AudioTrack track : playlist.getTracks()) {
-                        enqueue(track);
+                        scheduler.queue(track);
                     }
                 }
 
@@ -98,35 +95,10 @@ public class MusicHandler extends AudioEventAdapter {
     }
 
     /*
-     * Enqueue a track.
-     * If there is already a track playing, add the track to the queue.
-     */
-    public void enqueue(AudioTrack track)
-    {
-        if (!player.startTrack(track, true))
-        {
-            queue.offer(track);
-            return;
-        }
-
-        System.out.println("Started a track");
-    }
-
-    /*
-     * Starts the next track, regardless of whether or not there is already a song playing.
-     */
-    public void nextTrack()
-    {
-        player.startTrack(queue.poll(), false);
-
-        System.out.println("Started next track");
-    }
-
-    /*
      * Returns an AudioProvider wrapper for the AudioPlayer.
      */
     public AudioProvider getAudioProvider()
     {
-        return new AudioProvider(player);
+        return new AudioProvider(this.player);
     }
 }
