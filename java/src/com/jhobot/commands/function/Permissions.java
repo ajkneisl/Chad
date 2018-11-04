@@ -3,6 +3,7 @@ package com.jhobot.commands.function;
 import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.*;
+import org.bson.Document;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("all")
 public class Permissions implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -52,37 +54,51 @@ public class Permissions implements Command {
                 System.out.println(nextArg);
                 args.remove(0); // isolates again
                 switch (nextArg.toLowerCase()) {
-                    default:
-                        m.sendError(ChadVar.getString("arguments.invalid"));
-                        break;
                     case "add":
+                        if (!(args.size() >= 1))
+                        {
+                            m.sendError(ChadVar.getString("arguments.invalid"));
+                        }
                         int add = ChadVar.PERMISSION_HANDLER.addCommandToRole(role, args.get(0));
                         if (add == 6) {
                             m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
                             m.sendError(ChadVar.PERMISSION_HANDLER.parseErrorCode(add));
                         }
-                        break;
+                        return;
                     case "remove":
+                        if (!(args.size() >= 1))
+                        {
+                            m.sendError(ChadVar.getString("arguments.invalid"));
+                        }
                         int rem = ChadVar.PERMISSION_HANDLER.removeCommandFromRole(role, args.get(0));
                         if (rem == 6) {
                             m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
                             m.sendError(ChadVar.PERMISSION_HANDLER.parseErrorCode(rem));
                         }
-                        break;
+                        return;
                     case "view":
-                        if (ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()) == null || ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).size() == 0) {
+                        if (!(args.size() >= 1))
+                        {
+                            m.sendError(ChadVar.getString("arguments.invalid"));
+                        }
+                        Document doc = ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc();
+                        ArrayList<String> ar = (ArrayList<String>) doc.get(role.getStringID());
+                        if (ar == null || ar.size() == 0) {
                             m.sendError(ChadVar.getString("chad.function.permissions.none"));
                             return;
                         }
                         EmbedBuilder b2 = new EmbedBuilder();
                         b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
                         StringBuilder b3 = new StringBuilder();
-                        ChadVar.DATABASE_HANDLER.getArray(e.getGuild(), role.getStringID()).forEach((v) -> b3.append(v).append(", "));
+                        ar.forEach((v) -> b3.append(v).append(", "));
                         b2.withDesc(b3.toString());
                         m.sendEmbed(b2.build());
-                        break;
+                        return;
+                    default:
+                        m.sendError(ChadVar.getString("arguments.invalid"));
+                        return;
                 }
             }
             m.sendError(ChadVar.getString("arguments.invalid"));

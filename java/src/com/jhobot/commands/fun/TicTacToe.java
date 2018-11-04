@@ -13,6 +13,7 @@ public class TicTacToe implements Command {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
+        // TODO hello?
         return() -> {
             IMessage m = RequestBuffer.request(() -> e.getChannel().sendMessage("")).get();
             RequestBuilder rb = new RequestBuilder(e.getClient());

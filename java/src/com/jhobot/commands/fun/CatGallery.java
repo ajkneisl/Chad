@@ -16,7 +16,7 @@ public class CatGallery implements Command {
             MessageHandler m = new MessageHandler(e.getChannel());
             if (args.size() == 0)
             {
-                File[] files = new File(System.getenv("appdata") + "\\jho\\catpictures\\").listFiles();
+                File[] files = new File(System.getenv("appdata") + "\\chad\\catpictures\\").listFiles();
                 if (files == null)
                 {
                     m.sendError("An internal error has occurred!");

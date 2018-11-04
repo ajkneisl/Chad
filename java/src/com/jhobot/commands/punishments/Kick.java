@@ -97,13 +97,13 @@ public class Kick implements Command {
                 e.getGuild().kickUser(user);
                 reason.add("None");
                 m.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
-                m.sendPunishLog("Kick", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
+                m.sendPunishLog("Kick", user, e.getAuthor(), e.getGuild(), reason);
                 return;
             }
 
             e.getGuild().kickUser(user);
             m.send("Successfully kicked " + user.getName() + " for " + sb2.toString().trim() + ".", "Kicked User");
-            m.sendPunishLog("Kick", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
+            m.sendPunishLog("Kick", user, e.getAuthor(), e.getGuild(), reason);
         };
     }
 

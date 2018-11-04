@@ -2,6 +2,7 @@ package com.jhobot.core.listener;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.core.ChadVar;
+import com.jhobot.handle.ui.ChadException;
 import com.jhobot.handle.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -34,20 +35,8 @@ public class OnReady
             }, 0, ChadVar.ROTATION_TIME); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work
         });
 
-        // UI Updater
-        if (ChadVar.ALLOW_UI)
-        {
-            UIHandler h = new UIHandler(e.getClient());
-            ChadVar.EXECUTOR_POOL.submit(() -> {
-                java.util.Timer t = new Timer();
-                t.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        h.update();
-                    }
-                }, 0, 60000*5);
-                h.getPanel().getRefreshButton().addActionListener((ActionEvent) ->  h.update());
-            });
-        }
+        // ui stuff
+        ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!");
+        ChadVar.UI_HANDLER.update();
     }
 }

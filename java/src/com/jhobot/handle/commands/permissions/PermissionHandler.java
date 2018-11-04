@@ -11,14 +11,13 @@ import sx.blah.discord.handle.obj.IUser;
 
 import java.util.*;
 
-@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "CanBeFinal"})
+@SuppressWarnings("all")
 public class PermissionHandler
 {
     private ArrayList<String> CMD; // arraylists are simpler, shut up
     public PermissionHandler()
     {
-        this.CMD = new ArrayList<>();
-        ChadVar.COMMANDS.forEach((k, v) -> this.CMD.add(k.toLowerCase()));
+        //ASD POKASDKOIPASDPOKASDKJPIOOIJASD JOI
     }
 
     // check if the user is in the list of developers
@@ -64,22 +63,25 @@ public class PermissionHandler
         if (!parseCommand(command))
             return 0;
 
-        Document get = ChadVar.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+        Document get = ChadVar.CACHE_DEVICE.getGuild(role.getGuild()).getDoc();
         if (get == null)
             return 1;
-        if (ChadVar.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()) == null || ChadVar.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).isEmpty())
+        ArrayList<String> arr = (ArrayList<String>)get.get(role.getStringID());
+        if (arr == null || arr.isEmpty())
         {
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);
             ChadVar.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
             return 6;
         }
         else {
-            if (ChadVar.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()).contains(command))
+            if (arr.contains(command))
                 return 2;
-            ArrayList<String> ar = ChadVar.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID());
+            ArrayList<String> ar = arr;
             ar.add(command);
             ChadVar.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
             return 6;
         }
     }
@@ -109,7 +111,7 @@ public class PermissionHandler
     // this method is poorly named as it doesnt actually parse the command. i think it checks to see if its a valid command /shrug
     private boolean parseCommand(String arg)
     {
-        return this.CMD.contains(arg.toLowerCase());
+        return ChadVar.COMMANDS.containsKey(arg.toLowerCase());
     }
 
     // this is only used for a select few commands, but it has its moments.

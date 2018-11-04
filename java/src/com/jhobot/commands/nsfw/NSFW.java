@@ -2,8 +2,10 @@ package com.jhobot.commands.nsfw;
 
 import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.commands.Command;
+import com.jhobot.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class NSFW implements Command {
@@ -25,6 +27,8 @@ public class NSFW implements Command {
 
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("NSFW", "Toggles NSFW status for the channel");
+        return HelpHandler.helpCommand(st, "NSFW", e);
     }
 }

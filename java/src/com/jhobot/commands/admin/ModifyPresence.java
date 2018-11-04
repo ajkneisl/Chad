@@ -22,7 +22,7 @@ public class ModifyPresence implements Command {
                 default:
                     StringBuilder sb = new StringBuilder();
                     for (String str : args) {
-                        sb.append(str + " ");
+                        sb.append(str).append(" ");
                     }
                     ChadBot.cli.changePresence(StatusType.ONLINE, ActivityType.PLAYING, sb.toString().trim());
                     message = "Changed presence to \"" + sb.toString().trim() + "\"";
@@ -53,6 +53,35 @@ public class ModifyPresence implements Command {
                     ChadVar.ROTATION_TIME = Integer.parseInt(time_sb.toString().trim());
                     message = "Changed rotation period to `" + ChadVar.ROTATION_TIME + "`";
                     break;
+                case "status":
+                    args.remove(0);
+                    if (args.get(0).equalsIgnoreCase("idle"))
+                    {
+                        e.getClient().changePresence(StatusType.IDLE);
+                        message = "Changed status type to `Idle`";
+                        break;
+                    }
+                    else if (args.get(0).equalsIgnoreCase("online"))
+                    {
+                        e.getClient().changePresence(StatusType.ONLINE);
+                        message = "Changed status type to `Online`";
+                        break;
+                    }
+                    else if (args.get(0).equalsIgnoreCase("offline"))
+                    {
+                        e.getClient().changePresence(StatusType.INVISIBLE);
+                        message = "Changed status type to `Offline`";
+                        break;
+                    }
+                    else if (args.get(0).equalsIgnoreCase("dontdisturb"))
+                    {
+                        e.getClient().changePresence(StatusType.DND);
+                        message = "Changed status type to `Do Not Disturb`";
+                        break;
+                    }
+                    else {
+                        message = "Invalid";
+                    }
             }
 
             new MessageHandler(e.getChannel()).sendMessage(message);

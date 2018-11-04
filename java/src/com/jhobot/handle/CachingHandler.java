@@ -46,16 +46,19 @@ public class CachingHandler
         {
             return;
         }
+        ChadVar.UI_HANDLER.addLog("Caching guild '"+guild.getStringID()+"'.");
         ChadVar.GUILD_CACHE.put(guild, new CachedGuild(guild, get));
     }
 
     public void unCacheGuild(IGuild guild)
     {
+        ChadVar.UI_HANDLER.addLog("UnCached guild '"+guild.getStringID()+"'.");
         ChadVar.GUILD_CACHE.remove(guild);
     }
 
     public void cacheAll()
     {
+        ChadVar.UI_HANDLER.addLog("ReCaching all guilds.");
         cli.getGuilds().forEach(this::cacheGuild);
     }
 

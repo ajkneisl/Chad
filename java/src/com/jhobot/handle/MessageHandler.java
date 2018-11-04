@@ -1,5 +1,7 @@
 package com.jhobot.handle;
 
+import com.jhobot.core.ChadVar;
+import org.bson.Document;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
@@ -77,11 +79,12 @@ public class MessageHandler
         }
     }
 
-    public void sendPunishLog(String punishment, IUser punished, IUser punisher, DatabaseHandler databaseHandler, IGuild g, List<String> reason)
+    public void sendPunishLog(String punishment, IUser punished, IUser punisher, IGuild g, List<String> reason)
     {
-        if (!databaseHandler.getBoolean(g, "logging"))
+        Document doc = ChadVar.CACHE_DEVICE.getGuild(g).getDoc();
+        if (!doc.getBoolean("logging"))
             return;
-        if (databaseHandler.getString(g, "logging_channel").equalsIgnoreCase("none"))
+        if (doc.getString("logging_channel").equalsIgnoreCase("none"))
             return;
 
         StringBuilder sb = new StringBuilder();
@@ -94,7 +97,7 @@ public class MessageHandler
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         try {
             RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(databaseHandler.getString(g, "logging_channel"))).sendMessage(b.build());
+                g.getChannelByID(Long.parseLong(doc.getString("logging_channel"))).sendMessage(b.build());
             });
         } catch (NumberFormatException ee)
         {
@@ -102,18 +105,19 @@ public class MessageHandler
         }
     }
 
-    public void sendConfigLog(String changedVal, String newval, String oldval, IUser mod, IGuild g, DatabaseHandler databaseHandler)
+    public void sendConfigLog(String changedVal, String newval, String oldval, IUser mod, IGuild g)
     {
-        if (!databaseHandler.getBoolean(g, "logging"))
+        Document doc = ChadVar.CACHE_DEVICE.getGuild(g).getDoc();
+        if (!doc.getBoolean("logging"))
             return;
-        if (databaseHandler.getString(g, "logging_channel").equalsIgnoreCase("none"))
+        if (doc.getString("logging_channel").equalsIgnoreCase("none"))
             return;
 
         EmbedBuilder b = new EmbedBuilder().withTitle("Config Change : " + changedVal).appendField("New Value", newval, true).appendField("Old Value", oldval, true).appendField("Admin", mod.getName(), true).withFooterText(Util.getTimeStamp());
         b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
         try {
             RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(databaseHandler.getString(g, "logging_channel"))).sendMessage(b.build());
+                g.getChannelByID(Long.parseLong(doc.getString("logging_channel"))).sendMessage(b.build());
             });
         } catch (NumberFormatException ee)
         {

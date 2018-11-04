@@ -28,6 +28,7 @@ public class AutoRole implements Command {
                     break;
                 case "on":
                     ChadVar.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", true);
+                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
                     EmbedBuilder on_emb = new EmbedBuilder();
                     on_emb.withTitle("Auto Role");
                     on_emb.withDesc("Auto Role enabled.");
@@ -36,6 +37,7 @@ public class AutoRole implements Command {
                     break;
                 case "off":
                     ChadVar.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", false);
+                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
                     EmbedBuilder off_emb = new EmbedBuilder();
                     off_emb.withTitle("Auto Role");
                     off_emb.withDesc("Auto Role disabled.");
@@ -52,11 +54,8 @@ public class AutoRole implements Command {
                         if (!roles.isEmpty()) break;
                     }
                     IRole set_role = roles.get(0);
-                    if (set_role.equals(null)) {
-                        m.sendError("Invalid role.");
-                        return;
-                    }
                     ChadVar.DATABASE_HANDLER.set(e.getGuild(), "join_role", set_role.getStringID());
+                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
                     EmbedBuilder set_emb = new EmbedBuilder();
                     set_emb.withTitle("Auto Role");
                     set_emb.withDesc("New users will now automatically receive the role: " + set_role.getName());

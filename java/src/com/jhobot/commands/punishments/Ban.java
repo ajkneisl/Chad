@@ -104,13 +104,13 @@ public class Ban implements Command {
                 e.getGuild().banUser(user);
                 reason.add("None");
                 m.send("Successfully banned " + user.getName() + " for no reason.", "Banned User");
-                m.sendPunishLog("Ban", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
+                m.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
                 return;
             }
 
             e.getGuild().banUser(user);
             m.send("Successfully banned " + user.getName() + " for " + sb2.toString().trim() + ".", "Banned User");
-            m.sendPunishLog("Ban", user, e.getAuthor(), ChadVar.DATABASE_HANDLER, e.getGuild(), reason);
+            m.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
         };
     }
 

@@ -1,44 +1,90 @@
 package com.jhobot.handle.ui;
 
 import com.jhobot.core.ChadBot;
+import com.jhobot.core.ChadVar;
 import sx.blah.discord.api.IDiscordClient;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.util.HashMap;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 
 @SuppressWarnings({"FieldCanBeLocal", "CanBeFinal"})
 public class UIHandler
 {
-    private StatPanel panel = new StatPanel();
+    // panels
+    private JFrame mainFrame = new JFrame("Chad");
+    private MainPanel mainpanel = new MainPanel();
     private IDiscordClient cli;
+
     public UIHandler(IDiscordClient cli)
     {
-        JFrame frame = new JFrame("Chad : Statistics");
-        frame.setVisible(true);
-        frame.add(this.panel);
-        frame.setSize(411, 300);
-        frame.setResizable(false);
+
         this.cli = cli;
+        // mainpanel
+        mainFrame.getContentPane().add(mainpanel);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // makes it look better :)
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mainFrame.setVisible(true);
+        mainFrame.pack();
+        beginMainFrame();
+
+        // UI Updater (updates stats)
+        ChadVar.EXECUTOR_POOL.submit(() -> new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                update();
+            }
+        }, 60000*5,0));
+    }
+
+    public void addLog(String log)
+    {
+        mainpanel.logs.append("\n" + log);
+    }
+    void newError(String error)
+    {
+        PopUpPanel panel = new PopUpPanel();
+        JFrame frame = new JFrame("Chad : Error");
+        try {
+            frame.setIconImage(ImageIO.read(getClass().getResource("img/ui_error.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        frame.setName("Chad : Error");
+        panel.textArea1.setEditable(false);
+        panel.textArea1.setText(error);
+        frame.getContentPane().add(panel);
+        frame.setVisible(true);
+        frame.pack();
+        panel.Exit.addActionListener((ActionEvent) -> frame.dispose());
+
+    }
+
+    private void beginMainFrame()
+    {
+        mainpanel.button1.addActionListener((ActionEvent) -> System.exit(0));
+        mainpanel.RefreshButton.addActionListener((ActionEvent) -> update());
+        mainpanel.logs.setEditable(false);
+        mainpanel.logs.setText("UI has begun.");
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        try {
+            mainFrame.setIconImage(ImageIO.read(getClass().getResource("img/ui_icon.png")));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void update()
     {
-        HashMap<String, String> hash = StatsHandler.getStats(this.cli);
-        this.panel.setAvgGuildSize(Integer.parseInt(hash.get("avgGuildSize")));
-        this.panel.setBiggestGuild(hash.get("biggestGuild"));
-        this.panel.setBotToPlayer(hash.get("botToPlayer"));
-        this.panel.setGuildAmount(Integer.parseInt(hash.get("guildAmount")));
-    }
-
-    public StatPanel getPanel()
-    {
-        return this.panel;
+        mainpanel.allGuildsValue.setText(StatsHandler.getStats(cli).get("guildAmount"));
+        mainpanel.biggestGuildValue.setText(StatsHandler.getStats(cli).get("biggestGuild"));
+        mainpanel.botToUserVal.setText(StatsHandler.getStats(cli).get("botToPlayer"));
     }
 }

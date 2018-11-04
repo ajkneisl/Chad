@@ -17,8 +17,6 @@ public class StatsHandler
 
         List<IGuild> guilds = RequestBuffer.request(cli::getGuilds).get();
 
-        int total = 0;
-        int guild = 0;
         int bots = 0;
         int users = 0;
         int biggestGuildAmount = 0;
@@ -30,7 +28,6 @@ public class StatsHandler
                 biggestGuildName = g.getName();
                 biggestGuildAmount = g.getUsers().size();
             }
-            total += g.getUsers().size();
             for (IUser u : g.getUsers())
             {
                 if (u.isBot())
@@ -38,10 +35,7 @@ public class StatsHandler
                 else
                     users++;
             }
-            guild++;
         }
-
-        hashmap.put("avgGuildSize", Integer.toString(total/guild));
         hashmap.put("biggestGuild", biggestGuildName + "("+biggestGuildAmount+")");
         hashmap.put("botToPlayer", Integer.toString(bots)+"/"+Integer.toString(users));
         hashmap.put("guildAmount", Integer.toString(guilds.size()));

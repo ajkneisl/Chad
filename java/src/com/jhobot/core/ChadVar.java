@@ -1,6 +1,6 @@
 package com.jhobot.core;
 
-import com.jhobot.commands.admin.CacheStatus;
+import com.jhobot.commands.admin.Cache;
 import com.jhobot.commands.admin.CurrentThreads;
 import com.jhobot.commands.admin.ModifyPresence;
 import com.jhobot.commands.fun.*;
@@ -15,6 +15,7 @@ import com.jhobot.handle.commands.Category;
 import com.jhobot.handle.commands.CommandData;
 import com.jhobot.handle.commands.permissions.PermissionHandler;
 import com.jhobot.handle.commands.permissions.PermissionLevels;
+import com.jhobot.handle.ui.UIHandler;
 import sx.blah.discord.handle.obj.IGuild;
 
 import java.util.ArrayList;
@@ -25,21 +26,24 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ChadVar {
+public class ChadVar
+{
+    // UI HANDLER
+    public static UIHandler UI_HANDLER;
     // caching
     public static CachingHandler CACHE_DEVICE;
 
     // main
     public static final JSONHandler JSON_HANDLER = new JSONHandler().forceCheck();
-    public static final DatabaseHandler DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
+    public static DatabaseHandler DATABASE_HANDLER;
     public static final ExecutorService EXECUTOR_POOL = Executors.newFixedThreadPool(30);
     public static final DebugHandler DEBUG_HANDLER = new DebugHandler();
 
     // else
-    public static boolean ALLOW_UI = true;
+    static boolean ALLOW_UI = true;
     public static final HashMap<String, CommandData> COMMANDS = new HashMap<>();
     // presence rotation stuff
-    public static int ROTATION_TIME = 60000 * 5; // 5 minutes
+    public static int ROTATION_TIME = 60000*5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
     public static List<String> PRESENCE_ROTATION = new ArrayList<>();
 
@@ -149,12 +153,23 @@ public class ChadVar {
         COMMANDS.put("threads", new CommandData(Category.ADMIN, true, new CurrentThreads()));
         COMMANDS.put("modpresence", new CommandData(Category.ADMIN, true, new ModifyPresence()));
         COMMANDS.put("systeminfo", new CommandData(Category.ADMIN, true, new SystemInfo()));
-        COMMANDS.put("cachestatus", new CommandData(Category.ADMIN, true, new CacheStatus()));
+        COMMANDS.put("cache", new CommandData(Category.ADMIN, true, new Cache()));
         COMMANDS.put("Invite", new CommandData(Category.ADMIN,false, new Invite()));
     }
 
-    static void setCacheDevice() {
+    static void setCacheDevice()
+    {
         CACHE_DEVICE = new CachingHandler(ChadBot.cli);
+    }
+
+    static void setUiHandler()
+    {
+        UI_HANDLER = new UIHandler(ChadBot.cli);
+    }
+
+    static void setDatabaseHandler()
+    {
+        DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
     }
 
     // get a string from STRINGS

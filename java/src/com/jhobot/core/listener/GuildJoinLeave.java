@@ -92,7 +92,7 @@ public class GuildJoinLeave
 
         // assign the role
         if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "role_on_join")) {
-            if (joinRoleStringID != "none") {
+            if (!joinRoleStringID.equals("none")) {
                 e.getUser().addRole(joinRole);
             }
         }
@@ -115,6 +115,7 @@ public class GuildJoinLeave
 
         m.sendLog(b.build(), ChadVar.DATABASE_HANDLER, g);
 
+        ChadVar.CACHE_DEVICE.unCacheGuild(e.getGuild());
         if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
         {
             String leaveMsgCh = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
@@ -168,7 +169,7 @@ public class GuildJoinLeave
 
             dbb.getCollection().insertOne(doc);
 
-            System.out.println(Util.getTimeStamp() + " <" + e.getGuild().getStringID() + "> Joined Guild");
+            ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Joined Guild");
         }
     }
 
@@ -183,6 +184,6 @@ public class GuildJoinLeave
 
         databaseHandler.getCollection().deleteOne(get);
 
-        System.out.println(Util.getTimeStamp() + " <" + e.getGuild().getStringID() + "> Left Guild");
+        ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Joined Guild");
     }
 }

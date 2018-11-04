@@ -43,7 +43,7 @@ public class Logging implements Command {
                 }
 
                 ChadVar.DATABASE_HANDLER.set(e.getGuild(), "logging", Boolean.parseBoolean(bool));
-                m.sendConfigLog("Logging", bool, Boolean.toString(ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
+                m.sendConfigLog("Logging", bool, Boolean.toString(ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild());
                 m.send("Changed logging to " + bool, "Changed Logging");
 
                 return;
@@ -75,10 +75,10 @@ public class Logging implements Command {
 
                 if (ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel").equalsIgnoreCase("none"))
                 {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild());
                 }
                 else {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild(), ChadVar.DATABASE_HANDLER);
+                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild());
                 }
                 m.send("Changed logging channel to " + b.toString().trim(), "Changed Logging Channel");
                 ChadVar.DATABASE_HANDLER.set(e.getGuild(), "logging_channel", ch.getStringID());
