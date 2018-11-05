@@ -2,19 +2,11 @@ package com.jhobot.handle;
 
 import com.jhobot.core.ChadVar;
 import com.jhobot.handle.ui.ChadException;
-import com.sedmelluq.discord.lavaplayer.format.AudioDataFormat;
-import com.sedmelluq.discord.lavaplayer.format.AudioPlayerInputStream;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -23,7 +15,6 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import sx.blah.discord.handle.obj.IGuild;
 
-import javax.sound.sampled.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -35,49 +26,32 @@ public class MusicHandler {
     public TrackScheduler scheduler;
     public boolean currentlyPlaying = false;
 
-    public AudioDataFormat format;
-    public AudioInputStream stream;
-    public SourceDataLine.Info info;
-    public SourceDataLine line;
-
     public MusicHandler(IGuild guild)
     {
         try {
+            ChadVar.UI_HANDLER.addLog("1");
             this.guild = guild;
-            guild.getAudioManager().setAudioProvider(getAudioProvider());
+            ChadVar.UI_HANDLER.addLog("2");
             playerManager = new com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager();
-
-            format = playerManager.getConfiguration().getOutputFormat();
-            stream = AudioPlayerInputStream.createStream(player, format, 10000L, false);
-            info = new DataLine.Info(SourceDataLine.class, new AudioFormat(AudioFormat.Encoding.PCM_UNSIGNED, 44100, 16, 2, 4, 44100, false));
-            line = (SourceDataLine) AudioSystem.getLine(info);
-
-            YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager();
-            youtubeAudioSourceManager.configureRequests(config -> RequestConfig.copy(config).setCookieSpec(CookieSpecs.IGNORE_COOKIES).build());
-
-            playerManager.registerSourceManager(youtubeAudioSourceManager);
-
-            if (playerManager == null)
-                ChadVar.UI_HANDLER.addLog("playerManager is null");
-
-            ChadVar.UI_HANDLER.addLog("passed playerManager init");
-
+            ChadVar.UI_HANDLER.addLog("3");
             player = playerManager.createPlayer();
-
-            ChadVar.UI_HANDLER.addLog("passed player init");
-
+            ChadVar.UI_HANDLER.addLog("4");
+            guild.getAudioManager().setAudioProvider(getAudioProvider());
+            ChadVar.UI_HANDLER.addLog("5");
+            //YoutubeAudioSourceManager youtubeAudioSourceManager = new com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager();
+            ChadVar.UI_HANDLER.addLog("6");
+            //youtubeAudioSourceManager.configureRequests(config -> RequestConfig.copy(config).setCookieSpec(CookieSpecs.IGNORE_COOKIES).build());
+            ChadVar.UI_HANDLER.addLog("7");
+            //playerManager.registerSourceManager(youtubeAudioSourceManager);
+            ChadVar.UI_HANDLER.addLog("8");
+            //playerManager.registerSourceManager(new HttpAudioSourceManager());
+            ChadVar.UI_HANDLER.addLog("9");
+            AudioSourceManagers.registerRemoteSources(playerManager);
+            ChadVar.UI_HANDLER.addLog("10");
             scheduler = new TrackScheduler(this, player);
-
-            ChadVar.UI_HANDLER.addLog("passed scheduler init");
-
+            ChadVar.UI_HANDLER.addLog("11");
             player.addListener(scheduler);
-
-            ChadVar.UI_HANDLER.addLog("passed manager setup");
-
-            if (player == null)
-                ChadVar.UI_HANDLER.addLog("player is null");
-
-            ChadVar.UI_HANDLER.addLog("END OF MusicHandler CONSTRUCTOR");
+            ChadVar.UI_HANDLER.addLog("12");
         } catch (Exception ex) {
             ex.printStackTrace();
             ChadException.error("Exception in MusicHandler: " + ex);
@@ -93,15 +67,15 @@ public class MusicHandler {
             playerManager.loadItem(identifier, new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
-                    scheduler.queue(track);
                     ChadVar.UI_HANDLER.addLog("track loaded and enqueued: " + identifier);
+                    scheduler.queue(track);
                 }
 
                 @Override
                 public void playlistLoaded(AudioPlaylist playlist) {
                     for (AudioTrack track : playlist.getTracks()) {
-                        scheduler.queue(track);
                         ChadVar.UI_HANDLER.addLog("track loaded and enqueued: " + identifier);
+                        scheduler.queue(track);
                     }
                 }
 
@@ -112,18 +86,13 @@ public class MusicHandler {
 
                 @Override
                 public void loadFailed(FriendlyException throwable) {
-                    ChadVar.UI_HANDLER.addLog("track load failed");
+                    ChadVar.UI_HANDLER.addLog("track load failed: " + throwable);
                 }
             });
 
-            line.open(new AudioFormat(AudioFormat.Encoding.PCM_FLOAT, 44100, 16, 2, 4, 44100, false));
-            line.start();
-
-            byte[] buffer = new byte[format.maximumChunkSize()];
-            int chunkSize;
-
-            while ((chunkSize = stream.read(buffer)) >= 0) {
-                line.write(buffer, 0, chunkSize);
+            while (getAudioProvider().isReady())
+            {
+                ChadVar.UI_HANDLER.addLog("audio provider is ready");
             }
         } catch (Exception e) {
             e.printStackTrace();
