@@ -4,13 +4,6 @@ import com.jhobot.core.ChadVar;
 import com.jhobot.handle.MusicHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.ui.ChadException;
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -28,7 +21,7 @@ public class Play implements Command {
             if (!vc.isConnected())
             {
                 vc.join();
-                System.out.println("Joined the voice channel");
+                ChadVar.UI_HANDLER.addLog("Joined the voice channel");
             }
 
             while (!vc.isConnected())
@@ -54,13 +47,11 @@ public class Play implements Command {
                 }
             }
 
-            ChadException.error("yeet1");
-
-            guild.getAudioManager().setAudioProvider(handler.getAudioProvider());
-
-            ChadException.error("yeet2");
+            ChadVar.UI_HANDLER.addLog("about to play");
 
             handler.play(args.get(0)); // lookup and enqueue the track provided
+
+            ChadVar.UI_HANDLER.addLog("played");
         };
     }
 

@@ -1,5 +1,6 @@
 package com.jhobot.handle;
 
+import com.jhobot.core.ChadVar;
 import com.jhobot.handle.ui.ChadException;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
@@ -16,7 +17,7 @@ public class AudioProvider implements IAudioProvider {
     public AudioProvider(AudioPlayer audioPlayer)
     {
         if (audioPlayer == null)
-            ChadException.error("constructor audioPlayer is null");
+            ChadVar.UI_HANDLER.addLog("constructor audioPlayer is null");
         this.audioPlayer = audioPlayer;
     }
 
