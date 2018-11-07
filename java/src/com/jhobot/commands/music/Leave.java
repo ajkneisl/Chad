@@ -1,6 +1,5 @@
 package com.jhobot.commands.music;
 
-import com.jhobot.handle.MusicHandler;
 import com.jhobot.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
