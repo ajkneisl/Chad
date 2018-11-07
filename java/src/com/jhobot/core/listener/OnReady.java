@@ -2,6 +2,7 @@ package com.jhobot.core.listener;
 
 import com.jhobot.core.ChadBot;
 import com.jhobot.core.ChadVar;
+import com.jhobot.handle.autoupdate.Updater;
 import com.jhobot.handle.ui.ChadException;
 import com.jhobot.handle.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -9,7 +10,9 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
+import javax.swing.*;
 import java.util.*;
+import java.util.Timer;
 
 
 public class OnReady
@@ -17,7 +20,8 @@ public class OnReady
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
-        // cache o
+        e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "");
+        // cache
         ChadVar.CACHE_DEVICE.cacheAll();
         // automatic presence updater
         //TODO: put this in its own thread class so i can change the timings on it
@@ -38,5 +42,8 @@ public class OnReady
         // ui stuff
         ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!");
         ChadVar.UI_HANDLER.update();
+
+        // updates
+        new Updater();
     }
 }

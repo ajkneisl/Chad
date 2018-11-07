@@ -59,6 +59,8 @@ public class CachingHandler
     public void cacheAll()
     {
         ChadVar.UI_HANDLER.addLog("ReCaching all guilds.");
+        ChadVar.LAST_CACHE_ALL = Util.getTimeStamp();
+        ChadVar.UI_HANDLER.update();
         cli.getGuilds().forEach(this::cacheGuild);
     }
 

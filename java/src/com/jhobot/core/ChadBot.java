@@ -7,14 +7,10 @@ import com.jhobot.core.listener.UserLeaveJoin;
 import com.jhobot.handle.JSONHandler;
 import com.jhobot.handle.commands.permissions.PermissionLevels;
 import com.jhobot.handle.ui.ChadException;
-import com.jhobot.handle.ui.PopUpPanel;
-import com.jhobot.handle.ui.UIHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class ChadBot {
@@ -37,9 +33,15 @@ public class ChadBot {
 
     public static void main(String[] args)
     {
-        if (args.length == 1 && args[0].equalsIgnoreCase("denyui")) {
+        if (args.length >= 1 && Arrays.asList(args).contains("denyui"))
+        {
             ChadVar.ALLOW_UI = false;
         }
+        if (args.length >= 1 && Arrays.asList(args).contains("unstable"))
+        {
+            ChadVar.ALLOW_UNSTABLE = true;
+        }
+
 
         ChadVar.setJsonHandler();
         ChadVar.setDatabaseHandler();

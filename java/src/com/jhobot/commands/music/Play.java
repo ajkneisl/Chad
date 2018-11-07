@@ -1,13 +1,26 @@
 package com.jhobot.commands.music;
 
 import com.jhobot.core.ChadVar;
+import com.jhobot.handle.MessageHandler;
 import com.jhobot.handle.MusicHandler;
 import com.jhobot.handle.commands.Command;
 import com.jhobot.handle.ui.ChadException;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class Play implements Command {
@@ -33,25 +46,17 @@ public class Play implements Command {
                 }
             }
 
-            MusicHandler handler = ChadVar.musicHandlers.get(guild);
 
-            // if the guild doesnt have a music handler, register one
-            if (handler == null)
-            {
-                try {
-                    handler = new MusicHandler(guild);
-                    ChadVar.musicHandlers.put(guild, handler);
-                } catch (Exception exe) {
-                    exe.printStackTrace();
-                    ChadException.error("A problem occurred while creating a new music handler: " + exe.getMessage());
-                }
+            try {
+                sx.blah.discord.util.audio.AudioPlayer.getAudioPlayerForGuild(e.getGuild()).queue(
+                        new URL("https://cce.oeaa.cc/e0031b32820151234868e1c25cb66d63/18JQUYgpOlw")
+                );
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (UnsupportedAudioFileException e1) {
+                e1.printStackTrace();
             }
 
-            ChadVar.UI_HANDLER.addLog("about to play");
-
-            handler.play(args.get(0)); // lookup and enqueue the track provided
-
-            ChadVar.UI_HANDLER.addLog("played");
         };
     }
 

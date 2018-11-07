@@ -31,10 +31,14 @@ import java.util.concurrent.Executors;
 
 public class ChadVar
 {
+    // version
+    public static final String VERSION = "v0.5.3-A";
+    public static boolean ALLOW_UNSTABLE = false;
     // UI HANDLER
     public static UIHandler UI_HANDLER;
     // caching
     public static CachingHandler CACHE_DEVICE;
+    public static String LAST_CACHE_ALL = "Loading...";
 
     // main
     public static JSONHandler JSON_HANDLER;
