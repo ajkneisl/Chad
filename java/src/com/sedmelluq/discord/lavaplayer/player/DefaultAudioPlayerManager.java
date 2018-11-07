@@ -63,15 +63,15 @@ import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.
  * The default implementation of audio player manager.
  */
 public class DefaultAudioPlayerManager implements AudioPlayerManager {
-    private static final int TRACK_INFO_VERSIONED = 1;
-    private static final int TRACK_INFO_VERSION = 2;
+    private static int TRACK_INFO_VERSIONED = 1;
+    private static int TRACK_INFO_VERSION = 2;
 
-    private static final int DEFAULT_FRAME_BUFFER_DURATION = (int) TimeUnit.SECONDS.toMillis(5);
-    private static final int DEFAULT_CLEANUP_THRESHOLD = (int) TimeUnit.MINUTES.toMillis(1);
+    private static int DEFAULT_FRAME_BUFFER_DURATION = (int) TimeUnit.SECONDS.toMillis(5);
+    private static int DEFAULT_CLEANUP_THRESHOLD = (int) TimeUnit.MINUTES.toMillis(1);
 
-    private static final int MAXIMUM_LOAD_REDIRECTS = 5;
-    private static final int DEFAULT_LOADER_POOL_SIZE = 10;
-    private static final int LOADER_QUEUE_CAPACITY = 5000;
+    private static int MAXIMUM_LOAD_REDIRECTS = 5;
+    private static int DEFAULT_LOADER_POOL_SIZE = 10;
+    private static int LOADER_QUEUE_CAPACITY = 5000;
 
     private static final Logger log = LoggerFactory.getLogger(DefaultAudioPlayerManager.class);
 

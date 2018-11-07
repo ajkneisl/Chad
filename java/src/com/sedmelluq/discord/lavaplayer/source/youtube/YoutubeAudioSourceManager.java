@@ -56,20 +56,20 @@ import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.
  * Audio source manager that implements finding Youtube videos or playlists based on an URL or ID.
  */
 public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfigurable {
-    private static final Logger log = LoggerFactory.getLogger(YoutubeAudioSourceManager.class);
-    static final String CHARSET = "UTF-8";
+    private static Logger log = LoggerFactory.getLogger(YoutubeAudioSourceManager.class);
+    static String CHARSET = "UTF-8";
 
-    private static final String PROTOCOL_REGEX = "(?:http://|https://|)";
-    private static final String DOMAIN_REGEX = "(?:www\\.|m\\.|music\\.|)youtube\\.com";
-    private static final String SHORT_DOMAIN_REGEX = "(?:www\\.|)youtu\\.be";
-    private static final String VIDEO_ID_REGEX = "(?<v>[a-zA-Z0-9_-]{11})";
-    private static final String PLAYLIST_ID_REGEX = "(?<list>(PL|LL|FL|UU)[a-zA-Z0-9_-]+)";
+    private static String PROTOCOL_REGEX = "(?:http://|https://|)";
+    private static String DOMAIN_REGEX = "(?:www\\.|m\\.|music\\.|)youtube\\.com";
+    private static String SHORT_DOMAIN_REGEX = "(?:www\\.|)youtu\\.be";
+    private static String VIDEO_ID_REGEX = "(?<v>[a-zA-Z0-9_-]{11})";
+    private static String PLAYLIST_ID_REGEX = "(?<list>(PL|LL|FL|UU)[a-zA-Z0-9_-]+)";
 
-    private static final String SEARCH_PREFIX = "ytsearch:";
+    private static String SEARCH_PREFIX = ""; // ytsearch:
 
-    private static final Pattern directVideoIdPattern = Pattern.compile("^" + VIDEO_ID_REGEX + "$");
+    private static Pattern directVideoIdPattern = Pattern.compile("^" + VIDEO_ID_REGEX + "$");
 
-    private final Extractor[] extractors = new Extractor[] {
+    private Extractor[] extractors = new Extractor[] {
             new Extractor(directVideoIdPattern, id -> loadTrackWithVideoId(id, false)),
             new Extractor(Pattern.compile("^" + PLAYLIST_ID_REGEX + "$"), id -> loadPlaylistWithId(id, null)),
             new Extractor(Pattern.compile("^" + PROTOCOL_REGEX + DOMAIN_REGEX + "/.*"), this::loadFromMainDomain),
@@ -88,6 +88,8 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
      */
     public YoutubeAudioSourceManager() {
         this(true);
+
+        ChadVar.UI_HANDLER.addLog("Chad is using the right YoutubeAudioSourceManager");
     }
 
     /**
@@ -95,8 +97,6 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
      * @param allowSearch Whether to allow search queries as identifiers
      */
     public YoutubeAudioSourceManager(boolean allowSearch) {
-        ChadVar.UI_HANDLER.addLog("Chad is using the right YoutubeAudioSourceManager");
-
         signatureCipherManager = new YoutubeSignatureCipherManager();
         httpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager();
         this.allowSearch = allowSearch;
