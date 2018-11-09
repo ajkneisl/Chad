@@ -1,7 +1,7 @@
-package com.sedmelluq.discord.lavaplayer.player;
+/*package com.sedmelluq.discord.lavaplayer.player;
 
-import com.jhobot.core.ChadVar;
-import com.jhobot.handle.ui.ChadException;
+import ChadVar;
+import ChadException;
 import com.sedmelluq.discord.lavaplayer.remote.RemoteAudioTrackExecutor;
 import com.sedmelluq.discord.lavaplayer.remote.RemoteNodeManager;
 import com.sedmelluq.discord.lavaplayer.remote.RemoteNodeRegistry;
@@ -59,9 +59,6 @@ import java.util.function.Function;
 import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.FAULT;
 import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.SUSPICIOUS;
 
-/**
- * The default implementation of audio player manager.
- */
 public class DefaultAudioPlayerManager implements AudioPlayerManager {
     private static int TRACK_INFO_VERSIONED = 1;
     private static int TRACK_INFO_VERSION = 2;
@@ -98,9 +95,6 @@ public class DefaultAudioPlayerManager implements AudioPlayerManager {
     private AudioPlayerLifecycleManager lifecycleManager;
 
 
-    /**
-     * Create a new instance
-     */
     public DefaultAudioPlayerManager() {
         ChadVar.UI_HANDLER.addLog("Chad is using the right DefaultAudioPlayerManager");
 
@@ -291,11 +285,6 @@ public class DefaultAudioPlayerManager implements AudioPlayerManager {
         return new DecodedTrackHolder(track);
     }
 
-    /**
-     * Encodes an audio track to a byte array. Does not include AudioTrackInfo in the buffer.
-     * @param track The track to encode
-     * @return The bytes of the encoded data
-     */
     public byte[] encodeTrackDetails(AudioTrack track) {
         try {
             ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
@@ -315,12 +304,6 @@ public class DefaultAudioPlayerManager implements AudioPlayerManager {
         sourceManager.encodeTrack(track, output);
     }
 
-    /**
-     * Decodes an audio track from a byte array.
-     * @param trackInfo Track info for the track to decode
-     * @param buffer Byte array containing the encoded track
-     * @return Decoded audio track
-     */
     public AudioTrack decodeTrackDetails(AudioTrackInfo trackInfo, byte[] buffer) {
         try {
             DataInput input = new DataInputStream(new ByteArrayInputStream(buffer));
@@ -342,13 +325,7 @@ public class DefaultAudioPlayerManager implements AudioPlayerManager {
         return null;
     }
 
-    /**
-     * Executes an audio track with the given player and volume.
-     * @param listener A listener for track state events
-     * @param track The audio track to execute
-     * @param configuration The audio configuration to use for executing
-     * @param playerOptions Options of the audio player
-     */
+
     public void executeTrack(TrackStateListener listener, InternalAudioTrack track, AudioConfiguration configuration,
                              AudioPlayerOptions playerOptions) {
 
@@ -512,4 +489,4 @@ public class DefaultAudioPlayerManager implements AudioPlayerManager {
             }
         }
     }
-}
+}*/

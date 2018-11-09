@@ -1,6 +1,7 @@
-package com.sedmelluq.discord.lavaplayer.source.youtube;
 
-import com.jhobot.core.ChadVar;
+/*package com.sedmelluq.discord.lavaplayer.source.youtube;
+
+import ChadVar;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.DataFormatTools;
@@ -52,9 +53,6 @@ import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.
 import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.FAULT;
 import static com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity.SUSPICIOUS;
 
-/**
- * Audio source manager that implements finding Youtube videos or playlists based on an URL or ID.
- */
 public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfigurable {
     private static Logger log = LoggerFactory.getLogger(YoutubeAudioSourceManager.class);
     static String CHARSET = "UTF-8";
@@ -83,19 +81,12 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
     private boolean allowSearch;
     private volatile int playlistPageCount;
 
-    /**
-     * Create an instance with default settings.
-     */
     public YoutubeAudioSourceManager() {
         this(true);
 
         ChadVar.UI_HANDLER.addLog("Chad is using the right YoutubeAudioSourceManager");
     }
 
-    /**
-     * Create an instance.
-     * @param allowSearch Whether to allow search queries as identifiers
-     */
     public YoutubeAudioSourceManager(boolean allowSearch) {
         signatureCipherManager = new YoutubeSignatureCipherManager();
         httpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager();
@@ -105,16 +96,9 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
         mixProvider = new YoutubeMixProvider(this);
     }
 
-    /**
-     * @param playlistPageCount Maximum number of pages loaded from one playlist. There are 100 tracks per page.
-     */
     public void setPlaylistPageCount(int playlistPageCount) {
         this.playlistPageCount = playlistPageCount;
     }
-
-    /**
-     * @param maximumPoolSize Maximum number of threads in mix loader thread pool.
-     */
     public void setMixLoaderMaximumPoolSize(int maximumPoolSize) {
         mixProvider.setLoaderMaximumPoolSize(maximumPoolSize);
     }
@@ -164,20 +148,16 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
         return signatureCipherManager;
     }
 
-    /**
-     * @return Get an HTTP interface for a playing track.
-     */
+
     public HttpInterface getHttpInterface() {
         return httpInterfaceManager.getInterface();
     }
 
-    @Override
     public void configureRequests(Function<RequestConfig, RequestConfig> configurator) {
         httpInterfaceManager.configureRequests(configurator);
         searchProvider.configureRequests(configurator);
     }
 
-    @Override
     public void configureBuilder(Consumer<HttpClientBuilder> configurator) {
         httpInterfaceManager.configureBuilder(configurator);
         searchProvider.configureBuilder(configurator);
@@ -191,13 +171,6 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
         return loadNonSearch(reference.identifier);
     }
 
-    /**
-     * Loads a single track from video ID.
-     *
-     * @param videoId ID of the YouTube video.
-     * @param mustExist True if it should throw an exception on missing track, otherwise returns AudioReference.NO_TRACK.
-     * @return Loaded YouTube track.
-     */
     public AudioItem loadTrackWithVideoId(String videoId, boolean mustExist) {
         try (HttpInterface httpInterface = getHttpInterface()) {
             JsonBrowser info = getTrackInfoFromMainPage(httpInterface, videoId, mustExist);
@@ -220,11 +193,6 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
         }
     }
 
-    /**
-     * @param tracks List of tracks to search from.
-     * @param selectedVideoId Selected track identifier.
-     * @return The selected track from the track list, or null if it is not present.
-     */
     public AudioTrack findSelectedTrack(List<AudioTrack> tracks, String selectedVideoId) {
         if (selectedVideoId != null) {
             for (AudioTrack track : tracks) {
@@ -334,15 +302,6 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
         }
     }
 
-    /**
-     * @param httpInterface HTTP interface to use for performing any necessary request.
-     * @param videoId ID of the video.
-     * @param mustExist If <code>true</code>, throws an exception instead of returning <code>null</code> if the track does
-     *                  not exist.
-     * @return JSON information about the track if it exists. <code>null</code> if it does not and mustExist is
-     *         <code>false</code>.
-     * @throws IOException On network error.
-     */
     public JsonBrowser getTrackInfoFromMainPage(HttpInterface httpInterface, String videoId, boolean mustExist) throws IOException {
         try (CloseableHttpResponse response = httpInterface.execute(new HttpGet(getWatchUrl(videoId)))) {
             int statusCode = response.getStatusLine().getStatusCode();
@@ -518,14 +477,6 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
         return null;
     }
 
-    /**
-     * @param videoId Video ID. Used as {@link AudioTrackInfo#identifier}.
-     * @param title See {@link AudioTrackInfo#title}.
-     * @param uploader Name of the uploader. Used as {@link AudioTrackInfo#author}.
-     * @param isStream See {@link AudioTrackInfo#isStream}.
-     * @param duration See {@link AudioTrackInfo#length}.
-     * @return An audio track instance.
-     */
     public YoutubeAudioTrack buildTrackObject(String videoId, String title, String uploader, boolean isStream, long duration) {
         return new YoutubeAudioTrack(new AudioTrackInfo(title, uploader, duration, videoId, isStream, getWatchUrl(videoId)), this);
     }
@@ -572,4 +523,4 @@ public class YoutubeAudioSourceManager implements AudioSourceManager, HttpConfig
             this.loader = loader;
         }
     }
-}
+}*/
