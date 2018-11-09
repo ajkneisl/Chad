@@ -115,11 +115,13 @@ public class UIHandler
 
     private void beginMainFrame()
     {
-        i = 0;
-        mainpanel.getAllGuilds.addActionListener((ActionEvent) -> ChadBot.cli.getGuilds().forEach((g) -> {
-            add();
-            addLog("<" + i + "> "+g.getName()+" ["+g.getStringID()+"]", LogLevel.INFO);
-        }));
+        mainpanel.getAllGuilds.addActionListener((ActionEvent) -> {
+          i = 0;
+          ChadBot.cli.getGuilds().forEach((g) -> {
+                add();
+                addLog("<" + i + "> "+g.getName()+" ["+g.getStringID()+"]", LogLevel.INFO);
+          });
+        });
         mainpanel.exitButton.addActionListener((ActionEvent) -> System.exit(0));
         mainpanel.RefreshButton.addActionListener((ActionEvent) -> update());
         mainpanel.RefreshButton2.addActionListener((ActionEvent) -> ChadVar.CACHE_DEVICE.reCacheAll());
