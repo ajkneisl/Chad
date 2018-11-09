@@ -27,7 +27,7 @@ public class Contributors implements Command {
                 JSONObject object = null;
                 for (Object obj : o)
                 {
-                    if (((JSONObject) obj).getString("display_name").equalsIgnoreCase(args.get(2)))
+                    if (((JSONObject) obj).getString("display_name").equalsIgnoreCase(args.get(1)))
                     {
                         object = (JSONObject) obj;
                     }
@@ -36,6 +36,7 @@ public class Contributors implements Command {
                 if (object == null)
                 {
                     new MessageHandler(e.getChannel()).sendError("Invalid User");
+                    return;
                 }
 
                 // builds profile
