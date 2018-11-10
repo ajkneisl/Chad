@@ -1,5 +1,8 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import org.woahoverflow.chad.handle.commands.HelpHandler;
@@ -19,17 +22,11 @@ public class EightBall implements Command {
                 m.sendError("You didn't ask a question!");
                 return;
             }
-            String[] answers = {"It is certain", "It is decidedly so", "Without a doubt",
-                    "Yes - definitely", "You may rely on it", "As I see it, yes",
-                    "Most likely", "Outlook good", "Signs point to yes",
-                    "Yes", "Reply hazy, try again", "Ask again later",
-                    "Better not tell you now", "Cannot predict now", "Concentrate and ask again",
-                    "Don't count on it", "My reply is no", "My sources say no",
-                    "Outlook not so good", "Very doubtful"};
+            JSONArray answers = ChadVar.JSON_HANDLER.readArray("https://raw.githubusercontent.com/woahoverflow/Chad-Repo/master/data/8ball.json");
 
             Random random = new Random();
-            int index = random.nextInt(answers.length);
-            m.send(answers[index], "8Ball");
+            int index = random.nextInt(answers.length());
+            m.send((String) answers.get(index), "8Ball");
         };
     }
 

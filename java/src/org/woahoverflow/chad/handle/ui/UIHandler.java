@@ -60,7 +60,7 @@ public class UIHandler
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : Chad");
         try {
-            frame.setIconImage(ImageIO.read(getClass().getResource("img/ui_error.png")));
+            frame.setIconImage(ImageIO.read(getClass().getResource("/org/woahoverflow/chad/data/img/ui_error.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +80,7 @@ public class UIHandler
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : " + guild.getStringID());
         try {
-            frame.setIconImage(ImageIO.read(getClass().getResource("img/ui_error.png")));
+            frame.setIconImage(ImageIO.read(getClass().getResource("/org/woahoverflow/chad/data/img/ui_error.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,7 +108,7 @@ public class UIHandler
             panel.inviteLinkVal.setText("Bot doesn't have permission");
         }
         else {
-            panel.inviteLinkVal.setText("YEET"); // TODO make invite url
+            panel.inviteLinkVal.setText("Invite URL"); // TODO make invite url
         }
         panel.reCacheButton.addActionListener((ActionEvent) -> ChadVar.CACHE_DEVICE.cacheGuild(guild));
     }
@@ -152,7 +152,7 @@ public class UIHandler
         mainpanel.logs.setText("UI has started.");
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         try {
-            mainFrame.setIconImage(ImageIO.read(getClass().getResource("img/ui_icon.png")));
+            mainFrame.setIconImage(ImageIO.read(UIHandler.class.getResource("/org/woahoverflow/chad/data/img/ui_icon.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

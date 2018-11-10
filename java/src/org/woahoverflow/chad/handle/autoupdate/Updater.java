@@ -9,20 +9,20 @@ import javax.swing.*;
 
 public class Updater
 {
-    boolean UPDATE = true;
     JSONObject VER_JSON;
     JFrame frame;
-    UpdatePanel p;
+
     public Updater()
     {
         ChadVar.UI_HANDLER.addLog("Checking for updates...", LogLevel.UPDATE);
-        this.VER_JSON = ChadVar.JSON_HANDLER.read("https://raw.githubusercontent.com/woahoverflow/Chad-Repo/master/data/ver.json");
+        this.VER_JSON = ChadVar.JSON_HANDLER.read("https://raw.githubusercontent.com/woahoverflow/Chad-Repo/master/data/version.json");
+        boolean UPDATE = true;
         if (!ChadVar.ALLOW_UNSTABLE && ChadVar.VERSION.equals(this.VER_JSON.getString("recent-stable")))
-            this.UPDATE = false;
+            UPDATE = false;
         else if (ChadVar.ALLOW_UNSTABLE && ChadVar.VERSION.equals(this.VER_JSON.getString("recent-unstable")))
-            this.UPDATE = false;
+            UPDATE = false;
 
-        if (!this.UPDATE)
+        if (!UPDATE)
         {
             ChadVar.UI_HANDLER.addLog("Client is up to date!", LogLevel.UPDATE);
             return;
@@ -30,7 +30,7 @@ public class Updater
 
         ChadVar.UI_HANDLER.addLog("Found Update!", LogLevel.UPDATE);
         frame = new JFrame("Update Available!");
-        p = new UpdatePanel();
+        UpdatePanel p = new UpdatePanel();
         if (ChadVar.ALLOW_UNSTABLE)
             p.newVersion.setText(this.VER_JSON.getString("recent-unstable") + " (unstable)");
         else
@@ -47,6 +47,5 @@ public class Updater
     {
         ChadVar.UI_HANDLER.addLog("Exited Updater", LogLevel.UPDATE);
         frame.dispose();
-
     }
 }

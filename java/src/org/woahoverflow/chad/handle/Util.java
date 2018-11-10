@@ -19,11 +19,6 @@ public class Util
         return new SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().getTime());
     }
 
-    public static void sendToAdminGuild(IDiscordClient cli, String s)
-    {
-        cli.getGuildByID(Long.parseLong("504413906471485460")).getChannelByID(Long.parseLong("507686267216068608")).sendMessage(s);
-    }
-
     public static String httpGet(String url) {
         try {
             URL obj = new URL(url);
