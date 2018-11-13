@@ -37,7 +37,7 @@ public class StatsHandler
             }
         }
         hashmap.put("biggestGuild", biggestGuildName + "("+biggestGuildAmount+")");
-        hashmap.put("botToPlayer", Integer.toString(bots)+"/"+Integer.toString(users));
+        hashmap.put("botToPlayer", bots +"/"+ users);
         hashmap.put("guildAmount", Integer.toString(guilds.size()));
         return hashmap;
     }

@@ -14,7 +14,6 @@ import sx.blah.discord.api.IDiscordClient;
 
 import java.util.Arrays;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class ChadBot {
     static {
         JSONHandler h = new JSONHandler().forceCheck();

@@ -40,7 +40,7 @@ public class ModifyPresence implements Command {
                     args.remove(0);
                     StringBuilder add_sb = new StringBuilder();
                     for (String str : args) {
-                        add_sb.append(str + " ");
+                        add_sb.append(str).append(" ");
                     }
                     ChadVar.PRESENCE_ROTATION.add(add_sb.toString().trim());
                     message = "Added \"" + add_sb.toString().trim() + "\" to rotation";
@@ -49,7 +49,7 @@ public class ModifyPresence implements Command {
                     args.remove(0);
                     StringBuilder time_sb = new StringBuilder();
                     for (String str : args) {
-                        time_sb.append(str + " ");
+                        time_sb.append(str).append(" ");
                     }
                     ChadVar.ROTATION_TIME = Integer.parseInt(time_sb.toString().trim());
                     message = "Changed rotation period to `" + ChadVar.ROTATION_TIME + "`";

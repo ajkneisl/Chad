@@ -23,7 +23,7 @@ public class RedditNew implements Command {
             }
 
             String link = null;
-            JSONObject post = null;
+            JSONObject post;
             try {
                 int index = 0;
                 post = ChadVar.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
@@ -47,7 +47,7 @@ public class RedditNew implements Command {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle(post.getString("title"));
             b.withDesc(post.getString("author"));
-            b.appendField("Score", Integer.toString(post.getInt("score")) + " (" + Integer.toString(post.getInt("ups")) + "/" + Integer.toString(post.getInt("downs")) + ")", true);
+            b.appendField("Score", post.getInt("score") + " (" + post.getInt("ups") + "/" + post.getInt("downs") + ")", true);
             b.appendField("Comments", Integer.toString(post.getInt("num_comments")), true);
             b.withImage(post.getString("url"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));

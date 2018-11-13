@@ -11,9 +11,9 @@ public class CachingHandler
 {
     public class CachedGuild
     {
-        private Document doc;
-        private IGuild guild;
-        private String cacheTime;
+        private final Document doc;
+        private final IGuild guild;
+        private final String cacheTime;
         private CachedGuild(IGuild guild, Document doc)
         {
             this.doc = doc;
@@ -33,8 +33,8 @@ public class CachingHandler
             return this.doc;
         }
     }
-    private IDiscordClient cli;
-    private MongoCollection<Document> col = ChadVar.DATABASE_HANDLER.getCollection();
+    private final IDiscordClient cli;
+    private final MongoCollection<Document> col = ChadVar.DATABASE_HANDLER.getCollection();
     public CachingHandler(IDiscordClient cli)
     {
         this.cli = cli;
@@ -65,7 +65,7 @@ public class CachingHandler
         cli.getGuilds().forEach(this::cacheGuild);
     }
 
-    public void unCacheAll()
+    private void unCacheAll()
     {
         ChadVar.GUILD_CACHE.clear();
     }

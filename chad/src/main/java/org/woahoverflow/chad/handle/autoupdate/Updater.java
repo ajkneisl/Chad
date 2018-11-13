@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class Updater
 {
-    JSONObject VER_JSON;
+    final JSONObject VER_JSON;
     JFrame frame;
 
     public Updater()

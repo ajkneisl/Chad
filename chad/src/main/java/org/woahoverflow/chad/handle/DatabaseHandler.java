@@ -1,13 +1,11 @@
 package org.woahoverflow.chad.handle;
 
-import org.woahoverflow.chad.handle.commands.permissions.PermissionLevels;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
 
 import java.util.ArrayList;
 
@@ -46,26 +44,6 @@ public class DatabaseHandler
         return this.db;
     }
 
-    public PermissionLevels getPermissionLevel(IUser user)
-    {
-        Document get = col.find(new Document("userid", Long.toString(user.getLongID()))).first();
-
-        // if they dont have a permission level, return member
-        if (get == null)
-            return PermissionLevels.MEMBER;
-
-        return PermissionLevels.valueOf(get.getString("level"));
-    }
-
-    public void setPermissionLevel(IUser user, PermissionLevels level)
-    {
-        Document get = col.find(new Document("userid", Long.toString(user.getLongID()))).first();
-
-        if (get == null)
-            return;
-
-        col.updateOne(get, new Document("$set", new Document("level", level.toString())));
-    }
 
     @SuppressWarnings("unchecked")
     public ArrayList<String> getArray(IGuild guild, String object)

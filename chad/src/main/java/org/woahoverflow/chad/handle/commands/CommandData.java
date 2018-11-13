@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.handle.commands;
 
 public class CommandData {
-    public Category category;
-    public boolean isDevOnly;
-    public Command commandClass;
+    public final Category category;
+    public final boolean isDevOnly;
+    public final Command commandClass;
 
     public CommandData(Category category, boolean isDevOnly, Command commandClass) {
         this.category = category;

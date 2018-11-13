@@ -3,7 +3,6 @@ package org.woahoverflow.chad.commands.fun;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.woahoverflow.chad.handle.commands.Command;
 import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;

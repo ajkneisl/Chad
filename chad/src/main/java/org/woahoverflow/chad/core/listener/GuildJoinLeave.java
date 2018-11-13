@@ -12,6 +12,7 @@ import sx.blah.discord.handle.obj.Permissions;
 public class GuildJoinLeave
 {
 
+    @SuppressWarnings("unused")
     @EventSubscriber
     public void joinGuild(GuildCreateEvent e)
     {
@@ -52,6 +53,7 @@ public class GuildJoinLeave
         }
     }
 
+    @SuppressWarnings("unused")
     @EventSubscriber
     public void leaveGuild(GuildLeaveEvent e)
     {
@@ -62,6 +64,8 @@ public class GuildJoinLeave
             return;
 
         databaseHandler.getCollection().deleteOne(get);
+
+        ChadVar.CACHE_DEVICE.unCacheGuild(e.getGuild());
 
         ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Left Guild", LogLevel.INFO);
     }

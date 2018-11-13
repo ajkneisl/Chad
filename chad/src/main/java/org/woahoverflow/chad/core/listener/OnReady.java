@@ -9,17 +9,16 @@ import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.*;
-import java.util.Timer;
 
 
 public class OnReady
 {
+    @SuppressWarnings("unused")
     @EventSubscriber
     public void onReadyEvent(ReadyEvent e)
     {
         e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "");
 
-        // automatic presence updater
         //TODO: put this in its own thread class so i can change the timings on it
         ChadVar.EXECUTOR_POOL.submit(() -> {
             Timer t = new Timer();
@@ -35,14 +34,14 @@ public class OnReady
             }, 0, ChadVar.ROTATION_TIME); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work
         });
 
-        // ui stuff
+        // UI Begin
         ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", LogLevel.INFO);
         ChadVar.UI_HANDLER.update();
 
-        // cache ? hopefully?
+        // Caching
         ChadVar.CACHE_DEVICE.cacheAll();
 
-        // updates
+        // auto update begin
         new Updater();
     }
 }

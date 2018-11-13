@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 
 public class MessageRecieved
 {
+    @SuppressWarnings("unused")
     @EventSubscriber
     public void messageRecieved(MessageReceivedEvent e)
     {

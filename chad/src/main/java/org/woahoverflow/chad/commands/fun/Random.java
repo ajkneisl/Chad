@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.google.common.net.HttpHeaders.USER_AGENT;
-
 public class Random implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -104,7 +102,6 @@ public class Random implements Command {
                         b.append(l.get(new java.util.Random().nextInt(l.size()))).append(" ");
                     }
                     new MessageHandler(e.getChannel()).send(b.toString().trim(),"Sentence");
-                    return;
             }
         };
     }

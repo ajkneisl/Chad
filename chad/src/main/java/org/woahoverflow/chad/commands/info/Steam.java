@@ -102,7 +102,7 @@ public class Steam implements Command {
                         b2.withTitle("Map Stats for " + profile.getName());
                         b2.appendField("Total Kills", Integer.toString(profile.getCSGOStats().getJSONObject(0).getInt("value")), true);
                         b2.appendField("Total Deaths", Integer.toString(profile.getCSGOStats().getJSONObject(1).getInt("value")), true);
-                        b2.appendField("Total Time Played", Integer.toString(profile.getCSGOStats().getJSONObject(2).getInt("value")/60/60) + "hrs", true);
+                        b2.appendField("Total Time Played", profile.getCSGOStats().getJSONObject(2).getInt("value") / 60 / 60 + "hrs", true);
                         b2.appendField("Total Bombs Planted", Integer.toString(profile.getCSGOStats().getJSONObject(3).getInt("value")), true);
                         b2.appendField("Total Bombs Defused", Integer.toString(profile.getCSGOStats().getJSONObject(4).getInt("value")), true);
                         b2.appendField("Total Wins", Integer.toString(profile.getCSGOStats().getJSONObject(5).getInt("value")), true);
@@ -178,5 +178,6 @@ interface SteamProfile
     String getName();
     String getID();
     JSONArray getCSGOStats();
+    @SuppressWarnings("unused")
     JSONObject getProfileObj();
 }

@@ -9,6 +9,7 @@ import sx.blah.discord.util.RequestBuilder;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class TicTacToe implements Command {
 
     @Override

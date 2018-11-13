@@ -47,30 +47,29 @@ public class PhotoEditor implements Command {
                 f = new File(System.getenv("appdata") + "\\chad\\imgcache\\img" + new java.util.Random().nextInt(2000) + ".png");
             }
 
-            switch (args.get(0).toLowerCase())
+            if ("blur".equals(args.get(0).toLowerCase()))
             {
-                case "blur":
-                    try {
-                        float[] matrix = new float[400];
-                        for (int i = 0; i < 400; i++)
-                            matrix[i] = 1.0f/400.0f;
-                        BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null );
+                try {
+                    float[] matrix = new float[400];
+                    for (int i = 0; i < 400; i++)
+                        matrix[i] = 1.0f / 400.0f;
+                    BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null);
 
-                        BufferedImage i = null;
+                    BufferedImage i = null;
 
-                        ImageIO.write(op.filter(im, i), "png", f);
+                    ImageIO.write(op.filter(im, null), "png", f);
 
-                        m.sendFile(f);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                    m.sendFile(f);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 
-                    if (f.delete())
-                        System.err.println("Failed to delete file " + f.getPath());
-                    return;
+                if (f.delete())
+                    System.err.println("Failed to delete file " + f.getPath());
+                return;
             }
 
-            help(e, args);
+            new MessageHandler(e.getChannel()).sendError("Invalid Arguments");
         };
     }
 

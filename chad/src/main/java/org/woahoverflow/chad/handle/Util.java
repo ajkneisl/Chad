@@ -1,7 +1,5 @@
 package org.woahoverflow.chad.handle;
 
-import sx.blah.discord.api.IDiscordClient;
-
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,7 +17,7 @@ public class Util
         return new SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().getTime());
     }
 
-    public static String httpGet(String url) {
+    static String httpGet(String url) {
         try {
             URL obj = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
@@ -36,7 +34,7 @@ public class Util
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }

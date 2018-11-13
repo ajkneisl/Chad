@@ -6,6 +6,7 @@ import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Leave implements Command {
 
     @Override

@@ -9,6 +9,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Invite implements Command {
 
     @Override

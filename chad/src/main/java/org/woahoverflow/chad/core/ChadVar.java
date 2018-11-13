@@ -22,18 +22,19 @@ import sx.blah.discord.handle.obj.IGuild;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ChadVar
 {
-    // version
-    public static final String VERSION = "v0.5.3-A";
+    // used in with the auto updater
+    public static final String VERSION = "v0.5.3-SNAPCHAT";
     public static boolean ALLOW_UNSTABLE = false;
-    // UI HANDLER
+
+    // ui stuff
     public static UIHandler UI_HANDLER;
+
     // caching
     public static CachingHandler CACHE_DEVICE;
     public static String LAST_CACHE_ALL = "Loading...";
@@ -42,7 +43,6 @@ public class ChadVar
     public static JSONHandler JSON_HANDLER;
     public static DatabaseHandler DATABASE_HANDLER;
     public static final ExecutorService EXECUTOR_POOL = Executors.newFixedThreadPool(30);
-    public static final DebugHandler DEBUG_HANDLER = new DebugHandler();
 
     // else
     static boolean ALLOW_UI = true;
@@ -50,20 +50,20 @@ public class ChadVar
     // presence rotation stuff
     public static int ROTATION_TIME = 60000*5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
-    public static List<String> PRESENCE_ROTATION = new ArrayList<>();
+    public static final List<String> PRESENCE_ROTATION = new ArrayList<>();
 
     // perms
-    public static Map<String, PermissionLevels> GLOBAL_PERMISSIONS = new HashMap<>();
-    public static PermissionHandler PERMISSION_HANDLER = new PermissionHandler();
+    public static final ConcurrentHashMap<String, PermissionLevels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
+    public static final PermissionHandler PERMISSION_HANDLER = new PermissionHandler();
 
     // count handler
-    public static ThreadCountHandler THREAD_HANDLER = new ThreadCountHandler();
+    public static final ThreadCountHandler THREAD_HANDLER = new ThreadCountHandler();
 
     // caching
-    public static ConcurrentHashMap<IGuild, CachingHandler.CachedGuild> GUILD_CACHE = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<IGuild, CachingHandler.CachedGuild> GUILD_CACHE = new ConcurrentHashMap<>();
 
     // strings
-    public static ConcurrentHashMap<String, String> STRINGS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, String> STRINGS = new ConcurrentHashMap<>();
 
     // music handlers
     //public static Map<IGuild, MusicHandler> musicHandlers = new HashMap<>();

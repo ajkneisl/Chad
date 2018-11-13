@@ -12,20 +12,17 @@ import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.io.IOException;
 import java.util.*;
 import java.util.Timer;
 
-@SuppressWarnings({"FieldCanBeLocal", "CanBeFinal"})
 public class UIHandler
 {
     // panels
     private int i = 0;
-    private JFrame mainFrame = new JFrame("Chad");
-    private MainPanel mainpanel = new MainPanel();
-    private IDiscordClient cli;
+    private final JFrame mainFrame = new JFrame("Chad");
+    private final MainPanel mainpanel = new MainPanel();
+    private final IDiscordClient cli;
     public UIHandler(IDiscordClient cli)
     {
 
@@ -70,6 +67,7 @@ public class UIHandler
 
     }
 
+    @SuppressWarnings("unused")
     void newError(String error, IGuild guild)
     {
         PopUpPanel panel = new PopUpPanel();
@@ -160,14 +158,14 @@ public class UIHandler
         mainpanel.lastReCacheAllValue.setText(ChadVar.LAST_CACHE_ALL);
         ChadVar.THREAD_HANDLER.getMap().forEach((k, v) -> v.forEach((val) -> add()));
         mainpanel.threadVal.setText(Integer.toString(ChadVar.THREAD_HANDLER.getMap().size()));
-        if (ChadBot.cli.isReady())
+        if (ChadBot.cli.isReady() && ChadBot.cli.getOurUser().getPresence().getText().isPresent())
             mainpanel.presenceVal.setText(ChadBot.cli.getOurUser().getPresence().getText().get());
-        mainpanel.shardRespTimeVal.setText(Long.toString(ping) + "ms");
+        mainpanel.shardRespTimeVal.setText(ping + "ms");
         mainpanel.coresVal.setText(Integer.toString(available_processors));
         mainpanel.memoryVal.setText(memory);
     }
 
-    public void add()
+    private void add()
     {
         this.i++;
     }

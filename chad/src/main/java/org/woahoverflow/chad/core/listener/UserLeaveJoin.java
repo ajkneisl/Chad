@@ -20,6 +20,7 @@ import java.util.List;
 
 public class UserLeaveJoin
 {
+    @SuppressWarnings("unused")
     @EventSubscriber
     public void userJoin(UserJoinEvent e)
     {
@@ -88,12 +89,13 @@ public class UserLeaveJoin
 
         // assign the role
         if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "role_on_join")) {
-            if (joinRoleStringID != "none") {
+            if (!joinRoleStringID.equals("none")) {
                 e.getUser().addRole(joinRole);
             }
         }
     }
 
+    @SuppressWarnings("unused")
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
     {
