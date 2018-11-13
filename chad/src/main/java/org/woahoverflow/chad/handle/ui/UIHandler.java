@@ -59,11 +59,6 @@ public class UIHandler
     {
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : Chad");
-        try {
-            frame.setIconImage(ImageIO.read(getClass().getResource("/org/woahoverflow/chad/data/img/ui_error.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         panel.errorContent.setEditable(false);
         panel.errorContent.setText(error);
         frame.getContentPane().add(panel);
@@ -79,11 +74,6 @@ public class UIHandler
     {
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : " + guild.getStringID());
-        try {
-            frame.setIconImage(ImageIO.read(getClass().getResource("/org/woahoverflow/chad/data/img/ui_error.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         frame.getContentPane().add(panel);
         frame.setVisible(true);
         panel.errorContent.setEditable(false);
@@ -145,17 +135,12 @@ public class UIHandler
         });
         mainpanel.coresVal.setText(Integer.toString(available_processors));
         mainpanel.memoryVal.setText(memory);
-        mainpanel.shardRespTimeVal.setText(Long.toString(ping) + "ms");
+        mainpanel.shardRespTimeVal.setText(ping + "ms");
         mainpanel.lastReCacheAllValue.setText(ChadVar.LAST_CACHE_ALL);
         mainpanel.presenceVal.setText("Loading");
         mainpanel.logs.setEditable(false);
         mainpanel.logs.setText("UI has started.");
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        try {
-            mainFrame.setIconImage(ImageIO.read(UIHandler.class.getResource("/org/woahoverflow/chad/data/img/ui_icon.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         mainFrame.setSize(1157, 842);
     }
 

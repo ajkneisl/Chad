@@ -18,8 +18,7 @@ public class OnReady
     public void onReadyEvent(ReadyEvent e)
     {
         e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "");
-        // cache
-        ChadVar.CACHE_DEVICE.cacheAll();
+
         // automatic presence updater
         //TODO: put this in its own thread class so i can change the timings on it
         ChadVar.EXECUTOR_POOL.submit(() -> {
@@ -39,6 +38,9 @@ public class OnReady
         // ui stuff
         ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", LogLevel.INFO);
         ChadVar.UI_HANDLER.update();
+
+        // cache ? hopefully?
+        ChadVar.CACHE_DEVICE.cacheAll();
 
         // updates
         new Updater();
