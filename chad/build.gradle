@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+}
+
+group 'org.woahoverflow'
+version '0.6.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    flatDir { dirs 'lib' }
+}
+
+repositories {
+    jcenter()
+}
+
+
+configurations {
+    extraLibs
+}
+
+dependencies {
+    extraLibs "com.discord4j:Discord4J:2.10.1"
+    extraLibs group: 'org.mongodb', name: 'mongo-java-driver', version: '3.9.0'
+    extraLibs 'com.google.code.gson:gson:2.8.5'
+    extraLibs 'com.google.guava:guava:27.0-jre'
+    extraLibs group: 'org.json', name: 'json', version: '20180813'
+    extraLibs group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    compile "com.discord4j:Discord4J:2.10.1"
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.9.0'
+    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.google.guava:guava:27.0-jre'
+    compile group: 'org.json', name: 'json', version: '20180813'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+}
+
+jar {
+    from {
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+jar {
+    manifest.attributes(
+            "Manifest-Version": 1.0,
+            "Main-Class": "org.woahoverflow.chad.core.ChadBot"
+    )
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
