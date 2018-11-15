@@ -33,11 +33,12 @@ public class SystemInfo implements Command {
 
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("System Information");
-            b.withDesc(os_name + "/" + os_version + " - " + os_arch);
-            b.appendField("Available cores", Integer.toString(available_processors), true);
-            b.appendField("CPU Load", Double.toString(load_average), true);
-            b.appendField("Memory", memory, true);
-            b.appendField("Shard Response Time", Long.toString(ping), false);
+            b.withDesc("OS `"+os_name + " [" + os_version + "]`" +
+                    "\n Available cores `" + available_processors + "`" +
+                    "\n CPU Load `" +  load_average + "`" +
+                    "\n Memory `" + memory + "`" +
+                    "\n Shard Response Time `" + ping + "`"
+            );
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
