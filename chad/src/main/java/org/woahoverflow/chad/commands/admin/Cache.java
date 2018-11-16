@@ -17,19 +17,28 @@ public class Cache implements Command {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (args.size() == 1 && args.get(0).equalsIgnoreCase("recache"))
+            if (args.size() == 0)
             {
-                ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
-                new MessageHandler(e.getChannel()).send("ReCached current guild", "Caching");
+                EmbedBuilder b = new EmbedBuilder();
+                b.withTitle("Cache Status");
+                b.withDesc("Current Cached Guilds `" + ChadVar.GUILD_CACHE.size() + "`\n"+
+                        "Last Cached in Current Guild `" + ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).lastCached() + "`\n");
+                b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
+                b.withFooterText(Util.getTimeStamp());
+                new MessageHandler(e.getChannel()).sendEmbed(b.build());
                 return;
             }
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Cache Status");
-            b.withDesc("Current Cached Guilds `" + ChadVar.GUILD_CACHE.size() + "`\n"+
-                    "Last Cached in Current Guild `" + ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).lastCached() + "`\n");
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            b.withFooterText(Util.getTimeStamp());
-            new MessageHandler(e.getChannel()).sendEmbed(b.build());
+            switch(args.get(0).toLowerCase())
+            {
+                case "recache":
+                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
+                    new MessageHandler(e.getChannel()).send("ReCached current guild", "Caching Manager");
+                    return;
+                case "recacheall":
+                    ChadVar.CACHE_DEVICE.reCacheAll();
+                    new MessageHandler(e.getChannel()).send("ReCached all guilds", "Caching Manager");
+                    return;
+            }
         };
     }
 
@@ -37,6 +46,8 @@ public class Cache implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("cache", "Giving information about caching.");
-        return HelpHandler.helpCommand(st, "Cache Status", e);
+        st.put("cache recache", "ReCaches current guild.");
+        st.put("cache recacheall", "ReCaches all guilds.");
+        return HelpHandler.helpCommand(st, "Caching Manager", e);
     }
 }
