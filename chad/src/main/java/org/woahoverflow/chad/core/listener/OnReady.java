@@ -2,7 +2,6 @@ package org.woahoverflow.chad.core.listener;
 
 import org.woahoverflow.chad.handle.logging.LogLevel;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.autoupdate.Updater;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
@@ -40,8 +39,5 @@ public class OnReady
 
         // Caching
         ChadVar.CACHE_DEVICE.cacheAll();
-
-        // auto update begin
-        new Updater();
     }
 }

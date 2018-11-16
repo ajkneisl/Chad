@@ -37,6 +37,7 @@ public class JSONHandler
                 obj.put("token", "");
                 obj.put("steam_api_token", "");
                 obj.put("uri_link", "");
+                obj.put("unstable", false);
                 try (FileWriter filew = new FileWriter(bot)) {
                     filew.write(obj.toString());
                     filew.flush();

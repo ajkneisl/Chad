@@ -52,7 +52,6 @@ public class Permissions implements Command {
                 }
 
                 String nextArg = args.get(0);
-                System.out.println(nextArg);
                 args.remove(0); // isolates again
                 switch (nextArg.toLowerCase()) {
                     case "add":
