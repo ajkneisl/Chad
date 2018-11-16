@@ -2,14 +2,13 @@ package org.woahoverflow.chad.commands.nsfw;
 
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class NSFW implements Command {
+public class NSFW implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -35,6 +34,6 @@ public class NSFW implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("NSFW", "Toggles NSFW status for the channel");
-        return HelpHandler.helpCommand(st, "NSFW", e);
+        return Command.helpCommand(st, "NSFW", e);
     }
 }

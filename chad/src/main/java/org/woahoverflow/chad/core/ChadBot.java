@@ -1,14 +1,14 @@
 package org.woahoverflow.chad.core;
 
+import org.json.JSONObject;
 import org.woahoverflow.chad.core.listener.GuildJoinLeave;
 import org.woahoverflow.chad.core.listener.MessageRecieved;
 import org.woahoverflow.chad.core.listener.OnReady;
 import org.woahoverflow.chad.core.listener.UserLeaveJoin;
 import org.woahoverflow.chad.handle.JSONHandler;
-import org.woahoverflow.chad.handle.logging.LogLevel;
+import org.woahoverflow.chad.handle.commands.PermissionHandler;
 import org.woahoverflow.chad.handle.ui.ChadException;
-import org.json.JSONObject;
-import org.woahoverflow.chad.handle.commands.permissions.PermissionLevels;
+import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 
@@ -58,8 +58,8 @@ public class ChadBot {
         // add developer ids to the permissions handler
         ChadVar.JSON_HANDLER.readArray("https://raw.githubusercontent.com/woahoverflow/Chad-Repo/master/data/contributors.json").forEach((v) ->
         {
-            ChadVar.UI_HANDLER.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", LogLevel.INFO);
-            ChadVar.GLOBAL_PERMISSIONS.put(((JSONObject) v).getString("id"), PermissionLevels.SYSTEM_ADMINISTRATOR);
+            ChadVar.UI_HANDLER.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UIHandler.LogLevel.INFO);
+            ChadVar.GLOBAL_PERMISSIONS.put(((JSONObject) v).getString("id"), PermissionHandler.Levels.SYSTEM_ADMINISTRATOR);
         });
     }
 

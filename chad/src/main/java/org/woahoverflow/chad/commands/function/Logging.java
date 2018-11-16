@@ -3,7 +3,6 @@ package org.woahoverflow.chad.commands.function;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
@@ -11,7 +10,7 @@ import sx.blah.discord.handle.obj.Permissions;
 import java.util.HashMap;
 import java.util.List;
 
-public class Logging implements Command {
+public class Logging implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -94,6 +93,6 @@ public class Logging implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("logging set <true/false>", "Toggles the logging functionality.");
         st.put("logging setchannel <channel name>", "Sets the logging channel.");
-        return HelpHandler.helpCommand(st, "Logging", e);
+        return Command.helpCommand(st, "Logging", e);
     }
 }

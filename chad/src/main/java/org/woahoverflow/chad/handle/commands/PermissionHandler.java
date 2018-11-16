@@ -1,47 +1,43 @@
-package org.woahoverflow.chad.handle.commands.permissions;
+package org.woahoverflow.chad.handle.commands;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.commands.Category;
-import org.woahoverflow.chad.handle.commands.CommandData;
-import org.woahoverflow.chad.handle.commands.Command;
 import org.bson.Document;
+import org.woahoverflow.chad.core.ChadVar;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
-import java.util.*;
+import java.util.ArrayList;
 
 @SuppressWarnings("all")
 public class PermissionHandler
 {
+    // check if the user is in the list of developers
+    public boolean userIsDeveloper(IUser user) {
+        return ChadVar.GLOBAL_PERMISSIONS.get(user.getStringID()) == PermissionHandler.Levels.SYSTEM_ADMINISTRATOR;
+    }
     private ArrayList<String> CMD; // arraylists are simpler, shut up
     public PermissionHandler()
     {
         //ASD POKASDKOIPASDPOKASDKJPIOOIJASD JOI
     }
 
-    // check if the user is in the list of developers
-    public boolean userIsDeveloper(IUser user) {
-        return ChadVar.GLOBAL_PERMISSIONS.get(user.getStringID()) == PermissionLevels.SYSTEM_ADMINISTRATOR;
-    }
-
     // check if the user has permission for the specified command
     public boolean userHasPermission(String command, IUser user, IGuild g)
     {
-        Command cmd = ChadVar.COMMANDS.get(command).commandClass;
+        Command.Class cmd = ChadVar.COMMANDS.get(command).commandClass;
 
         if (cmd == null)
         {
             return false; // return false if the command doesnt exist
         }
 
-        CommandData meta = ChadVar.COMMANDS.get(command);
+        Command.Data meta = ChadVar.COMMANDS.get(command);
         // developers should always have permission for developer commands
         if (meta.isDevOnly && userIsDeveloper(user))
             return true;
 
         // all users should have access to commands in the fun and info category
-        if (meta.category == Category.FUN || meta.category == Category.INFO)
+        if (meta.category == Command.Category.FUN.FUN || meta.category == Command.Category.INFO)
             return true;
 
         // loop through the users roles, if the role has permission for the command, return true
@@ -55,6 +51,11 @@ public class PermissionHandler
         }
         // return false if none of the users roles have permission for the command
         return false;
+    }
+
+    public enum Levels
+    {
+        SYSTEM_ADMINISTRATOR
     }
 
     // grants the specified role access to the specified command in the guild the role belongs to

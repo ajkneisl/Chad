@@ -1,13 +1,15 @@
 package org.woahoverflow.chad.core.listener;
 
-import org.woahoverflow.chad.handle.logging.LogLevel;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
-import java.util.*;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class OnReady
@@ -34,7 +36,7 @@ public class OnReady
         });
 
         // UI Begin
-        ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", LogLevel.INFO);
+        ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
         ChadVar.UI_HANDLER.update();
 
         // Caching

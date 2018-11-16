@@ -4,7 +4,6 @@ import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -13,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class Cache implements Command {
+public class Cache implements Command.Class{
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -48,6 +47,6 @@ public class Cache implements Command {
         st.put("cache", "Giving information about caching.");
         st.put("cache recache", "ReCaches current guild.");
         st.put("cache recacheall", "ReCaches all guilds.");
-        return HelpHandler.helpCommand(st, "Caching Manager", e);
+        return Command.helpCommand(st, "Caching Manager", e);
     }
 }

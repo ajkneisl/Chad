@@ -1,22 +1,20 @@
 package org.woahoverflow.chad.core;
 
-import org.woahoverflow.chad.handle.ui.UIHandler;
-import org.woahoverflow.chad.commands.admin.Cache;
-import org.woahoverflow.chad.commands.admin.CurrentThreads;
-import org.woahoverflow.chad.commands.admin.ModifyPresence;
 import org.woahoverflow.chad.commands.admin.Shutdown;
-import org.woahoverflow.chad.commands.admin.SystemInfo;
+import org.woahoverflow.chad.commands.admin.*;
 import org.woahoverflow.chad.commands.fun.*;
 import org.woahoverflow.chad.commands.function.*;
 import org.woahoverflow.chad.commands.info.*;
 import org.woahoverflow.chad.commands.nsfw.*;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
-import org.woahoverflow.chad.handle.*;
-import org.woahoverflow.chad.handle.commands.Category;
-import org.woahoverflow.chad.handle.commands.CommandData;
-import org.woahoverflow.chad.handle.commands.permissions.PermissionHandler;
-import org.woahoverflow.chad.handle.commands.permissions.PermissionLevels;
+import org.woahoverflow.chad.handle.CachingHandler;
+import org.woahoverflow.chad.handle.DatabaseHandler;
+import org.woahoverflow.chad.handle.JSONHandler;
+import org.woahoverflow.chad.handle.ThreadCountHandler;
+import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.handle.commands.PermissionHandler;
+import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.handle.obj.IGuild;
 
 import java.util.ArrayList;
@@ -29,15 +27,16 @@ import java.util.concurrent.Executors;
 public class ChadVar
 {
     // used in with the auto updater
-    public static final String VERSION = "v0.5.3-SNAPCHAT";
-    public static boolean ALLOW_UNSTABLE = false;
+    public static final String VERSION = "v0.6.0-SNAPSHOT";
+    public static final HashMap<String, Command.Data> COMMANDS = new HashMap<>();
 
     // ui stuff
     public static UIHandler UI_HANDLER;
 
     // caching
     public static CachingHandler CACHE_DEVICE;
-    public static String LAST_CACHE_ALL = "Loading...";
+    // perms
+    public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
 
     // main
     public static JSONHandler JSON_HANDLER;
@@ -46,14 +45,12 @@ public class ChadVar
 
     // else
     static boolean ALLOW_UI = true;
-    public static final HashMap<String, CommandData> COMMANDS = new HashMap<>();
+    public static String LAST_CACHE_ALL = "Loading..."; // this is basically useless
     // presence rotation stuff
     public static int ROTATION_TIME = 60000*5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
     public static final List<String> PRESENCE_ROTATION = new ArrayList<>();
-
-    // perms
-    public static final ConcurrentHashMap<String, PermissionLevels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
+    static boolean ALLOW_UNSTABLE = false;
     public static final PermissionHandler PERMISSION_HANDLER = new PermissionHandler();
 
     // count handler
@@ -111,61 +108,58 @@ public class ChadVar
 
     static {
         // FUN!
-        COMMANDS.put("random", new CommandData(Category.FUN, false, new Random()));
-        COMMANDS.put("pe", new CommandData(Category.FUN, false, new PhotoEditor()));
-        COMMANDS.put("8ball", new CommandData(Category.FUN, false, new EightBall()));
-        COMMANDS.put("catgallery", new CommandData(Category.FUN, false, new CatGallery()));
-        COMMANDS.put("catfact", new CommandData(Category.FUN, false, new CatFact()));
-        COMMANDS.put("rrl", new CommandData(Category.FUN, false, new RussianRoulette()));
+        COMMANDS.put("random", new Command.Data(Command.Category.FUN, false, new Random()));
+        COMMANDS.put("pe", new Command.Data(Command.Category.FUN, false, new PhotoEditor()));
+        COMMANDS.put("8ball", new Command.Data(Command.Category.FUN, false, new EightBall()));
+        COMMANDS.put("catgallery", new Command.Data(Command.Category.FUN, false, new CatGallery()));
+        COMMANDS.put("catfact", new Command.Data(Command.Category.FUN, false, new CatFact()));
+        COMMANDS.put("rrl", new Command.Data(Command.Category.FUN, false, new RussianRoulette()));
 
         // INFO!
-        COMMANDS.put("help", new CommandData(Category.INFO, false, new Help()));
-        COMMANDS.put("userinfo", new CommandData(Category.INFO, false, new UserInfo()));
-        COMMANDS.put("steam", new CommandData(Category.INFO, false, new Steam()));
-        COMMANDS.put("org/woahoverflow/chad", new CommandData(Category.INFO, false, new Chad()));
-        COMMANDS.put("guildinfo", new CommandData(Category.INFO, false, new GuildInfo()));
-        COMMANDS.put("rtop", new CommandData(Category.INFO, false, new RedditTop()));
-        COMMANDS.put("rnew", new CommandData(Category.INFO, false, new RedditNew()));
-        COMMANDS.put("contributors", new CommandData(Category.INFO, false, new Contributors()));
+        COMMANDS.put("help", new Command.Data(Command.Category.INFO, false, new Help()));
+        COMMANDS.put("userinfo", new Command.Data(Command.Category.INFO, false, new UserInfo()));
+        COMMANDS.put("steam", new Command.Data(Command.Category.INFO, false, new Steam()));
+        COMMANDS.put("chad", new Command.Data(Command.Category.INFO, false, new Chad()));
+        COMMANDS.put("guildinfo", new Command.Data(Command.Category.INFO, false, new GuildInfo()));
+        COMMANDS.put("rtop", new Command.Data(Command.Category.INFO, false, new RedditTop()));
+        COMMANDS.put("rnew", new Command.Data(Command.Category.INFO, false, new RedditNew()));
+        COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, false, new Contributors()));
 
         // PUNISHMENTS!
-        COMMANDS.put("kick", new CommandData(Category.PUNISHMENTS, false, new Kick()));
-        COMMANDS.put("ban", new CommandData(Category.PUNISHMENTS, false, new Ban()));
+        COMMANDS.put("kick", new Command.Data(Command.Category.PUNISHMENTS, false, new Kick()));
+        COMMANDS.put("ban", new Command.Data(Command.Category.PUNISHMENTS, false, new Ban()));
 
         // FUNCTION!
-        COMMANDS.put("prefix", new CommandData(Category.FUNCTION, false, new Prefix()));
-        COMMANDS.put("logging", new CommandData(Category.FUNCTION, false, new Logging()));
-        COMMANDS.put("purge", new CommandData(Category.FUNCTION, false, new Purge()));
-        COMMANDS.put("im", new CommandData(Category.FUNCTION, false, new Message()));
-        COMMANDS.put("autorole", new CommandData(Category.FUNCTION, false, new AutoRole()));
-        COMMANDS.put("perms", new CommandData(Category.FUNCTION, false, new Permissions()));
+        COMMANDS.put("prefix", new Command.Data(Command.Category.FUNCTION, false, new Prefix()));
+        COMMANDS.put("logging", new Command.Data(Command.Category.FUNCTION, false, new Logging()));
+        COMMANDS.put("purge", new Command.Data(Command.Category.FUNCTION, false, new Purge()));
+        COMMANDS.put("im", new Command.Data(Command.Category.FUNCTION, false, new Message()));
+        COMMANDS.put("autorole", new Command.Data(Command.Category.FUNCTION, false, new AutoRole()));
+        COMMANDS.put("perms", new Command.Data(Command.Category.FUNCTION, false, new Permissions()));
 
         // NSFW !
-        COMMANDS.put("nsfw", new CommandData(Category.NSFW, false, new NSFW()));
-        COMMANDS.put("4k", new CommandData(Category.NSFW, false, new NB4K()));
-        COMMANDS.put("hentai", new CommandData(Category.NSFW, false, new NBHentai()));
-        COMMANDS.put("holo", new CommandData(Category.NSFW, false, new NBHolo()));
-        COMMANDS.put("lewdneko", new CommandData(Category.NSFW, false, new NBLewdNeko()));
-        COMMANDS.put("lewdkitsune", new CommandData(Category.NSFW, false, new NBLewdKitsune()));
-        COMMANDS.put("kemonomimi", new CommandData(Category.NSFW, false, new NBKemonomimi()));
-        COMMANDS.put("anal", new CommandData(Category.NSFW, false, new NBAnal()));
-        COMMANDS.put("hentaianal", new CommandData(Category.NSFW, false, new NBHentaiAnal()));
-        COMMANDS.put("gonewild", new CommandData(Category.NSFW, false, new NBGoneWild()));
-        COMMANDS.put("kanna", new CommandData(Category.NSFW, false, new NBKanna()));
-        COMMANDS.put("ass", new CommandData(Category.NSFW, false, new NBAss()));
-        COMMANDS.put("pussy", new CommandData(Category.NSFW, false, new NBPussy()));
-        COMMANDS.put("thigh", new CommandData(Category.NSFW, false, new NBThigh()));
-        COMMANDS.put("neko", new CommandData(Category.NSFW, false, new NBNeko()));
+        COMMANDS.put("nsfw", new Command.Data(Command.Category.NSFW, false, new NSFW()));
+        COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, false, new NB4K()));
+        COMMANDS.put("hentai", new Command.Data(Command.Category.NSFW, false, new NBHentai()));
+        COMMANDS.put("holo", new Command.Data(Command.Category.NSFW, false, new NBHolo()));
+        COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, false, new NBLewdNeko()));
+        COMMANDS.put("lewdkitsune", new Command.Data(Command.Category.NSFW, false, new NBLewdKitsune()));
+        COMMANDS.put("kemonomimi", new Command.Data(Command.Category.NSFW, false, new NBKemonomimi()));
+        COMMANDS.put("anal", new Command.Data(Command.Category.NSFW, false, new NBAnal()));
+        COMMANDS.put("hentaianal", new Command.Data(Command.Category.NSFW, false, new NBHentaiAnal()));
+        COMMANDS.put("gonewild", new Command.Data(Command.Category.NSFW, false, new NBGoneWild()));
+        COMMANDS.put("kanna", new Command.Data(Command.Category.NSFW, false, new NBKanna()));
+        COMMANDS.put("ass", new Command.Data(Command.Category.NSFW, false, new NBAss()));
+        COMMANDS.put("pussy", new Command.Data(Command.Category.NSFW, false, new NBPussy()));
+        COMMANDS.put("thigh", new Command.Data(Command.Category.NSFW, false, new NBThigh()));
+        COMMANDS.put("neko", new Command.Data(Command.Category.NSFW, false, new NBNeko()));
 
         // ADMIN!
-        COMMANDS.put("threads", new CommandData(Category.ADMIN, true, new CurrentThreads()));
-        COMMANDS.put("modpresence", new CommandData(Category.ADMIN, true, new ModifyPresence()));
-        COMMANDS.put("systeminfo", new CommandData(Category.ADMIN, true, new SystemInfo()));
-        COMMANDS.put("cache", new CommandData(Category.ADMIN, true, new Cache()));
-        COMMANDS.put("shutdown", new CommandData(Category.ADMIN,true, new Shutdown()));
-
-        // MUSIC!
-        // disabled :/
+        COMMANDS.put("threads", new Command.Data(Command.Category.ADMIN, true, new CurrentThreads()));
+        COMMANDS.put("modpresence", new Command.Data(Command.Category.ADMIN, true, new ModifyPresence()));
+        COMMANDS.put("systeminfo", new Command.Data(Command.Category.ADMIN, true, new SystemInfo()));
+        COMMANDS.put("cache", new Command.Data(Command.Category.ADMIN, true, new Cache()));
+        COMMANDS.put("shutdown", new Command.Data(Command.Category.ADMIN,true, new Shutdown()));
     }
 
     // just because they use the client

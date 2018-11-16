@@ -3,16 +3,17 @@ package org.woahoverflow.chad.commands.punishments;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.PermissionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-public class Ban implements Command {
+public class Ban implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -119,6 +120,6 @@ public class Ban implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("ban <user>", "Bans a user with no reason.");
         st.put("ban <user> <reason>", "Bans a user with a specified reason.");
-        return HelpHandler.helpCommand(st, "User Info", e);
+        return Command.helpCommand(st, "User Info", e);
     }
 }

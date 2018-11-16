@@ -1,12 +1,11 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class Steam implements Command {
+public class Steam implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -169,7 +168,7 @@ public class Steam implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("steam profile <steam name>", "Gets a steam user's profile.");
         st.put("steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CS:GO stats.");
-        return HelpHandler.helpCommand(st, "Steam", e);
+        return Command.helpCommand(st, "Steam", e);
     }
 }
 

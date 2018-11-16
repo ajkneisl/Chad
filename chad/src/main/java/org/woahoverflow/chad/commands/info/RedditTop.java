@@ -1,11 +1,10 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
-import org.json.JSONObject;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -14,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class RedditTop implements Command {
+public class RedditTop implements Command.Class {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -62,6 +61,6 @@ public class RedditTop implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rtop <subreddit>", "Displays the hottest post from a subreddit.");
-        return HelpHandler.helpCommand(st, "Reddit Top", e);
+        return Command.helpCommand(st, "Reddit Top", e);
     }
 }

@@ -1,20 +1,23 @@
 package org.woahoverflow.chad.handle.ui;
 
-import org.woahoverflow.chad.handle.ui.panels.GuildPanel;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.Util;
-import org.woahoverflow.chad.handle.logging.LogLevel;
+import org.woahoverflow.chad.handle.ui.panels.GuildPanel;
 import org.woahoverflow.chad.handle.ui.panels.MainPanel;
 import org.woahoverflow.chad.handle.ui.panels.PopUpPanel;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.RequestBuffer;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class UIHandler
 {
@@ -142,6 +145,37 @@ public class UIHandler
         mainFrame.setSize(1157, 842);
     }
 
+    private static HashMap<String, String> getStats(IDiscordClient cli)
+    {
+        HashMap<String, String> hashmap = new HashMap<>();
+
+        List<IGuild> guilds = RequestBuffer.request(cli::getGuilds).get();
+
+        int bots = 0;
+        int users = 0;
+        int biggestGuildAmount = 0;
+        String biggestGuildName = "";
+        for (IGuild g : guilds)
+        {
+            if (g.getUsers().size() > biggestGuildAmount)
+            {
+                biggestGuildName = g.getName();
+                biggestGuildAmount = g.getUsers().size();
+            }
+            for (IUser u : g.getUsers())
+            {
+                if (u.isBot())
+                    bots++;
+                else
+                    users++;
+            }
+        }
+        hashmap.put("biggestGuild", biggestGuildName + "("+biggestGuildAmount+")");
+        hashmap.put("botToPlayer", bots +"/"+ users);
+        hashmap.put("guildAmount", Integer.toString(guilds.size()));
+        return hashmap;
+    }
+
     public void update()
     {
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
@@ -152,9 +186,9 @@ public class UIHandler
         int available_processors = os.getAvailableProcessors();
         IShard shard = ChadBot.cli.getShards().get(0);
         long ping = shard.getResponseTime();
-        mainpanel.allGuildsValue.setText(StatsHandler.getStats(cli).get("guildAmount"));
-        mainpanel.biggestGuildValue.setText(StatsHandler.getStats(cli).get("biggestGuild"));
-        mainpanel.botToUserVal.setText(StatsHandler.getStats(cli).get("botToPlayer"));
+        mainpanel.allGuildsValue.setText(getStats(cli).get("guildAmount"));
+        mainpanel.biggestGuildValue.setText(getStats(cli).get("biggestGuild"));
+        mainpanel.botToUserVal.setText(getStats(cli).get("botToPlayer"));
         mainpanel.lastReCacheAllValue.setText(ChadVar.LAST_CACHE_ALL);
         ChadVar.THREAD_HANDLER.getMap().forEach((k, v) -> v.forEach((val) -> add()));
         mainpanel.threadVal.setText(Integer.toString(ChadVar.THREAD_HANDLER.getMap().size()));
@@ -165,6 +199,10 @@ public class UIHandler
         mainpanel.memoryVal.setText(memory);
     }
 
+    public enum LogLevel
+    {
+        INFO, WARNING, SEVERE, EXCEPTION, CACHING
+    }
     private void add()
     {
         this.i++;

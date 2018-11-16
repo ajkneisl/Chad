@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.core.listener;
 
 import org.bson.Document;
-import org.woahoverflow.chad.handle.logging.LogLevel;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.DatabaseHandler;
+import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
@@ -50,7 +50,7 @@ public class GuildJoinLeave
 
             dbb.getCollection().insertOne(doc);
             ChadVar.UI_HANDLER.loadGuild(e.getGuild());
-            ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Joined Guild", LogLevel.INFO);
+            ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
         }
     }
 
@@ -68,6 +68,6 @@ public class GuildJoinLeave
 
         ChadVar.CACHE_DEVICE.unCacheGuild(e.getGuild());
 
-        ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Left Guild", LogLevel.INFO);
+        ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
     }
 }

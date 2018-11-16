@@ -1,12 +1,11 @@
 package org.woahoverflow.chad.commands.fun;
 
 import com.google.common.net.HttpHeaders;
+import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
-import org.json.JSONObject;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Random implements Command {
+public class Random implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -111,7 +110,7 @@ public class Random implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("random quote", "Gives random quote.");
         st.put("random number [max]", "Gives random number with an optional max value.");
-        return HelpHandler.helpCommand(st, "Random", e);
+        return Command.helpCommand(st, "Random", e);
 
     }
 }

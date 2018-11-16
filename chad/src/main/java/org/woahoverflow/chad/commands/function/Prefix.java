@@ -4,7 +4,6 @@ import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -13,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class Prefix implements Command {
+public class Prefix implements Command.Class  {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -52,6 +51,6 @@ public class Prefix implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("prefix", "Your prefix.");
         st.put("prefix set <string>", "Sets the prefix.");
-        return HelpHandler.helpCommand(st, "Prefix", e);
+        return Command.helpCommand(st, "Prefix", e);
     }
 }

@@ -3,13 +3,12 @@ package org.woahoverflow.chad.commands.fun;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class CatFact implements Command {
+public class CatFact implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -28,6 +27,6 @@ public class CatFact implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("catfact", "Gives you a random catfact.");
-        return HelpHandler.helpCommand(st, "Cat Fact", e);
+        return Command.helpCommand(st, "Cat Fact", e);
     }
 }
