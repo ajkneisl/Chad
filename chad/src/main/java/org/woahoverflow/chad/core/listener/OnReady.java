@@ -38,8 +38,5 @@ public class OnReady
         // UI Begin
         ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
         ChadVar.UI_HANDLER.update();
-
-        // Caching
-        ChadVar.CACHE_DEVICE.cacheAll();
     }
 }

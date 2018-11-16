@@ -38,10 +38,6 @@ public class ChadBot {
         {
             ChadVar.ALLOW_UI = false;
         }
-        if (args.length >= 1 && Arrays.asList(args).contains("unstable"))
-        {
-            ChadVar.ALLOW_UNSTABLE = true;
-        }
 
 
         ChadVar.setJsonHandler();

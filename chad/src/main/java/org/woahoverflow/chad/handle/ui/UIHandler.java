@@ -93,7 +93,10 @@ public class UIHandler
         frame.pack();
         panel.exitButton.addActionListener((ActionEvent) -> frame.dispose());
         panel.guildNameVal.setText(guild.getName());
-        panel.leaveButton.addActionListener((ActionEvent) -> guild.leave());
+        panel.leaveButton.addActionListener((ActionEvent) -> {
+            guild.leave();
+            frame.dispose();
+        });
         if (!guild.getClient().getOurUser().getPermissionsForGuild(guild).contains(Permissions.CREATE_INVITE))
         {
             panel.inviteLinkVal.setText("Bot doesn't have permission");

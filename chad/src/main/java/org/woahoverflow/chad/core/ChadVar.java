@@ -26,46 +26,24 @@ import java.util.concurrent.Executors;
 
 public class ChadVar
 {
-    // used in with the auto updater
-    public static final String VERSION = "v0.6.0-SNAPSHOT";
-    public static final HashMap<String, Command.Data> COMMANDS = new HashMap<>();
-
-    // ui stuff
     public static UIHandler UI_HANDLER;
-
-    // caching
     public static CachingHandler CACHE_DEVICE;
-    // perms
-    public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
-
-    // main
+    public static final HashMap<String, Command.Data> COMMANDS = new HashMap<>();
     public static JSONHandler JSON_HANDLER;
     public static DatabaseHandler DATABASE_HANDLER;
     public static final ExecutorService EXECUTOR_POOL = Executors.newFixedThreadPool(30);
-
-    // else
     static boolean ALLOW_UI = true;
-    public static String LAST_CACHE_ALL = "Loading..."; // this is basically useless
-    // presence rotation stuff
+    public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
     public static int ROTATION_TIME = 60000*5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
     public static final List<String> PRESENCE_ROTATION = new ArrayList<>();
-    static boolean ALLOW_UNSTABLE = false;
+    public static String LAST_CACHE_ALL = "NCA"; // NCA = Not Cached All
     public static final PermissionHandler PERMISSION_HANDLER = new PermissionHandler();
-
-    // count handler
     public static final ThreadCountHandler THREAD_HANDLER = new ThreadCountHandler();
-
-    // caching
     public static final ConcurrentHashMap<IGuild, CachingHandler.CachedGuild> GUILD_CACHE = new ConcurrentHashMap<>();
-
-    // strings
     private static final ConcurrentHashMap<String, String> STRINGS = new ConcurrentHashMap<>();
 
-    // music handlers
-    //public static Map<IGuild, MusicHandler> musicHandlers = new HashMap<>();
-
-    // add strings
+    // static blocks
     static {
         STRINGS.put("error.generic", "An unknown error has occurred.");
         STRINGS.put("error.internal", "An internal error has occurred.");
@@ -79,8 +57,6 @@ public class ChadVar
         STRINGS.put("chad.function.permissions.none", "There's no permissions there!");
         STRINGS.put("chad.function.permissions.role.invalid", "Invalid role!");
     }
-
-    // add in rotation
     static {
         PRESENCE_ROTATION.add("hello!");
         PRESENCE_ROTATION.add("gamers");
@@ -105,7 +81,6 @@ public class ChadVar
         PRESENCE_ROTATION.add("someone stole my sweet role");
         PRESENCE_ROTATION.add("j!lewdneko... FBI open up!");
     }
-
     static {
         // FUN!
         COMMANDS.put("random", new Command.Data(Command.Category.FUN, false, new Random()));
