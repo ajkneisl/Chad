@@ -3,7 +3,6 @@ package org.woahoverflow.chad.commands.function;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
@@ -12,7 +11,7 @@ import sx.blah.discord.util.RequestBuffer;
 import java.util.HashMap;
 import java.util.List;
 
-public class Message implements Command {
+public class Message implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -238,6 +237,6 @@ public class Message implements Command {
         st.put("im toggle <join/leave/ban/kick> <true/false>", "Toggles the different message types.");
         st.put("im setchannel <join/leave> <channel name>", "Toggles the join/leave messages.");
         st.put("Variables", "&guild&, &user&, &reason& (punishment)");
-        return HelpHandler.helpCommand(st, "Message", e);
+        return Command.helpCommand(st, "Message", e);
     }
 }

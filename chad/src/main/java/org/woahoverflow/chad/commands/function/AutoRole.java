@@ -4,7 +4,6 @@ import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AutoRole implements Command {
+public class AutoRole implements Command.Class  {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -70,6 +69,6 @@ public class AutoRole implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("autorole [on/off]", "Toggles automatic role assignment features.");
         st.put("autorole set [role name]", "Sets role.");
-        return HelpHandler.helpCommand(st, "Auto Role", e);
+        return Command.helpCommand(st, "Auto Role", e);
     }
 }

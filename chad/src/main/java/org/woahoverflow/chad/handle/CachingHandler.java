@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.handle;
 
-import org.woahoverflow.chad.handle.logging.LogLevel;
-import org.woahoverflow.chad.core.ChadVar;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IGuild;
 
@@ -47,19 +47,19 @@ public class CachingHandler
         {
             return;
         }
-        ChadVar.UI_HANDLER.addLog("Caching guild '"+guild.getStringID()+"'.", LogLevel.CACHING);
+        ChadVar.UI_HANDLER.addLog("Caching guild '"+guild.getStringID()+"'.", UIHandler.LogLevel.CACHING);
         ChadVar.GUILD_CACHE.put(guild, new CachedGuild(guild, get));
     }
 
     public void unCacheGuild(IGuild guild)
     {
-        ChadVar.UI_HANDLER.addLog("UnCached guild '"+guild.getStringID()+"'.", LogLevel.CACHING);
+        ChadVar.UI_HANDLER.addLog("UnCached guild '"+guild.getStringID()+"'.", UIHandler.LogLevel.CACHING);
         ChadVar.GUILD_CACHE.remove(guild);
     }
 
     public void cacheAll()
     {
-        ChadVar.UI_HANDLER.addLog("ReCaching all guilds.", LogLevel.CACHING);
+        ChadVar.UI_HANDLER.addLog("ReCaching all guilds.", UIHandler.LogLevel.CACHING);
         ChadVar.LAST_CACHE_ALL = Util.getTimeStamp();
         ChadVar.UI_HANDLER.update();
         cli.getGuilds().forEach(this::cacheGuild);

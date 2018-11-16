@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Chad.iml" filepath="$PROJECT_DIR$/Chad.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/chad.iml" filepath="$PROJECT_DIR$/.idea/modules/chad.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/chad_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chad_main.iml" group="chad" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/chad_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chad_test.iml" group="chad" />
-      <module fileurl="file://$PROJECT_DIR$/jhobot.iml" filepath="$PROJECT_DIR$/jhobot.iml" />
     </modules>
   </component>
 </project>

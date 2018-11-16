@@ -10,7 +10,7 @@ import sx.blah.discord.util.RequestBuilder;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class TicTacToe implements Command {
+public class TicTacToe implements Command.Class  {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {

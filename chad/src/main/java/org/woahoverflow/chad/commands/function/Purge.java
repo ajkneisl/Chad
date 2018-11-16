@@ -3,7 +3,6 @@ package org.woahoverflow.chad.commands.function;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("all")
-public class Purge implements Command {
+public class Purge implements Command.Class  {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -61,6 +60,6 @@ public class Purge implements Command {
         HashMap<String, String> st = new HashMap<>();
         st.put("purge <amount of messages>", "Removes a specific amount of messages from a defined channel.");
         st.put("For silent deletions", "Add -s to the end of the command.");
-        return HelpHandler.helpCommand(st, "Purge", e);
+        return Command.helpCommand(st, "Purge", e);
     }
 }

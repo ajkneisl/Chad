@@ -4,7 +4,6 @@ import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
@@ -12,7 +11,7 @@ import sx.blah.discord.handle.obj.StatusType;
 import java.util.HashMap;
 import java.util.List;
 
-public class ModifyPresence implements Command {
+public class ModifyPresence implements Command.Class {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -93,6 +92,6 @@ public class ModifyPresence implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("modpresence <string>", "Changes the bots rich presence message.");
-        return HelpHandler.helpCommand(st, "Modify Presence", e);
+        return Command.helpCommand(st, "Modify Presence", e);
     }
 }

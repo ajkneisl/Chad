@@ -1,10 +1,9 @@
 package org.woahoverflow.chad.commands.function;
 
+import org.bson.Document;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.bson.Document;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @SuppressWarnings("all")
-public class Permissions implements Command {
+public class Permissions implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -52,7 +51,6 @@ public class Permissions implements Command {
                 }
 
                 String nextArg = args.get(0);
-                System.out.println(nextArg);
                 args.remove(0); // isolates again
                 switch (nextArg.toLowerCase()) {
                     case "add":
@@ -110,7 +108,7 @@ public class Permissions implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("View at website", "https://bot.shoganeko.me/permissions");
-        return HelpHandler.helpCommand(st, "Permissions", e);
+        return Command.helpCommand(st, "Permissions", e);
     }
 }
 

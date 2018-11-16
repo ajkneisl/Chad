@@ -2,7 +2,6 @@ package org.woahoverflow.chad.commands.fun;
 
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -16,14 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class RussianRoulette implements Command
-{
+public class RussianRoulette implements Command.Class {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args)
     {
         HashMap<String, String> st = new HashMap<>();
         st.put("rrl <user>", "Plays russian roulette with a selected user.");
-        return HelpHandler.helpCommand(st, "Russian Roulette", e);
+        return Command.helpCommand(st, "Russian Roulette", e);
     }
 
     @Override

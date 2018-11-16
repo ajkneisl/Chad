@@ -2,7 +2,6 @@ package org.woahoverflow.chad.commands.fun;
 
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.imageio.ImageIO;
@@ -16,7 +15,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-public class PhotoEditor implements Command {
+public class PhotoEditor implements Command.Class {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -77,6 +76,6 @@ public class PhotoEditor implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("pe blur <image>", "Blurs a photo.");
-        return HelpHandler.helpCommand(st, "Photo Editor", e);
+        return Command.helpCommand(st, "Photo Editor", e);
     }
 }

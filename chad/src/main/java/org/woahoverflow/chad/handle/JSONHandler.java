@@ -1,16 +1,22 @@
 package org.woahoverflow.chad.handle;
 
-import org.woahoverflow.chad.handle.logging.LogLevel;
-import org.woahoverflow.chad.handle.ui.ChadException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.google.gson.*;
-import org.woahoverflow.chad.core.ChadVar;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.handle.ui.ChadException;
+import org.woahoverflow.chad.handle.ui.UIHandler;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 @SuppressWarnings({"ALL", "deprecation"})
 public class JSONHandler
@@ -28,15 +34,16 @@ public class JSONHandler
         {
             File dir = new File(System.getenv("appdata") + "\\chad");
             if (!dir.exists())
-                ChadVar.UI_HANDLER.addLog("Created Chad Directory : " + dir.mkdirs(), LogLevel.INFO);
+                ChadVar.UI_HANDLER.addLog("Created Chad Directory : " + dir.mkdirs(), UIHandler.LogLevel.INFO);
             File bot = new File(dir + "\\bot.json");
             if (!new File(dir + "\\bot.json").exists())
             {
-                ChadVar.UI_HANDLER.addLog("Created Bot Directory : " + bot.createNewFile(), LogLevel.INFO);
+                ChadVar.UI_HANDLER.addLog("Created Bot Directory : " + bot.createNewFile(), UIHandler.LogLevel.INFO);
                 org.json.JSONObject obj = new org.json.JSONObject();
                 obj.put("token", "");
                 obj.put("steam_api_token", "");
                 obj.put("uri_link", "");
+                obj.put("unstable", false);
                 try (FileWriter filew = new FileWriter(bot)) {
                     filew.write(obj.toString());
                     filew.flush();
@@ -46,10 +53,10 @@ public class JSONHandler
             }
             File imgdir = new File(System.getenv("appdata") + "\\chad\\imgcache");
             if (!imgdir.exists())
-                ChadVar.UI_HANDLER.addLog("Created Temp Image Directory : " + imgdir.mkdirs(), LogLevel.INFO);
+                ChadVar.UI_HANDLER.addLog("Created Temp Image Directory : " + imgdir.mkdirs(), UIHandler.LogLevel.INFO);
             File dir2 = new File(System.getenv("appdata") + "\\chad\\catpictures");
             if (!dir2.exists())
-                ChadVar.UI_HANDLER.addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), LogLevel.INFO);
+                ChadVar.UI_HANDLER.addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
         } catch (IOException e)
         {
             ChadException.error("There was an error creating files during startup!", e);
@@ -102,7 +109,7 @@ public class JSONHandler
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ChadVar.UI_HANDLER.addLog("readFile failed, returning null", LogLevel.SEVERE);
+        ChadVar.UI_HANDLER.addLog("readFile failed, returning null", UIHandler.LogLevel.SEVERE);
         return null;
     }
 

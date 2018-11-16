@@ -4,7 +4,6 @@ import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -13,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class NBNeko implements Command {
+public class NBNeko implements Command.Class  {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -37,6 +36,6 @@ public class NBNeko implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("neko", "Gets a Neko");
-        return HelpHandler.helpCommand(st, "neko", e);
+        return Command.helpCommand(st, "neko", e);
     }
 }

@@ -1,12 +1,11 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.HelpHandler;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class Contributors implements Command {
+public class Contributors implements Command.Class {
     @SuppressWarnings("all")
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -64,6 +63,6 @@ public class Contributors implements Command {
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
         st.put("contributors", "Gets all contributors that've committed to Chad.");
-        return HelpHandler.helpCommand(st, "Contributors", e);
+        return Command.helpCommand(st, "Contributors", e);
     }
 }
