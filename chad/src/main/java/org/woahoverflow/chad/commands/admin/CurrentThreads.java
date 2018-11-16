@@ -23,7 +23,9 @@ public class CurrentThreads implements Command {
 
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withTitle("Current Threads Running");
-            ChadVar.THREAD_HANDLER.getMap().forEach((k, v) -> b.appendField(k.getName() + " [" + k.getLongID() + "]", Integer.toString(v.size()), false));
+            StringBuilder sb = new StringBuilder();
+            ChadVar.THREAD_HANDLER.getMap().forEach((k, v) -> sb.append(k.getName()).append(" [").append(k.getLongID()).append("] ").append(v.size()).append("\n"));
+            b.appendDesc(sb.toString());
             m.sendEmbed(b.build());
         };
     }

@@ -16,6 +16,7 @@ public class GuildJoinLeave
     @EventSubscriber
     public void joinGuild(GuildCreateEvent e)
     {
+        ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
         DatabaseHandler dbb = ChadVar.DATABASE_HANDLER;
         if (!dbb.exists(e.getGuild()))
         {

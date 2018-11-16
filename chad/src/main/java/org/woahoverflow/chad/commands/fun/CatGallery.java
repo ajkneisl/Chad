@@ -1,8 +1,10 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import org.woahoverflow.chad.handle.commands.HelpHandler;
+import org.woahoverflow.chad.handle.logging.LogLevel;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.io.File;
@@ -20,6 +22,12 @@ public class CatGallery implements Command {
                 File[] files = new File(System.getenv("appdata") + "\\chad\\catpictures\\").listFiles();
                 if (files == null)
                 {
+                    m.sendError("An internal error has occurred!");
+                    return;
+                }
+                if (files.length == 0)
+                {
+                    ChadVar.UI_HANDLER.addLog("Cat Pictures directory empty!", LogLevel.SEVERE);
                     m.sendError("An internal error has occurred!");
                     return;
                 }
