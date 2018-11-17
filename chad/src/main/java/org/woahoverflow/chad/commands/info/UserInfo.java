@@ -44,11 +44,15 @@ public class UserInfo implements Command.Class {
             StringBuilder roles = new StringBuilder();
             for (IRole r : u.getRolesForGuild(e.getGuild()))
             {
-                roles.append(r.getName()).append(", ");
+                if (!r.isEveryoneRole())
+                    roles.append(r.getName()).append(", ");
             }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("User : " + u.getName());
-            b.appendField("Roles", roles.toString().substring(0, roles.toString().length()-2) + "[" + u.getRolesForGuild(e.getGuild()).size() + "]", true);
+            if (roles.toString().length() == 0)
+                b.appendField("Roles", "none", true);
+            else
+                b.appendField("Roles", roles.toString().substring(0, roles.toString().length()-2) + " [" + (u.getRolesForGuild(e.getGuild()).size() - 1) + "]", true);
             String human;
             if (u.isBot())
                 human = "False";

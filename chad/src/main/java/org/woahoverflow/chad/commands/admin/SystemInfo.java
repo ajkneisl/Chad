@@ -46,7 +46,7 @@ public class SystemInfo implements Command.Class  {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("systeminfo", "Displays system/connectivity information about the bot server.");
+        st.put("systeminfo", "Displays system/connectivity information about the bot.");
         return Command.helpCommand(st, "System Information", e);
     }
 }

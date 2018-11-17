@@ -18,8 +18,8 @@ public class Chad implements Command.Class {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Chad");
             b.withDesc("by woahoveflow");
-            b.appendField("GitHub", "http://woahoverflow.org/github", true);
-            b.appendField("Website", "http://woahoverflow.org/chad", true);
+            b.appendField("GitHub", "http://woahoverflow.org/github", false);
+            b.appendField("Website", "http://woahoverflow.org/chad", false);
             b.withFooterText(Util.getTimeStamp());
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             new MessageHandler(e.getChannel()).sendEmbed(b.build());

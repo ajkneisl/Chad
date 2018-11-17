@@ -13,7 +13,7 @@ public class NSFW implements Command.Class  {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler h = new MessageHandler(e.getChannel());
-            if (e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
             {
                 h.sendError("You don't have permission for this!");
                 return;
