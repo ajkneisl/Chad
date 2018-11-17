@@ -16,6 +16,11 @@ public class ModifyPresence implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            if (args.size() == 0)
+            {
+                new MessageHandler(e.getChannel()).sendError("Invalid Arguments");
+                return;
+            }
             String option = args.get(0);
             String message;
             switch (option) {
@@ -24,8 +29,9 @@ public class ModifyPresence implements Command.Class {
                     for (String str : args) {
                         sb.append(str).append(" ");
                     }
-                    ChadBot.cli.changePresence(StatusType.ONLINE, ActivityType.PLAYING, sb.toString().trim());
+                    ChadBot.cli.changePresence(ChadVar.STATUS_TYPE, ActivityType.PLAYING, sb.toString().trim());
                     message = "Changed presence to \"" + sb.toString().trim() + "\"";
+                    ChadVar.CURRENT_STATUS = sb.toString().trim();
                     break;
                 case "rotate":
                     ChadVar.ROTATE_PRESENCE = true;
@@ -57,25 +63,29 @@ public class ModifyPresence implements Command.Class {
                     args.remove(0);
                     if (args.get(0).equalsIgnoreCase("idle"))
                     {
-                        e.getClient().changePresence(StatusType.IDLE);
+                        ChadVar.STATUS_TYPE = StatusType.IDLE;
+                        e.getClient().changePresence(StatusType.IDLE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
                         message = "Changed status type to `Idle`";
                         break;
                     }
                     else if (args.get(0).equalsIgnoreCase("online"))
                     {
-                        e.getClient().changePresence(StatusType.ONLINE);
+                        ChadVar.STATUS_TYPE = StatusType.ONLINE;
+                        e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
                         message = "Changed status type to `Online`";
                         break;
                     }
                     else if (args.get(0).equalsIgnoreCase("offline"))
                     {
-                        e.getClient().changePresence(StatusType.INVISIBLE);
+                        ChadVar.STATUS_TYPE = StatusType.OFFLINE;
+                        e.getClient().changePresence(StatusType.INVISIBLE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
                         message = "Changed status type to `Offline`";
                         break;
                     }
-                    else if (args.get(0).equalsIgnoreCase("dontdisturb"))
+                    else if (args.get(0).equalsIgnoreCase("dnd"))
                     {
-                        e.getClient().changePresence(StatusType.DND);
+                        ChadVar.STATUS_TYPE = StatusType.DND;
+                        e.getClient().changePresence(StatusType.DND, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
                         message = "Changed status type to `Do Not Disturb`";
                         break;
                     }

@@ -6,6 +6,8 @@ import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.ActivityType;
+import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +17,11 @@ public class Shutdown implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            new MessageHandler(e.getChannel()).send("Shutting down in 5 seconds...", "Warning");
-            ChadVar.UI_HANDLER.addLog("Shutting down in 5 seconds...", UIHandler.LogLevel.SEVERE);
+            new MessageHandler(e.getChannel()).send("Shutting down in 10 seconds...", "Warning");
+            ChadVar.UI_HANDLER.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);
+            ChadBot.cli.changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }

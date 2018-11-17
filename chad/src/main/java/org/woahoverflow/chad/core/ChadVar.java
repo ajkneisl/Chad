@@ -18,6 +18,7 @@ import org.woahoverflow.chad.handle.commands.Command;
 import org.woahoverflow.chad.handle.commands.PermissionHandler;
 import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ import java.util.concurrent.Executors;
 
 public class ChadVar
 {
+    public static StatusType STATUS_TYPE = StatusType.ONLINE;
+    public static String CURRENT_STATUS = "";
     public static UIHandler UI_HANDLER;
     public static CachingHandler CACHE_DEVICE;
     public static final HashMap<String, Command.Data> COMMANDS = new HashMap<>();
