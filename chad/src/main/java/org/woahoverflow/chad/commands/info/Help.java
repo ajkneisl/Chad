@@ -16,6 +16,8 @@ public class Help implements Command.Class {
             StringBuilder sb = new StringBuilder();
             // go through each category and add all its commands to the help string
             for (Command.Category category : Command.Category.values()) {
+                if (category == Command.Category.NSFW && !e.getChannel().isNSFW())
+                    continue;
                 if (category == Command.Category.ADMIN && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor())) // no admin commands (unless admin)
                     continue;
                 sb.append("\n").append(Util.fixEnumString(category.toString().toLowerCase())).append(": ");
