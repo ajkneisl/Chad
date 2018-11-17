@@ -17,8 +17,10 @@ public class RedditNew implements Command.Class{
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            if (args.size() < 1) {
+            if (args.size() < 1)
+            {
                 new MessageHandler(e.getChannel()).sendError("Invalid arguments.");
+                return;
             }
 
             String link = null;
