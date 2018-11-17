@@ -5,7 +5,9 @@ import org.woahoverflow.chad.commands.admin.*;
 import org.woahoverflow.chad.commands.fun.*;
 import org.woahoverflow.chad.commands.function.*;
 import org.woahoverflow.chad.commands.info.*;
-import org.woahoverflow.chad.commands.nsfw.*;
+import org.woahoverflow.chad.commands.nsfw.NB4K;
+import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
+import org.woahoverflow.chad.commands.nsfw.NSFW;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
 import org.woahoverflow.chad.handle.CachingHandler;
@@ -115,19 +117,7 @@ public class ChadVar
         // NSFW !
         COMMANDS.put("nsfw", new Command.Data(Command.Category.NSFW, false, new NSFW()));
         COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, false, new NB4K()));
-        COMMANDS.put("hentai", new Command.Data(Command.Category.NSFW, false, new NBHentai()));
-        COMMANDS.put("holo", new Command.Data(Command.Category.NSFW, false, new NBHolo()));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, false, new NBLewdNeko()));
-        COMMANDS.put("lewdkitsune", new Command.Data(Command.Category.NSFW, false, new NBLewdKitsune()));
-        COMMANDS.put("kemonomimi", new Command.Data(Command.Category.NSFW, false, new NBKemonomimi()));
-        COMMANDS.put("anal", new Command.Data(Command.Category.NSFW, false, new NBAnal()));
-        COMMANDS.put("hentaianal", new Command.Data(Command.Category.NSFW, false, new NBHentaiAnal()));
-        COMMANDS.put("gonewild", new Command.Data(Command.Category.NSFW, false, new NBGoneWild()));
-        COMMANDS.put("kanna", new Command.Data(Command.Category.NSFW, false, new NBKanna()));
-        COMMANDS.put("ass", new Command.Data(Command.Category.NSFW, false, new NBAss()));
-        COMMANDS.put("pussy", new Command.Data(Command.Category.NSFW, false, new NBPussy()));
-        COMMANDS.put("thigh", new Command.Data(Command.Category.NSFW, false, new NBThigh()));
-        COMMANDS.put("neko", new Command.Data(Command.Category.NSFW, false, new NBNeko()));
 
         // ADMIN!
         COMMANDS.put("threads", new Command.Data(Command.Category.ADMIN, true, new CurrentThreads()));
