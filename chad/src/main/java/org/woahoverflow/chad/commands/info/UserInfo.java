@@ -59,9 +59,9 @@ public class UserInfo implements Command.Class {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date2 = Date.from(u.getCreationDate());
             if (u.isBot())
-                human = "Yes";
-            else
                 human = "No";
+            else
+                human = "Yes";
             b.withDesc(
                     "Human `"+human+"`" +
                             "\nRoles `"+roleString+"`" +
