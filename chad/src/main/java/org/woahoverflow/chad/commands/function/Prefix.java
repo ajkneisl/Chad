@@ -21,7 +21,7 @@ public class Prefix implements Command.Class  {
             if (args.size() == 0) {
                 EmbedBuilder b = new EmbedBuilder();
                 b.withTitle("Prefix");
-                ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc().getString("prefix");
+                b.withDesc(ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc().getString("prefix"));
                 b.withFooterText(Util.getTimeStamp());
                 b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
                 m.sendEmbed(b.build());
