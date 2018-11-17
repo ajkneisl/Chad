@@ -7,7 +7,6 @@ import org.woahoverflow.chad.commands.function.*;
 import org.woahoverflow.chad.commands.info.*;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
-import org.woahoverflow.chad.commands.nsfw.NSFW;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
 import org.woahoverflow.chad.handle.CachingHandler;
@@ -116,9 +115,9 @@ public class ChadVar
         COMMANDS.put("im", new Command.Data(Command.Category.FUNCTION, false, new Message()));
         COMMANDS.put("autorole", new Command.Data(Command.Category.FUNCTION, false, new AutoRole()));
         COMMANDS.put("perms", new Command.Data(Command.Category.FUNCTION, false, new Permissions()));
+        COMMANDS.put("nsfw", new Command.Data(Command.Category.FUNCTION, false, new NSFW()));
 
         // NSFW !
-        COMMANDS.put("nsfw", new Command.Data(Command.Category.NSFW, false, new NSFW()));
         COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, false, new NB4K()));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, false, new NBLewdNeko()));
 

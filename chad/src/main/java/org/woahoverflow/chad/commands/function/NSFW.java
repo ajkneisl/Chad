@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.commands.nsfw;
+package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
