@@ -22,8 +22,8 @@ public class GuildInfo implements Command.Class{
             IGuild g = e.getGuild();
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Guild : " + g.getName());
-            b.appendField("Owner", g.getOwner().getName(), true);
-            b.appendField("Role Amount", Integer.toString(g.getRoles().size()), true);
+            Date date = Date.from(e.getGuild().getCreationDate());
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             int human = 0;
             int bot = 0;
             for (IUser u : g.getUsers())
@@ -33,16 +33,16 @@ public class GuildInfo implements Command.Class{
                 else
                     bot++;
             }
-            b.appendField("Humans", Integer.toString(human), true);
-            b.appendField("Bots", Integer.toString(bot), true);
-            b.appendField("User Amount", Integer.toString(g.getUsers().size()), true);
-            b.appendField("Voice Channels", Integer.toString(g.getVoiceChannels().size()), true);
-            b.appendField("Text Channels", Integer.toString(g.getChannels().size()), true);
-            b.appendField("Categories", Integer.toString(g.getCategories().size()), true);
-            Date date = Date.from(e.getGuild().getCreationDate());
-            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            b.appendField("Creation Date", format.format(date), false);
-
+            b.withDesc(
+                    "Owner `"+g.getOwner().getName()+"`" +
+                            "\nRole Amount `"+g.getRoles().size()+"`"+
+                              "\nHuman to Bots `"+human+"/"+bot+"`" +
+                              "\nUser Amount `"+g.getUsers().size()+"`" +
+                              "\nVoice Channels `"+g.getVoiceChannels().size()+"`" +
+                              "\nText Channels `"+g.getChannels().size()+"`" +
+                              "\nCategories `"+g.getCategories().size()+"`" +
+                              "\nCreation Date `"+format.format(date)+"`"
+            );
             b.withImage(e.getGuild().getIconURL());
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());

@@ -49,22 +49,25 @@ public class UserInfo implements Command.Class {
             }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("User : " + u.getName());
+            String roleString = "";
             if (roles.toString().length() == 0)
-                b.appendField("Roles", "none", true);
+                roleString = "none";
             else
-                b.appendField("Roles", roles.toString().substring(0, roles.toString().length()-2) + " [" + (u.getRolesForGuild(e.getGuild()).size() - 1) + "]", true);
+                roleString = roles.toString().substring(0, roles.toString().length()-2) + " [" + (u.getRolesForGuild(e.getGuild()).size() - 1) + "]";
             String human;
-            if (u.isBot())
-                human = "False";
-            else
-                human = "True";
-            b.appendField("Human", human, true);
             Date date = Date.from(e.getGuild().getJoinTimeForUser(u));
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date2 = Date.from(u.getCreationDate());
-            b.appendField("Guild Join Date", format.format(date), false);
-            b.appendField("Account Creation Date", format.format(date2), false);
-
+            if (u.isBot())
+                human = "Yes";
+            else
+                human = "No";
+            b.withDesc(
+                    "Human `"+human+"`" +
+                            "\nRoles `"+roleString+"`" +
+                            "\nGuild Join Date `"+format.format(date)+"`" +
+                            "\nAccount Creation Date `"+format.format(date2)+"`"
+            );
             b.withImage(u.getAvatarURL());
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
