@@ -46,6 +46,12 @@ public class RedditTop implements Command.Class {
                 return;
             }
 
+            if (post.getBoolean("over_18") && !e.getChannel().isNSFW())
+            {
+                new MessageHandler(e.getChannel()).sendError("Post is NSFW!");
+                return;
+            }
+
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle(post.getString("title"));
             b.withDesc(post.getString("author"));

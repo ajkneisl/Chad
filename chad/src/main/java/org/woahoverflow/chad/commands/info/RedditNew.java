@@ -23,7 +23,6 @@ public class RedditNew implements Command.Class{
                 return;
             }
 
-            String link = null;
             JSONObject post;
             try {
                 int index = 0;
@@ -42,6 +41,12 @@ public class RedditNew implements Command.Class{
                 }
             } catch (Exception e1) {
                 new MessageHandler(e.getChannel()).sendError("Invalid subreddit.");
+                return;
+            }
+
+            if (post.getBoolean("over_18") && !e.getChannel().isNSFW())
+            {
+                new MessageHandler(e.getChannel()).sendError("Post is NSFW!");
                 return;
             }
 
