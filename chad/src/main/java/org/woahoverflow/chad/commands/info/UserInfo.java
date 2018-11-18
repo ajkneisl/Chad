@@ -44,23 +44,30 @@ public class UserInfo implements Command.Class {
             StringBuilder roles = new StringBuilder();
             for (IRole r : u.getRolesForGuild(e.getGuild()))
             {
-                roles.append(r.getName()).append(", ");
+                if (!r.isEveryoneRole())
+                    roles.append(r.getName()).append(", ");
             }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("User : " + u.getName());
-            b.appendField("Roles", roles.toString().substring(0, roles.toString().length()-2) + "[" + u.getRolesForGuild(e.getGuild()).size() + "]", true);
-            String human;
-            if (u.isBot())
-                human = "False";
+            String roleString = "";
+            if (roles.toString().length() == 0)
+                roleString = "none";
             else
-                human = "True";
-            b.appendField("Human", human, true);
+                roleString = roles.toString().substring(0, roles.toString().length()-2) + " [" + (u.getRolesForGuild(e.getGuild()).size() - 1) + "]";
+            String human;
             Date date = Date.from(e.getGuild().getJoinTimeForUser(u));
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date2 = Date.from(u.getCreationDate());
-            b.appendField("Guild Join Date", format.format(date), false);
-            b.appendField("Account Creation Date", format.format(date2), false);
-
+            if (u.isBot())
+                human = "No";
+            else
+                human = "Yes";
+            b.withDesc(
+                    "Human `"+human+"`" +
+                            "\nRoles `"+roleString+"`" +
+                            "\nGuild Join Date `"+format.format(date)+"`" +
+                            "\nAccount Creation Date `"+format.format(date2)+"`"
+            );
             b.withImage(u.getAvatarURL());
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());

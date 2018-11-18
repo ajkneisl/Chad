@@ -30,7 +30,8 @@ public class OnReady
                         return;
                     Object[] ar = ChadVar.PRESENCE_ROTATION.toArray();
                     int rotation = ar.length;
-                    e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, (String)ar[new Random().nextInt(rotation)]);
+                    ChadVar.CURRENT_STATUS = (String)ar[new Random().nextInt(rotation)];
+                    e.getClient().changePresence(ChadVar.STATUS_TYPE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
                 }
             }, 0, ChadVar.ROTATION_TIME); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work
         });

@@ -32,6 +32,11 @@ public class PhotoEditor implements Command.Class {
                 return;
             }
 
+            if (!(e.getMessage().getAttachments().get(0).getUrl().endsWith(".png") || e.getMessage().getAttachments().get(0).getUrl().endsWith(".jpg")))
+            {
+                new MessageHandler(e.getChannel()).sendError("Invalid Format! \n Please use PNG or JPG");
+                return;
+            }
             System.setProperty("http.agent", "Chrome");
             BufferedImage im = null;
             try {

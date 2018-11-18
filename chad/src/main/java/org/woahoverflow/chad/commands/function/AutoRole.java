@@ -18,9 +18,13 @@ public class AutoRole implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            if (args.size() == 0)
+            {
+                new MessageHandler(e.getChannel()).sendError("Invalid Arguments");
+                return;
+            }
             String option = args.get(0).toLowerCase();
             MessageHandler m = new MessageHandler(e.getChannel());
-            System.out.println("Auto Role: " + option);
             switch (option) {
                 default:
                     break;

@@ -117,7 +117,7 @@ public class Steam implements Command.Class  {
                         b2.appendField("HE Grenade", Integer.toString(profile.getCSGOStats().getJSONObject(10).getInt("value")), true);
                         b2.appendField("Glock", Integer.toString(profile.getCSGOStats().getJSONObject(11).getInt("value")), true);
                         b2.appendField("Deagle", Integer.toString(profile.getCSGOStats().getJSONObject(12).getInt("value")), true);
-                        b2.appendField("USP-S", Integer.toString(profile.getCSGOStats().getJSONObject(12).getInt("value")), true);
+                        b2.appendField("USP-S", Integer.toString(profile.getCSGOStats().getJSONObject(133).getInt("value")), true);
                         b2.appendField("Mac-10", Integer.toString(profile.getCSGOStats().getJSONObject(16).getInt("value")), true);
                         b2.appendField("UMP-45", Integer.toString(profile.getCSGOStats().getJSONObject(17).getInt("value")), true);
                         b2.appendField("AWP", Integer.toString(profile.getCSGOStats().getJSONObject(19).getInt("value")), true);
@@ -125,7 +125,7 @@ public class Steam implements Command.Class  {
                         b2.appendField("M4", Integer.toString(profile.getCSGOStats().getJSONObject(162).getInt("value")), true);
                     } else if (args.size() == 3 && args.get(2).equalsIgnoreCase("maps"))
                     {
-                        b2.withTitle("Map Stats for " + profile.getName());
+                        b2.withTitle("Map Wins for " + profile.getName());
                         b2.appendField("Office", Integer.toString(profile.getCSGOStats().getJSONObject(28).getInt("value")), true);
                         b2.appendField("Cobble", Integer.toString(profile.getCSGOStats().getJSONObject(29).getInt("value")), true);
                         b2.appendField("Dust 2", Integer.toString(profile.getCSGOStats().getJSONObject(30).getInt("value")), true);
@@ -135,7 +135,7 @@ public class Steam implements Command.Class  {
                     } else if (args.size() == 3 && args.get(2).equalsIgnoreCase("lastmatch"))
                     {
                         b2.withTitle(profile.getName() + "'s last game");
-                        b2.appendField("Round Wins", Integer.toString(profile.getCSGOStats().getJSONObject(83).getInt("value")), true);
+                        b2.appendField("Round Wins", Integer.toString(profile.getCSGOStats().getJSONObject(81).getInt("value") + profile.getCSGOStats().getJSONObject(82).getInt("value")), true);
                         b2.appendField("Kills", Integer.toString(profile.getCSGOStats().getJSONObject(85).getInt("value")), true);
                         b2.appendField("Deaths", Integer.toString(profile.getCSGOStats().getJSONObject(86).getInt("value")), true);
                         b2.appendField("MVPs", Integer.toString(profile.getCSGOStats().getJSONObject(87).getInt("value")), true);

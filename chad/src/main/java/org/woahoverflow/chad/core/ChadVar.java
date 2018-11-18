@@ -5,7 +5,8 @@ import org.woahoverflow.chad.commands.admin.*;
 import org.woahoverflow.chad.commands.fun.*;
 import org.woahoverflow.chad.commands.function.*;
 import org.woahoverflow.chad.commands.info.*;
-import org.woahoverflow.chad.commands.nsfw.*;
+import org.woahoverflow.chad.commands.nsfw.NB4K;
+import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
 import org.woahoverflow.chad.handle.CachingHandler;
@@ -16,6 +17,7 @@ import org.woahoverflow.chad.handle.commands.Command;
 import org.woahoverflow.chad.handle.commands.PermissionHandler;
 import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +28,8 @@ import java.util.concurrent.Executors;
 
 public class ChadVar
 {
+    public static StatusType STATUS_TYPE = StatusType.ONLINE;
+    public static String CURRENT_STATUS = "";
     public static UIHandler UI_HANDLER;
     public static CachingHandler CACHE_DEVICE;
     public static final HashMap<String, Command.Data> COMMANDS = new HashMap<>();
@@ -111,23 +115,11 @@ public class ChadVar
         COMMANDS.put("im", new Command.Data(Command.Category.FUNCTION, false, new Message()));
         COMMANDS.put("autorole", new Command.Data(Command.Category.FUNCTION, false, new AutoRole()));
         COMMANDS.put("perms", new Command.Data(Command.Category.FUNCTION, false, new Permissions()));
+        COMMANDS.put("nsfw", new Command.Data(Command.Category.FUNCTION, false, new NSFW()));
 
         // NSFW !
-        COMMANDS.put("nsfw", new Command.Data(Command.Category.NSFW, false, new NSFW()));
         COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, false, new NB4K()));
-        COMMANDS.put("hentai", new Command.Data(Command.Category.NSFW, false, new NBHentai()));
-        COMMANDS.put("holo", new Command.Data(Command.Category.NSFW, false, new NBHolo()));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, false, new NBLewdNeko()));
-        COMMANDS.put("lewdkitsune", new Command.Data(Command.Category.NSFW, false, new NBLewdKitsune()));
-        COMMANDS.put("kemonomimi", new Command.Data(Command.Category.NSFW, false, new NBKemonomimi()));
-        COMMANDS.put("anal", new Command.Data(Command.Category.NSFW, false, new NBAnal()));
-        COMMANDS.put("hentaianal", new Command.Data(Command.Category.NSFW, false, new NBHentaiAnal()));
-        COMMANDS.put("gonewild", new Command.Data(Command.Category.NSFW, false, new NBGoneWild()));
-        COMMANDS.put("kanna", new Command.Data(Command.Category.NSFW, false, new NBKanna()));
-        COMMANDS.put("ass", new Command.Data(Command.Category.NSFW, false, new NBAss()));
-        COMMANDS.put("pussy", new Command.Data(Command.Category.NSFW, false, new NBPussy()));
-        COMMANDS.put("thigh", new Command.Data(Command.Category.NSFW, false, new NBThigh()));
-        COMMANDS.put("neko", new Command.Data(Command.Category.NSFW, false, new NBNeko()));
 
         // ADMIN!
         COMMANDS.put("threads", new Command.Data(Command.Category.ADMIN, true, new CurrentThreads()));

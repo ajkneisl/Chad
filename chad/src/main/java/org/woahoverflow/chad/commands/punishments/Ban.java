@@ -25,15 +25,9 @@ public class Ban implements Command.Class  {
                 return;
             }
 
-            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.BAN))
-            {
-                m.sendError("You don't have permissions for this!");
-                return;
-            }
-
             IUser user = null;
             List<String> reason = new ArrayList<>();
-            if (!e.getMessage().getMentions().isEmpty() && args.get(0).equalsIgnoreCase(e.getMessage().getMentions().get(0).mention()))
+            if (!e.getMessage().getMentions().isEmpty() && args.get(0).contains(e.getMessage().getMentions().get(0).getStringID()))
             {
                 user = e.getMessage().getMentions().get(0);
                 args.remove(0);

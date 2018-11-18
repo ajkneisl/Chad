@@ -25,7 +25,7 @@ public class Kick implements Command.Class  {
             }
             IUser user = null;
             List<String> reason = new ArrayList<>();
-            if (!e.getMessage().getMentions().isEmpty() && args.get(0).equalsIgnoreCase(e.getMessage().getMentions().get(0).mention()))
+            if (!e.getMessage().getMentions().isEmpty() && args.get(0).contains(e.getMessage().getMentions().get(0).getStringID()))
             {
                 user = e.getMessage().getMentions().get(0);
                 args.remove(0);

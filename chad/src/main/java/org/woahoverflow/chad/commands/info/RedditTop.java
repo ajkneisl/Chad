@@ -18,8 +18,10 @@ public class RedditTop implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            if (args.size() < 1) {
+            if (args.size() < 1)
+            {
                 new MessageHandler(e.getChannel()).sendError("Invalid arguments.");
+                return;
             }
 
             String link = null;
@@ -41,6 +43,12 @@ public class RedditTop implements Command.Class {
                 }
             } catch (Exception e1) {
                 new MessageHandler(e.getChannel()).sendError("Invalid subreddit.");
+                return;
+            }
+
+            if (post.getBoolean("over_18") && !e.getChannel().isNSFW())
+            {
+                new MessageHandler(e.getChannel()).sendError("Post is NSFW!");
                 return;
             }
 
