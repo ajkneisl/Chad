@@ -78,7 +78,7 @@ public class Random implements Command.Class {
 
                     List<String> l = new ArrayList<>();
                     try {
-                        URL obj = new URL("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt");
+                        URL obj = new URL("https://cdn.woahoverflow.org/chad/data/words.txt");
                         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
                         // optional default is GET
                         con.setRequestMethod("GET");
