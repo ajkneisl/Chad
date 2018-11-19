@@ -49,7 +49,7 @@ public class ChadBot {
             ChadVar.setUiHandler();
 
         // add developer ids to the permissions handler
-        ChadVar.JSON_HANDLER.readArray("https://raw.githubusercontent.com/woahoverflow/Chad-Repo/master/data/contributors.json").forEach((v) ->
+        ChadVar.JSON_HANDLER.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json").forEach((v) ->
         {
             ChadVar.UI_HANDLER.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UIHandler.LogLevel.INFO);
             ChadVar.GLOBAL_PERMISSIONS.put(((JSONObject) v).getString("id"), PermissionHandler.Levels.SYSTEM_ADMINISTRATOR);
