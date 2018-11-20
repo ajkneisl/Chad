@@ -74,7 +74,7 @@ public class Random implements Command.Class {
                         m.sendError("API Exception!");
                     }
                     return;
-                case "sentence":
+                case "word":
 
                     List<String> l = new ArrayList<>();
                     try {
@@ -94,13 +94,8 @@ public class Random implements Command.Class {
                     } catch (Exception e3) {
                         e3.printStackTrace();
                     }
-                    int in = new java.util.Random().nextInt(20);
-                    StringBuilder b = new StringBuilder();
-                    for (int i = 0; i < in; i++)
-                    {
-                        b.append(l.get(new java.util.Random().nextInt(l.size()))).append(" ");
-                    }
-                    new MessageHandler(e.getChannel()).send(b.toString().trim(),"Sentence");
+
+                    new MessageHandler(e.getChannel()).send(l.get(new java.util.Random().nextInt(300000)),"Word");
             }
         };
     }
@@ -110,6 +105,7 @@ public class Random implements Command.Class {
         HashMap<String, String> st = new HashMap<>();
         st.put("random quote", "Gives random quote.");
         st.put("random number [max]", "Gives random number with an optional max value.");
+        st.put("random word", "Gets a random word.");
         return Command.helpCommand(st, "Random", e);
 
     }
