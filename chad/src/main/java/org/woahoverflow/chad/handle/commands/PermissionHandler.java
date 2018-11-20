@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.handle.commands;
 
 import org.bson.Document;
+import org.woahoverflow.chad.commands.function.Permissions;
 import org.woahoverflow.chad.core.ChadVar;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
@@ -30,6 +31,10 @@ public class PermissionHandler
         {
             return false; // return false if the command doesnt exist
         }
+
+        // system admins can set their own permissions :) (for testing tho don't worry)
+        if (cmd instanceof Permissions && userIsDeveloper(user))
+            return true;
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
         // developers should always have permission for developer commands
