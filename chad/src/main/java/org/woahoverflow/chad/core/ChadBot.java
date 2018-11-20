@@ -51,8 +51,14 @@ public class ChadBot {
         // add developer ids to the permissions handler
         ChadVar.JSON_HANDLER.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json").forEach((v) ->
         {
-            ChadVar.UI_HANDLER.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UIHandler.LogLevel.INFO);
-            ChadVar.GLOBAL_PERMISSIONS.put(((JSONObject) v).getString("id"), PermissionHandler.Levels.SYSTEM_ADMINISTRATOR);
+            if (Boolean.parseBoolean(((JSONObject) v).getString("allow")))
+            {
+                ChadVar.UI_HANDLER.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UIHandler.LogLevel.INFO);
+                ChadVar.GLOBAL_PERMISSIONS.put(((JSONObject) v).getString("id"), PermissionHandler.Levels.SYSTEM_ADMINISTRATOR);
+            }
+            else {
+                ChadVar.UI_HANDLER.addLog("Avoided adding user " + ((JSONObject) v).getString("display_name"), UIHandler.LogLevel.INFO);
+            }
         });
     }
 
