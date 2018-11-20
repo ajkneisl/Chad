@@ -93,6 +93,7 @@ public class ChadVar
         COMMANDS.put("catgallery", new Command.Data(Command.Category.FUN, false, new CatGallery()));
         COMMANDS.put("catfact", new Command.Data(Command.Category.FUN, false, new CatFact()));
         COMMANDS.put("rrl", new Command.Data(Command.Category.FUN, false, new RussianRoulette()));
+        COMMANDS.put("wr", new Command.Data(Command.Category.FUN, false, new WordReverse()));
 
         // INFO!
         COMMANDS.put("help", new Command.Data(Command.Category.INFO, false, new Help()));
