@@ -42,7 +42,7 @@ public class PermissionHandler
             return true;
 
         // all users should have access to commands in the fun and info category
-        if (meta.category == Command.Category.FUN.FUN || meta.category == Command.Category.INFO)
+        if (meta.category == Command.Category.FUN.FUN || meta.category == Command.Category.INFO || meta.category == Command.Category.NSFW)
             return true;
 
         // loop through the users roles, if the role has permission for the command, return true
