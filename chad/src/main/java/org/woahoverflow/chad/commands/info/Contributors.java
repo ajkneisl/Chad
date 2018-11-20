@@ -20,7 +20,7 @@ public class Contributors implements Command.Class {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             EmbedBuilder b = new EmbedBuilder();
-            JSONArray o = ChadVar.JSON_HANDLER.readArray("https://raw.githubusercontent.com/woahoverflow/Chad-Repo/master/data/contributors.json");
+            JSONArray o = ChadVar.JSON_HANDLER.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("view"))
             {
                 JSONObject object = null;
@@ -50,9 +50,9 @@ public class Contributors implements Command.Class {
             b.withTitle("Official Contributors for Chad");
             o.forEach((obj) -> {
                 JSONObject json = (JSONObject) obj;
-                b2.append(json.getString("display_name")).append(", ");
+                b2.append(", ").append(json.getString("display_name"));
             });
-            b.withDesc(b2.toString().trim());
+            b.withDesc(b2.toString().trim().replaceFirst(", ", ""));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
