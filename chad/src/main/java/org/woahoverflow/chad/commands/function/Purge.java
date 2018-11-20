@@ -24,13 +24,13 @@ public class Purge implements Command.Class  {
                 return;
             }
 
-            if (!(args.size() >= 1))
+            if (args.size() != 1)
             {
                 new MessageHandler(e.getChannel()).sendError("Invalid Arguments!");
                 return;
             }
 
-            boolean silent = e.getMessage().getContent().endsWith("-s");
+            boolean silent = true;
 
             int requestedAmount = Integer.parseInt(args.get(0));
 
@@ -58,8 +58,7 @@ public class Purge implements Command.Class  {
     @Override
     public Runnable help(MessageReceivedEvent e, List<String> args) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("purge <amount of messages>", "Removes a specific amount of messages from a defined channel.");
-        st.put("For silent deletions", "Add -s to the end of the command.");
+        st.put("purge <amount of messages>", "Removes a specific amount of messages from the current channel.");
         return Command.helpCommand(st, "Purge", e);
     }
 }
