@@ -7,6 +7,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.awt.*;
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -18,6 +19,8 @@ public class Chad implements Command.Class {
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Chad");
             b.withDesc("by woahoveflow");
+            b.appendField("Uptime", ManagementFactory.getRuntimeMXBean().getUptime() / 60000 +" minutes", true);
+            b.appendField("Ping", e.getClient().getShards().get(0).getResponseTime()+"ms", true);
             b.appendField("GitHub", "http://woahoverflow.org/github", false);
             b.appendField("Website", "http://woahoverflow.org/chad", false);
             b.withFooterText(Util.getTimeStamp());

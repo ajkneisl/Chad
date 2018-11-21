@@ -27,7 +27,7 @@ public class Command
     }
     public enum Category
     {
-        ADMIN, FUN, FUNCTION, INFO, PUNISHMENTS, NSFW
+        ADMIN, FUN, FUNCTION, INFO, PUNISHMENTS, NSFW, MONEY
     }
     public interface Class
     {

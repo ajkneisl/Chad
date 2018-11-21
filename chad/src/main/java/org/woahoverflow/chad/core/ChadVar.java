@@ -4,6 +4,9 @@ import org.woahoverflow.chad.commands.admin.Shutdown;
 import org.woahoverflow.chad.commands.admin.*;
 import org.woahoverflow.chad.commands.fun.*;
 import org.woahoverflow.chad.commands.function.*;
+import org.woahoverflow.chad.commands.gambling.Balance;
+import org.woahoverflow.chad.commands.gambling.CoinFlip;
+import org.woahoverflow.chad.commands.gambling.Register;
 import org.woahoverflow.chad.commands.info.*;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
@@ -134,5 +137,11 @@ public class ChadVar
         COMMANDS.put("systeminfo", new Command.Data(Command.Category.ADMIN, true, new SystemInfo()));
         COMMANDS.put("cache", new Command.Data(Command.Category.ADMIN, true, new Cache()));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.ADMIN,true, new Shutdown()));
+        COMMANDS.put("setbal", new Command.Data(Command.Category.ADMIN, true, new SetBalance()));
+
+        // MONEY!
+        COMMANDS.put("register", new Command.Data(Command.Category.MONEY, false, new Register()));
+        COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, false, new CoinFlip()));
+        COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, false, new Balance()));
     }
 }

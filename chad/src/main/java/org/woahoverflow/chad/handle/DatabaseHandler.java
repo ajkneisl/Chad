@@ -77,17 +77,27 @@ public class DatabaseHandler
         return (String) get.get(object);
     }
 
-    public void set(IGuild guild, String object, String entry)
+    public Object get(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
         if (get == null)
-            return;
+            return null;
 
-        col.updateOne(get, new Document("$set", new Document(object, entry)));
+        return get.get(object);
     }
 
-    public void set(IGuild guild, String object, Boolean entry)
+    public boolean contains(IGuild guild, String object)
+    {
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
+
+        if (get == null)
+            return false;
+
+        return get.containsKey(object);
+    }
+
+    public void set(IGuild guild, String object, Object entry)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
@@ -101,27 +111,5 @@ public class DatabaseHandler
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
         return get != null;
-    }
-
-    @SuppressWarnings("unused")
-    public String getStats(String object)
-    {
-        Document get = col.find(new Document("stats", true)).first();
-
-        if (get == null)
-            return null;
-
-        return (String) get.get(object);
-    }
-
-    @SuppressWarnings("unused")
-    public void setStats(String object, String entry)
-    {
-        Document get = col.find(new Document("stats", true)).first();
-
-        if (get == null)
-            return;
-
-        col.updateOne(get, new Document("$set", new Document(object, entry)));
     }
 }
