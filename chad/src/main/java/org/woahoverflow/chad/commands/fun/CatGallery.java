@@ -26,7 +26,7 @@ public class CatGallery implements Command.Class  {
                 }
                 if (files.length == 0)
                 {
-                    ChadVar.UI_HANDLER.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
+                    ChadVar.UI_DEVICE.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
                     m.sendError("An internal error has occurred!");
                     return;
                 }
@@ -39,7 +39,7 @@ public class CatGallery implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("catgallery", "Gives you a random cat picture.");
         return Command.helpCommand(st, "Cat Gallery", e);

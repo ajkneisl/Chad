@@ -29,7 +29,7 @@ public class AutoRole implements Command.Class  {
                 default:
                     break;
                 case "on":
-                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", true);
+                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "role_on_join", true);
                     ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
                     EmbedBuilder on_emb = new EmbedBuilder();
                     on_emb.withTitle("Auto Role");
@@ -38,7 +38,7 @@ public class AutoRole implements Command.Class  {
                     m.sendEmbed(on_emb.build());
                     break;
                 case "off":
-                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "role_on_join", false);
+                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "role_on_join", false);
                     ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
                     EmbedBuilder off_emb = new EmbedBuilder();
                     off_emb.withTitle("Auto Role");
@@ -56,7 +56,7 @@ public class AutoRole implements Command.Class  {
                         if (!roles.isEmpty()) break;
                     }
                     IRole set_role = roles.get(0);
-                    ChadVar.DATABASE_HANDLER.set(e.getGuild(), "join_role", set_role.getStringID());
+                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "join_role", set_role.getStringID());
                     ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
                     EmbedBuilder set_emb = new EmbedBuilder();
                     set_emb.withTitle("Auto Role");
@@ -69,10 +69,10 @@ public class AutoRole implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("autorole [on/off]", "Toggles automatic role assignment features.");
-        st.put("autorole set [role name]", "Sets role.");
+        st.put("autorole <on/off>", "Toggles automatic role assignment features.");
+        st.put("autorole set <role name>", "Sets role.");
         return Command.helpCommand(st, "Auto Role", e);
     }
 }

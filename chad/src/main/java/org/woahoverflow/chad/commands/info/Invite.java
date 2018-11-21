@@ -18,7 +18,7 @@ public class Invite implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("invite", "Gets an invite");
         return Command.helpCommand(st, "invite", e);

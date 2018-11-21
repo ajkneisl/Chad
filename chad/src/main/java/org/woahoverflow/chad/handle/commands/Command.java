@@ -16,7 +16,7 @@ public class Command
     public static Runnable helpCommand(HashMap<String, String> cmds, String commandName, MessageReceivedEvent e)
     {
         return () -> {
-            String prefix = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "prefix");
+            String prefix = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "prefix");
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("Help : " + commandName);
             cmds.forEach((k, v) -> b.appendField(prefix+k, v, false));
@@ -32,7 +32,7 @@ public class Command
     public interface Class
     {
         Runnable run(MessageReceivedEvent e, List<String> args);
-        Runnable help(MessageReceivedEvent e, List<String> args);
+        Runnable help(MessageReceivedEvent e);
     }
 
     public static class Data

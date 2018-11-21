@@ -48,9 +48,9 @@ public class PermissionHandler
         // loop through the users roles, if the role has permission for the command, return true
         for (IRole r : user.getRolesForGuild(g))
         {
-            if (ChadVar.DATABASE_HANDLER.getArray(g, r.getStringID()) != null)
+            if (ChadVar.DATABASE_DEVICE.getArray(g, r.getStringID()) != null)
             {
-                if (ChadVar.DATABASE_HANDLER.getArray(g, r.getStringID()).contains(command))
+                if (ChadVar.DATABASE_DEVICE.getArray(g, r.getStringID()).contains(command))
                     return true;
             }
         }
@@ -77,7 +77,7 @@ public class PermissionHandler
         {
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);
-            ChadVar.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.DATABASE_DEVICE.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
             ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
             return 6;
         }
@@ -86,7 +86,7 @@ public class PermissionHandler
                 return 2;
             ArrayList<String> ar = arr;
             ar.add(command);
-            ChadVar.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.DATABASE_DEVICE.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
             ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
             return 6;
         }
@@ -98,17 +98,17 @@ public class PermissionHandler
         if (!parseCommand(command))
             return 0;
 
-        if (ChadVar.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID()) == null)
+        if (ChadVar.DATABASE_DEVICE.getArray(role.getGuild(), role.getStringID()) == null)
             return 4;
         else {
-            Document get = ChadVar.DATABASE_HANDLER.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+            Document get = ChadVar.DATABASE_DEVICE.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
 
             if (get == null)
                 return 1;
 
-            ArrayList<String> ar = ChadVar.DATABASE_HANDLER.getArray(role.getGuild(), role.getStringID());
+            ArrayList<String> ar = ChadVar.DATABASE_DEVICE.getArray(role.getGuild(), role.getStringID());
             ar.remove(command);
-            ChadVar.DATABASE_HANDLER.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.DATABASE_DEVICE.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
             return 6;
         }
 
@@ -125,7 +125,7 @@ public class PermissionHandler
     {
         if (i == 1)
         {
-            return ChadVar.getString("error.internal");
+            return "An internal error has ocurred";
         }
         else if (i == 2)
         {

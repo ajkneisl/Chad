@@ -13,7 +13,7 @@ public class CatFact implements Command.Class  {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             try{
-                String fact = ChadVar.JSON_HANDLER.read("https://catfact.ninja/fact").getString("fact");
+                String fact = ChadVar.JSON_DEVICE.read("https://catfact.ninja/fact").getString("fact");
                 new MessageHandler(e.getChannel()).send(fact, "Cat Fact");
             } catch (Exception ee)
             {
@@ -24,7 +24,7 @@ public class CatFact implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("catfact", "Gives you a random catfact.");
         return Command.helpCommand(st, "Cat Fact", e);

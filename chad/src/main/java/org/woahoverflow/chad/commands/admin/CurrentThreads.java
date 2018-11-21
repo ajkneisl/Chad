@@ -23,14 +23,14 @@ public class CurrentThreads implements Command.Class{
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withTitle("Current Threads Running");
             StringBuilder sb = new StringBuilder();
-            ChadVar.THREAD_HANDLER.getMap().forEach((k, v) -> sb.append(k.getName()).append(" [").append(k.getLongID()).append("] ").append(v.size()).append("\n"));
+            ChadVar.THREAD_DEVICE.getMap().forEach((k, v) -> sb.append(k.getName()).append(" [").append(k.getLongID()).append("] ").append(v.size()).append("\n"));
             b.appendDesc(sb.toString());
             m.sendEmbed(b.build());
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("threads", "Displays all running threads for users.");
         return Command.helpCommand(st, "Current Threads", e);

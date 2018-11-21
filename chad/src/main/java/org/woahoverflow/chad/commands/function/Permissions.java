@@ -38,7 +38,7 @@ public class Permissions implements Command.Class  {
 
                 if (args.size() == i)
                 {
-                    m.sendError(ChadVar.getString("chad.function.permissions.role.invalid"));
+                    m.sendError("Invalid Role!");
                     return;
                 }
                 IRole role = r.get(0);
@@ -56,36 +56,39 @@ public class Permissions implements Command.Class  {
                     case "add":
                         if (!(args.size() >= 1))
                         {
-                            m.sendError(ChadVar.getString("arguments.invalid"));
+                            m.sendError("Invalid Arguments");
+                            return;
                         }
-                        int add = ChadVar.PERMISSION_HANDLER.addCommandToRole(role, args.get(0));
+                        int add = ChadVar.PERMISSION_DEVICE.addCommandToRole(role, args.get(0));
                         if (add == 6) {
                             m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
-                            m.sendError(ChadVar.PERMISSION_HANDLER.parseErrorCode(add));
+                            m.sendError(ChadVar.PERMISSION_DEVICE.parseErrorCode(add));
                         }
                         return;
                     case "remove":
                         if (!(args.size() >= 1))
                         {
-                            m.sendError(ChadVar.getString("arguments.invalid"));
+                            m.sendError("Invalid Arguments");
+                            return;
                         }
-                        int rem = ChadVar.PERMISSION_HANDLER.removeCommandFromRole(role, args.get(0));
+                        int rem = ChadVar.PERMISSION_DEVICE.removeCommandFromRole(role, args.get(0));
                         if (rem == 6) {
                             m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
-                            m.sendError(ChadVar.PERMISSION_HANDLER.parseErrorCode(rem));
+                            m.sendError(ChadVar.PERMISSION_DEVICE.parseErrorCode(rem));
                         }
                         return;
                     case "view":
                         if (!(args.size() >= 1))
                         {
-                            m.sendError(ChadVar.getString("arguments.invalid"));
+                            m.sendError("Invalid Arguments");
+                            return;
                         }
                         Document doc = ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc();
                         ArrayList<String> ar = (ArrayList<String>) doc.get(role.getStringID());
                         if (ar == null || ar.size() == 0) {
-                            m.sendError(ChadVar.getString("chad.function.permissions.none"));
+                            m.sendError("There's no permissions in this role!");
                             return;
                         }
                         EmbedBuilder b2 = new EmbedBuilder();
@@ -96,18 +99,20 @@ public class Permissions implements Command.Class  {
                         m.sendEmbed(b2.build());
                         return;
                     default:
-                        m.sendError(ChadVar.getString("arguments.invalid"));
+                        m.sendError("Invalid Arguments");
                         return;
                 }
             }
-            m.sendError(ChadVar.getString("arguments.invalid"));
+            m.sendError("Invalid Arguments");
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("View at website", "https://bot.shoganeko.me/permissions");
+        st.put("perm role <role name> add <command>", "Adds a Chad command to a Discord role.");
+        st.put("perm role <role name> remove <command>", "Removes a Chad command to a Discord role.");
+        st.put("perm role <role name> view", "Displays all Chad commands tied to that Discord role.");
         return Command.helpCommand(st, "Permissions", e);
     }
 }

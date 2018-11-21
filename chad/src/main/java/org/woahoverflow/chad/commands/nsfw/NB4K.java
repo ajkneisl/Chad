@@ -24,7 +24,7 @@ public class NB4K implements Command.Class  {
             }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("4k Pornography [NSFW]");
-            b.withImage(ChadVar.JSON_HANDLER.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
+            b.withImage(ChadVar.JSON_DEVICE.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
             b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withFooterText(Util.getTimeStamp());
             new MessageHandler(e.getChannel()).sendEmbed(b.build());
@@ -32,7 +32,7 @@ public class NB4K implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("4k", "Gets 4k Pornographic Images");
         return Command.helpCommand(st, "4k", e);

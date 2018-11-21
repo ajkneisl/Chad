@@ -36,18 +36,18 @@ public class UserLeaveJoin
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Join Time", format.format(date), true);
 
-        m.sendLog(b.build(), ChadVar.DATABASE_HANDLER, g);
+        m.sendLog(b.build(), ChadVar.DATABASE_DEVICE, g);
 
 
-        if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "join_msg_on"))
+        if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "join_msg_on"))
         {
-            String joinMsgCh = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "join_message_ch");
+            String joinMsgCh = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_message_ch");
             if (!joinMsgCh.equalsIgnoreCase("none")) {
                 Long id = Long.parseLong(joinMsgCh);
                 IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
                 if (!ch.isDeleted())
                 {
-                    String msg = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "join_message");
+                    String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_message");
                     msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
                     new MessageHandler(ch).sendMessage(msg);
                 }
@@ -62,7 +62,7 @@ public class UserLeaveJoin
 
         // you probably shouldnt put code below this comment
 
-        String joinRoleStringID = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "join_role");
+        String joinRoleStringID = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_role");
         Long joinRoleID = Long.parseLong(joinRoleStringID);
         List<IRole> botRoles = ChadBot.cli.getOurUser().getRolesForGuild(e.getGuild());
         IRole joinRole = e.getGuild().getRoleByID(joinRoleID);
@@ -88,7 +88,7 @@ public class UserLeaveJoin
         }
 
         // assign the role
-        if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "role_on_join")) {
+        if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "role_on_join")) {
             if (!joinRoleStringID.equals("none")) {
                 e.getUser().addRole(joinRole);
             }
@@ -111,18 +111,18 @@ public class UserLeaveJoin
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Leave Time", format.format(date), true);
 
-        m.sendLog(b.build(), ChadVar.DATABASE_HANDLER, g);
+        m.sendLog(b.build(), ChadVar.DATABASE_DEVICE, g);
 
-        if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "leave_msg_on"))
+        if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "leave_msg_on"))
         {
-            String leaveMsgCh = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "leave_message_ch");
+            String leaveMsgCh = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "leave_message_ch");
             if (!leaveMsgCh.equalsIgnoreCase("none"))
             {
                 Long id = Long.parseLong(leaveMsgCh);
                 IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
                 if (!ch.isDeleted())
                 {
-                    String msg = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "leave_message");
+                    String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "leave_message");
                     msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
                     new MessageHandler(ch).sendMessage(msg);
                 }

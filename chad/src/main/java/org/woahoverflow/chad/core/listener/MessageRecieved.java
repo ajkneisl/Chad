@@ -38,7 +38,7 @@ public class MessageRecieved
         args.remove(0);
 
         // If the user
-        if (!ChadVar.THREAD_HANDLER.allowThread(e.getAuthor()))
+        if (!ChadVar.THREAD_DEVICE.allowThread(e.getAuthor()))
             return;
 
         ChadVar.COMMANDS.forEach((k, v) -> {
@@ -47,26 +47,26 @@ public class MessageRecieved
                 Future<?> thread;
 
                 // if the command is developer only, and the user is NOT a developer, deny them access
-                if (v.isDevOnly && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor()))
+                if (v.isDevOnly && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor()))
                 {
-                    new MessageHandler(e.getChannel()).sendError(ChadVar.getString("denied.permission.developer"));
+                    new MessageHandler(e.getChannel()).sendError("This command is developer only!");
                     return;
                 }
 
                 // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-                if (!ChadVar.PERMISSION_HANDLER.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+                if (!ChadVar.PERMISSION_DEVICE.userHasPermission(k, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
-                    new MessageHandler(e.getChannel()).sendError(ChadVar.getString("denied.permission.command"));
+                    new MessageHandler(e.getChannel()).sendError("You don't have permission for this command!");
                     return;
                 }
 
                 // if there is only 1 argument, and its equal to "help", show the commands help information
                 if (args.size() == 1 && args.get(0).equalsIgnoreCase("help"))
-                    thread = ChadVar.EXECUTOR_POOL.submit(v.commandClass.help(e, args));
+                    thread = ChadVar.EXECUTOR_POOL.submit(v.commandClass.help(e));
                 else // otherwise, run the command
                     thread = ChadVar.EXECUTOR_POOL.submit(v.commandClass.run(e, args));
                 // add the command thread to the handler
-                ChadVar.THREAD_HANDLER.addThread(thread, e.getAuthor());
+                ChadVar.THREAD_DEVICE.addThread(thread, e.getAuthor());
             }
         });
     }

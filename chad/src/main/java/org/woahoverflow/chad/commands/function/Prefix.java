@@ -36,7 +36,7 @@ public class Prefix implements Command.Class  {
                     new MessageHandler(e.getChannel()).sendError("Prefix can't be over 12 characters long!");
                 }
                 m.sendConfigLog("Prefix", args.get(1), prefix, e.getAuthor(), e.getGuild());
-                ChadVar.DATABASE_HANDLER.set(e.getGuild(), "prefix", args.get(1));
+                ChadVar.DATABASE_DEVICE.set(e.getGuild(), "prefix", args.get(1));
                 m.send("Your prefix is now " + args.get(1), "Changed Prefix");
                 ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
                 return;
@@ -47,7 +47,7 @@ public class Prefix implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("prefix", "Your prefix.");
         st.put("prefix set <string>", "Sets the prefix.");

@@ -26,14 +26,14 @@ public class RedditNew implements Command.Class{
             JSONObject post;
             try {
                 int index = 0;
-                post = ChadVar.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
                         .getJSONObject("data");
                 while (post.getBoolean("stickied")) {
                     index++;
-                    post = ChadVar.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                    post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)
@@ -64,7 +64,7 @@ public class RedditNew implements Command.Class{
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rnew <subreddit>", "Displays the most recent post from a subreddit.");
         return Command.helpCommand(st, "Reddit New", e);

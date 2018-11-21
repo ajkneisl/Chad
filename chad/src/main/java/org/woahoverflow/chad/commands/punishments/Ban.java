@@ -87,9 +87,9 @@ public class Ban implements Command.Class  {
                 sb2.append("no reason");
             }
 
-            if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "ban_msg_on"))
+            if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "ban_msg_on"))
             {
-                String msg = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "ban_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
+                String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "ban_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
                 if (!user.isBot())
                     new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(msg).build();
             }
@@ -110,7 +110,7 @@ public class Ban implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("ban <user>", "Bans a user with no reason.");
         st.put("ban <user> <reason>", "Bans a user with a specified reason.");

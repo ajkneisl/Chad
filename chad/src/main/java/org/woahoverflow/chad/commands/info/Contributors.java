@@ -20,7 +20,7 @@ public class Contributors implements Command.Class {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             EmbedBuilder b = new EmbedBuilder();
-            JSONArray o = ChadVar.JSON_HANDLER.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
+            JSONArray o = ChadVar.JSON_DEVICE.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("view"))
             {
                 JSONObject object = null;
@@ -60,9 +60,10 @@ public class Contributors implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("contributors", "Gets all contributors that've committed to Chad.");
+        st.put("contributors view <contributor name>", "Views that contributor's profile.");
         return Command.helpCommand(st, "Contributors", e);
     }
 }

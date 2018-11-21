@@ -36,13 +36,12 @@ public class Cache implements Command.Class{
                 case "recacheall":
                     ChadVar.CACHE_DEVICE.reCacheAll();
                     new MessageHandler(e.getChannel()).send("ReCached all guilds", "Caching Manager");
-                    return;
             }
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("cache", "Giving information about caching.");
         st.put("cache recache", "ReCaches current guild.");

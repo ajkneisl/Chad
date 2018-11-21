@@ -18,14 +18,14 @@ public class Help implements Command.Class {
             for (Command.Category category : Command.Category.values()) {
                 if (category == Command.Category.NSFW && !e.getChannel().isNSFW())
                     continue;
-                if (category == Command.Category.ADMIN && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor())) // no admin commands (unless admin)
+                if (category == Command.Category.ADMIN && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor())) // no admin commands (unless admin)
                     continue;
                 sb.append("\n").append(Util.fixEnumString(category.toString().toLowerCase())).append(": ");
                 StringBuilder scuffed_builder = new StringBuilder();
                 for (String k : ChadVar.COMMANDS.keySet())
                 {
                     Command.Data meta = ChadVar.COMMANDS.get(k);
-                    if (meta.category == Command.Category.ADMIN && !ChadVar.PERMISSION_HANDLER.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
+                    if (meta.category == Command.Category.ADMIN && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
                         continue;
                     if (meta.category != category)
                         continue;
@@ -39,7 +39,7 @@ public class Help implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("help", "Displays all commands Chad has to offer.");
         return Command.helpCommand(st, "Help", e);

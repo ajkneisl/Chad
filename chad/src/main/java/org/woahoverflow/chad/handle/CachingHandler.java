@@ -34,7 +34,7 @@ public class CachingHandler
         }
     }
     private final IDiscordClient cli;
-    private final MongoCollection<Document> col = ChadVar.DATABASE_HANDLER.getCollection();
+    private final MongoCollection<Document> col = ChadVar.DATABASE_DEVICE.getCollection();
     public CachingHandler(IDiscordClient cli)
     {
         this.cli = cli;
@@ -47,21 +47,21 @@ public class CachingHandler
         {
             return;
         }
-        ChadVar.UI_HANDLER.addLog("Caching guild '"+guild.getStringID()+"'.", UIHandler.LogLevel.CACHING);
+        ChadVar.UI_DEVICE.addLog("Caching guild '"+guild.getStringID()+"'.", UIHandler.LogLevel.CACHING);
         ChadVar.GUILD_CACHE.put(guild, new CachedGuild(guild, get));
     }
 
     public void unCacheGuild(IGuild guild)
     {
-        ChadVar.UI_HANDLER.addLog("UnCached guild '"+guild.getStringID()+"'.", UIHandler.LogLevel.CACHING);
+        ChadVar.UI_DEVICE.addLog("UnCached guild '"+guild.getStringID()+"'.", UIHandler.LogLevel.CACHING);
         ChadVar.GUILD_CACHE.remove(guild);
     }
 
-    public void cacheAll()
+    private void cacheAll()
     {
-        ChadVar.UI_HANDLER.addLog("ReCaching all guilds.", UIHandler.LogLevel.CACHING);
+        ChadVar.UI_DEVICE.addLog("ReCaching all guilds.", UIHandler.LogLevel.CACHING);
         ChadVar.LAST_CACHE_ALL = Util.getTimeStamp();
-        ChadVar.UI_HANDLER.update();
+        ChadVar.UI_DEVICE.update();
         cli.getGuilds().forEach(this::cacheGuild);
     }
 

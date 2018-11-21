@@ -99,7 +99,7 @@ public class ModifyPresence implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("modpresence <string>", "Changes the bots rich presence message.");
         st.put("modpresence status <status>", "Changes the bots status.");

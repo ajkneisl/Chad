@@ -20,7 +20,6 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -28,39 +27,45 @@ import java.util.concurrent.Executors;
 
 public class ChadVar
 {
+    // Used in ModPresence
     public static StatusType STATUS_TYPE = StatusType.ONLINE;
     public static String CURRENT_STATUS = "";
-    public static UIHandler UI_HANDLER;
-    public static CachingHandler CACHE_DEVICE;
-    public static final HashMap<String, Command.Data> COMMANDS = new HashMap<>();
-    public static JSONHandler JSON_HANDLER;
-    public static DatabaseHandler DATABASE_HANDLER;
-    public static final ExecutorService EXECUTOR_POOL = Executors.newFixedThreadPool(30);
-    static boolean ALLOW_UI = true;
-    public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
     public static int ROTATION_TIME = 60000*5; // 5 minutes
     public static boolean ROTATE_PRESENCE = true;
     public static final List<String> PRESENCE_ROTATION = new ArrayList<>();
-    public static String LAST_CACHE_ALL = "NCA"; // NCA = Not Cached All
-    public static final PermissionHandler PERMISSION_HANDLER = new PermissionHandler();
-    public static final ThreadCountHandler THREAD_HANDLER = new ThreadCountHandler();
+
+    // Devices
+    static void init() // for devices that need to use the client
+    {
+        JSON_DEVICE = new JSONHandler().forceCheck();
+        DATABASE_DEVICE = new DatabaseHandler(JSON_DEVICE.get("uri_link"));
+        CACHE_DEVICE = new CachingHandler(ChadBot.cli);
+        PERMISSION_DEVICE = new PermissionHandler();
+        THREAD_DEVICE = new ThreadCountHandler();
+        UI_DEVICE = new UIHandler(ChadBot.cli);
+    }
+
+    public static UIHandler UI_DEVICE;
+    public static CachingHandler CACHE_DEVICE;
+    public static JSONHandler JSON_DEVICE;
+    public static DatabaseHandler DATABASE_DEVICE;
+    public static PermissionHandler PERMISSION_DEVICE;
+    public static ThreadCountHandler THREAD_DEVICE;
+
+    // HashMaps
+    public static final ConcurrentHashMap<String, Command.Data> COMMANDS = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
     public static final ConcurrentHashMap<IGuild, CachingHandler.CachedGuild> GUILD_CACHE = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, String> STRINGS = new ConcurrentHashMap<>();
+
+    // Important Stuff
+    public static final ExecutorService EXECUTOR_POOL = Executors.newFixedThreadPool(30);
+
+    // UI Stuff
+    public static String LAST_CACHE_ALL = "NCA"; // NCA = Not Cached All
+
+
 
     // static blocks
-    static {
-        STRINGS.put("error.generic", "An unknown error has occurred.");
-        STRINGS.put("error.internal", "An internal error has occurred.");
-        STRINGS.put("arguments.invalid", "Invalid arguments.");
-        STRINGS.put("arguments.more", "Not enough arguments.");
-        STRINGS.put("arguments.less", "Too many arguments.");
-        STRINGS.put("denied.generic", "No access. Contact a system administrator for assistance.");
-        STRINGS.put("denied.permission.generic", "You don't have permission for this!");
-        STRINGS.put("denied.permission.command", "You don't have permission to access this command!");
-        STRINGS.put("denied.permission.developer", "Oh noes! Looks like you're not a developer, too bad.");
-        STRINGS.put("chad.function.permissions.none", "There's no permissions there!");
-        STRINGS.put("chad.function.permissions.role.invalid", "Invalid role!");
-    }
     static {
         PRESENCE_ROTATION.add("hello!");
         PRESENCE_ROTATION.add("gamers");
@@ -94,6 +99,7 @@ public class ChadVar
         COMMANDS.put("catfact", new Command.Data(Command.Category.FUN, false, new CatFact()));
         COMMANDS.put("rrl", new Command.Data(Command.Category.FUN, false, new RussianRoulette()));
         COMMANDS.put("wr", new Command.Data(Command.Category.FUN, false, new WordReverse()));
+        COMMANDS.put("rps", new Command.Data(Command.Category.FUN, false, new RockPaperScissors()));
 
         // INFO!
         COMMANDS.put("help", new Command.Data(Command.Category.INFO, false, new Help()));
@@ -128,31 +134,5 @@ public class ChadVar
         COMMANDS.put("systeminfo", new Command.Data(Command.Category.ADMIN, true, new SystemInfo()));
         COMMANDS.put("cache", new Command.Data(Command.Category.ADMIN, true, new Cache()));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.ADMIN,true, new Shutdown()));
-    }
-
-    // just because they use the client
-    static void setCacheDevice()
-    {
-        CACHE_DEVICE = new CachingHandler(ChadBot.cli);
-    }
-
-    static void setUiHandler()
-    {
-        UI_HANDLER = new UIHandler(ChadBot.cli);
-    }
-
-    static void setDatabaseHandler()
-    {
-        DATABASE_HANDLER = new DatabaseHandler(JSON_HANDLER.get("uri_link"));
-    }
-
-    static void setJsonHandler()
-    {
-        JSON_HANDLER = new JSONHandler().forceCheck();
-    }
-
-    // get a string from STRINGS
-    public static String getString(String key) {
-        return ChadVar.STRINGS.get(key);
     }
 }

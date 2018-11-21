@@ -28,14 +28,14 @@ public class RedditTop implements Command.Class {
             JSONObject post;
             try {
                 int index = 0;
-                post = ChadVar.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
+                post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
                         .getJSONObject("data");
                 while (post.getBoolean("stickied")) {
                     index++;
-                    post = ChadVar.JSON_HANDLER.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
+                    post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)
@@ -66,7 +66,7 @@ public class RedditTop implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rtop <subreddit>", "Displays the hottest post from a subreddit.");
         return Command.helpCommand(st, "Reddit Top", e);

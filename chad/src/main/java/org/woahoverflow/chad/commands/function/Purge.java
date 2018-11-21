@@ -56,7 +56,7 @@ public class Purge implements Command.Class  {
         };
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("purge <amount of messages>", "Removes a specific amount of messages from the current channel.");
         return Command.helpCommand(st, "Purge", e);

@@ -10,12 +10,12 @@ public class ChadException
         for (StackTraceElement st : throwable.getStackTrace()) {
             b.append(st.toString()).append("\n");
         }
-        ChadVar.UI_HANDLER.newError(error + "\n" + b.toString());
-        ChadVar.UI_HANDLER.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
+        ChadVar.UI_DEVICE.newError(error + "\n" + b.toString());
+        ChadVar.UI_DEVICE.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
     }
     public static void error(String error)
     {
-        ChadVar.UI_HANDLER.newError(error);
-        ChadVar.UI_HANDLER.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
+        ChadVar.UI_DEVICE.newError(error);
+        ChadVar.UI_DEVICE.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
     }
 }

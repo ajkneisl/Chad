@@ -37,7 +37,12 @@ public class OnReady
         });
 
         // UI Begin
-        ChadVar.UI_HANDLER.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
-        ChadVar.UI_HANDLER.update();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+        ChadVar.UI_DEVICE.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
+        ChadVar.UI_DEVICE.update();
     }
 }

@@ -86,9 +86,9 @@ public class Kick implements Command.Class  {
                 sb2.append("no reason");
             }
 
-            if (ChadVar.DATABASE_HANDLER.getBoolean(e.getGuild(), "kick_msg_on"))
+            if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "kick_msg_on"))
             {
-                String msg = ChadVar.DATABASE_HANDLER.getString(e.getGuild(), "kick_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
+                String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "kick_message").replaceAll("&guild&", e.getGuild().getName()).replaceAll("&user&", user.getName()).replaceAll("&reason&", sb2.toString().trim());
                 if (!user.isBot())
                     new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(msg).build();
             }
@@ -109,7 +109,7 @@ public class Kick implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("kick <user>", "Kicks a user with no reason.");
         st.put("kick <user> <reason>", "Kicks a user with a specified reason.");

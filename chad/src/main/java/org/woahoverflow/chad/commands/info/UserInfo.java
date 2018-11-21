@@ -49,7 +49,7 @@ public class UserInfo implements Command.Class {
             }
             EmbedBuilder b = new EmbedBuilder();
             b.withTitle("User : " + u.getName());
-            String roleString = "";
+            String roleString;
             if (roles.toString().length() == 0)
                 roleString = "none";
             else
@@ -77,9 +77,9 @@ public class UserInfo implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("userinfo <user>", "Gives information about the mentioned user.");
+        st.put("userinfo <user/@user>", "Gives information about the mentioned user.");
         return Command.helpCommand(st, "User Info", e);
     }
 }

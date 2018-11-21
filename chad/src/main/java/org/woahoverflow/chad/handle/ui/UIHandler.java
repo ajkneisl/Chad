@@ -107,6 +107,7 @@ public class UIHandler
         panel.reCacheButton.addActionListener((ActionEvent) -> ChadVar.CACHE_DEVICE.cacheGuild(guild));
     }
 
+    @SuppressWarnings("all")
     private void beginMainFrame()
     {
         mainpanel.getAllGuilds.addActionListener((ActionEvent) -> {
@@ -119,14 +120,20 @@ public class UIHandler
         mainpanel.exitButton.addActionListener((ActionEvent) -> System.exit(0));
         mainpanel.RefreshButton.addActionListener((ActionEvent) -> update());
         mainpanel.RefreshButton2.addActionListener((ActionEvent) -> ChadVar.CACHE_DEVICE.reCacheAll());
+
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
                 java.lang.management.ManagementFactory.getOperatingSystemMXBean();
 
         String memory = Util.humanReadableByteCount(os.getTotalPhysicalMemorySize(), true);
 
         int available_processors = os.getAvailableProcessors();
-        IShard shard = ChadBot.cli.getShards().get(0);
-        long ping = shard.getResponseTime();
+        long ping = 69;
+        try {
+            ping = ChadBot.cli.getShards().get(0).getResponseTime();
+        } catch (IndexOutOfBoundsException e)
+        {
+            // throwaway :(
+        }
 
         mainpanel.guildGo.addActionListener((ActionEvent) ->
         {
@@ -193,8 +200,8 @@ public class UIHandler
         mainpanel.biggestGuildValue.setText(getStats(cli).get("biggestGuild"));
         mainpanel.botToUserVal.setText(getStats(cli).get("botToPlayer"));
         mainpanel.lastReCacheAllValue.setText(ChadVar.LAST_CACHE_ALL);
-        ChadVar.THREAD_HANDLER.getMap().forEach((k, v) -> v.forEach((val) -> add()));
-        mainpanel.threadVal.setText(Integer.toString(ChadVar.THREAD_HANDLER.getMap().size()));
+        ChadVar.THREAD_DEVICE.getMap().forEach((k, v) -> v.forEach((val) -> add()));
+        mainpanel.threadVal.setText(Integer.toString(ChadVar.THREAD_DEVICE.getMap().size()));
         if (ChadBot.cli.isReady() && ChadBot.cli.getOurUser().getPresence().getText().isPresent())
             mainpanel.presenceVal.setText(ChadBot.cli.getOurUser().getPresence().getText().get());
         mainpanel.shardRespTimeVal.setText(ping + "ms");

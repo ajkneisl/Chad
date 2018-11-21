@@ -16,9 +16,7 @@ public class GuildJoinLeave
     @EventSubscriber
     public void joinGuild(GuildCreateEvent e)
     {
-        ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
-        DatabaseHandler dbb = ChadVar.DATABASE_HANDLER;
-        if (!dbb.exists(e.getGuild()))
+        if (!ChadVar.DATABASE_DEVICE.exists(e.getGuild()))
         {
             Document doc = new Document();
 
@@ -48,17 +46,19 @@ public class GuildJoinLeave
             doc.append("join_message_ch", "none");
             doc.append("leave_message_ch", "none");
 
-            dbb.getCollection().insertOne(doc);
-            ChadVar.UI_HANDLER.loadGuild(e.getGuild());
-            ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+            ChadVar.DATABASE_DEVICE.getCollection().insertOne(doc);
+            ChadVar.UI_DEVICE.loadGuild(e.getGuild());
+            ChadVar.UI_DEVICE.addLog("<"+e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+            ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
         }
+        ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
     }
 
     @SuppressWarnings("unused")
     @EventSubscriber
     public void leaveGuild(GuildLeaveEvent e)
     {
-        DatabaseHandler databaseHandler = ChadVar.DATABASE_HANDLER;
+        DatabaseHandler databaseHandler = ChadVar.DATABASE_DEVICE;
         Document get = databaseHandler.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
         if (get == null)
@@ -68,6 +68,6 @@ public class GuildJoinLeave
 
         ChadVar.CACHE_DEVICE.unCacheGuild(e.getGuild());
 
-        ChadVar.UI_HANDLER.addLog("<"+e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
+        ChadVar.UI_DEVICE.addLog("<"+e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
     }
 }

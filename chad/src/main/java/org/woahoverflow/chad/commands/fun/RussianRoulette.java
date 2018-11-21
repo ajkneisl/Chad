@@ -17,10 +17,10 @@ import java.util.concurrent.TimeUnit;
 
 public class RussianRoulette implements Command.Class {
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args)
+    public Runnable help(MessageReceivedEvent e)
     {
         HashMap<String, String> st = new HashMap<>();
-        st.put("rrl <user>", "Plays russian roulette with a selected user.");
+        st.put("rrl <user/@user>", "Plays russian roulette with a selected user.");
         return Command.helpCommand(st, "Russian Roulette", e);
     }
 

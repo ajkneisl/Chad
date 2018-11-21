@@ -51,10 +51,9 @@ public class GuildInfo implements Command.Class{
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("logging set <true/false>", "Toggles the logging functionality.");
-        st.put("logging setchannel <channel name>", "Sets the logging channel.");
-        return Command.helpCommand(st, "Message", e);
+        st.put("guildinfo", "Gets information about the guild.");
+        return Command.helpCommand(st, "Guild Info", e);
     }
 }

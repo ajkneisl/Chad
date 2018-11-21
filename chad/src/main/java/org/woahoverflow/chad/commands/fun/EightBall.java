@@ -20,7 +20,7 @@ public class EightBall implements Command.Class  {
                 m.sendError("You didn't ask a question!");
                 return;
             }
-            JSONArray answers = ChadVar.JSON_HANDLER.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
+            JSONArray answers = ChadVar.JSON_DEVICE.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
 
             Random random = new Random();
             int index = random.nextInt(answers.length());
@@ -29,7 +29,7 @@ public class EightBall implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("8ball <question>", "The eight ball always answers your best questions.");
         return Command.helpCommand(st, "Eight Ball", e);

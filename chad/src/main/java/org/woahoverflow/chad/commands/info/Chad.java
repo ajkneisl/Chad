@@ -27,7 +27,7 @@ public class Chad implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("chad", "Gives information about the bot.");
         return Command.helpCommand(st, "Chad", e);

@@ -25,7 +25,7 @@ public class Random implements Command.Class {
             MessageHandler m = new MessageHandler(e.getChannel());
             if (args.size() == 0)
             {
-                help(e, args);
+                help(e);
                 return;
             }
 
@@ -56,7 +56,7 @@ public class Random implements Command.Class {
                     return;
                 case "quote":
                     try {
-                        JSONObject obj = ChadVar.JSON_HANDLER.read("https://talaikis.com/api/quotes/random/");
+                        JSONObject obj = ChadVar.JSON_DEVICE.read("https://talaikis.com/api/quotes/random/");
                         EmbedBuilder b = new EmbedBuilder();
                         b.withTitle("Random Quote");
                         b.appendField("Author", obj.getString("author"), true);
@@ -101,7 +101,7 @@ public class Random implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e, List<String> args) {
+    public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("random quote", "Gives random quote.");
         st.put("random number [max]", "Gives random number with an optional max value.");
