@@ -25,6 +25,7 @@ public class Permissions implements Command.Class  {
                 args.remove(0); // removes so it can get role name
                 StringBuilder b = new StringBuilder();
                 List<IRole> r = new ArrayList<>();
+                IRole role = null;
                 int i = 0;
                 int i1 = 0;
                 for (String s : args)
@@ -32,8 +33,16 @@ public class Permissions implements Command.Class  {
                     i++;
                     b.append(s).append(" ");
 
-                    r = RequestBuffer.request(() -> e.getGuild().getRolesByName(b.toString().trim())).get();
-                    if (!r.isEmpty()) break;
+                    r = RequestBuffer.request(() -> e.getGuild().getRoles()).get();
+                    for (IRole rol : r)
+                    {
+                        if (rol.getName().equalsIgnoreCase(b.toString().trim()))
+                        {
+                            role = rol;
+                            break;
+                        }
+                    }
+                    if (role != null) break;
                 }
 
                 if (args.size() == i)
@@ -41,7 +50,6 @@ public class Permissions implements Command.Class  {
                     m.sendError("Invalid Role!");
                     return;
                 }
-                IRole role = r.get(0);
 
                 // isolates next arguments
                 while (i > i1)
@@ -80,11 +88,6 @@ public class Permissions implements Command.Class  {
                         }
                         return;
                     case "view":
-                        if (!(args.size() >= 1))
-                        {
-                            m.sendError("Invalid Arguments");
-                            return;
-                        }
                         Document doc = ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc();
                         ArrayList<String> ar = (ArrayList<String>) doc.get(role.getStringID());
                         if (ar == null || ar.size() == 0) {
@@ -94,8 +97,8 @@ public class Permissions implements Command.Class  {
                         EmbedBuilder b2 = new EmbedBuilder();
                         b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
                         StringBuilder b3 = new StringBuilder();
-                        ar.forEach((v) -> b3.append(v).append(", "));
-                        b2.withDesc(b3.toString());
+                        ar.forEach((v) -> b3.append(", ").append(v));
+                        b2.withDesc(b3.toString().trim().replaceFirst(",", ""));
                         m.sendEmbed(b2.build());
                         return;
                     default:

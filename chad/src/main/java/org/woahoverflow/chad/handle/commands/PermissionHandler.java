@@ -72,12 +72,12 @@ public class PermissionHandler
         Document get = ChadVar.CACHE_DEVICE.getGuild(role.getGuild()).getDoc();
         if (get == null)
             return 1;
-        ArrayList<String> arr = (ArrayList<String>)get.get(role.getStringID());
+        ArrayList<String> arr = (ArrayList<String>) get.get(role.getStringID());
         if (arr == null || arr.isEmpty())
         {
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);
-            ChadVar.DATABASE_DEVICE.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.DATABASE_DEVICE.set(role.getGuild(), role.getStringID(), ar);
             ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
             return 6;
         }
@@ -86,7 +86,7 @@ public class PermissionHandler
                 return 2;
             ArrayList<String> ar = arr;
             ar.add(command);
-            ChadVar.DATABASE_DEVICE.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.DATABASE_DEVICE.set(role.getGuild(), role.getStringID(), ar);
             ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
             return 6;
         }
