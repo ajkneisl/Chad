@@ -5,6 +5,7 @@ import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CoinFlip implements Command.Class{
@@ -23,18 +24,30 @@ public class CoinFlip implements Command.Class{
                 return;
             }
 
-            int bet;
+            long bet;
             try {
-                bet = Integer.parseInt(args.get(0));
+                bet = Long.parseLong(args.get(0));
             } catch (NumberFormatException throwaway) {
                 new MessageHandler(e.getChannel()).sendError("Invalid Bet!");
                 return;
             }
 
-            Integer balance = (Integer) ChadVar.DATABASE_DEVICE.get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
+            if (!(bet > 0))
+            {
+                new MessageHandler(e.getChannel()).sendError("You can't use negative numbers!");
+                return;
+            }
+
+            long balance = (long) ChadVar.DATABASE_DEVICE.get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
             if (bet > balance)
             {
                 new MessageHandler(e.getChannel()).sendError("Your bet is too large!");
+                return;
+            }
+
+            if (bet+balance < 0)
+            {
+                new MessageHandler(e.getChannel()).sendError("Your balance is too big!\nPlease report this on https://woahoverflow.org/forums");
                 return;
             }
 
@@ -66,6 +79,8 @@ public class CoinFlip implements Command.Class{
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("coinflip <amount to bet> <tails/heads>", "College?");
+        return Command.helpCommand(st, "CoinFlip", e);
     }
 }

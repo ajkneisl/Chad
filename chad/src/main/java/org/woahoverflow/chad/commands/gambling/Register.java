@@ -19,7 +19,7 @@ public class Register implements Command.Class {
                 return;
             }
 
-            ChadVar.DATABASE_DEVICE.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", 0);
+            ChadVar.DATABASE_DEVICE.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", 0L);
             new MessageHandler(e.getChannel()).send("You've now got an account!", "Money");
         };
     }

@@ -5,6 +5,7 @@ import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Balance implements Command.Class {
@@ -23,6 +24,8 @@ public class Balance implements Command.Class {
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("balance", "See your balance.");
+        return Command.helpCommand(st, "Balance", e);
     }
 }
