@@ -49,7 +49,7 @@ public class ThreadCountHandler
         }
     }
 
-    public boolean allowThread(IUser user)
+    public final boolean allowThread(IUser user)
     {
         if (this.COUNT.get(user) == null)
         {
@@ -58,12 +58,12 @@ public class ThreadCountHandler
         else return this.COUNT.get(user).size() < 3;
     }
 
-    public Map<IUser, ArrayList<Future<?>>> getMap()
+    public final Map<IUser, ArrayList<Future<?>>> getMap()
     {
         return this.COUNT;
     }
 
-    public void addThread(Future<?> thread, IUser user)
+    public final void addThread(Future<?> thread, IUser user)
     {
         if (this.COUNT.containsKey(user))
         {

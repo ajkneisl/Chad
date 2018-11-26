@@ -1,36 +1,34 @@
 package org.woahoverflow.chad.commands.info;
 
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class Chad implements Command.Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Chad");
-            b.withDesc("by woahoveflow");
-            b.appendField("Uptime", ManagementFactory.getRuntimeMXBean().getUptime() / 60000 +" minutes", true);
-            b.appendField("Ping", e.getClient().getShards().get(0).getResponseTime()+"ms", true);
-            b.appendField("GitHub", "http://woahoverflow.org/github", false);
-            b.appendField("Website", "http://woahoverflow.org/chad", false);
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            new MessageHandler(e.getChannel()).sendEmbed(b.build());
+            // Creates an embed builder, and adds links etc to it.
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.withTitle("Chad");
+            embedBuilder.withDesc("by woahoveflow");
+            embedBuilder.appendField("Uptime", ManagementFactory.getRuntimeMXBean().getUptime() / 60000 +" minutes", true);
+            embedBuilder.appendField("Ping", e.getClient().getShards().get(0).getResponseTime()+"ms", true);
+            embedBuilder.appendField("GitHub", "http://woahoverflow.org/github", false);
+            embedBuilder.appendField("Website", "http://woahoverflow.org/chad", false);
+
+            // Sends
+            new MessageHandler(e.getChannel()).sendEmbed(embedBuilder);
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("chad", "Gives information about the bot.");
         return Command.helpCommand(st, "Chad", e);

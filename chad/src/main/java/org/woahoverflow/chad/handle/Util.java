@@ -28,7 +28,7 @@ public class Util
             int responseCode = con.getResponseCode();
             if (responseCode != 200)
             {
-                System.out.println("\nThere was an error sending a request to url : " + url);
+                System.out.println("\nThere was an throwError sending a request to url : " + url);
                 System.out.println("Response Code : " + responseCode);
             }
             BufferedReader in = new BufferedReader(

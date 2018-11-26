@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.core.listener;
 
+import java.security.SecureRandom;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -7,7 +8,6 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,7 +16,7 @@ public class OnReady
 {
     @SuppressWarnings("unused")
     @EventSubscriber
-    public void onReadyEvent(ReadyEvent e)
+    public final void onReadyEvent(ReadyEvent e)
     {
         e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "");
 
@@ -30,7 +30,7 @@ public class OnReady
                         return;
                     Object[] ar = ChadVar.PRESENCE_ROTATION.toArray();
                     int rotation = ar.length;
-                    ChadVar.CURRENT_STATUS = (String)ar[new Random().nextInt(rotation)];
+                    ChadVar.CURRENT_STATUS = (String)ar[new SecureRandom().nextInt(rotation)];
                     e.getClient().changePresence(ChadVar.STATUS_TYPE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
                 }
             }, 0, ChadVar.ROTATION_TIME); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work

@@ -15,7 +15,7 @@ public class MessageRecieved
 {
     @SuppressWarnings("unused")
     @EventSubscriber
-    public void messageRecieved(MessageReceivedEvent e)
+    public final void messageRecieved(MessageReceivedEvent e)
     {
         // Gets the message, then splits all the different parts with a space.
         String[] argArray = e.getMessage().getContent().split(" ");
@@ -47,7 +47,7 @@ public class MessageRecieved
                 Future<?> thread;
 
                 // if the command is developer only, and the user is NOT a developer, deny them access
-                if (v.isDevOnly && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor()))
+                if (v.isDeveloperOnly && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor()))
                 {
                     new MessageHandler(e.getChannel()).sendError("This command is developer only!");
                     return;

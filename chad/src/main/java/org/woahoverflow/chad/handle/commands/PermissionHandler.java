@@ -38,11 +38,12 @@ public class PermissionHandler
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
         // developers should always have permission for developer commands
-        if (meta.isDevOnly && userIsDeveloper(user))
+        if (meta.isDeveloperOnly && userIsDeveloper(user))
             return true;
 
-        // all users should have access to commands in the fun and info category
-        if (meta.category == Command.Category.FUN.FUN || meta.category == Command.Category.INFO || meta.category == Command.Category.NSFW)
+        // all users should have access to commands in the fun and info commandCategory
+        if (meta.commandCategory == Command.Category.FUN.FUN || meta.commandCategory == Command.Category.INFO || meta.commandCategory
+            == Command.Category.NSFW)
             return true;
 
         // loop through the users roles, if the role has permission for the command, return true
@@ -125,7 +126,7 @@ public class PermissionHandler
     {
         if (i == 1)
         {
-            return "An internal error has ocurred";
+            return "An internal throwError has ocurred";
         }
         else if (i == 2)
         {
@@ -139,6 +140,6 @@ public class PermissionHandler
         {
             return "There's nothing to remove!";
         }
-        return "An internal error has occurred!";
+        return "An internal throwError has occurred!";
     }
 }

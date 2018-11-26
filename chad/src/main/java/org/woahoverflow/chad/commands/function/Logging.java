@@ -1,98 +1,105 @@
 package org.woahoverflow.chad.commands.function;
 
+import java.util.stream.Collectors;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.handle.obj.IChannel;;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class Logging implements Command.Class  {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler m = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
 
-            if (!e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+            // Checks if there are any arguments
+            if (args.isEmpty())
             {
-                m.sendError("You don't have permissions for this!");
-                return;
-            }
-            if (args.size() == 0)
-            {
-                m.sendError("Invalid Arguments!");
+                messageHandler.sendError("Invalid Arguments!");
                 return;
             }
 
+            // Disables or Enables logging in the guild
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("set"))
             {
-                String bool;
-
-                if (args.get(1).equalsIgnoreCase("on"))
-                    bool = "On";
-                else if (args.get(1).equalsIgnoreCase("off"))
-                    bool = "Off";
-                else
+                if (args.get(1).equalsIgnoreCase("off") || args.get(1).equalsIgnoreCase("on"))
                 {
-                    m.sendError("You didn't input on or off!");
+                    // Sets the on or off
+                    String bool = args.get(1).equalsIgnoreCase("on") ? "off" : "on";
+
+                    // Sets an actual boolean value
+                    boolean actualBoolean = bool.equalsIgnoreCase("off");
+
+                    // Sets in the database
+                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "logging", actualBoolean);
+
+                    // Sends a log
+                    MessageHandler.sendConfigLog("Logging", bool, Boolean.toString(ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild());
+
+                    // Sends the message
+                    messageHandler.send("Changed logging to " + bool, "Changed Logging");
                     return;
                 }
-
-                boolean abool = false;
-                if (bool.equalsIgnoreCase("on"))
-                    abool = true;
-                ChadVar.DATABASE_DEVICE.set(e.getGuild(), "logging", abool);
-                m.sendConfigLog("Logging", bool, Boolean.toString(ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild());
-                m.send("Changed logging to " + bool, "Changed Logging");
-
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
 
             if (args.size() >= 2 && args.get(0).equalsIgnoreCase("setchannel"))
             {
+                // Isolates the channel name
                 args.remove(0);
 
-                StringBuilder b = new StringBuilder();
-                for (String s : args)
-                {
-                    b.append(s).append(" ");
-                }
+                // Builds the channel name
+                String formattedString = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
-                if (e.getGuild().getChannelsByName(b.toString().trim()).isEmpty())
+                // Makes sure the channel exists
+                if (e.getGuild().getChannelsByName(formattedString.trim()).isEmpty())
                 {
                     new MessageHandler(e.getChannel()).sendError("Invalid Channel");
                     return;
                 }
 
-                IChannel ch = e.getGuild().getChannelsByName(b.toString().trim()).get(0);
+                IChannel channel = e.getGuild().getChannelsByName(formattedString.trim()).get(0);
 
-                if (ch == null)
+                // Makes sure it's not null
+                if (channel == null)
                 {
-                    m.sendError("Invalid Channel");
+                    messageHandler.sendError("Invalid Channel");
                     return;
                 }
 
-                if (ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "logging_channel").equalsIgnoreCase("none"))
+                // Gets the current logging channel and makes sure it isn't null
+                String loggingChannel = ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc().getString("logging_channel");
+                if (loggingChannel == null)
                 {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), "none", e.getAuthor(), e.getGuild());
+                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                    return;
                 }
-                else {
-                    m.sendConfigLog("Logging Channel", b.toString().trim(), e.getGuild().getChannelByID(Long.parseLong(ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "logging_channel"))).getName(), e.getAuthor(), e.getGuild());
+
+                // Sends the log
+                if (loggingChannel.equalsIgnoreCase("none"))
+                {
+                    MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), "none", e.getAuthor(), e.getGuild());
+                } else {
+                    MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
                 }
-                m.send("Changed logging channel to " + b.toString().trim(), "Changed Logging Channel");
-                ChadVar.DATABASE_DEVICE.set(e.getGuild(), "logging_channel", ch.getStringID());
+
+                // Send Message
+                messageHandler.send("Changed logging channel to " + formattedString.trim(), "Changed Logging Channel");
+                ChadVar.DATABASE_DEVICE.set(e.getGuild(), "logging_channel", channel.getStringID());
                 return;
             }
 
-            m.sendError("Invalid Arguments");
+            messageHandler.sendError("Invalid Arguments");
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("logging set <on/off>", "Toggles the logging functionality.");
         st.put("logging setchannel <channel name>", "Sets the logging channel.");

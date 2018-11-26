@@ -1,52 +1,63 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.handle.ui.ChadError;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class RedditNew implements Command.Class{
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            if (args.size() < 1)
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // If there's no arguments
+            if (args.isEmpty())
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid arguments.");
+                new MessageHandler(e.getChannel()).sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
 
+            // Gets a new post from the selected sub-reddit
             JSONObject post;
             try {
+                // Gets post
                 int index = 0;
                 post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                    .getJSONObject("data")
+                    .getJSONArray("children")
+                    .getJSONObject(index)
+                    .getJSONObject("data");
+                // Makes sure the post isn't stickied
+                while (post.getBoolean("stickied"))
+                {
+                    index++;
+                    post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
                         .getJSONObject("data");
-                while (post.getBoolean("stickied")) {
-                    index++;
-                    post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/new.json")
-                            .getJSONObject("data")
-                            .getJSONArray("children")
-                            .getJSONObject(index)
-                            .getJSONObject("data");
                 }
-            } catch (Exception e1) {
+            } catch (JSONException e1) {
+                ChadError
+                    .throwError("Error with RedditNew in guild " + e.getGuild().getStringID(), e1);
+                return;
+            } catch (RuntimeException e1) {
                 new MessageHandler(e.getChannel()).sendError("Invalid subreddit.");
                 return;
             }
 
+            // If the post is over 18 and the channel isn't Nsfw, deny.
             if (post.getBoolean("over_18") && !e.getChannel().isNSFW())
             {
-                new MessageHandler(e.getChannel()).sendError("Post is NSFW!");
+                messageHandler.sendError(MessageHandler.CHANNEL_NOT_NSFW);
                 return;
             }
 
@@ -56,15 +67,13 @@ public class RedditNew implements Command.Class{
             b.appendField("Score", post.getInt("score") + " (" + post.getInt("ups") + "/" + post.getInt("downs") + ")", true);
             b.appendField("Comments", Integer.toString(post.getInt("num_comments")), true);
             b.withImage(post.getString("url"));
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withUrl("https://reddit.com" + post.getString("permalink"));
-            b.withFooterText(Util.getTimeStamp());
-            new MessageHandler(e.getChannel()).sendEmbed(b.build());
+            messageHandler.sendEmbed(b);
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rnew <subreddit>", "Displays the most recent post from a subreddit.");
         return Command.helpCommand(st, "Reddit New", e);

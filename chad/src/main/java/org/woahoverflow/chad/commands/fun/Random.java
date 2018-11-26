@@ -1,16 +1,17 @@
 package org.woahoverflow.chad.commands.fun;
 
 import com.google.common.net.HttpHeaders;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.stream.Collectors;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -20,88 +21,103 @@ import java.util.List;
 
 public class Random implements Command.Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler m = new MessageHandler(e.getChannel());
-            if (args.size() == 0)
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // Makes sure there's arguments
+            if (args.isEmpty())
             {
-                help(e);
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
-
+            
             switch (args.get(0).toLowerCase())
             {
                 case "number":
-                    java.util.Random rand = new java.util.Random();
+                    SecureRandom rand = new SecureRandom();
+                    
+                    // If the args size is 2, custom number was inputted
                     if (args.size() == 2)
                     {
+                        // Try block is to catch if the argument wasn't a number
                         try {
-                            int i2 = Integer.parseInt(args.get(1));
+                            int i = Integer.parseInt(args.get(1));
 
-                            if (i2 == 0)
+                            // Makes sure the input isn't 0
+                            if (i == 0)
                             {
-                                m.sendError("Cannot use 0!");
+                                messageHandler.sendError("Cannot use 0!");
                                 return;
                             }
 
-                            m.send("Number is : " + rand.nextInt(i2), "Random Number");
-                        } catch (NumberFormatException ee)
+                            // Gets the random numbers and sends
+                            messageHandler.send("Number is : " + rand.nextInt(i), "Random Number");
+                        } catch (NumberFormatException throwaway)
                         {
-                            new MessageHandler(e.getChannel()).sendError("Invalid Number");
+                            messageHandler.sendError("Invalid Number");
                         }
                         return;
                     }
 
-                    m.send("Number is : " + rand.nextInt(100), "Random Number");
+                    // Sends a random number within 100
+                    messageHandler.send("Number is : " + rand.nextInt(100), "Random Number");
                     return;
                 case "quote":
-                    try {
-                        JSONObject obj = ChadVar.JSON_DEVICE.read("https://talaikis.com/api/quotes/random/");
-                        EmbedBuilder b = new EmbedBuilder();
-                        b.withTitle("Random Quote");
-                        b.appendField("Author", obj.getString("author"), true);
-                        // Switches category's first letter to be uppercase
-                        String s1 = obj.getString("cat").substring(0, 1).toUpperCase();
-                        String cap = s1 + obj.getString("cat").substring(1);
-                        b.appendField("Category", cap, true);
-                        b.appendField("Quote", obj.getString("quote"), false);
-                        b.withFooterText(Util.getTimeStamp());
-                        b.withColor(new Color(new java.util.Random().nextFloat(), new java.util.Random().nextFloat(), new java.util.Random().nextFloat()));
-                        m.sendEmbed(b.build());
-                    } catch (Exception ee)
-                    {
-                        ee.printStackTrace();
-                        m.sendError("API Exception!");
-                    }
+                    // Gets a random quote
+                    JSONObject obj = ChadVar.JSON_DEVICE.read("https://talaikis.com/api/quotes/random/");
+                    
+                    // Builds the embed
+                    EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.withTitle("Random Quote");
+                    embedBuilder.appendField("Author", obj.getString("author"), true);
+
+                    // Switches commandCategory's first letter to be uppercase
+                    String s1 = obj.getString("cat").substring(0, 1).toUpperCase();
+                    String cap = s1 + obj.getString("cat").substring(1);
+
+                    embedBuilder.appendField("Category", cap, true);
+                    embedBuilder.appendField("Quote", obj.getString("quote"), false);
+
+                    // Sends the embed
+                    messageHandler.sendEmbed(embedBuilder);
                     return;
                 case "word":
 
-                    List<String> l = new ArrayList<>();
+                    List<String> wordList = new ArrayList<>();
                     try {
-                        URL obj = new URL("https://cdn.woahoverflow.org/chad/data/words.txt");
-                        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-                        // optional default is GET
+                        // Defines the URL and Connection
+                        URL url = new URL("https://cdn.woahoverflow.org/chad/data/words.txt");
+                        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+                        // Sets the properties of the connection
                         con.setRequestMethod("GET");
-                        //add request header
                         con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT);
-                        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(con.getInputStream()));
-                        String inputLine;
-                        while ((inputLine = in.readLine()) != null) {
-                            l.add(inputLine);
-                        }
+
+                        @SuppressWarnings("all")
+                        // Creates a buffered reader at the word url
+                        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+
+                        // Adds the words to the list
+                        wordList = in.lines().collect(Collectors.toList());
+
+                        // Closes the reader
                         in.close();
-                    } catch (Exception e3) {
-                        e3.printStackTrace();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                     }
 
-                    new MessageHandler(e.getChannel()).send(l.get(new java.util.Random().nextInt(300000)),"Word");
+                    // Gets a random word and sends it
+                    messageHandler.send(wordList.get(new SecureRandom().nextInt(300000)),"Word");
+                    return;
+                default:
+                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
             }
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("random quote", "Gives random quote.");
         st.put("random number [max]", "Gives random number with an optional max value.");

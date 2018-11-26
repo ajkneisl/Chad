@@ -19,41 +19,58 @@ public class Purge implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES)) {
-                new MessageHandler(e.getChannel()).sendError("Bot can't manage messages.");
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // Makes sure the bot has permission to manage messages
+            if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES))
+            {
+                messageHandler.sendError(MessageHandler.USER_NO_PERMISSION);
                 return;
             }
 
+            // Makes sure they've got the amount of messages they want to delete
             if (args.size() != 1)
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid Arguments!");
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
 
-            boolean silent = true;
-
-            int requestedAmount = Integer.parseInt(args.get(0));
-
-            if (requestedAmount > 100) {
-                new MessageHandler(e.getChannel()).sendError("You can only delete 100 messages or less.");
-                return;
-            }
-
-            final IChannel ch2 = e.getChannel();
-            RequestBuffer.request(() -> ch2.getMessageHistory(Integer.parseInt(args.get(0))).bulkDelete());
-            IMessage m2 = RequestBuffer.request(() -> e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+ch2.getName()+"`")).get();
-            if (silent)
+            // Gets the requested amount from the arguments and makes sure it's an actual integer
+            int requestedAmount;
+            try {
+                requestedAmount = Integer.parseInt(args.get(0));
+            } catch (NumberFormatException throwaway)
             {
-                try {
-                    TimeUnit.SECONDS.sleep(2);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-                RequestBuffer.request(e.getMessage()::delete);
-                RequestBuffer.request(m2::delete);
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                return;
             }
+
+
+            // Makes sure the amount isn't over 100
+            if (requestedAmount > 100)
+            {
+                messageHandler.sendError("You can only delete 100 messages or less.");
+                return;
+            }
+
+            // Deletes the user's message
+            RequestBuffer.request(e.getMessage()::delete);
+
+            // Deletes the messages from the channel
+            RequestBuffer.request(() -> e.getChannel().getMessageHistory(Integer.parseInt(args.get(0))).bulkDelete());
+
+            // Sends message confirming
+            IMessage botConfirm = RequestBuffer.request(() -> e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+e.getChannel().getName()+"`")).get();
+
+            // Waits 2 seconds, then deletes the bot's message
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            RequestBuffer.request(botConfirm::delete);
         };
-        };
+    }
 
     @Override
     public Runnable help(MessageReceivedEvent e) {

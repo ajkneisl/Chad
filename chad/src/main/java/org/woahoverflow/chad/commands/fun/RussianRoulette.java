@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import java.security.SecureRandom;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -7,7 +8,6 @@ import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RussianRoulette implements Command.Class {
     @Override
-    public Runnable help(MessageReceivedEvent e)
+    public final Runnable help(MessageReceivedEvent e)
     {
         HashMap<String, String> st = new HashMap<>();
         st.put("rrl <user/@user>", "Plays russian roulette with a selected user.");
@@ -25,110 +25,109 @@ public class RussianRoulette implements Command.Class {
     }
 
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler m = new MessageHandler(e.getChannel());
-            IUser u = null;
-            if (e.getMessage().getMentions().isEmpty())
-            {
-                StringBuilder b = new StringBuilder();
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
 
-                for (String s : args)
-                {
-                    b.append(s).append(" ");
-                    if (!e.getGuild().getUsersByName(b.toString().trim()).isEmpty())
-                        u = e.getGuild().getUsersByName(b.toString().trim()).get(0);
-                }
+            // Assigns the user to the mentioned user
+            IUser unFinalUser;
+            if (!e.getMessage().getMentions().isEmpty())
+            {
+                unFinalUser = e.getMessage().getMentions().get(0);
             }
             else {
-                u = e.getMessage().getMentions().get(0);
-            }
-
-            if (u == null)
-            {
-                m.sendError("Invalid User!");
+                messageHandler.sendError(MessageHandler.NO_MENTIONS);
                 return;
             }
 
-            if (u == e.getAuthor())
+            // If the user equals themselves or chad, deny
+            if (unFinalUser.equals(e.getAuthor()) && unFinalUser.equals(e.getClient().getOurUser()))
             {
-                m.sendError("You can't play with yourself!");
-                return;
-            }
-            if (u == e.getClient().getOurUser())
-            {
-                new MessageHandler(e.getChannel()).sendError("You can't play with Chad!");
+                messageHandler.sendError("You can't play with that person!");
                 return;
             }
 
-            final IUser u2 = u;
+            // Makes the user final
+            final IUser user = unFinalUser;
 
+            // Sends the invitation message
+            IMessage acceptMessage = RequestBuffer.request(() -> e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + user.getName() + "`?")).get();
 
-            IMessage m2 = RequestBuffer.request(() -> e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + u2.getName() + "`?")).get();
-
+            // Creates a request buffer and reacts with the Y and N emojis
             RequestBuilder rb = new RequestBuilder(e.getClient());
             rb.shouldBufferRequests(true);
             rb.doAction(() -> {
-                m2.addReaction(ReactionEmoji.of("\uD83C\uDDFE")); // yes
+                acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDFE")); // Y
                 return true;
             }).andThen(() -> {
-                m2.addReaction(ReactionEmoji.of("\uD83C\uDDF3")); // no
+                acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDF3")); // N
                 return true;
-            }).execute();
+            }).execute(); // Executes
 
+            // Assigns variables
             boolean reacted = true;
             int timeout = 0;
+
             while (reacted)
             {
+                // If it's been 10 seconds, exit
                 if (timeout == 10)
                 {
-                    m.sendError("`"+u2.getName()+"` didn't respond in time!");
+                    messageHandler.sendError('`' +user.getName()+"` didn't respond in time!");
                     return;
                 }
+
+                // Sleeps a second so it doesn't go so fast
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
 
+                // Increases the timeout value
                 timeout++;
 
-                IReaction y = RequestBuffer.request(() -> m2.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))).get();
+                // Gets both reactions
+                IReaction yReaction = RequestBuffer.request(() -> acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))).get();
+                IReaction nReaction = RequestBuffer.request(() -> acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))).get();
 
-                IReaction n = RequestBuffer.request(() -> m2.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))).get();
-
-                if (y.getUserReacted(u2))
-                    reacted = false;
-
-                if (n.getUserReacted(u2))
+                // Checks if the user reacted to the Y
+                if (yReaction.getUserReacted(user))
                 {
-                    m.send("User Denied!", "Russian Roulette");
+                    reacted = false;
+                }
+
+                // Checks if the user reacted with the N
+                if (nReaction.getUserReacted(user))
+                {
+                    messageHandler.send("User Denied!", "Russian Roulette");
                     return;
                 }
             }
+
+            // Calculates the winner with two random numbers
             IUser win = null;
             IUser loser = null;
-
-            int r1 = new java.util.Random().nextInt(100);
-            int r2 = new java.util.Random().nextInt(100);
-
+            int r1 = new SecureRandom().nextInt(100);
+            int r2 = new SecureRandom().nextInt(100);
             if (r1 > r2) {
                 win = e.getAuthor();
-                loser = u2;
+                loser = user;
             }
             if (r2 > r1) {
-                win = u2;
+                win = user;
                 loser = e.getAuthor();
             }
 
+            // Makes sure the users aren't null
             if (win == null || loser == null)
             {
-                new MessageHandler(e.getChannel()).sendError("");
+                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                 return;
             }
 
-            MessageBuilder b = new MessageBuilder(e.getClient()).withChannel(e.getChannel()).withContent("`" +win.getName()+"` is the winner! \n`"+loser.getName()+"`\uD83D\uDD2B");
-            RequestBuffer.request(b::build);
+            // Sends the message
+            messageHandler.sendMessage('`' +win.getName()+"` is the winner! \n`"+loser.getName()+"`\uD83D\uDD2B");
         };
     }
 }

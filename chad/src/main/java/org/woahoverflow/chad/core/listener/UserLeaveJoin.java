@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.core.listener;
 
+import java.util.Objects;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
@@ -22,9 +23,9 @@ public class UserLeaveJoin
 {
     @SuppressWarnings("unused")
     @EventSubscriber
-    public void userJoin(UserJoinEvent e)
+    public final void userJoin(UserJoinEvent e)
     {
-        // for logging
+        // Logs the user's join
         IGuild g = e.getGuild();
         MessageHandler m = new MessageHandler(null);
         EmbedBuilder b = new EmbedBuilder();
@@ -36,26 +37,30 @@ public class UserLeaveJoin
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Join Time", format.format(date), true);
 
-        m.sendLog(b.build(), ChadVar.DATABASE_DEVICE, g);
+        MessageHandler.sendLog(b, g);
 
-
+        // If the guild has user join messages on, do that
         if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "join_msg_on"))
         {
             String joinMsgCh = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_message_ch");
-            if (!joinMsgCh.equalsIgnoreCase("none")) {
+            if (joinMsgCh != null && !joinMsgCh.equalsIgnoreCase("none")) {
                 Long id = Long.parseLong(joinMsgCh);
                 IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
                 if (!ch.isDeleted())
                 {
                     String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_message");
-                    msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-                    new MessageHandler(ch).sendMessage(msg);
+                    if (msg != null)
+                    {
+                        msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
+                        new MessageHandler(ch).sendMessage(msg);
+                    }
                 }
             }
         }
 
         // does the bot have MANAGE_ROLES?
-        if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES)) {
+        if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
+        {
             new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Bot doesn't have permission: MANAGE_ROLES.");
             return;
         }
@@ -63,41 +68,44 @@ public class UserLeaveJoin
         // you probably shouldnt put code below this comment
 
         String joinRoleStringID = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_role");
-        Long joinRoleID = Long.parseLong(joinRoleStringID);
-        List<IRole> botRoles = ChadBot.cli.getOurUser().getRolesForGuild(e.getGuild());
-        IRole joinRole = e.getGuild().getRoleByID(joinRoleID);
+        if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none"))
+        {
+            Long joinRoleID = Long.parseLong(joinRoleStringID);
+            List<IRole> botRoles = ChadBot.cli.getOurUser().getRolesForGuild(e.getGuild());
+            IRole joinRole = e.getGuild().getRoleByID(joinRoleID);
 
-        // get the bots highest role position in the guild
-        int botPosition = 0;
-        for (IRole role : botRoles) {
-            if (role.getPosition() > botPosition) {
-                botPosition = role.getPosition();
+            // get the bots highest role position in the guild
+            int botPosition = 0;
+            for (IRole role : botRoles) {
+                if (role.getPosition() > botPosition) {
+                    botPosition = role.getPosition();
+                }
             }
-        }
 
-        // can the bot assign the user the configured role?
-        if (joinRole.getPosition() > botPosition) {
-            new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.");
-            return;
-        }
+            // can the bot assign the user the configured role?
+            if (joinRole.getPosition() > botPosition) {
+                new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.");
+                return;
+            }
 
-        // is the role @everyone?
-        if (joinRole.isEveryoneRole()) {
-            new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Misconfigured role.");
-            return;
-        }
+            // is the role @everyone?
+            if (joinRole.isEveryoneRole()) {
+                new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Misconfigured role.");
+                return;
+            }
 
-        // assign the role
-        if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "role_on_join")) {
-            if (!joinRoleStringID.equals("none")) {
-                e.getUser().addRole(joinRole);
+            // assign the role
+            if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "role_on_join")) {
+                if (!joinRoleStringID.equals("none")) {
+                    e.getUser().addRole(joinRole);
+                }
             }
         }
     }
 
     @SuppressWarnings("unused")
     @EventSubscriber
-    public void userLeave(UserLeaveEvent e)
+    public final void userLeave(UserLeaveEvent e)
     {
         // for logging
         IGuild g = e.getGuild();
@@ -111,19 +119,20 @@ public class UserLeaveJoin
                 .withFooterText(Util.getTimeStamp())
                 .appendField("Leave Time", format.format(date), true);
 
-        m.sendLog(b.build(), ChadVar.DATABASE_DEVICE, g);
+        MessageHandler.sendLog(b, g);
 
         if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "leave_msg_on"))
         {
             String leaveMsgCh = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "leave_message_ch");
-            if (!leaveMsgCh.equalsIgnoreCase("none"))
+            if (!Objects.requireNonNull(leaveMsgCh).equalsIgnoreCase("none"))
             {
                 Long id = Long.parseLong(leaveMsgCh);
                 IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
                 if (!ch.isDeleted())
                 {
                     String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "leave_message");
-                    msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
+                    msg = Objects.requireNonNull(msg)
+                        .replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
                     new MessageHandler(ch).sendMessage(msg);
                 }
             }

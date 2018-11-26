@@ -2,46 +2,53 @@ package org.woahoverflow.chad.commands.admin;
 
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class Cache implements Command.Class{
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (args.size() == 0)
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // If there's no arguments, show regular stats
+            if (args.isEmpty())
             {
-                EmbedBuilder b = new EmbedBuilder();
-                b.withTitle("Cache Status");
-                b.withDesc("Current Cached Guilds `" + ChadVar.GUILD_CACHE.size() + "`\n"+
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.withTitle("Cache Status");
+                embedBuilder.withDesc("Current Cached Guilds `" + ChadVar.GUILD_CACHE.size() + "`\n"+
                         "Last Cached in Current Guild `" + ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).lastCached() + "`\n");
-                b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-                b.withFooterText(Util.getTimeStamp());
-                new MessageHandler(e.getChannel()).sendEmbed(b.build());
+                messageHandler.sendEmbed(embedBuilder);
                 return;
             }
-            switch(args.get(0).toLowerCase())
+
+            // Adds a switch for extra arguments
+            switch (args.get(0).toLowerCase())
             {
+                // ReCaches the current guild
                 case "recache":
                     ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
-                    new MessageHandler(e.getChannel()).send("ReCached current guild", "Caching Manager");
+                    messageHandler.send("ReCached current guild", "Caching Manager");
                     return;
+                // ReCaches all guilds
                 case "recacheall":
                     ChadVar.CACHE_DEVICE.reCacheAll();
-                    new MessageHandler(e.getChannel()).send("ReCached all guilds", "Caching Manager");
+                    messageHandler.send("ReCached all guilds", "Caching Manager");
+                    return;
+
+                // if no other arguments were met, error
+                default:
+                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
             }
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("cache", "Giving information about caching.");
         st.put("cache recache", "ReCaches current guild.");

@@ -1,131 +1,155 @@
 package org.woahoverflow.chad.handle;
 
+import java.awt.Color;
+import java.security.SecureRandom;
+import java.util.stream.Collectors;
+import org.apache.http.util.TextUtils;
 import org.woahoverflow.chad.core.ChadVar;
 import org.bson.Document;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import org.woahoverflow.chad.handle.ui.ChadError;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
-
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Random;
 
 public class MessageHandler
 {
+    // All the messages that're used in commands.
+    public static final String INVALID_USER = "That user couldn't be found!";
+    public static final String BOT_NO_PERMISSION = "Chad doesn't have permission for this!";
+    public static final String USER_NO_PERMISSION = "You don't have permission for this command!";
+    public static final String CHANNEL_NOT_NSFW = "This channel isn't Nsfw!";
+    public static final String INVALID_ARGUMENTS = "Invalid Arguments!";
+    public static final String NO_MENTIONS = "You didn't mention anyone!";
+    public static final String INTERNAL_EXCEPTION = "Internal Exception!";
+
     private final IChannel channel;
-    public MessageHandler(IChannel ch)
+    public MessageHandler(IChannel channel)
     {
-        this.channel = ch;
+        this.channel = channel;
     }
 
-    public void sendMessage(String message)
+    // Sends a raw message
+    public final void sendMessage(String message)
     {
-        RequestBuffer.request(() ->{
-           channel.sendMessage(message);
-        });
+        // Requests the message to be sent
+        RequestBuffer.request(() ->channel.sendMessage(message));
     }
 
-    public void sendEmbed(EmbedObject e)
+    // Sends the embed and applies default items.
+    public final void sendEmbed(EmbedBuilder embedBuilder)
     {
-        RequestBuffer.request(() ->{
-            channel.sendMessage(e);
-        });
+        // Applies the timestamp to the footer
+        embedBuilder.withFooterText(Util.getTimeStamp());
+
+        // Makes the color random
+        embedBuilder.withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
+
+        // Requests the message to be sent
+        RequestBuffer.request(() -> channel.sendMessage(embedBuilder.build()));
     }
 
-    public void sendError(String error)
+    // Default method for sending errors.
+    public final void sendError(String error)
     {
-        EmbedBuilder b = new EmbedBuilder();
-        b.withTitle("Error");
-        b.withDesc(error);
-        b.withFooterText(Util.getTimeStamp());
+        // Creates an embed builder and applies the throwError to the description
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.withTitle("Error");
+        embedBuilder.withDesc(error);
 
-        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-        RequestBuffer.request(() -> {
-           channel.sendMessage(b.build());
-        });
+        // Sends
+        sendEmbed(embedBuilder);
     }
 
-    public void send(String msg, String title)
+    // Sends a embed message with a title and message.
+    public final void send(String msg, String title)
     {
-        EmbedBuilder b = new EmbedBuilder();
-        b.withTitle(title);
-        b.withDesc(msg);
-        b.withFooterText(Util.getTimeStamp());
-        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-        RequestBuffer.request(() -> {
-            channel.sendMessage(b.build());
-        });
+        // Creates an embed builder and applies msg and title
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.withTitle(title);
+        embedBuilder.withDesc(msg);
+
+        // Sends
+        sendEmbed(embedBuilder);
     }
 
-    public void sendLog(EmbedObject e, DatabaseHandler databaseHandler, IGuild g)
+    // Base log sender
+    public static void sendLog(EmbedBuilder embedBuilder, IGuild guild)
     {
-        if (!databaseHandler.getBoolean(g, "logging"))
+        // Gets the guild's cached doc
+        Document document = ChadVar.CACHE_DEVICE.getGuild(guild).getDoc();
+
+        // Checks if logging is enabled
+        if (!document.getBoolean("logging"))
+        {
             return;
-        if (databaseHandler.getString(g, "logging_channel").equalsIgnoreCase("none"))
-            return;
+        }
 
+        // Gets the logging channel ID
+        String channelID = document.getString("logging_channel");
+
+        // Checks if the logging channel is somehow null
+        if (TextUtils.isEmpty(channelID))
+        {
+            return;
+        }
+
+        // Checks if the id is empty, by default it's set to 'none'
+        if (channelID.equalsIgnoreCase("none"))
+        {
+            return;
+        }
+
+        // Attempts to get the logging channel, catching if the string isn't actually an ID.
+        IChannel loggingChannel;
         try {
-            RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(databaseHandler.getString(g, "logging_channel"))).sendMessage(e);
-            });
-        } catch (NumberFormatException ee)
+            loggingChannel = RequestBuffer.request(() -> guild.getChannelByID(Long.parseLong(channelID))).get();
+        } catch (NumberFormatException e)
         {
-            ee.printStackTrace();
+            ChadError.throwError("Guild " + guild.getStringID() + "'s logging had an issue!", e);
+            return;
         }
+
+        // Checks if the channel is deleted
+        if (RequestBuffer.request(loggingChannel::isDeleted).get())
+        {
+            return;
+        }
+
+        // Applies the timestamp to the footer & applies color
+        embedBuilder.withFooterText(Util.getTimeStamp()).withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
+
+        // Sends the log on it's way :)
+        RequestBuffer.request(() -> loggingChannel.sendMessage(embedBuilder.build()));
     }
 
-    public void sendPunishLog(String punishment, IUser punished, IUser punisher, IGuild g, List<String> reason)
+    // Logger for punishments
+    public static void sendPunishLog(String punishment, IUser punished, IUser moderator, IGuild guild, List<String> reason)
     {
-        Document doc = ChadVar.CACHE_DEVICE.getGuild(g).getDoc();
-        if (!doc.getBoolean("logging"))
-            return;
-        if (doc.getString("logging_channel").equalsIgnoreCase("none"))
-            return;
+        // Creates a string of the reasons
+        String sb = reason.stream().map(s -> s + ' ').collect(Collectors.joining());
 
-        StringBuilder sb = new StringBuilder();
-        for (String s : reason)
-        {
-            sb.append(s).append(" ");
-        }
+        // Creates an embed builder with all the details
+        EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("Punishment : " + punished.getName()).appendField("Punished User", punished.getName(), true).appendField("Moderator", moderator.getName(), true).appendField("Punishment", punishment, true).appendField("Reason", sb
+            .trim(), false).withImage(punished.getAvatarURL()).withFooterText(Util.getTimeStamp());
 
-        EmbedBuilder b = new EmbedBuilder().withTitle("Punishment : " + punished.getName()).appendField("Punished User", punished.getName(), true).appendField("Moderator", punisher.getName(), true).appendField("Punishment", punishment, true).appendField("Reason", sb.toString().trim(), false).withImage(punished.getAvatarURL()).withFooterText(Util.getTimeStamp());
-        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-        try {
-            RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(doc.getString("logging_channel"))).sendMessage(b.build());
-            });
-        } catch (NumberFormatException ee)
-        {
-            ee.printStackTrace();
-        }
+        // Sends the log
+        sendLog(embedBuilder, guild);
     }
 
-    public void sendConfigLog(String changedVal, String newval, String oldval, IUser mod, IGuild g)
+    // Logger for config changes within the guild
+    public static void sendConfigLog(String changedValue, String newValue, String oldValue, IUser moderator, IGuild guild)
     {
-        Document doc = ChadVar.CACHE_DEVICE.getGuild(g).getDoc();
-        if (!doc.getBoolean("logging"))
-            return;
-        if (doc.getString("logging_channel").equalsIgnoreCase("none"))
-            return;
-
-        EmbedBuilder b = new EmbedBuilder().withTitle("Config Change : " + changedVal).appendField("New Value", newval, true).appendField("Old Value", oldval, true).appendField("Admin", mod.getName(), true).withFooterText(Util.getTimeStamp());
-        b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-        try {
-            RequestBuffer.request(() -> {
-                g.getChannelByID(Long.parseLong(doc.getString("logging_channel"))).sendMessage(b.build());
-            });
-        } catch (NumberFormatException ee)
-        {
-            ee.printStackTrace();
-        }
+        EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("Config Change : " + changedValue).appendField("New Value", newValue, true).appendField("Old Value", oldValue, true).appendField("Admin", moderator.getName(), true).withFooterText(Util.getTimeStamp());
+        sendLog(embedBuilder, guild);
     }
 
-    public void sendFile(File file)
+    // Sends a file
+    public final void sendFile(File file)
     {
         RequestBuffer.request(() -> {
             try {

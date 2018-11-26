@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import java.security.SecureRandom;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
@@ -9,37 +10,46 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class CatGallery implements Command.Class  {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler m = new MessageHandler(e.getChannel());
-            if (args.size() == 0)
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // Makes sure there's no argumments
+            if (args.isEmpty())
             {
+                // Gets the catpictures directory
                 File[] files = new File(System.getenv("appdata") + "\\chad\\catpictures\\").listFiles();
+
+                // If the directory is somehow null
                 if (files == null)
                 {
-                    m.sendError("An internal error has occurred!");
+                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                     return;
                 }
+
+                // If the directory is empty
                 if (files.length == 0)
                 {
                     ChadVar.UI_DEVICE.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
-                    m.sendError("An internal error has occurred!");
+                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                     return;
                 }
-                m.sendFile(files[new Random().nextInt(files.length)]);
+
+                // Sends a random picture from the folder
+                messageHandler.sendFile(files[new SecureRandom().nextInt(files.length)]);
                 return;
             }
 
-            m.sendError("Invalid Arguments.");
+            // TODO unless something else is planned for this class, argument checking should be removed in general
+            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("catgallery", "Gives you a random cat picture.");
         return Command.helpCommand(st, "Cat Gallery", e);

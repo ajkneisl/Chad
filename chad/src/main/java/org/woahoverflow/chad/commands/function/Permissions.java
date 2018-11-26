@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.bson.Document;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
@@ -19,94 +18,133 @@ public class Permissions implements Command.Class  {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler m = new MessageHandler(e.getChannel());
-            // j!perms role <role> add <perm>
+
+            // Accesses the permissions to a specific role
             if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role"))
             {
-                args.remove(0); // removes so it can get role name
+                // Removes the base argument, in this case "role", so it can get the role name
+                args.remove(0);
+
+                // Assign variables
                 StringBuilder b = new StringBuilder();
-                List<IRole> r = new ArrayList<>();
+                List<IRole> rolesList = new ArrayList<>();
                 IRole role = null;
                 int i = 0;
                 int i1 = 0;
+
+                // Builds the role name
                 for (String s : args)
                 {
+                    // Adds the amount of arguments used in the role name so they can be removed later
                     i++;
+
+                    // Appends the string
                     b.append(s).append(" ");
 
-                    r = RequestBuffer.request(() -> e.getGuild().getRoles()).get();
-                    for (IRole rol : r)
+                    // Requests the roles from the guild
+                    rolesList = RequestBuffer.request(() -> e.getGuild().getRoles()).get();
+
+                    // Checks if any of the roles equal
+                    for (IRole rol : rolesList)
                     {
                         if (rol.getName().equalsIgnoreCase(b.toString().trim()))
                         {
+                            // If a role was found, assign it to the variable
                             role = rol;
-                            break;
                         }
                     }
+
+                    // If the role was assigned, break out of the loop
                     if (role != null) break;
                 }
 
+                // Make sure there's enough arguments for the rest
                 if (args.size() == i)
                 {
                     m.sendError("Invalid Role!");
                     return;
                 }
 
-                // isolates next arguments
+                // Removes the amount of arguments that the role name used
                 while (i > i1)
                 {
                     i1++;
                     args.remove(0);
                 }
 
-                String nextArg = args.get(0);
-                args.remove(0); // isolates again
-                switch (nextArg.toLowerCase()) {
+                // Gets the option
+                String option = args.get(0);
+
+                // Isolates the next option(s)
+                args.remove(0);
+
+                switch (option.toLowerCase()) {
                     case "add":
-                        if (!(args.size() >= 1))
+                        // The add can only add 1 command
+                        if (args.size() != 1)
                         {
-                            m.sendError("Invalid Arguments");
+                            m.sendError(MessageHandler.INVALID_ARGUMENTS);
                             return;
                         }
+
+                        // Adds it to the database and gets the result
                         int add = ChadVar.PERMISSION_DEVICE.addCommandToRole(role, args.get(0));
-                        if (add == 6) {
+
+                        // If the result was 6 (good) return the amount, if not return the correct error.
+                        if (add == 6)
+                        {
                             m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
                             m.sendError(ChadVar.PERMISSION_DEVICE.parseErrorCode(add));
                         }
                         return;
                     case "remove":
-                        if (!(args.size() >= 1))
+                        // The remove can only remove 1 command
+                        if (args.size() != 1)
                         {
-                            m.sendError("Invalid Arguments");
+                            m.sendError(MessageHandler.INVALID_ARGUMENTS);
                             return;
                         }
+
+                        // Removes it from the database and gets the result
                         int rem = ChadVar.PERMISSION_DEVICE.removeCommandFromRole(role, args.get(0));
-                        if (rem == 6) {
+
+                        // If the result was 6 (good) return the amount, if not return the correct error.
+                        if (rem == 6)
+                        {
                             m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
                             m.sendError(ChadVar.PERMISSION_DEVICE.parseErrorCode(rem));
                         }
                         return;
                     case "view":
-                        Document doc = ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc();
-                        ArrayList<String> ar = (ArrayList<String>) doc.get(role.getStringID());
+                        // Gets the permissions to a role
+                        ArrayList<String> ar = (ArrayList<String>) ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).getDoc().get(role.getStringID());
+
+                        // Checks if there's no permissions
                         if (ar == null || ar.size() == 0) {
                             m.sendError("There's no permissions in this role!");
                             return;
                         }
-                        EmbedBuilder b2 = new EmbedBuilder();
-                        b2.withTitle("Viewing Permissions for `" + role.getName()+"`");
-                        StringBuilder b3 = new StringBuilder();
-                        ar.forEach((v) -> b3.append(", ").append(v));
-                        b2.withDesc(b3.toString().trim().replaceFirst(",", ""));
-                        m.sendEmbed(b2.build());
+
+                        // Creates an embed builder and applies the title
+                        EmbedBuilder embedBuilder = new EmbedBuilder();
+                        embedBuilder.withTitle("Viewing Permissions for `" + role.getName()+"`");
+
+                        // Builds all the permissions
+                        StringBuilder stringBuilder = new StringBuilder();
+                        ar.forEach((v) -> stringBuilder.append(", ").append(v));
+
+                        // Replaces the first ',' and sends.
+                        embedBuilder.withDesc(stringBuilder.toString().trim().replaceFirst(",", ""));
+                        m.sendEmbed(embedBuilder);
                         return;
                     default:
-                        m.sendError("Invalid Arguments");
+                        m.sendError(MessageHandler.INVALID_ARGUMENTS);
                         return;
                 }
             }
-            m.sendError("Invalid Arguments");
+            m.sendError(MessageHandler.INVALID_ARGUMENTS);
         };
     }
 

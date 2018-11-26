@@ -2,39 +2,38 @@ package org.woahoverflow.chad.commands.nsfw;
 
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class NB4K implements Command.Class  {
 
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // Checks if channel is Nsfw
             if (!e.getChannel().isNSFW())
             {
-                new MessageHandler(e.getChannel()).sendError("This isn't an NSFW channel!");
+                new MessageHandler(e.getChannel()).sendError(MessageHandler.CHANNEL_NOT_NSFW);
                 return;
             }
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("4k Pornography [NSFW]");
-            b.withImage(ChadVar.JSON_DEVICE.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
-            b.withFooterText(Util.getTimeStamp());
-            new MessageHandler(e.getChannel()).sendEmbed(b.build());
+
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.withTitle("4k Pornography [Nsfw]");
+            embedBuilder.withImage(ChadVar.JSON_DEVICE.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
+            messageHandler.sendEmbed(embedBuilder);
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("4k", "Gets 4k Pornographic Images");
-        return Command.helpCommand(st, "4k", e);
+        return Command.helpCommand(st, "4K Porn", e);
     }
 }

@@ -2,7 +2,6 @@ package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
@@ -16,60 +15,93 @@ import java.util.List;
 public class AutoRole implements Command.Class  {
 
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            if (args.size() == 0)
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // Makes sure the arguments are empty
+            if (args.isEmpty())
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid Arguments");
+                messageHandler.sendError("Invalid Arguments");
                 return;
             }
+
+            // Gets the option
             String option = args.get(0).toLowerCase();
-            MessageHandler m = new MessageHandler(e.getChannel());
+
             switch (option) {
-                default:
-                    break;
                 case "on":
+                    // Sets the value in the database
                     ChadVar.DATABASE_DEVICE.set(e.getGuild(), "role_on_join", true);
+
+                    // ReCaches the guild
                     ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
-                    EmbedBuilder on_emb = new EmbedBuilder();
-                    on_emb.withTitle("Auto Role");
-                    on_emb.withDesc("Auto Role enabled.");
-                    on_emb.withFooterText(Util.getTimeStamp());
-                    m.sendEmbed(on_emb.build());
+
+                    // Builds the embed and sends it
+                    EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.withTitle("Auto Role");
+                    embedBuilder.withDesc("Auto Role enabled.");
+                    messageHandler.sendEmbed(embedBuilder);
                     break;
                 case "off":
+                    // Sets the value in the database
                     ChadVar.DATABASE_DEVICE.set(e.getGuild(), "role_on_join", false);
+
+                    // ReCaches the guild
                     ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
-                    EmbedBuilder off_emb = new EmbedBuilder();
-                    off_emb.withTitle("Auto Role");
-                    off_emb.withDesc("Auto Role disabled.");
-                    off_emb.withFooterText(Util.getTimeStamp());
-                    m.sendEmbed(off_emb.build());
+
+                    // Builds the embed and sends it
+                    EmbedBuilder embedBuilder2 = new EmbedBuilder();
+                    embedBuilder2.withTitle("Auto Role");
+                    embedBuilder2.withDesc("Auto Role disabled.");
+                    messageHandler.sendEmbed(embedBuilder2);
                     break;
                 case "set":
-                    args.remove(0); // remove option argument
-                    StringBuilder sb = new StringBuilder();
+                    // Isolates the role text
+                    args.remove(0);
+
+                    // Set variables
+                    StringBuilder stringBuilder = new StringBuilder();
                     List<IRole> roles = new ArrayList<>();
+
+                    // Gets roles with the text said
                     for (String s : args) {
-                        sb.append(s).append(" ");
-                        roles = RequestBuffer.request(() -> e.getGuild().getRolesByName(sb.toString().trim())).get();
-                        if (!roles.isEmpty()) break;
+                        stringBuilder.append(s).append(' ');
+                        roles = RequestBuffer.request(() -> e.getGuild().getRolesByName(stringBuilder.toString().trim())).get();
+                        if (!roles.isEmpty()) {
+                            break;
+                        }
                     }
-                    IRole set_role = roles.get(0);
-                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "join_role", set_role.getStringID());
+
+                    // If there's no roles, return
+                    if (roles.isEmpty())
+                    {
+                        messageHandler.sendError("Invalid Role!");
+                        return;
+                    }
+
+                    // The selected role
+                    IRole newRole = roles.get(0);
+
+                    // Sets the role ID into the database and recaches
+                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "join_role", newRole.getStringID());
                     ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
-                    EmbedBuilder set_emb = new EmbedBuilder();
-                    set_emb.withTitle("Auto Role");
-                    set_emb.withDesc("New users will now automatically receive the role: " + set_role.getName());
-                    set_emb.withFooterText(Util.getTimeStamp());
-                    m.sendEmbed(set_emb.build());
+
+                    // Builds the embed and sends it
+                    EmbedBuilder embedBuilder3 = new EmbedBuilder();
+                    embedBuilder3.withTitle("Auto Role");
+                    embedBuilder3.withDesc("New users will now automatically receive the role: " + newRole.getName());
+                    messageHandler.sendEmbed(embedBuilder3);
+                    break;
+                default:
+                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                     break;
             }
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("autorole <on/off>", "Toggles automatic role assignment features.");
         st.put("autorole set <role name>", "Sets role.");

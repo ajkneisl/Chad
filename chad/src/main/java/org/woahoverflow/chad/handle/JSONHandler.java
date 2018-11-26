@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.ui.ChadException;
+import org.woahoverflow.chad.handle.ui.ChadError;
 import org.woahoverflow.chad.handle.ui.UIHandler;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class JSONHandler
                     filew.write(obj.toString());
                     filew.flush();
                 } catch (IOException e) {
-                    ChadException.error("There was an error creating files during startup!", e);
+                    ChadError.throwError("There was an throwError creating files during startup!", e);
                 }
             }
             File imgdir = new File(System.getenv("appdata") + "\\chad\\imgcache");
@@ -59,7 +59,7 @@ public class JSONHandler
                 ChadVar.UI_DEVICE.addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
         } catch (IOException e)
         {
-            ChadException.error("There was an error creating files during startup!", e);
+            ChadError.throwError("There was an throwError creating files during startup!", e);
         }
         return this;
     }

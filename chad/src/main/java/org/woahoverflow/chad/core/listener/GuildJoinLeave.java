@@ -14,7 +14,7 @@ public class GuildJoinLeave
 
     @SuppressWarnings("unused")
     @EventSubscriber
-    public void joinGuild(GuildCreateEvent e)
+    public final void joinGuild(GuildCreateEvent e)
     {
         if (!ChadVar.DATABASE_DEVICE.exists(e.getGuild()))
         {
@@ -56,7 +56,7 @@ public class GuildJoinLeave
 
     @SuppressWarnings("unused")
     @EventSubscriber
-    public void leaveGuild(GuildLeaveEvent e)
+    public final void leaveGuild(GuildLeaveEvent e)
     {
         DatabaseHandler databaseHandler = ChadVar.DATABASE_DEVICE;
         Document get = databaseHandler.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();

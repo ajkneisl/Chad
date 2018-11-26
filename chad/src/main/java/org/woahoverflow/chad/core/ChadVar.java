@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("all")
 public class ChadVar
 {
     // Used in ModPresence
@@ -125,9 +126,9 @@ public class ChadVar
         COMMANDS.put("im", new Command.Data(Command.Category.FUNCTION, false, new Message()));
         COMMANDS.put("autorole", new Command.Data(Command.Category.FUNCTION, false, new AutoRole()));
         COMMANDS.put("perms", new Command.Data(Command.Category.FUNCTION, false, new Permissions()));
-        COMMANDS.put("nsfw", new Command.Data(Command.Category.FUNCTION, false, new NSFW()));
+        COMMANDS.put("nsfw", new Command.Data(Command.Category.FUNCTION, false, new Nsfw()));
 
-        // NSFW !
+        // Nsfw !
         COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, false, new NB4K()));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, false, new NBLewdNeko()));
 

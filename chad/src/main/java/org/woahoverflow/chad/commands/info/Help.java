@@ -1,45 +1,68 @@
 package org.woahoverflow.chad.commands.info;
 
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.handle.commands.Command.Category;
+import org.woahoverflow.chad.handle.commands.Command.Class;
+import org.woahoverflow.chad.handle.commands.Command.Data;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class Help implements Command.Class {
+public class Help implements Class {
+
+    private static final Pattern REGEX = Pattern.compile(", $");
+
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            StringBuilder sb = new StringBuilder();
-            // go through each category and add all its commands to the help string
-            for (Command.Category category : Command.Category.values()) {
-                if (category == Command.Category.NSFW && !e.getChannel().isNSFW())
+            StringBuilder stringBuilder = new StringBuilder();
+            // Go through each commandCategory and add all it's commands to the help string
+            for (Category category : Category.values()) {
+                // If the commandCategory is Nsfw and the channel isn't Nsfw, don't show.
+                if (category == Category.NSFW && !e.getChannel().isNSFW()) {
                     continue;
-                if (category == Command.Category.ADMIN && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor())) // no admin commands (unless admin)
-                    continue;
-                sb.append("\n").append(Util.fixEnumString(category.toString().toLowerCase())).append(": ");
-                StringBuilder scuffed_builder = new StringBuilder();
-                for (String k : ChadVar.COMMANDS.keySet())
-                {
-                    Command.Data meta = ChadVar.COMMANDS.get(k);
-                    if (meta.category == Command.Category.ADMIN && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor())) // seriously, no admin commands (unless admin)
-                        continue;
-                    if (meta.category != category)
-                        continue;
-                    String str = "`" + k + "`, ";
-                    scuffed_builder.append(str);
                 }
-                sb.append(scuffed_builder.toString().replaceAll(", $", ""));
+                // If the commandCategory is Admin and the user isn't an Admin, don't show.
+                if (category == Category.ADMIN && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor()))
+                {
+                    continue;
+                }
+
+                // Append the commandCategory.
+                stringBuilder.append('\n').append(Util.fixEnumString(category.toString().toLowerCase())).append(": ");
+                StringBuilder commandsBuilder = new StringBuilder();
+                for (Entry<String, Data> stringDataEntry : ChadVar.COMMANDS.entrySet())
+                {
+                    // Gets the command's data
+                    Data meta = stringDataEntry.getValue();
+
+                    // Makes sure the command is in the right area
+                    if (meta.commandCategory != category)
+                    {
+                        continue;
+                    }
+
+                    // Adds the command to the builder
+                    String str = '`' + stringDataEntry.getKey() + "`, ";
+                    commandsBuilder.append(str);
+                }
+                // Replaces the end
+                stringBuilder.append(REGEX.matcher(commandsBuilder.toString()).replaceAll(""));
             }
-            new MessageHandler(e.getChannel()).send(sb.toString(), "Help");
+
+            // Sends the message
+            new MessageHandler(e.getChannel()).send(stringBuilder.toString(), "Help");
        };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("help", "Displays all commands Chad has to offer.");
         return Command.helpCommand(st, "Help", e);

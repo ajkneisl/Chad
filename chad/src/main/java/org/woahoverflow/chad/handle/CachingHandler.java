@@ -9,7 +9,7 @@ import sx.blah.discord.handle.obj.IGuild;
 
 public class CachingHandler
 {
-    public class CachedGuild
+    public static class CachedGuild
     {
         private final Document doc;
         private final IGuild guild;
@@ -20,15 +20,15 @@ public class CachingHandler
             this.guild = guild;
             this.cacheTime = Util.getTimeStamp();
         }
-        public String lastCached()
+        public final String lastCached()
         {
             return this.cacheTime;
         }
-        public IGuild getGuild()
+        public final IGuild getGuild()
         {
             return this.guild;
         }
-        public Document getDoc()
+        public final Document getDoc()
         {
             return this.doc;
         }
@@ -40,7 +40,7 @@ public class CachingHandler
         this.cli = cli;
     }
 
-    public void cacheGuild(IGuild guild)
+    public final void cacheGuild(IGuild guild)
     {
         Document get = this.col.find(new Document("guildid", guild.getStringID())).first();
         if (get == null)
@@ -51,7 +51,7 @@ public class CachingHandler
         ChadVar.GUILD_CACHE.put(guild, new CachedGuild(guild, get));
     }
 
-    public void unCacheGuild(IGuild guild)
+    public final void unCacheGuild(IGuild guild)
     {
         ChadVar.UI_DEVICE.addLog("UnCached guild '"+guild.getStringID()+"'.", UIHandler.LogLevel.CACHING);
         ChadVar.GUILD_CACHE.remove(guild);
@@ -70,13 +70,13 @@ public class CachingHandler
         ChadVar.GUILD_CACHE.clear();
     }
 
-    public void reCacheAll()
+    public final void reCacheAll()
     {
         unCacheAll();
         cacheAll();
     }
 
-    public CachedGuild getGuild(IGuild guild)
+    public final CachedGuild getGuild(IGuild guild)
     {
         return ChadVar.GUILD_CACHE.get(guild);
     }

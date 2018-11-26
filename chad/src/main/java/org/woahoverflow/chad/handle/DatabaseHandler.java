@@ -15,99 +15,107 @@ public class DatabaseHandler
     private MongoCollection<Document> col;
     private final MongoDatabase db;
 
-    public DatabaseHandler(String URI)
+    public DatabaseHandler(String uri)
     {
-        this.cli = new MongoClient(new MongoClientURI(URI));
-        this.db = cli.getDatabase("Database");
-        this.col = db.getCollection("bot");
+        cli = new MongoClient(new MongoClientURI(uri));
+        db = cli.getDatabase("Database");
+        col = db.getCollection("bot");
     }
 
     @SuppressWarnings("unused")
-    public DatabaseHandler getSeperateCollection(String colName)
+    public final DatabaseHandler getSeperateCollection(String colName)
     {
-        this.col = db.getCollection(colName);
+        col = db.getCollection(colName);
         return this;
     }
 
     @SuppressWarnings("unused")
-    public MongoClient getClient()
+    public final MongoClient getClient()
     {
-        return this.cli;
+        return cli;
     }
-    public MongoCollection<Document> getCollection()
+    public final MongoCollection<Document> getCollection()
     {
-        return this.col;
+        return col;
     }
     @SuppressWarnings("unused")
-    public MongoDatabase getDatabase()
+    public final MongoDatabase getDatabase()
     {
-        return this.db;
+        return db;
     }
 
 
     @SuppressWarnings("unchecked")
-    public ArrayList<String> getArray(IGuild guild, String object)
+    public final ArrayList<String> getArray(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null) return null;
+        if (get == null) {
+            return null;
+        }
 
         ArrayList<String> ar = (ArrayList<String>) get.get(object);
-        if (ar == null)
+        if (ar == null) {
             return null;
+        }
         return ar;
     }
-    public boolean getBoolean(IGuild guild, String object)
+    public final boolean getBoolean(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null)
+        if (get == null) {
             return false;
+        }
 
         return (Boolean) get.get(object);
     }
 
-    public String getString(IGuild guild, String object)
+    public final String getString(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null)
+        if (get == null) {
             return null;
+        }
 
         return (String) get.get(object);
     }
 
-    public Object get(IGuild guild, String object)
+    public final Object get(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null)
+        if (get == null) {
             return null;
+        }
 
         return get.get(object);
     }
 
-    public boolean contains(IGuild guild, String object)
+    public final boolean contains(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null)
+        if (get == null) {
             return false;
+        }
 
         return get.containsKey(object);
     }
 
-    public void set(IGuild guild, String object, Object entry)
+    public final void set(IGuild guild, String object, Object entry)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null)
+        if (get == null) {
             return;
+        }
 
         col.updateOne(get, new Document("$set", new Document(object, entry)));
     }
 
-    public boolean exists(IGuild guild)
+    public final boolean exists(IGuild guild)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
         return get != null;

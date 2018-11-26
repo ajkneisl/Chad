@@ -9,26 +9,31 @@ import java.util.List;
 
 public class WordReverse implements Command.Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (args.size() == 0)
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            // Makes sure the arguments aren't empty
+            if (args.isEmpty())
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid Arguments!");
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
 
-            StringBuilder b = new StringBuilder();
+            // Gets the word from all the arguments
+            StringBuilder stringBuilder = new StringBuilder();
             for (String s : args)
             {
-                b.append(s).append(" ");
+                stringBuilder.append(s).append(' ');
             }
-            String B = b.toString().trim();
-            new MessageHandler(e.getChannel()).send("Word: `" + B + "`\n" + b.reverse().toString().trim(), "Word Reverser");
+
+            // Gets the word & sends
+            String word = stringBuilder.toString().trim();
+            new MessageHandler(e.getChannel()).send("Word: `" + word + "`\n" + stringBuilder.reverse().toString().trim(), "Word Reverser");
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> hash = new HashMap<>();
         hash.put("wr <word>", "Reverses a word");
         return Command.helpCommand(hash, "Word Reverse", e);

@@ -2,35 +2,33 @@ package org.woahoverflow.chad.commands.admin;
 
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class CurrentThreads implements Command.Class{
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler m = new MessageHandler(e.getChannel());
+            // Creates an embed builder and applies a title
             EmbedBuilder b = new EmbedBuilder();
-            b.withFooterText(Util.getTimeStamp());
-
-            b.withColor(new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()));
             b.withTitle("Current Threads Running");
-            StringBuilder sb = new StringBuilder();
-            ChadVar.THREAD_DEVICE.getMap().forEach((k, v) -> sb.append(k.getName()).append(" [").append(k.getLongID()).append("] ").append(v.size()).append("\n"));
-            b.appendDesc(sb.toString());
-            m.sendEmbed(b.build());
+
+            // Adds all threads running threads to the stringbuilder, than to the description.
+            StringBuilder stringBuilder = new StringBuilder();
+            ChadVar.THREAD_DEVICE.getMap().forEach((key, val) -> stringBuilder.append(key.getName()).append(" [").append(key.getLongID()).append("] ").append(val.size()).append('\n'));
+            b.appendDesc(stringBuilder.toString());
+
+            // Sends
+            new MessageHandler(e.getChannel()).sendEmbed(b);
         };
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("threads", "Displays all running threads for users.");
         return Command.helpCommand(st, "Current Threads", e);

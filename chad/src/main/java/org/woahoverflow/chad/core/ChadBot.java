@@ -4,37 +4,43 @@ import org.json.JSONObject;
 import org.woahoverflow.chad.core.listener.*;
 import org.woahoverflow.chad.handle.JSONHandler;
 import org.woahoverflow.chad.handle.commands.PermissionHandler;
-import org.woahoverflow.chad.handle.ui.ChadException;
+import org.woahoverflow.chad.handle.ui.ChadError;
 import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 
 public class ChadBot {
-    static {
+    // Makes sure the token and URI_LINK values in bot.json are filled in.
+    static
+    {
         JSONHandler h = new JSONHandler().forceCheck();
-        if (h.get("token").equals("") || h.get("uri_link").equals(""))
+        if (h.get("token").isEmpty() || h.get("uri_link").isEmpty())
         {
             ChadVar.UI_DEVICE = new UIHandler(null);
-            ChadException.error("bot.json is missing values!");
+            ChadError.throwError("bot.json is missing values!");
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
+            // Exits
             System.exit(1);
         }
     }
+
     public static final IDiscordClient cli = new ClientBuilder().withToken(new JSONHandler().forceCheck().get("token")).withRecommendedShardCount().build();
 
     public static void main(String[] args)
     {
+        // Initializes ChadVar variables.
         ChadVar.init();
-        // logs in and registers the listener
+
+        // Logs in and registers the listeners
         cli.login();
         cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageRecieved(), new OnReady(), new UserLeaveJoin());
 
-        // add developer ids to the permissions handler
+        // Adds developers into the permissions.
         ChadVar.JSON_DEVICE.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json").forEach((v) ->
         {
             if (Boolean.parseBoolean(((JSONObject) v).getString("allow")))

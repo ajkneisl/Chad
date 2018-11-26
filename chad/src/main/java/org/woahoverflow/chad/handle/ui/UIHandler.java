@@ -51,11 +51,11 @@ public class UIHandler
         }, 60000*5,0));
     }
 
-    public void addLog(String log, LogLevel level)
+    public final void addLog(String log, LogLevel level)
     {
         mainpanel.logs.append("\n" +"["+ level +"] "+ log);
     }
-    void newError(String error)
+    final void newError(String error)
     {
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : Chad");
@@ -71,7 +71,7 @@ public class UIHandler
     }
 
     @SuppressWarnings("unused")
-    void newError(String error, IGuild guild)
+    final void newError(String error, IGuild guild)
     {
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : " + guild.getStringID());
@@ -84,7 +84,7 @@ public class UIHandler
         panel.exitButton.addActionListener((ActionEvent) -> frame.dispose());
     }
 
-    public void loadGuild(IGuild guild)
+    public final void loadGuild(IGuild guild)
     {
         JFrame frame = new JFrame("Guild : " + guild.getStringID());
         GuildPanel panel = new GuildPanel();
@@ -186,7 +186,7 @@ public class UIHandler
         return hashmap;
     }
 
-    public void update()
+    public final void update()
     {
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
                 java.lang.management.ManagementFactory.getOperatingSystemMXBean();
@@ -209,6 +209,7 @@ public class UIHandler
         mainpanel.memoryVal.setText(memory);
     }
 
+    @SuppressWarnings("unused")
     public enum LogLevel
     {
         INFO, WARNING, SEVERE, EXCEPTION, CACHING

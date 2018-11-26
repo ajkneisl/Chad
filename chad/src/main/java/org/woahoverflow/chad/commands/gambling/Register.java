@@ -11,7 +11,7 @@ import java.util.List;
 // command registers user into the database, specifically into their guild's mongodb
 public class Register implements Command.Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             if (ChadVar.DATABASE_DEVICE.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
             {
@@ -25,7 +25,7 @@ public class Register implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("register", "Registers your account with Chad.");
         return Command.helpCommand(st, "Register", e);
