@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.commands.fun;
 
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.stream.Stream;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
@@ -57,7 +58,7 @@ public class RockPaperScissors implements Command.Class
     // Builds the string for RPS
     private static String calculateWinner(int i, int i2)
     {
-        // 'i' is meant for the user's input
+        // 'rotationInteger' is meant for the user's input
         // 'i2' is meant for the bot's input
 
         // Builds Chad's value
@@ -106,6 +107,8 @@ public class RockPaperScissors implements Command.Class
 
     @Override
     public final Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("rps <rock/paper/scissors>", "Plays rock paper scissors with Chad.");
+        return Command.helpCommand(st, "Rock Paper Scissors", e);
     }
 }

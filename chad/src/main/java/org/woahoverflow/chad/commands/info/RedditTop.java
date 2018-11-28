@@ -31,7 +31,7 @@ public class RedditTop implements Command.Class {
             try {
                 // Gets post
                 int index = 0;
-                post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
+                post = ChadVar.jsonDevice.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
@@ -40,7 +40,7 @@ public class RedditTop implements Command.Class {
                 while (post.getBoolean("stickied"))
                 {
                     index++;
-                    post = ChadVar.JSON_DEVICE.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
+                    post = ChadVar.jsonDevice.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)
@@ -62,14 +62,15 @@ public class RedditTop implements Command.Class {
                 return;
             }
 
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle(post.getString("title"));
-            b.withDesc(post.getString("author"));
-            b.appendField("Score", post.getInt("score") + " (" + post.getInt("ups") + "/" + post.getInt("downs") + ")", true);
-            b.appendField("Comments", Integer.toString(post.getInt("num_comments")), true);
-            b.withImage(post.getString("url"));
-            b.withUrl("https://reddit.com" + post.getString("permalink"));
-            messageHandler.sendEmbed(b);
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.withTitle(post.getString("title"));
+            embedBuilder.withDesc(post.getString("author"));
+            embedBuilder.appendField("Score", post.getInt("score") + " (" + post.getInt("ups") + '/'
+                + post.getInt("downs") + ')', true);
+            embedBuilder.appendField("Comments", Integer.toString(post.getInt("num_comments")), true);
+            embedBuilder.withImage(post.getString("url"));
+            embedBuilder.withUrl("https://reddit.com" + post.getString("permalink"));
+            messageHandler.sendEmbed(embedBuilder);
         };
     }
 

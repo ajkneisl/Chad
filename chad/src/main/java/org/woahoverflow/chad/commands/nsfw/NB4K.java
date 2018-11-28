@@ -25,7 +25,7 @@ public class NB4K implements Command.Class  {
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.withTitle("4k Pornography [Nsfw]");
-            embedBuilder.withImage(ChadVar.JSON_DEVICE.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
+            embedBuilder.withImage(ChadVar.jsonDevice.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
             messageHandler.sendEmbed(embedBuilder);
         };
     }

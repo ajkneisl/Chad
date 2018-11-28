@@ -21,7 +21,7 @@ public class Shutdown implements Command.Class  {
             new MessageHandler(e.getChannel()).send("Shutting down in 10 seconds...", "Warning");
 
             // Warns within the UI
-            ChadVar.UI_DEVICE.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);
+            ChadVar.uiDevice.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);
 
             // Updates the presence
             ChadBot.cli.changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...");

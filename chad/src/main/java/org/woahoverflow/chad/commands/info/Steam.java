@@ -19,7 +19,7 @@ public class Steam implements Command.Class  {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
             
             // Gets the steam api token from the bot.json
-            String key = ChadVar.JSON_DEVICE.get("steam_api_token");
+            String key = ChadVar.jsonDevice.get("steam_api_token");
 
             // Checks if the arguments are invalid
             if (args.isEmpty() || args.size() == 1)
@@ -35,7 +35,8 @@ public class Steam implements Command.Class  {
                 String intention = args.get(0);
                 
                 // Gets the user's steam id by their username
-                JSONObject steamUser = ChadVar.JSON_DEVICE.read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + key + "&vanityurl=" + args.get(1))
+                JSONObject steamUser = ChadVar.jsonDevice
+                    .read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + key + "&vanityurl=" + args.get(1))
                     .getJSONObject("response");
                 
                 // Checks to see if the user actually exists
@@ -49,7 +50,8 @@ public class Steam implements Command.Class  {
                 String steamId = steamUser.getString("steamid");
                 
                 // Gets the user's profile
-                JSONObject steamUserProfile = ChadVar.JSON_DEVICE.read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamId).getJSONObject("response").getJSONArray("players").getJSONObject(0);
+                JSONObject steamUserProfile = ChadVar.jsonDevice
+                    .read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamId).getJSONObject("response").getJSONArray("players").getJSONObject(0);
                 
                 // The user's name
                 String userName = steamUserProfile.getString("personaname");
@@ -70,7 +72,7 @@ public class Steam implements Command.Class  {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.withFooterIcon(steamUserProfile.getString("avatar"));
                     
-                    JSONArray csgoStats = ChadVar.JSON_DEVICE.read(
+                    JSONArray csgoStats = ChadVar.jsonDevice.read(
                         "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="
                             + key + "&steamid=" + steamId).getJSONObject("playerstats")
                         .getJSONArray("stats");

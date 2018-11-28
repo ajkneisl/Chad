@@ -23,7 +23,7 @@ public class DatabaseHandler
     }
 
     @SuppressWarnings("unused")
-    public final DatabaseHandler getSeperateCollection(String colName)
+    public final DatabaseHandler getSeparateCollection(String colName)
     {
         col = db.getCollection(colName);
         return this;
@@ -60,16 +60,6 @@ public class DatabaseHandler
         }
         return ar;
     }
-    public final boolean getBoolean(IGuild guild, String object)
-    {
-        Document get = col.find(new Document("guildid", guild.getStringID())).first();
-
-        if (get == null) {
-            return false;
-        }
-
-        return (Boolean) get.get(object);
-    }
 
     public final String getString(IGuild guild, String object)
     {
@@ -102,6 +92,17 @@ public class DatabaseHandler
         }
 
         return get.containsKey(object);
+    }
+
+    public final boolean getBoolean(IGuild guild, String object)
+    {
+        Document get = col.find(new Document("guildid", guild.getStringID())).first();
+
+        if (get == null) {
+            return false;
+        }
+
+        return (Boolean) get.get(object);
     }
 
     public final void set(IGuild guild, String object, Object entry)

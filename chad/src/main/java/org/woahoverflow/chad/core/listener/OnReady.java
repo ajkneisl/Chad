@@ -11,29 +11,29 @@ import sx.blah.discord.handle.obj.StatusType;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
-public class OnReady
+public final class OnReady
 {
     @SuppressWarnings("unused")
     @EventSubscriber
-    public final void onReadyEvent(ReadyEvent e)
+    public void onReadyEvent(ReadyEvent e)
     {
         e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "");
 
-        //TODO: put this in its own thread class so i can change the timings on it
+        //TODO: put this in its own thread class so rotationInteger can change the timings on it
         ChadVar.EXECUTOR_POOL.submit(() -> {
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (!ChadVar.ROTATE_PRESENCE)
+                    if (!ChadVar.rotatePresence) {
                         return;
-                    Object[] ar = ChadVar.PRESENCE_ROTATION.toArray();
+                    }
+                    Object[] ar = ChadVar.presenceRotation.toArray();
                     int rotation = ar.length;
-                    ChadVar.CURRENT_STATUS = (String)ar[new SecureRandom().nextInt(rotation)];
-                    e.getClient().changePresence(ChadVar.STATUS_TYPE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
+                    ChadVar.currentStatus = (String)ar[new SecureRandom().nextInt(rotation)];
+                    e.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus);
                 }
-            }, 0, ChadVar.ROTATION_TIME); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work
+            }, 0, ChadVar.rotationInteger); // this cant be changed for some reason, rotationInteger would probably have to reschedule the timer in order for this to work
         });
 
         // UI Begin
@@ -42,7 +42,9 @@ public class OnReady
         } catch (InterruptedException e1) {
             e1.printStackTrace();
         }
-        ChadVar.UI_DEVICE.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
-        ChadVar.UI_DEVICE.update();
+
+        ChadVar.uiDevice
+            .addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
+        ChadVar.uiDevice.update();
     }
 }

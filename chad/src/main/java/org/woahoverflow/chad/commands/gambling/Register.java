@@ -13,13 +13,13 @@ public class Register implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (ChadVar.DATABASE_DEVICE.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
+            if (ChadVar.databaseDevice.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
             {
                 new MessageHandler(e.getChannel()).sendError("You've already got an account!");
                 return;
             }
 
-            ChadVar.DATABASE_DEVICE.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", 0L);
+            ChadVar.databaseDevice.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", 0L);
             new MessageHandler(e.getChannel()).send("You've now got an account!", "Money");
         };
     }

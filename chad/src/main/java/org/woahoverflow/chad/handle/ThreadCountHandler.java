@@ -1,19 +1,22 @@
 package org.woahoverflow.chad.handle;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import org.woahoverflow.chad.core.ChadVar;
 import sx.blah.discord.handle.obj.IUser;
 
-import java.util.*;
 import java.util.concurrent.Future;
 
-@SuppressWarnings("CanBeFinal")
 public class ThreadCountHandler
 {
-    private Map<IUser, ArrayList<Future<?>>> COUNT;
+    private final ConcurrentHashMap<IUser, ArrayList<Future<?>>> threadCount;
 
     public ThreadCountHandler()
     {
-        this.COUNT = new HashMap<>();
+        threadCount = new ConcurrentHashMap<>();
         Thread th = new Thread(() -> new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -23,58 +26,51 @@ public class ThreadCountHandler
         ChadVar.EXECUTOR_POOL.submit(th);
     }
 
-    @SuppressWarnings("all")
     private void constant()
     {
-        if (!this.COUNT.isEmpty())
+        if (!threadCount.isEmpty())
         {
-            this.COUNT.forEach((k, v) -> {
-                if (v.size() != 0)
+            threadCount.forEach((key, val) -> {
+                if (!val.isEmpty())
                 {
-                    for (int i = 0; v.size() > i; i++)
+                    for (int i = 0; val.size() > i; i++)
                     {
-                        if (v.get(i).isDone())
+                        if (val.get(i).isDone())
                         {
-                            v.remove(v.get(i));
-                            continue;
+                            val.remove(val.get(i));
                         }
                     }
                 }
-                else if (v.size() == 0)
-                {
-                    v.remove(k);
+                else {
+                    threadCount.remove(key);
                 }
             });
 
         }
     }
 
-    public final boolean allowThread(IUser user)
+    public final boolean canRun(IUser user)
     {
-        if (this.COUNT.get(user) == null)
-        {
-            return true;
-        }
-        else return this.COUNT.get(user).size() < 3;
+        return threadCount.get(user) == null || threadCount.get(user).size() < 3;
     }
 
     public final Map<IUser, ArrayList<Future<?>>> getMap()
     {
-        return this.COUNT;
+        return threadCount;
     }
 
     public final void addThread(Future<?> thread, IUser user)
     {
-        if (this.COUNT.containsKey(user))
+        if (threadCount.containsKey(user))
         {
-            ArrayList<Future<?>> th = this.COUNT.get(user);
+            ArrayList<Future<?>> th = threadCount.get(user);
             th.add(thread);
-            this.COUNT.put(user, th);
+            threadCount.put(user, th);
         }
         else {
             ArrayList<Future<?>> th = new ArrayList<>();
             th.add(thread);
-            this.COUNT.put(user, th);
+            threadCount.put(user, th);
         }
     }
 }

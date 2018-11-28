@@ -1,6 +1,9 @@
 package org.woahoverflow.chad.commands.fun;
 
 import com.google.common.net.HttpHeaders;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
@@ -65,7 +68,7 @@ public class Random implements Command.Class {
                     return;
                 case "quote":
                     // Gets a random quote
-                    JSONObject obj = ChadVar.JSON_DEVICE.read("https://talaikis.com/api/quotes/random/");
+                    JSONObject obj = ChadVar.jsonDevice.read("https://talaikis.com/api/quotes/random/");
                     
                     // Builds the embed
                     EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -103,8 +106,8 @@ public class Random implements Command.Class {
 
                         // Closes the reader
                         in.close();
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
+                    } catch (@SuppressWarnings("all") IOException e1) {
+                      e1.printStackTrace();
                     }
 
                     // Gets a random word and sends it

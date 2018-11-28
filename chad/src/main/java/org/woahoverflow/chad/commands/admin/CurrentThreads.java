@@ -14,16 +14,17 @@ public class CurrentThreads implements Command.Class{
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             // Creates an embed builder and applies a title
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Current Threads Running");
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.withTitle("Current Threads Running");
 
             // Adds all threads running threads to the stringbuilder, than to the description.
             StringBuilder stringBuilder = new StringBuilder();
-            ChadVar.THREAD_DEVICE.getMap().forEach((key, val) -> stringBuilder.append(key.getName()).append(" [").append(key.getLongID()).append("] ").append(val.size()).append('\n'));
-            b.appendDesc(stringBuilder.toString());
+            ChadVar.threadDevice
+                .getMap().forEach((key, val) -> stringBuilder.append(key.getName()).append(" [").append(key.getLongID()).append("] ").append(val.size()).append('\n'));
+            embedBuilder.appendDesc(stringBuilder.toString());
 
             // Sends
-            new MessageHandler(e.getChannel()).sendEmbed(b);
+            new MessageHandler(e.getChannel()).sendEmbed(embedBuilder);
         };
     }
 

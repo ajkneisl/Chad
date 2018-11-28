@@ -32,25 +32,25 @@ public class ModifyPresence implements Command.Class {
                     String formattedMessage = args.stream().map(str -> str + ' ').collect(Collectors.joining());
 
                     // Changes the presence
-                    ChadBot.cli.changePresence(ChadVar.STATUS_TYPE, ActivityType.PLAYING, formattedMessage.trim());
+                    ChadBot.cli.changePresence(ChadVar.statusType, ActivityType.PLAYING, formattedMessage.trim());
 
                     // Updates the message
                     message = "Changed presence to \"" + formattedMessage.trim() + '"';
 
                     // Updates the ChadVar variable
-                    ChadVar.CURRENT_STATUS = formattedMessage.trim();
+                    ChadVar.currentStatus = formattedMessage.trim();
 
                     break;
                 case "rotate":
                     // Enables presence rotation
-                    ChadVar.ROTATE_PRESENCE = true;
+                    ChadVar.rotatePresence = true;
 
                     // Updates the message
                     message = "Enabled presence rotation.";
                     break;
                 case "static":
                     // Disables presence rotation
-                    ChadVar.ROTATE_PRESENCE = false;
+                    ChadVar.rotatePresence = false;
 
                     // Updates the message
                     message = "Disabled presence rotation.";
@@ -63,7 +63,7 @@ public class ModifyPresence implements Command.Class {
                     String stringBuilder = args.stream().map(str -> str + ' ').collect(Collectors.joining());
 
                     // Adds the message into the rotation pool.
-                    ChadVar.PRESENCE_ROTATION.add(stringBuilder.trim());
+                    ChadVar.presenceRotation.add(stringBuilder.trim());
 
                     // Updates the message
                     message = "Added \"" + stringBuilder.trim() + "\" to rotation";
@@ -74,62 +74,62 @@ public class ModifyPresence implements Command.Class {
                     for (String str : args) {
                         time_sb.append(str).append(" ");
                     }
-                    ChadVar.ROTATION_TIME = Integer.parseInt(time_sb.toString().trim());
-                    message = "Changed rotation period to `" + ChadVar.ROTATION_TIME + "`";
+                    ChadVar.rotationInteger = Integer.parseInt(time_sb.toString().trim());
+                    message = "Changed rotation period to `" + ChadVar.rotationInteger + "`";
                     break;*/
-                case "status":
+                case "statusType":
                     // Removes the option argument
                     args.remove(0);
 
                     if (args.get(0).equalsIgnoreCase("idle"))
                     {
                         // Updates the ChadVar to IDLE
-                        ChadVar.STATUS_TYPE = StatusType.IDLE;
+                        ChadVar.statusType = StatusType.IDLE;
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.IDLE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
+                        e.getClient().changePresence(StatusType.IDLE, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed status type to `Idle`";
+                        message = "Changed statusType type to `Idle`";
                         break;
                     }
 
                     if (args.get(0).equalsIgnoreCase("online"))
                     {
                         // Updates the ChadVar to Online
-                        ChadVar.STATUS_TYPE = StatusType.ONLINE;
+                        ChadVar.statusType = StatusType.ONLINE;
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
+                        e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed status type to `Online`";
+                        message = "Changed statusType type to `Online`";
                         break;
                     }
 
                     if (args.get(0).equalsIgnoreCase("offline"))
                     {
                         // Updates the ChadVar to Offline
-                        ChadVar.STATUS_TYPE = StatusType.OFFLINE;
+                        ChadVar.statusType = StatusType.OFFLINE;
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.INVISIBLE, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
+                        e.getClient().changePresence(StatusType.INVISIBLE, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed status type to `Offline`";
+                        message = "Changed statusType type to `Offline`";
                         break;
                     }
 
                     if (args.get(0).equalsIgnoreCase("dnd"))
                     {
                         // Updates the ChadVar to Do Not Disturb
-                        ChadVar.STATUS_TYPE = StatusType.DND;
+                        ChadVar.statusType = StatusType.DND;
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.DND, ActivityType.PLAYING, ChadVar.CURRENT_STATUS);
+                        e.getClient().changePresence(StatusType.DND, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed status type to `Do Not Disturb`";
+                        message = "Changed statusType type to `Do Not Disturb`";
                         break;
                     }
                     message = MessageHandler.INVALID_ARGUMENTS;
@@ -144,7 +144,7 @@ public class ModifyPresence implements Command.Class {
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("modpresence <string>", "Changes the bots rich presence message.");
-        st.put("modpresence status <status>", "Changes the bots status.");
+        st.put("modpresence statusType <statusType>", "Changes the bots statusType.");
         st.put("modpresence <static/rotate>", "Disables or enables the bot's presence rotation.");
         return Command.helpCommand(st, "Modify Presence", e);
     }

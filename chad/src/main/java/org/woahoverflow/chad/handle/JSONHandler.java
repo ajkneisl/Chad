@@ -34,11 +34,12 @@ public class JSONHandler
         {
             File dir = new File(System.getenv("appdata") + "\\chad");
             if (!dir.exists())
-                ChadVar.UI_DEVICE.addLog("Created Chad Directory : " + dir.mkdirs(), UIHandler.LogLevel.INFO);
+                ChadVar.uiDevice.addLog("Created Chad Directory : " + dir.mkdirs(), UIHandler.LogLevel.INFO);
             File bot = new File(dir + "\\bot.json");
             if (!new File(dir + "\\bot.json").exists())
             {
-                ChadVar.UI_DEVICE.addLog("Created Bot Directory : " + bot.createNewFile(), UIHandler.LogLevel.INFO);
+                ChadVar.uiDevice
+                    .addLog("Created Bot Directory : " + bot.createNewFile(), UIHandler.LogLevel.INFO);
                 org.json.JSONObject obj = new org.json.JSONObject();
                 obj.put("token", "");
                 obj.put("steam_api_token", "");
@@ -53,10 +54,12 @@ public class JSONHandler
             }
             File imgdir = new File(System.getenv("appdata") + "\\chad\\imgcache");
             if (!imgdir.exists())
-                ChadVar.UI_DEVICE.addLog("Created Temp Image Directory : " + imgdir.mkdirs(), UIHandler.LogLevel.INFO);
+                ChadVar.uiDevice
+                    .addLog("Created Temp Image Directory : " + imgdir.mkdirs(), UIHandler.LogLevel.INFO);
             File dir2 = new File(System.getenv("appdata") + "\\chad\\catpictures");
             if (!dir2.exists())
-                ChadVar.UI_DEVICE.addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
+                ChadVar.uiDevice
+                    .addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
         } catch (IOException e)
         {
             ChadError.throwError("There was an throwError creating files during startup!", e);
@@ -109,7 +112,7 @@ public class JSONHandler
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ChadVar.UI_DEVICE.addLog("readFile failed, returning null", UIHandler.LogLevel.SEVERE);
+        ChadVar.uiDevice.addLog("readFile failed, returning null", UIHandler.LogLevel.SEVERE);
         return null;
     }
 

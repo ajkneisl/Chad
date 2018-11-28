@@ -1,5 +1,8 @@
 package org.woahoverflow.chad.handle;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,15 +11,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 @SuppressWarnings("SameReturnValue")
-public class Util
+public final class Util
 {
     private static final String USER_AGENT = "Mozilla/5.0";
 
+    // Gets the current timestamp
     public static String getTimeStamp()
     {
         return new SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().getTime());
     }
 
+    @SuppressWarnings("all")
     static String httpGet(String url) {
         try {
             URL obj = new URL(url);
@@ -26,21 +31,16 @@ public class Util
             //add request header
             con.setRequestProperty("User-Agent", USER_AGENT);
             int responseCode = con.getResponseCode();
-            if (responseCode != 200)
-            {
+            if (responseCode != 200) {
                 System.out.println("\nThere was an throwError sending a request to url : " + url);
                 System.out.println("Response Code : " + responseCode);
             }
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+            String response = in.lines().collect(Collectors.joining());
             in.close();
-            return response.toString();
-        } catch (Exception e) {
+            return response;
+        } catch (IOException e) {
             e.printStackTrace();
             return "";
         }
@@ -48,9 +48,11 @@ public class Util
 
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
-        if (bytes < unit) return bytes + " B";
+        if (bytes < unit) {
+            return bytes + " B";
+        }
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "rotationInteger");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 

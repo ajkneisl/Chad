@@ -13,12 +13,12 @@ public class CatFact implements Command.Class  {
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             // Gets the fact
-            String fact = ChadVar.JSON_DEVICE.read("https://catfact.ninja/fact").getString("fact");
+            String fact = ChadVar.jsonDevice.read("https://catfact.ninja/fact").getString("fact");
 
             // Sends the fact
             new MessageHandler(e.getChannel()).send(fact, "Cat Fact");
 
-            // i don't even know how i could comprehend something so complicated like this
+            // rotationInteger don't even know how rotationInteger could comprehend something so complicated like this
         };
     }
 

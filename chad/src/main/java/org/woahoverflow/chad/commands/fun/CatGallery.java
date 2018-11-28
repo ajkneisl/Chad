@@ -33,7 +33,7 @@ public class CatGallery implements Command.Class  {
                 // If the directory is empty
                 if (files.length == 0)
                 {
-                    ChadVar.UI_DEVICE.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
+                    ChadVar.uiDevice.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
                     messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                     return;
                 }

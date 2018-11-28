@@ -17,13 +17,13 @@ public final class Command
     public static Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent e)
     {
         return () -> {
-            String prefix = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "prefix");
-            EmbedBuilder b = new EmbedBuilder();
-            b.withTitle("Help : " + commandName);
-            commands.forEach((k, v) -> b.appendField(prefix+k, v, false));
-            b.withFooterText(Util.getTimeStamp());
-            b.withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
-            new MessageHandler(e.getChannel()).sendEmbed(b);
+            String prefix = ChadVar.databaseDevice.getString(e.getGuild(), "prefix");
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.withTitle("Help : " + commandName);
+            commands.forEach((key, val) -> embedBuilder.appendField(prefix+key, val, false));
+            embedBuilder.withFooterText(Util.getTimeStamp());
+            embedBuilder.withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
+            new MessageHandler(e.getChannel()).sendEmbed(embedBuilder);
         };
     }
 

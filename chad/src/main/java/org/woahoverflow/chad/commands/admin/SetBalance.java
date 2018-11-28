@@ -33,7 +33,8 @@ public class SetBalance implements Command.Class {
                 }
 
                 // Sets the balance
-                ChadVar.DATABASE_DEVICE.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", Long.parseLong(args.get(0)));
+                ChadVar.databaseDevice
+                    .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", Long.parseLong(args.get(0)));
 
                 // Sends the message
                 messageHandler.send("Set your balance to `"+args.get(0)+"`.", "Balance");
@@ -59,7 +60,8 @@ public class SetBalance implements Command.Class {
                 }
 
                 // Sets the balance of the mentioned user
-                ChadVar.DATABASE_DEVICE.set(e.getGuild(), e.getMessage().getMentions().get(0).getStringID() + "_balance", Long.parseLong(args.get(0)));
+                ChadVar.databaseDevice
+                    .set(e.getGuild(), e.getMessage().getMentions().get(0).getStringID() + "_balance", Long.parseLong(args.get(0)));
 
                 // Sends the message
                 messageHandler.send("Set `" + e.getMessage().getMentions().get(0).getName() + "`'s balance to `"+args.get(0)+"`.", "Balance");

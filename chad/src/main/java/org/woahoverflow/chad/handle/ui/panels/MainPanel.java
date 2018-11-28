@@ -1,16 +1,14 @@
 package org.woahoverflow.chad.handle.ui.panels;
 
-import javax.swing.*;
-import java.awt.*;
-/*
- * Created by JFormDesigner on Thu Nov 01 20:40:26 CDT 2018
- */
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-
-
-/**
- * @author sho joie
- */
 public class MainPanel extends JPanel {
     public MainPanel() {
         initComponents();
@@ -27,12 +25,12 @@ public class MainPanel extends JPanel {
         JLabel logsText = new JLabel();
         JScrollPane scrollPane1 = new JScrollPane();
         logs = new JTextArea();
-        RefreshButton = new JButton();
+        refreshButton = new JButton();
         exitButton = new JButton();
         JLabel adv = new JLabel();
         JLabel lastReCacheAllText = new JLabel();
         lastReCacheAllValue = new JLabel();
-        RefreshButton2 = new JButton();
+        refreshButton2 = new JButton();
         guildGo = new JButton();
         JLabel guildText = new JLabel();
         JLabel presenceText = new JLabel();
@@ -99,10 +97,10 @@ public class MainPanel extends JPanel {
         }
         add(scrollPane1);
         scrollPane1.setBounds(300, 175, 750, 555);
-        RefreshButton.setText("Refresh");
-        add(RefreshButton);
-        RefreshButton.setFont(new Font("Open Sans", Font.PLAIN, 13));
-        RefreshButton.setBounds(10, 688,  RefreshButton.getPreferredSize().width, RefreshButton.getPreferredSize().height);
+        refreshButton.setText("Refresh");
+        add(refreshButton);
+        refreshButton.setFont(new Font("Open Sans", Font.PLAIN, 13));
+        refreshButton.setBounds(10, 688,  refreshButton.getPreferredSize().width, refreshButton.getPreferredSize().height);
         exitButton.setText("Exit");
         exitButton.setFont(new Font("Open Sans", Font.PLAIN, 13));
         exitButton.setFont(exitButton.getFont().deriveFont(exitButton.getFont().getSize() + 14f));
@@ -120,10 +118,10 @@ public class MainPanel extends JPanel {
         lastReCacheAllValue.setFont(new Font("Open Sans", Font.PLAIN, 15));
         add(lastReCacheAllValue);
         lastReCacheAllValue.setBounds(125, 645, lastReCacheAllValue.getPreferredSize().width, lastReCacheAllValue.getPreferredSize().height);
-        RefreshButton2.setText("ReCache");
-        RefreshButton2.setFont(new Font("Open Sans", Font.PLAIN, 13));
-        add(RefreshButton2);
-        RefreshButton2.setBounds(10, 715, 85, 30);
+        refreshButton2.setText("ReCache");
+        refreshButton2.setFont(new Font("Open Sans", Font.PLAIN, 13));
+        add(refreshButton2);
+        refreshButton2.setBounds(10, 715, 85, 30);
         guildGo.setText("Go");
         add(guildGo);
         guildGo.setBounds(new Rectangle(new Point(450, 55), guildGo.getPreferredSize()));
@@ -177,10 +175,10 @@ public class MainPanel extends JPanel {
     public JLabel biggestGuildValue;
     public JLabel botToUserVal;
     public JTextArea logs;
-    public JButton RefreshButton;
+    public JButton refreshButton;
     public JButton exitButton;
     public JLabel lastReCacheAllValue;
-    public JButton RefreshButton2;
+    public JButton refreshButton2;
     public JTextArea guildList;
     public JButton guildGo;
     public JLabel presenceVal;

@@ -1,10 +1,12 @@
 package org.woahoverflow.chad.core.listener;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.Util;
+import org.woahoverflow.chad.handle.ui.ChadError;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.member.UserJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.member.UserLeaveEvent;
@@ -19,40 +21,60 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class UserLeaveJoin
+public final class UserLeaveJoin
 {
+
+    private static final Pattern USER_PATTERN = Pattern.compile("&user&");
+    private static final Pattern GUILD_PATTERN = Pattern.compile("&guild&");
+
     @SuppressWarnings("unused")
     @EventSubscriber
-    public final void userJoin(UserJoinEvent e)
+    public void userJoin(UserJoinEvent e)
     {
         // Logs the user's join
-        IGuild g = e.getGuild();
-        MessageHandler m = new MessageHandler(null);
-        EmbedBuilder b = new EmbedBuilder();
-        Date date = Date.from(e.getGuild().getCreationDate());
+        IGuild guild = e.getGuild();
+        MessageHandler messageHandler = new MessageHandler(null);
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
-        b.withTitle("User Join : " + e.getUser().getName())
+        // Builds the embed
+        embedBuilder.withTitle("User Join : " + e.getUser().getName())
                 .withFooterIcon(e.getUser().getAvatarURL())
-                .withFooterText(Util.getTimeStamp())
-                .appendField("Join Time", format.format(date), true);
+                .appendField("Join Time", format.format(Date.from(e.getGuild().getCreationDate())), true);
 
-        MessageHandler.sendLog(b, g);
+        // Sends the log
+        MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user join messages on, do that
-        if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "join_msg_on"))
+        if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "join_msg_on"))
         {
-            String joinMsgCh = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_message_ch");
+            // Gets the join message channel
+            String joinMsgCh = ChadVar.databaseDevice.getString(e.getGuild(), "join_message_ch");
+
+            // Makes sure they actually assigned a channel
             if (joinMsgCh != null && !joinMsgCh.equalsIgnoreCase("none")) {
-                Long id = Long.parseLong(joinMsgCh);
-                IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
-                if (!ch.isDeleted())
+                final long id;
+                try {
+                    id = Long.parseLong(joinMsgCh);
+                } catch (NumberFormatException throwaway)
                 {
-                    String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_message");
+                    // Throws error in the UI
+                    ChadError.throwError("Guild " + guild.getName() + " has an invalid join message channel!");
+                    return;
+                }
+                // Gets the channel
+                IChannel channel = RequestBuffer.request(() -> guild.getChannelByID(id)).get();
+
+                // Makes sure the channel isn't deleted
+                if (!channel.isDeleted())
+                {
+                    // Gets the message, makes sure it isn't null, then sends
+                    String msg = ChadVar.databaseDevice.getString(e.getGuild(), "join_message");
                     if (msg != null)
                     {
-                        msg = msg.replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-                        new MessageHandler(ch).sendMessage(msg);
+                        msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
+                        messageHandler.sendMessage(msg);
                     }
                 }
             }
@@ -61,13 +83,13 @@ public class UserLeaveJoin
         // does the bot have MANAGE_ROLES?
         if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
         {
-            new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Bot doesn't have permission: MANAGE_ROLES.");
+            messageHandler.sendError("Auto role assignment failed; Bot doesn't have permission: MANAGE_ROLES.");
             return;
         }
 
         // you probably shouldnt put code below this comment
 
-        String joinRoleStringID = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "join_role");
+        String joinRoleStringID = ChadVar.databaseDevice.getString(e.getGuild(), "join_role");
         if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none"))
         {
             Long joinRoleID = Long.parseLong(joinRoleStringID);
@@ -95,7 +117,7 @@ public class UserLeaveJoin
             }
 
             // assign the role
-            if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "role_on_join")) {
+            if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "role_on_join")) {
                 if (!joinRoleStringID.equals("none")) {
                     e.getUser().addRole(joinRole);
                 }
@@ -105,35 +127,53 @@ public class UserLeaveJoin
 
     @SuppressWarnings("unused")
     @EventSubscriber
-    public final void userLeave(UserLeaveEvent e)
+    public void userLeave(UserLeaveEvent e)
     {
-        // for logging
-        IGuild g = e.getGuild();
-        MessageHandler m = new MessageHandler(null);
-        EmbedBuilder b = new EmbedBuilder();
-        Date date = Date.from(e.getGuild().getCreationDate());
+        // Log if the user leaves
+        IGuild guild = e.getGuild();
+        MessageHandler messageHandler = new MessageHandler(null);
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
-        b.withTitle("User Leave : " + e.getUser().getName())
-                .withFooterIcon(e.getUser().getAvatarURL())
-                .withFooterText(Util.getTimeStamp())
-                .appendField("Leave Time", format.format(date), true);
+        // Builds the embed
+        embedBuilder.withTitle("User Leave : " + e.getUser().getName())
+            .withFooterIcon(e.getUser().getAvatarURL())
+            .appendField("User Leave", format.format(Date.from(e.getGuild().getCreationDate())), true);
 
-        MessageHandler.sendLog(b, g);
+        // Sends the log
+        MessageHandler.sendLog(embedBuilder, guild);
 
-        if (ChadVar.DATABASE_DEVICE.getBoolean(e.getGuild(), "leave_msg_on"))
+        // If the guild has user leave messages on, do that
+        if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "leave_msg_on"))
         {
-            String leaveMsgCh = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "leave_message_ch");
-            if (!Objects.requireNonNull(leaveMsgCh).equalsIgnoreCase("none"))
-            {
-                Long id = Long.parseLong(leaveMsgCh);
-                IChannel ch = RequestBuffer.request(() -> g.getChannelByID(id)).get();
-                if (!ch.isDeleted())
+            // Gets the leave message channel
+            String leaveMsgCh = ChadVar.databaseDevice.getString(e.getGuild(), "leave_message_ch");
+
+            // Makes sure they actually assigned a channel
+            if (leaveMsgCh != null && !leaveMsgCh.equalsIgnoreCase("none")) {
+                final long id;
+                try {
+                    id = Long.parseLong(leaveMsgCh);
+                } catch (NumberFormatException throwaway)
                 {
-                    String msg = ChadVar.DATABASE_DEVICE.getString(e.getGuild(), "leave_message");
-                    msg = Objects.requireNonNull(msg)
-                        .replaceAll("&user&", e.getUser().getName()).replaceAll("&guild&", e.getGuild().getName());
-                    new MessageHandler(ch).sendMessage(msg);
+                    // Throws error in the UI
+                    ChadError.throwError("Guild " + guild.getName() + " has an invalid leave message channel!");
+                    return;
+                }
+                // Gets the channel
+                IChannel channel = RequestBuffer.request(() -> guild.getChannelByID(id)).get();
+
+                // Makes sure the channel isn't deleted
+                if (!channel.isDeleted())
+                {
+                    // Gets the message, makes sure it isn't null, then sends
+                    String msg = ChadVar.databaseDevice.getString(e.getGuild(), "leave_message");
+                    if (msg != null)
+                    {
+                        msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
+                        messageHandler.sendMessage(msg);
+                    }
                 }
             }
         }

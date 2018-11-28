@@ -2,6 +2,7 @@ package org.woahoverflow.chad.core.listener;
 
 import org.bson.Document;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.handle.CachingHandler;
 import org.woahoverflow.chad.handle.DatabaseHandler;
 import org.woahoverflow.chad.handle.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -9,23 +10,23 @@ import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
 import sx.blah.discord.handle.obj.Permissions;
 
-public class GuildJoinLeave
+public final class GuildJoinLeave
 {
-
     @SuppressWarnings("unused")
     @EventSubscriber
-    public final void joinGuild(GuildCreateEvent e)
+    public void joinGuild(GuildCreateEvent e)
     {
-        if (!ChadVar.DATABASE_DEVICE.exists(e.getGuild()))
+        if (!ChadVar.databaseDevice.exists(e.getGuild()))
         {
             Document doc = new Document();
 
             doc.append("guildid", e.getGuild().getStringID());
             doc.append("prefix", "j!");
-            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
+            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES)) {
                 doc.append("muted_role", "none_np");
-            else
+            } else {
                 doc.append("muted_role", "none");
+            }
             doc.append("muted_role", "none");
             doc.append("logging", false);
             doc.append("logging_channel", "none");
@@ -45,29 +46,32 @@ public class GuildJoinLeave
             doc.append("kick_msg_on", true);
             doc.append("join_message_ch", "none");
             doc.append("leave_message_ch", "none");
+            doc.append("stop_swear", false);
+            doc.append("swear_message", "No Swearing &user&!");
 
-            ChadVar.DATABASE_DEVICE.getCollection().insertOne(doc);
-            ChadVar.UI_DEVICE.loadGuild(e.getGuild());
-            ChadVar.UI_DEVICE.addLog("<"+e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
-            ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
+            ChadVar.databaseDevice.getCollection().insertOne(doc);
+            UIHandler.loadGuild(e.getGuild());
+            ChadVar.uiDevice.addLog('<' +e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+            ChadVar.cacheDevice.cacheGuild(e.getGuild());
         }
-        ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
+        ChadVar.cacheDevice.cacheGuild(e.getGuild());
     }
 
     @SuppressWarnings("unused")
     @EventSubscriber
-    public final void leaveGuild(GuildLeaveEvent e)
+    public static void leaveGuild(GuildLeaveEvent e)
     {
-        DatabaseHandler databaseHandler = ChadVar.DATABASE_DEVICE;
+        DatabaseHandler databaseHandler = ChadVar.databaseDevice;
         Document get = databaseHandler.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
-        if (get == null)
+        if (get == null) {
             return;
+        }
 
         databaseHandler.getCollection().deleteOne(get);
 
-        ChadVar.CACHE_DEVICE.unCacheGuild(e.getGuild());
+        CachingHandler.unCacheGuild(e.getGuild());
 
-        ChadVar.UI_DEVICE.addLog("<"+e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
+        ChadVar.uiDevice.addLog('<' +e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
     }
 }

@@ -96,7 +96,7 @@ public class PhotoEditor implements Command.Class {
                 if (!file.delete())
                 {
                     // if the file didn't delete, send a log
-                    ChadVar.UI_DEVICE.addLog("Failed to delete file " + file.getPath(), LogLevel.SEVERE);
+                    ChadVar.uiDevice.addLog("Failed to delete file " + file.getPath(), LogLevel.SEVERE);
                 }
                 return;
             }

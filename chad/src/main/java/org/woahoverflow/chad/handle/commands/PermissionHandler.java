@@ -3,6 +3,8 @@ package org.woahoverflow.chad.handle.commands;
 import org.bson.Document;
 import org.woahoverflow.chad.commands.function.Permissions;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.handle.CachingHandler;
+import org.woahoverflow.chad.handle.commands.Command.Category;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -43,15 +45,15 @@ public class PermissionHandler
 
         // all users should have access to commands in the fun and info commandCategory
         if (meta.commandCategory == Command.Category.FUN.FUN || meta.commandCategory == Command.Category.INFO || meta.commandCategory
-            == Command.Category.NSFW)
+            == Command.Category.NSFW || meta.commandCategory == Category.MONEY)
             return true;
 
         // loop through the users roles, if the role has permission for the command, return true
         for (IRole r : user.getRolesForGuild(g))
         {
-            if (ChadVar.DATABASE_DEVICE.getArray(g, r.getStringID()) != null)
+            if (ChadVar.databaseDevice.getArray(g, r.getStringID()) != null)
             {
-                if (ChadVar.DATABASE_DEVICE.getArray(g, r.getStringID()).contains(command))
+                if (ChadVar.databaseDevice.getArray(g, r.getStringID()).contains(command))
                     return true;
             }
         }
@@ -70,7 +72,7 @@ public class PermissionHandler
         if (!parseCommand(command))
             return 0;
 
-        Document get = ChadVar.CACHE_DEVICE.getGuild(role.getGuild()).getDoc();
+        Document get = CachingHandler.getGuild(role.getGuild()).getDoc();
         if (get == null)
             return 1;
         ArrayList<String> arr = (ArrayList<String>) get.get(role.getStringID());
@@ -78,8 +80,8 @@ public class PermissionHandler
         {
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);
-            ChadVar.DATABASE_DEVICE.set(role.getGuild(), role.getStringID(), ar);
-            ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
+            ChadVar.databaseDevice.set(role.getGuild(), role.getStringID(), ar);
+            ChadVar.cacheDevice.cacheGuild(role.getGuild());
             return 6;
         }
         else {
@@ -87,8 +89,8 @@ public class PermissionHandler
                 return 2;
             ArrayList<String> ar = arr;
             ar.add(command);
-            ChadVar.DATABASE_DEVICE.set(role.getGuild(), role.getStringID(), ar);
-            ChadVar.CACHE_DEVICE.cacheGuild(role.getGuild());
+            ChadVar.databaseDevice.set(role.getGuild(), role.getStringID(), ar);
+            ChadVar.cacheDevice.cacheGuild(role.getGuild());
             return 6;
         }
     }
@@ -99,23 +101,24 @@ public class PermissionHandler
         if (!parseCommand(command))
             return 0;
 
-        if (ChadVar.DATABASE_DEVICE.getArray(role.getGuild(), role.getStringID()) == null)
+        if (ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID()) == null)
             return 4;
         else {
-            Document get = ChadVar.DATABASE_DEVICE.getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+            Document get = ChadVar.databaseDevice
+                .getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
 
             if (get == null)
                 return 1;
 
-            ArrayList<String> ar = ChadVar.DATABASE_DEVICE.getArray(role.getGuild(), role.getStringID());
+            ArrayList<String> ar = ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID());
             ar.remove(command);
-            ChadVar.DATABASE_DEVICE.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+            ChadVar.databaseDevice.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
             return 6;
         }
 
     }
 
-    // this method is poorly named as it doesnt actually parse the command. i think it checks to see if its a valid command /shrug
+    // this method is poorly named as it doesnt actually parse the command. rotationInteger think it checks to see if its a valid command /shrug
     private boolean parseCommand(String arg)
     {
         return ChadVar.COMMANDS.containsKey(arg.toLowerCase());

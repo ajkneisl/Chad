@@ -24,7 +24,7 @@ public class EightBall implements Command.Class  {
             }
 
             // Gets the answers from the cdn
-            JSONArray answers = ChadVar.JSON_DEVICE.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
+            JSONArray answers = ChadVar.jsonDevice.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
 
             // Sends the answer
             messageHandler.send((String) answers.get(new SecureRandom().nextInt(answers.length())), "8Ball");

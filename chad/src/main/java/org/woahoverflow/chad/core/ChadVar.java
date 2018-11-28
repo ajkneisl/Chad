@@ -1,13 +1,38 @@
 package org.woahoverflow.chad.core;
 
+import org.woahoverflow.chad.commands.admin.Cache;
+import org.woahoverflow.chad.commands.admin.CurrentThreads;
+import org.woahoverflow.chad.commands.admin.ModifyPresence;
+import org.woahoverflow.chad.commands.admin.SetBalance;
 import org.woahoverflow.chad.commands.admin.Shutdown;
-import org.woahoverflow.chad.commands.admin.*;
-import org.woahoverflow.chad.commands.fun.*;
-import org.woahoverflow.chad.commands.function.*;
+import org.woahoverflow.chad.commands.admin.SystemInfo;
+import org.woahoverflow.chad.commands.fun.CatFact;
+import org.woahoverflow.chad.commands.fun.CatGallery;
+import org.woahoverflow.chad.commands.fun.EightBall;
+import org.woahoverflow.chad.commands.fun.PhotoEditor;
+import org.woahoverflow.chad.commands.fun.Random;
+import org.woahoverflow.chad.commands.fun.RockPaperScissors;
+import org.woahoverflow.chad.commands.fun.RussianRoulette;
+import org.woahoverflow.chad.commands.fun.WordReverse;
+import org.woahoverflow.chad.commands.function.AutoRole;
+import org.woahoverflow.chad.commands.function.Logging;
+import org.woahoverflow.chad.commands.function.Message;
+import org.woahoverflow.chad.commands.function.Nsfw;
+import org.woahoverflow.chad.commands.function.Permissions;
+import org.woahoverflow.chad.commands.function.Prefix;
+import org.woahoverflow.chad.commands.function.Purge;
+import org.woahoverflow.chad.commands.function.Swearing;
 import org.woahoverflow.chad.commands.gambling.Balance;
 import org.woahoverflow.chad.commands.gambling.CoinFlip;
 import org.woahoverflow.chad.commands.gambling.Register;
-import org.woahoverflow.chad.commands.info.*;
+import org.woahoverflow.chad.commands.info.Chad;
+import org.woahoverflow.chad.commands.info.Contributors;
+import org.woahoverflow.chad.commands.info.GuildInfo;
+import org.woahoverflow.chad.commands.info.Help;
+import org.woahoverflow.chad.commands.info.RedditNew;
+import org.woahoverflow.chad.commands.info.RedditTop;
+import org.woahoverflow.chad.commands.info.Steam;
+import org.woahoverflow.chad.commands.info.UserInfo;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
 import org.woahoverflow.chad.commands.punishments.Ban;
@@ -17,9 +42,10 @@ import org.woahoverflow.chad.handle.DatabaseHandler;
 import org.woahoverflow.chad.handle.JSONHandler;
 import org.woahoverflow.chad.handle.ThreadCountHandler;
 import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.handle.commands.Command.Category;
+import org.woahoverflow.chad.handle.commands.Command.Data;
 import org.woahoverflow.chad.handle.commands.PermissionHandler;
 import org.woahoverflow.chad.handle.ui.UIHandler;
-import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.ArrayList;
@@ -28,71 +54,72 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@SuppressWarnings("all")
-public class ChadVar
+public final class ChadVar
 {
     // Used in ModPresence
-    public static StatusType STATUS_TYPE = StatusType.ONLINE;
-    public static String CURRENT_STATUS = "";
-    public static int ROTATION_TIME = 60000*5; // 5 minutes
-    public static boolean ROTATE_PRESENCE = true;
-    public static final List<String> PRESENCE_ROTATION = new ArrayList<>();
+    public static StatusType statusType = StatusType.ONLINE;
+    public static String currentStatus = "";
+    public static int rotationInteger = 60000*5; // 5 minutes
+    public static boolean rotatePresence = true;
+    public static final List<String> presenceRotation = new ArrayList<>();
 
     // Devices
     static void init() // for devices that need to use the client
     {
-        JSON_DEVICE = new JSONHandler().forceCheck();
-        DATABASE_DEVICE = new DatabaseHandler(JSON_DEVICE.get("uri_link"));
-        CACHE_DEVICE = new CachingHandler(ChadBot.cli);
-        PERMISSION_DEVICE = new PermissionHandler();
-        THREAD_DEVICE = new ThreadCountHandler();
-        UI_DEVICE = new UIHandler(ChadBot.cli);
+        jsonDevice = new JSONHandler().forceCheck();
+        databaseDevice = new DatabaseHandler(jsonDevice.get("uri_link"));
+        cacheDevice = new CachingHandler(ChadBot.cli);
+        permissionDevice = new PermissionHandler();
+        threadDevice = new ThreadCountHandler();
+        uiDevice = new UIHandler(ChadBot.cli);
+
+        // adds all the words to the array
+        jsonDevice.readArray("https://cdn.woahoverflow.org/chad/data/swears.json").forEach((word) -> swearWords.add((String) word));
     }
 
-    public static UIHandler UI_DEVICE;
-    public static CachingHandler CACHE_DEVICE;
-    public static JSONHandler JSON_DEVICE;
-    public static DatabaseHandler DATABASE_DEVICE;
-    public static PermissionHandler PERMISSION_DEVICE;
-    public static ThreadCountHandler THREAD_DEVICE;
+    public static UIHandler uiDevice;
+    public static CachingHandler cacheDevice;
+    public static JSONHandler jsonDevice;
+    public static DatabaseHandler databaseDevice;
+    public static PermissionHandler permissionDevice;
+    public static ThreadCountHandler threadDevice;
 
     // HashMaps
     public static final ConcurrentHashMap<String, Command.Data> COMMANDS = new ConcurrentHashMap<>();
     public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
-    public static final ConcurrentHashMap<IGuild, CachingHandler.CachedGuild> GUILD_CACHE = new ConcurrentHashMap<>();
 
     // Important Stuff
     public static final ExecutorService EXECUTOR_POOL = Executors.newFixedThreadPool(30);
 
     // UI Stuff
-    public static String LAST_CACHE_ALL = "NCA"; // NCA = Not Cached All
+    public static String lastCacheAll = "NCA"; // NCA = Not Cached All
 
 
 
     // static blocks
     static {
-        PRESENCE_ROTATION.add("hello!");
-        PRESENCE_ROTATION.add("gamers");
-        PRESENCE_ROTATION.add("epic gamers");
-        PRESENCE_ROTATION.add("a bad game");
-        PRESENCE_ROTATION.add("j!help");
-        PRESENCE_ROTATION.add("j!prefix set *");
-        PRESENCE_ROTATION.add("what's going on gamers");
-        PRESENCE_ROTATION.add("invite me please");
-        PRESENCE_ROTATION.add("yeet");
-        PRESENCE_ROTATION.add("yeet yote yeet yote");
-        PRESENCE_ROTATION.add("chad is a kike");
-        PRESENCE_ROTATION.add("my mom beats me");
-        PRESENCE_ROTATION.add("chad till your dead");
-        PRESENCE_ROTATION.add("chad for life");
-        PRESENCE_ROTATION.add("suck my chad");
-        PRESENCE_ROTATION.add("git push you off the swing");
-        PRESENCE_ROTATION.add("git pull my dick");
-        PRESENCE_ROTATION.add("git reword essay");
-        PRESENCE_ROTATION.add("r/rule34");
-        PRESENCE_ROTATION.add("sneeki breeki");
-        PRESENCE_ROTATION.add("someone stole my sweet role");
-        PRESENCE_ROTATION.add("j!lewdneko... FBI open up!");
+        presenceRotation.add("hello!");
+        presenceRotation.add("gamers");
+        presenceRotation.add("epic gamers");
+        presenceRotation.add("a bad game");
+        presenceRotation.add("j!help");
+        presenceRotation.add("j!prefix set *");
+        presenceRotation.add("what's going on gamers");
+        presenceRotation.add("invite me please");
+        presenceRotation.add("yeet");
+        presenceRotation.add("yeet yote yeet yote");
+        presenceRotation.add("chad is a kike");
+        presenceRotation.add("my mom beats me");
+        presenceRotation.add("chad till your dead");
+        presenceRotation.add("chad for life");
+        presenceRotation.add("suck my chad");
+        presenceRotation.add("git push you off the swing");
+        presenceRotation.add("git pull my dick");
+        presenceRotation.add("git reword essay");
+        presenceRotation.add("r/rule34");
+        presenceRotation.add("sneeki breeki");
+        presenceRotation.add("someone stole my sweet role");
+        presenceRotation.add("j!lewdneko... FBI open up!");
     }
     static {
         // FUN!
@@ -127,6 +154,7 @@ public class ChadVar
         COMMANDS.put("autorole", new Command.Data(Command.Category.FUNCTION, false, new AutoRole()));
         COMMANDS.put("perms", new Command.Data(Command.Category.FUNCTION, false, new Permissions()));
         COMMANDS.put("nsfw", new Command.Data(Command.Category.FUNCTION, false, new Nsfw()));
+        COMMANDS.put("swearfilter", new Data(Category.FUNCTION, false, new Swearing()));
 
         // Nsfw !
         COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, false, new NB4K()));
@@ -145,4 +173,7 @@ public class ChadVar
         COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, false, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, false, new Balance()));
     }
+
+    // Utilized in MessageHandler (thanks mr zacanager)
+    public static List<String> swearWords = new ArrayList<>();
 }

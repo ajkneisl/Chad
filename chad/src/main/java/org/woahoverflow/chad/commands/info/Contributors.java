@@ -23,7 +23,7 @@ public class Contributors implements Class {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
             // Creates embed builder and gets the JSON array from the cdn
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            JSONArray o = ChadVar.JSON_DEVICE.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
+            JSONArray o = ChadVar.jsonDevice.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
 
             // Checks if the user is trying to see a specific profile
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("view"))

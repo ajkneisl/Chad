@@ -25,7 +25,7 @@ public class NBLewdNeko implements Command.Class  {
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.withTitle("Lewd Neko [Nsfw]");
-            embedBuilder.withImage(ChadVar.JSON_DEVICE.read("https://nekobot.xyz/api/image?type=lewdneko").getString("message"));
+            embedBuilder.withImage(ChadVar.jsonDevice.read("https://nekobot.xyz/api/image?type=lewdneko").getString("message"));
             messageHandler.sendEmbed(embedBuilder);
         };
     }

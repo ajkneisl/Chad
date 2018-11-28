@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.commands.admin;
 
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.handle.CachingHandler;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -20,8 +21,8 @@ public class Cache implements Command.Class{
             {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Cache Status");
-                embedBuilder.withDesc("Current Cached Guilds `" + ChadVar.GUILD_CACHE.size() + "`\n"+
-                        "Last Cached in Current Guild `" + ChadVar.CACHE_DEVICE.getGuild(e.getGuild()).lastCached() + "`\n");
+                embedBuilder.withDesc("Current Cached Guilds `" + CachingHandler.cachedGuildsSize() + "`\n"+
+                        "Last Cached in Current Guild `" + CachingHandler.getGuild(e.getGuild()).lastCached() + "`\n");
                 messageHandler.sendEmbed(embedBuilder);
                 return;
             }
@@ -31,12 +32,12 @@ public class Cache implements Command.Class{
             {
                 // ReCaches the current guild
                 case "recache":
-                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
+                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
                     messageHandler.send("ReCached current guild", "Caching Manager");
                     return;
                 // ReCaches all guilds
                 case "recacheall":
-                    ChadVar.CACHE_DEVICE.reCacheAll();
+                    ChadVar.cacheDevice.reCacheAll();
                     messageHandler.send("ReCached all guilds", "Caching Manager");
                     return;
 

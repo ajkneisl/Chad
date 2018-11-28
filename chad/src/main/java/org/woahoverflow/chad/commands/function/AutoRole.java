@@ -32,10 +32,10 @@ public class AutoRole implements Command.Class  {
             switch (option) {
                 case "on":
                     // Sets the value in the database
-                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "role_on_join", true);
+                    ChadVar.databaseDevice.set(e.getGuild(), "role_on_join", true);
 
                     // ReCaches the guild
-                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
+                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -45,10 +45,10 @@ public class AutoRole implements Command.Class  {
                     break;
                 case "off":
                     // Sets the value in the database
-                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "role_on_join", false);
+                    ChadVar.databaseDevice.set(e.getGuild(), "role_on_join", false);
 
                     // ReCaches the guild
-                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
+                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder2 = new EmbedBuilder();
@@ -84,8 +84,8 @@ public class AutoRole implements Command.Class  {
                     IRole newRole = roles.get(0);
 
                     // Sets the role ID into the database and recaches
-                    ChadVar.DATABASE_DEVICE.set(e.getGuild(), "join_role", newRole.getStringID());
-                    ChadVar.CACHE_DEVICE.cacheGuild(e.getGuild());
+                    ChadVar.databaseDevice.set(e.getGuild(), "join_role", newRole.getStringID());
+                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder3 = new EmbedBuilder();

@@ -29,7 +29,7 @@ public class Help implements Class {
                     continue;
                 }
                 // If the commandCategory is Admin and the user isn't an Admin, don't show.
-                if (category == Category.ADMIN && !ChadVar.PERMISSION_DEVICE.userIsDeveloper(e.getAuthor()))
+                if (category == Category.ADMIN && !ChadVar.permissionDevice.userIsDeveloper(e.getAuthor()))
                 {
                     continue;
                 }

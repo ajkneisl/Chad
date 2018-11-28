@@ -1,9 +1,14 @@
 package org.woahoverflow.chad.handle.ui.panels;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-public class GuildPanel extends JPanel  {
+public class GuildPanel extends JPanel {
 
     public GuildPanel()
     {

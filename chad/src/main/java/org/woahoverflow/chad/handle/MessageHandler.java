@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
 import org.apache.http.util.TextUtils;
-import org.woahoverflow.chad.core.ChadVar;
 import org.bson.Document;
 import org.woahoverflow.chad.handle.ui.ChadError;
 import sx.blah.discord.handle.obj.IChannel;
@@ -81,7 +80,7 @@ public class MessageHandler
     public static void sendLog(EmbedBuilder embedBuilder, IGuild guild)
     {
         // Gets the guild's cached doc
-        Document document = ChadVar.CACHE_DEVICE.getGuild(guild).getDoc();
+        Document document = CachingHandler.getGuild(guild).getDoc();
 
         // Checks if logging is enabled
         if (!document.getBoolean("logging"))

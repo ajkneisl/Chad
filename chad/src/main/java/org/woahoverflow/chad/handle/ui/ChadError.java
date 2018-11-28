@@ -13,19 +13,19 @@ public final class ChadError
         String stackTrace = Arrays.stream(throwable.getStackTrace()).map(st -> st + "\n").collect(Collectors.joining());
 
         // Initiates the error UI
-        ChadVar.UI_DEVICE.newError(error + '\n' + stackTrace);
+        UIHandler.newError(error + '\n' + stackTrace);
 
         // Adds a log to the main UI
-        ChadVar.UI_DEVICE.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
+        ChadVar.uiDevice.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
     }
 
     // Sends a string in an error format
     public static void throwError(String error)
     {
         // Initiates the error UI with the string error
-        ChadVar.UI_DEVICE.newError(error);
+        UIHandler.newError(error);
 
         // Adds a log to the main UI
-        ChadVar.UI_DEVICE.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
+        ChadVar.uiDevice.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
     }
 }
