@@ -16,7 +16,6 @@ public class RockPaperScissors implements Command.Class
         return () ->
         {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
-            // TODO clean this up, it's really unneccesary to have each one have a message, rather just create a calculator with 2 ints 1 - 3 for ea user
 
             // Checks if there's arguments
             if (args.isEmpty())
