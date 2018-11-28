@@ -58,7 +58,7 @@ public class RockPaperScissors implements Command.Class
     // Builds the string for RPS
     private static String calculateWinner(int i, int i2)
     {
-        // 'rotationInteger' is meant for the user's input
+        // 'i' is meant for the user's input
         // 'i2' is meant for the bot's input
 
         // Builds Chad's value

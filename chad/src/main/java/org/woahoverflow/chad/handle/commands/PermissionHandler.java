@@ -118,7 +118,7 @@ public class PermissionHandler
 
     }
 
-    // this method is poorly named as it doesnt actually parse the command. rotationInteger think it checks to see if its a valid command /shrug
+    // this method is poorly named as it doesnt actually parse the command. i/ think it checks to see if its a valid command /shrug
     private boolean parseCommand(String arg)
     {
         return ChadVar.COMMANDS.containsKey(arg.toLowerCase());

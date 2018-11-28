@@ -33,7 +33,7 @@ public final class OnReady
                     ChadVar.currentStatus = (String)ar[new SecureRandom().nextInt(rotation)];
                     e.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus);
                 }
-            }, 0, ChadVar.rotationInteger); // this cant be changed for some reason, rotationInteger would probably have to reschedule the timer in order for this to work
+            }, 0, ChadVar.rotationInteger); // this cant be changed for some reason, i would probably have to reschedule the timer in order for this to work
         });
 
         // UI Begin

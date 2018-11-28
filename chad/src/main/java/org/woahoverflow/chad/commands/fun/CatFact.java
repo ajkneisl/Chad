@@ -18,7 +18,7 @@ public class CatFact implements Command.Class  {
             // Sends the fact
             new MessageHandler(e.getChannel()).send(fact, "Cat Fact");
 
-            // rotationInteger don't even know how rotationInteger could comprehend something so complicated like this
+            // i don't even know how i could comprehend something so complicated like this
         };
     }
 

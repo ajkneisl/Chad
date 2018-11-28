@@ -16,11 +16,11 @@ public class Nsfw implements Command.Class  {
             // If the channel is NSFW, revoke, if not, add
             if (e.getChannel().isNSFW())
             {
-                messageHandler.send("Removed Nsfw statusType from this channel!", "Nsfw");
+                messageHandler.send("Removed Nsfw status from this channel!", "Nsfw");
                 e.getChannel().changeNSFW(false);
             }
             else {
-                messageHandler.send("Added Nsfw statusType to this channel!", "Nsfw");
+                messageHandler.send("Added Nsfw status to this channel!", "Nsfw");
                 e.getChannel().changeNSFW(true);
             }
         };
@@ -29,7 +29,7 @@ public class Nsfw implements Command.Class  {
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("nsfw", "Toggles Nsfw statusType for the channel");
+        st.put("nsfw", "Toggles Nsfw status for the channel");
         return Command.helpCommand(st, "Nsfw", e);
     }
 }

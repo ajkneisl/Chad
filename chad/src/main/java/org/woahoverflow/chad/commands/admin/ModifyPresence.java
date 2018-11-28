@@ -90,7 +90,7 @@ public class ModifyPresence implements Command.Class {
                         e.getClient().changePresence(StatusType.IDLE, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed statusType type to `Idle`";
+                        message = "Changed status type to `Idle`";
                         break;
                     }
 
@@ -103,7 +103,7 @@ public class ModifyPresence implements Command.Class {
                         e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed statusType type to `Online`";
+                        message = "Changed status type to `Online`";
                         break;
                     }
 
@@ -116,7 +116,7 @@ public class ModifyPresence implements Command.Class {
                         e.getClient().changePresence(StatusType.INVISIBLE, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed statusType type to `Offline`";
+                        message = "Changed status type to `Offline`";
                         break;
                     }
 
@@ -129,7 +129,7 @@ public class ModifyPresence implements Command.Class {
                         e.getClient().changePresence(StatusType.DND, ActivityType.PLAYING, ChadVar.currentStatus);
 
                         // Updates the message
-                        message = "Changed statusType type to `Do Not Disturb`";
+                        message = "Changed status type to `Do Not Disturb`";
                         break;
                     }
                     message = MessageHandler.INVALID_ARGUMENTS;
@@ -144,7 +144,7 @@ public class ModifyPresence implements Command.Class {
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("modpresence <string>", "Changes the bots rich presence message.");
-        st.put("modpresence statusType <statusType>", "Changes the bots statusType.");
+        st.put("modpresence status <statusType>", "Changes the bots status.");
         st.put("modpresence <static/rotate>", "Disables or enables the bot's presence rotation.");
         return Command.helpCommand(st, "Modify Presence", e);
     }
