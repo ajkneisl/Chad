@@ -1,5 +1,7 @@
 package org.woahoverflow.chad.handle.commands;
 
+import java.util.Objects;
+import java.util.stream.Stream;
 import org.bson.Document;
 import org.woahoverflow.chad.commands.function.Permissions;
 import org.woahoverflow.chad.core.ChadVar;
@@ -11,18 +13,13 @@ import sx.blah.discord.handle.obj.IUser;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("all")
 public class PermissionHandler
 {
     // check if the user is in the list of developers
     public boolean userIsDeveloper(IUser user) {
         return ChadVar.GLOBAL_PERMISSIONS.get(user.getStringID()) == PermissionHandler.Levels.SYSTEM_ADMINISTRATOR;
     }
-    private ArrayList<String> CMD; // arraylists are simpler, shut up
-    public PermissionHandler()
-    {
-        //ASD POKASDKOIPASDPOKASDKJPIOOIJASD JOI
-    }
+    private ArrayList<String> commands; // arraylists are simpler, shut up
 
     // check if the user has permission for the specified command
     public boolean userHasPermission(String command, IUser user, IGuild g)
@@ -35,30 +32,28 @@ public class PermissionHandler
         }
 
         // system admins can set their own permissions :) (for testing tho don't worry)
-        if (cmd instanceof Permissions && userIsDeveloper(user))
+        if (cmd instanceof Permissions && userIsDeveloper(user)) {
             return true;
+        }
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
         // developers should always have permission for developer commands
-        if (meta.isDeveloperOnly && userIsDeveloper(user))
+        if (meta.isDeveloperOnly && userIsDeveloper(user)) {
             return true;
+        }
 
         // all users should have access to commands in the fun and info commandCategory
-        if (meta.commandCategory == Command.Category.FUN.FUN || meta.commandCategory == Command.Category.INFO || meta.commandCategory
-            == Command.Category.NSFW || meta.commandCategory == Category.MONEY)
+        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY).anyMatch(category -> meta.commandCategory == category))
+        {
             return true;
+        }
 
         // loop through the users roles, if the role has permission for the command, return true
-        for (IRole r : user.getRolesForGuild(g))
-        {
-            if (ChadVar.databaseDevice.getArray(g, r.getStringID()) != null)
-            {
-                if (ChadVar.databaseDevice.getArray(g, r.getStringID()).contains(command))
-                    return true;
-            }
-        }
         // return false if none of the users roles have permission for the command
-        return false;
+        return user.getRolesForGuild(g).stream()
+            .filter(r -> ChadVar.databaseDevice.getArray(g, r.getStringID()) != null)
+            .anyMatch(r -> Objects
+                .requireNonNull(ChadVar.databaseDevice.getArray(g, r.getStringID())).contains(command));
     }
 
     public enum Levels
@@ -69,12 +64,14 @@ public class PermissionHandler
     // grants the specified role access to the specified command in the guild the role belongs to
     public int addCommandToRole(IRole role, String command) throws IndexOutOfBoundsException
     {
-        if (!parseCommand(command))
+        if (!parseCommand(command)) {
             return 0;
+        }
 
         Document get = CachingHandler.getGuild(role.getGuild()).getDoc();
-        if (get == null)
+        if (get == null) {
             return 1;
+        }
         ArrayList<String> arr = (ArrayList<String>) get.get(role.getStringID());
         if (arr == null || arr.isEmpty())
         {
@@ -84,42 +81,42 @@ public class PermissionHandler
             ChadVar.cacheDevice.cacheGuild(role.getGuild());
             return 6;
         }
-        else {
-            if (arr.contains(command))
-                return 2;
-            ArrayList<String> ar = arr;
-            ar.add(command);
-            ChadVar.databaseDevice.set(role.getGuild(), role.getStringID(), ar);
-            ChadVar.cacheDevice.cacheGuild(role.getGuild());
-            return 6;
+        if (arr.contains(command)) {
+            return 2;
         }
+        ArrayList<String> ar = arr;
+        ar.add(command);
+        ChadVar.databaseDevice.set(role.getGuild(), role.getStringID(), ar);
+        ChadVar.cacheDevice.cacheGuild(role.getGuild());
+        return 6;
     }
 
     // wadya get if you turn #addCommandToRole() upside down?
     public int removeCommandFromRole(IRole role, String command)
     {
-        if (!parseCommand(command))
+        if (!parseCommand(command)) {
             return 0;
-
-        if (ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID()) == null)
-            return 4;
-        else {
-            Document get = ChadVar.databaseDevice
-                .getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
-
-            if (get == null)
-                return 1;
-
-            ArrayList<String> ar = ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID());
-            ar.remove(command);
-            ChadVar.databaseDevice.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
-            return 6;
         }
+
+        if (ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID()) == null) {
+            return 4;
+        }
+        Document get = ChadVar.databaseDevice
+            .getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+
+        if (get == null) {
+            return 1;
+        }
+
+        ArrayList<String> ar = ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID());
+        ar.remove(command);
+        ChadVar.databaseDevice.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+        return 6;
 
     }
 
     // this method is poorly named as it doesnt actually parse the command. i/ think it checks to see if its a valid command /shrug
-    private boolean parseCommand(String arg)
+    private static boolean parseCommand(String arg)
     {
         return ChadVar.COMMANDS.containsKey(arg.toLowerCase());
     }
@@ -129,20 +126,20 @@ public class PermissionHandler
     {
         if (i == 1)
         {
-            return "An internal throwError has ocurred";
+            return "An internal error has ocurred";
         }
-        else if (i == 2)
+        if (i == 2)
         {
             return "Command is already entered!";
         }
-        else if (i == 0)
+        if (i == 0)
         {
             return "Invalid Command!";
         }
-        else if (i == 4)
+        if (i == 4)
         {
             return "There's nothing to remove!";
         }
-        return "An internal throwError has occurred!";
+        return "An internal error has occurred!";
     }
 }
