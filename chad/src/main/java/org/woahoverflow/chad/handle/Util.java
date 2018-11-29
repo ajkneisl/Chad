@@ -2,6 +2,7 @@ package org.woahoverflow.chad.handle;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -58,6 +59,18 @@ public final class Util
 
     public static String fixEnumString(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
+    // true for heads, false for tails
+    public static boolean coinflip()
+    {
+        Random random = new Random();
+        int flip = -1;
+        for (int i = 0; i < 100; i++)
+        {
+            flip = random.nextInt(2);
+        }
+        return flip == 0 ? true : false;
     }
 
     /*public static String replaceLast(String input, String regex, String replacement) {
