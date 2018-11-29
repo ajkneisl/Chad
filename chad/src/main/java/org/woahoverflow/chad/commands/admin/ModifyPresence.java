@@ -77,7 +77,7 @@ public class ModifyPresence implements Command.Class {
                     ChadVar.rotationInteger = Integer.parseInt(time_sb.toString().trim());
                     message = "Changed rotation period to `" + ChadVar.rotationInteger + "`";
                     break;*/
-                case "statusType":
+                case "status":
                     // Removes the option argument
                     args.remove(0);
 
