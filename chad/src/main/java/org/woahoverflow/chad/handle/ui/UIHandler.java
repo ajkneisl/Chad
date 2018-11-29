@@ -104,7 +104,16 @@ public class UIHandler
             panel.inviteLinkVal.setText("Bot doesn't have permission");
         }
         else {
-            panel.inviteLinkVal.setText("Invite URL"); // TODO make invite url
+            String invite;
+            if (guild.getClient().getOurUser().getPermissionsForGuild(guild).contains(Permissions.CREATE_INVITE))
+            {
+                // creates an invite (watch out,it can spam it)
+                invite = "https://discord.gg/"+guild.getDefaultChannel().createInvite(60, 420, false, true).getCode();
+            }
+            else {
+                invite = "No Permission for Invite!";
+            }
+            panel.inviteLinkVal.setText(invite);
         }
         panel.reCacheButton.addActionListener((ev) -> ChadVar.cacheDevice.cacheGuild(guild));
     }

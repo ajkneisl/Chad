@@ -101,7 +101,7 @@ public class PhotoEditor implements Command.Class {
                 return;
             }
 
-            // TODO: deep fry time!
+            // TODO: add more stuff to this, it's kinda lonely down here
 
             // If none of the arguments were met, return;
             messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);

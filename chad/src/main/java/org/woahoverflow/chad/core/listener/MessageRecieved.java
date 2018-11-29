@@ -17,7 +17,7 @@ import sx.blah.discord.util.RequestBuffer;
 public final class MessageRecieved
 {
 
-    private static final Pattern COMPILE = Pattern.compile("&user&");
+    public static final Pattern COMPILE = Pattern.compile("&user&");
 
     @SuppressWarnings("unused")
     @EventSubscriber
@@ -43,6 +43,7 @@ public final class MessageRecieved
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {
                     new MessageHandler(e.getChannel()).send(msg, "Swearing");
                     RequestBuffer.request(() -> e.getMessage().delete());
+                    return;
                 }
             }
         }

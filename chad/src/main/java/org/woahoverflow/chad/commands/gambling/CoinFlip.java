@@ -1,10 +1,12 @@
 package org.woahoverflow.chad.commands.gambling;
 
 import java.security.SecureRandom;
+import java.util.concurrent.TimeUnit;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.CachingHandler;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -128,7 +130,60 @@ public class CoinFlip implements Command.Class{
                 // only used once, but thanks lamda
                 final IUser user = opponentUser;
 
-                // TODO: add in a confirmation message
+                // Sends the invitation message
+                IMessage acceptMessage = RequestBuffer.request(() -> e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + user.getName() + "`?")).get();
+
+                // Creates a request buffer and reacts with the Y and N emojis
+                RequestBuilder rb = new RequestBuilder(e.getClient());
+                rb.shouldBufferRequests(true);
+                rb.doAction(() -> {
+                    acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDFE")); // Y
+                    return true;
+                }).andThen(() -> {
+                    acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDF3")); // N
+                    return true;
+                }).execute(); // Executes
+
+                // Assigns variables
+                boolean reacted = true;
+                int timeout = 0;
+
+                while (reacted)
+                {
+                    // If it's been 10 seconds, exit
+                    if (timeout == 10)
+                    {
+                        new MessageHandler(e.getChannel()).sendError('`' +user.getName()+"` didn't respond in time!");
+                        return;
+                    }
+
+                    // Sleeps a second so it doesn't go so fast
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    // Increases the timeout value
+                    timeout++;
+
+                    // Gets both reactions
+                    IReaction yReaction = RequestBuffer.request(() -> acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))).get();
+                    IReaction nReaction = RequestBuffer.request(() -> acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))).get();
+
+                    // Checks if the user reacted to the Y
+                    if (yReaction.getUserReacted(user))
+                    {
+                        reacted = false;
+                    }
+
+                    // Checks if the user reacted with the N
+                    if (nReaction.getUserReacted(user))
+                    {
+                        new MessageHandler(e.getChannel()).send("User Denied!", "CoinFlip");
+                        return;
+                    }
+                }
 
                 // Calculates the Bet
                 long bet;
@@ -197,11 +252,10 @@ public class CoinFlip implements Command.Class{
                 }).execute(); // Executes the builder
 
                 // Variable declaring
-                boolean bothReacted = false;
-                IUser heads = null;
+                timeout = 0;
                 IUser tails = null;
-                int timeout = 0;
-
+                IUser heads = null;
+                boolean bothReacted = false;
                 while (!bothReacted)
                 {
                     // So it doesn't go so fast.
@@ -272,6 +326,16 @@ public class CoinFlip implements Command.Class{
                         }
                     }
 
+                    if (tails != null)
+                    {
+                        System.out.println("tails.getName() = " + tails.getName());
+                    }
+
+                    if (heads != null)
+                    {
+                        System.out.println("heads.getName() = " + heads.getName());
+                    }
+
                     // If both users have selected one, the loop stops.
                     if (tails != null & heads != null) {
                         bothReacted = true;
@@ -300,6 +364,9 @@ public class CoinFlip implements Command.Class{
                 // 0 is tails winning, 1 is heads winning
                 if (flip == 0)
                 {
+                    System.out.println("Tails Winning");
+                    System.out.println("tails.getName() = " + tails.getName());
+                    System.out.println("heads.getName() = " + heads.getName());
                     // Sets the user's balances
                     ChadVar.databaseDevice
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance+bet);
@@ -313,6 +380,9 @@ public class CoinFlip implements Command.Class{
                 }
                 else /* flip is 1, so heads wins this */
                 {
+                    System.out.println("Heads Winning");
+                    System.out.println("tails1.getName() = " + tails.getName());
+                    System.out.println("heads.getName() = " + heads.getName());
                     // Sets the user's balances
                     ChadVar.databaseDevice
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance-bet);

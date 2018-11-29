@@ -2,6 +2,7 @@ package org.woahoverflow.chad.core;
 
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.listener.GuildJoinLeave;
+import org.woahoverflow.chad.core.listener.MessageEditEvent;
 import org.woahoverflow.chad.core.listener.MessageRecieved;
 import org.woahoverflow.chad.core.listener.OnReady;
 import org.woahoverflow.chad.core.listener.UserLeaveJoin;
@@ -41,7 +42,7 @@ public final class ChadBot {
 
         // Logs in and registers the listeners
         cli.login();
-        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageRecieved(), new OnReady(), new UserLeaveJoin());
+        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageRecieved(), new OnReady(), new UserLeaveJoin(), new MessageEditEvent());
 
         // Adds developers into the permissions.
         ChadVar.jsonDevice.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json").forEach((v) ->

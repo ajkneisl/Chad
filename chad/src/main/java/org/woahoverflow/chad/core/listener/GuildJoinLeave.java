@@ -47,7 +47,7 @@ public final class GuildJoinLeave
             doc.append("join_message_ch", "none");
             doc.append("leave_message_ch", "none");
             doc.append("stop_swear", false);
-            doc.append("swear_message", "No Swearing &user&!");
+            doc.append("swear_message", "No Swearing `&user&`!");
 
             ChadVar.databaseDevice.getCollection().insertOne(doc);
             UIHandler.loadGuild(e.getGuild());

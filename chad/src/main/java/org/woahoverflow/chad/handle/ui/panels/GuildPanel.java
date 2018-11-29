@@ -45,7 +45,7 @@ public class GuildPanel extends JPanel {
             inviteLinkVal.setText("inviteLink");
             inviteLinkVal.setFont(inviteLinkVal.getFont().deriveFont(inviteLinkVal.getFont().getSize() + 4f));
             add(inviteLinkVal);
-            inviteLinkVal.setBounds(105, 65, 100, 19);
+            inviteLinkVal.setBounds(105, 65, 300, 19);
             reCacheButton.setText("ReCache");
             add(reCacheButton);
             reCacheButton.setBounds(new Rectangle(new Point(405, 30), reCacheButton.getPreferredSize()));
