@@ -1,5 +1,7 @@
 package org.woahoverflow.chad.commands.admin;
 
+import com.sun.management.OperatingSystemMXBean;
+import java.lang.management.ManagementFactory;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.handle.MessageHandler;
 import org.woahoverflow.chad.handle.commands.Command;
@@ -19,8 +21,22 @@ public class CurrentThreads implements Command.Class{
 
             // Adds all threads running threads to the stringbuilder, than to the description.
             StringBuilder stringBuilder = new StringBuilder();
-            ChadVar.threadDevice
-                .getMap().forEach((key, val) -> stringBuilder.append(key.getName()).append(" [").append(key.getLongID()).append("] ").append(val.size()).append('\n'));
+            ChadVar.threadDevice.getMap().forEach((key, val) -> stringBuilder.append('`')
+                .append(key.getLongID())
+                .append("` **")
+                .append(key.getName())
+                .append("**: ")
+                .append(val.size())
+                .append('\n'));
+
+            // Gets the used ram by the JVM, and the available ram and adds it to the stringbuilder
+            stringBuilder.append("\nThe JVM is currently using `")
+                .append(Runtime.getRuntime().totalMemory()/1000/1000).append("`mb out of `")
+                .append(
+                    ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize()/1000/1000
+                ).append("`mb.");
+
+            // Append to builder
             embedBuilder.appendDesc(stringBuilder.toString());
 
             // Sends
