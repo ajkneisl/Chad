@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.handle.ui.panels;
+package org.woahoverflow.chad.framework.ui.panels;
 
 import java.awt.Font;
 import java.awt.Point;
@@ -28,8 +28,6 @@ public class MainPanel extends JPanel {
         refreshButton = new JButton();
         exitButton = new JButton();
         JLabel adv = new JLabel();
-        JLabel lastReCacheAllText = new JLabel();
-        lastReCacheAllValue = new JLabel();
         refreshButton2 = new JButton();
         guildGo = new JButton();
         JLabel guildText = new JLabel();
@@ -110,14 +108,6 @@ public class MainPanel extends JPanel {
         adv.setFont(new Font("Open Sans", Font.PLAIN, 20));
         add(adv);
         adv.setBounds(new Rectangle(new Point(895, 5), adv.getPreferredSize()));
-        lastReCacheAllText.setText("Last Cache :");
-        lastReCacheAllText.setFont(new Font("Open Sans", Font.PLAIN, 20));
-        add(lastReCacheAllText);
-        lastReCacheAllText.setBounds(10, 640, lastReCacheAllText.getPreferredSize().width, lastReCacheAllText.getPreferredSize().height);
-        lastReCacheAllValue.setText("00/00/0000 00:00");
-        lastReCacheAllValue.setFont(new Font("Open Sans", Font.PLAIN, 15));
-        add(lastReCacheAllValue);
-        lastReCacheAllValue.setBounds(125, 645, lastReCacheAllValue.getPreferredSize().width, lastReCacheAllValue.getPreferredSize().height);
         refreshButton2.setText("ReCache");
         refreshButton2.setFont(new Font("Open Sans", Font.PLAIN, 13));
         add(refreshButton2);
@@ -177,7 +167,6 @@ public class MainPanel extends JPanel {
     public JTextArea logs;
     public JButton refreshButton;
     public JButton exitButton;
-    public JLabel lastReCacheAllValue;
     public JButton refreshButton2;
     public JTextArea guildList;
     public JButton guildGo;

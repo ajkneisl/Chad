@@ -2,10 +2,10 @@ package org.woahoverflow.chad.commands.fun;
 
 import java.net.MalformedURLException;
 import java.security.SecureRandom;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.ui.UIHandler.LogLevel;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.ui.UIHandler;
+import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.imageio.ImageIO;
@@ -96,7 +96,7 @@ public class PhotoEditor implements Command.Class {
                 if (!file.delete())
                 {
                     // if the file didn't delete, send a log
-                    ChadVar.uiDevice.addLog("Failed to delete file " + file.getPath(), LogLevel.SEVERE);
+                    UIHandler.handle.addLog("Failed to delete file " + file.getPath(), LogLevel.SEVERE);
                 }
                 return;
             }

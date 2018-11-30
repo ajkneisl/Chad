@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.handle;
+package org.woahoverflow.chad.framework;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +22,7 @@ public final class Util
     }
 
     @SuppressWarnings("all")
-    static String httpGet(String url) {
+    public static String httpGet(String url) {
         try {
             URL obj = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();

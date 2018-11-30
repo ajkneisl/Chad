@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.handle;
+package org.woahoverflow.chad.framework.handle;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -9,9 +9,9 @@ import com.google.gson.JsonParser;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.ui.ChadError;
-import org.woahoverflow.chad.handle.ui.UIHandler;
+import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.ui.ChadError;
+import org.woahoverflow.chad.framework.ui.UIHandler;
 
 import java.io.File;
 import java.io.FileReader;
@@ -21,8 +21,8 @@ import java.io.IOException;
 @SuppressWarnings({"ALL", "deprecation"})
 public class JSONHandler
 {
+    public static final JSONHandler handle = new JSONHandler().forceCheck();
     // Handles JSONHandler data, including the bot.json files and reading from network
-    
     public JSONHandler()
     {
         super();
@@ -34,11 +34,11 @@ public class JSONHandler
         {
             File dir = new File(System.getenv("appdata") + "\\chad");
             if (!dir.exists())
-                ChadVar.uiDevice.addLog("Created Chad Directory : " + dir.mkdirs(), UIHandler.LogLevel.INFO);
+                UIHandler.handle.addLog("Created Chad Directory : " + dir.mkdirs(), UIHandler.LogLevel.INFO);
             File bot = new File(dir + "\\bot.json");
             if (!new File(dir + "\\bot.json").exists())
             {
-                ChadVar.uiDevice
+                UIHandler.handle
                     .addLog("Created Bot Directory : " + bot.createNewFile(), UIHandler.LogLevel.INFO);
                 org.json.JSONObject obj = new org.json.JSONObject();
                 obj.put("token", "");
@@ -54,11 +54,11 @@ public class JSONHandler
             }
             File imgdir = new File(System.getenv("appdata") + "\\chad\\imgcache");
             if (!imgdir.exists())
-                ChadVar.uiDevice
+                UIHandler.handle
                     .addLog("Created Temp Image Directory : " + imgdir.mkdirs(), UIHandler.LogLevel.INFO);
             File dir2 = new File(System.getenv("appdata") + "\\chad\\catpictures");
             if (!dir2.exists())
-                ChadVar.uiDevice
+                UIHandler.handle
                     .addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
         } catch (IOException e)
         {
@@ -112,7 +112,7 @@ public class JSONHandler
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ChadVar.uiDevice.addLog("readFile failed, returning null", UIHandler.LogLevel.SEVERE);
+        UIHandler.handle.addLog("readFile failed, returning null", UIHandler.LogLevel.SEVERE);
         return null;
     }
 

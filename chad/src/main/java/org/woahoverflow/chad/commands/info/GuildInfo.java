@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.info;
 
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;

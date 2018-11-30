@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.nsfw;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -25,7 +25,8 @@ public class NBLewdNeko implements Command.Class  {
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.withTitle("Lewd Neko [Nsfw]");
-            embedBuilder.withImage(ChadVar.jsonDevice.read("https://nekobot.xyz/api/image?type=lewdneko").getString("message"));
+            embedBuilder.withImage(
+                JSONHandler.handle.read("https://nekobot.xyz/api/image?type=lewdneko").getString("message"));
             messageHandler.sendEmbed(embedBuilder);
         };
     }

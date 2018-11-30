@@ -2,9 +2,9 @@ package org.woahoverflow.chad.commands.fun;
 
 import java.security.SecureRandom;
 import org.json.JSONArray;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class EightBall implements Command.Class  {
             }
 
             // Gets the answers from the cdn
-            JSONArray answers = ChadVar.jsonDevice.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
+            JSONArray answers = JSONHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
 
             // Sends the answer
             messageHandler.send((String) answers.get(new SecureRandom().nextInt(answers.length())), "8Ball");

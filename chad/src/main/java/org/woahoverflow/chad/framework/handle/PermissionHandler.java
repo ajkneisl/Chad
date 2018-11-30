@@ -1,12 +1,14 @@
-package org.woahoverflow.chad.handle.commands;
+package org.woahoverflow.chad.framework.handle;
 
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.bson.Document;
 import org.woahoverflow.chad.commands.function.Permissions;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.commands.Command.Category;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.Command.Category;
+import org.woahoverflow.chad.framework.Command.Class;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -15,16 +17,16 @@ import java.util.ArrayList;
 
 public class PermissionHandler
 {
+    public static final PermissionHandler handle = new PermissionHandler();
     // check if the user is in the list of developers
     public boolean userIsDeveloper(IUser user) {
         return ChadVar.GLOBAL_PERMISSIONS.get(user.getStringID()) == PermissionHandler.Levels.SYSTEM_ADMINISTRATOR;
     }
-    private ArrayList<String> commands; // arraylists are simpler, shut up
 
     // check if the user has permission for the specified command
     public boolean userHasPermission(String command, IUser user, IGuild g)
     {
-        Command.Class cmd = ChadVar.COMMANDS.get(command).commandClass;
+        Class cmd = ChadVar.COMMANDS.get(command).getCommandClass();
 
         if (cmd == null)
         {
@@ -38,12 +40,12 @@ public class PermissionHandler
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
         // developers should always have permission for developer commands
-        if (meta.isDeveloperOnly && userIsDeveloper(user)) {
+        if (meta.getCommandCategory() == Category.ADMIN && userIsDeveloper(user)) {
             return true;
         }
 
         // all users should have access to commands in the fun and info commandCategory
-        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY).anyMatch(category -> meta.commandCategory == category))
+        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY).anyMatch(category -> meta.getCommandCategory() == category))
         {
             return true;
         }
@@ -51,9 +53,9 @@ public class PermissionHandler
         // loop through the users roles, if the role has permission for the command, return true
         // return false if none of the users roles have permission for the command
         return user.getRolesForGuild(g).stream()
-            .filter(r -> ChadVar.databaseDevice.getArray(g, r.getStringID()) != null)
+            .filter(r -> DatabaseHandler.handle.getArray(g, r.getStringID()) != null)
             .anyMatch(r -> Objects
-                .requireNonNull(ChadVar.databaseDevice.getArray(g, r.getStringID())).contains(command));
+                .requireNonNull(DatabaseHandler.handle.getArray(g, r.getStringID())).contains(command));
     }
 
     public enum Levels
@@ -68,17 +70,21 @@ public class PermissionHandler
             return 0;
         }
 
-        Document get = CachingHandler.getGuild(role.getGuild()).getDoc();
-        if (get == null) {
+        Document cachedDocument = Chad.getGuild(role.getGuild()).getDocument();
+
+        if (cachedDocument == null) {
             return 1;
         }
-        ArrayList<String> arr = (ArrayList<String>) get.get(role.getStringID());
+
+        @SuppressWarnings("all")
+        ArrayList<String> arr = (ArrayList<String>) cachedDocument.get(role.getStringID());
+
         if (arr == null || arr.isEmpty())
         {
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);
-            ChadVar.databaseDevice.set(role.getGuild(), role.getStringID(), ar);
-            ChadVar.cacheDevice.cacheGuild(role.getGuild());
+            DatabaseHandler.handle.set(role.getGuild(), role.getStringID(), ar);
+            Chad.getGuild(role.getGuild()).cache();
             return 6;
         }
         if (arr.contains(command)) {
@@ -86,8 +92,8 @@ public class PermissionHandler
         }
         ArrayList<String> ar = arr;
         ar.add(command);
-        ChadVar.databaseDevice.set(role.getGuild(), role.getStringID(), ar);
-        ChadVar.cacheDevice.cacheGuild(role.getGuild());
+        DatabaseHandler.handle.set(role.getGuild(), role.getStringID(), ar);
+        Chad.getGuild(role.getGuild()).cache();
         return 6;
     }
 
@@ -98,19 +104,26 @@ public class PermissionHandler
             return 0;
         }
 
-        if (ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID()) == null) {
+        if (DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID()) == null) {
             return 4;
         }
-        Document get = ChadVar.databaseDevice
-            .getCollection().find(new Document("guildid", role.getGuild().getStringID())).first();
+
+        Document get = Chad.getGuild(role.getGuild()).getDocument();
 
         if (get == null) {
             return 1;
         }
 
-        ArrayList<String> ar = ChadVar.databaseDevice.getArray(role.getGuild(), role.getStringID());
+        ArrayList<String> ar = DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID());
+
+        if (ar == null)
+        {
+            return 1;
+        }
+
         ar.remove(command);
-        ChadVar.databaseDevice.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+        DatabaseHandler.handle.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
+        Chad.getGuild(role.getGuild()).cache();
         return 6;
 
     }

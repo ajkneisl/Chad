@@ -1,10 +1,9 @@
 package org.woahoverflow.chad.commands.admin;
 
 import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.ui.UIHandler;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
@@ -21,7 +20,7 @@ public class Shutdown implements Command.Class  {
             new MessageHandler(e.getChannel()).send("Shutting down in 10 seconds...", "Warning");
 
             // Warns within the UI
-            ChadVar.uiDevice.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);
+            UIHandler.handle.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);
 
             // Updates the presence
             ChadBot.cli.changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...");

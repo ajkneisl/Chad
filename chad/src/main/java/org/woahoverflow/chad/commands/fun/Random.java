@@ -2,15 +2,13 @@ package org.woahoverflow.chad.commands.fun;
 
 import com.google.common.net.HttpHeaders;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -68,7 +66,7 @@ public class Random implements Command.Class {
                     return;
                 case "quote":
                     // Gets a random quote
-                    JSONObject obj = ChadVar.jsonDevice.read("https://talaikis.com/api/quotes/random/");
+                    JSONObject obj = JSONHandler.handle.read("https://talaikis.com/api/quotes/random/");
                     
                     // Builds the embed
                     EmbedBuilder embedBuilder = new EmbedBuilder();

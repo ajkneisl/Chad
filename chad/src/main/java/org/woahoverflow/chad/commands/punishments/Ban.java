@@ -1,10 +1,10 @@
 package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -83,10 +83,10 @@ public class Ban implements Command.Class
             }
 
             // Checks if ban message is enabled
-            if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "ban_msg_on"))
+            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "ban_msg_on"))
             {
                 // Gets the message from the cache
-                String message = CachingHandler.getGuild(e.getGuild()).getDoc().getString("ban_message");
+                String message = Chad.getGuild(e.getGuild()).getDocument().getString("ban_message");
 
                 // If the message isn't null, continue
                 if (message != null)

@@ -2,11 +2,10 @@ package org.woahoverflow.chad.commands.gambling;
 
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -22,10 +21,10 @@ public class CoinFlip implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (!ChadVar.databaseDevice.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
+            if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
             {
-                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + CachingHandler
-                    .getGuild(e.getGuild()).getDoc().getString("prefix") + "register` to get one!");
+                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + Chad
+                    .getGuild(e.getGuild()).getDocument().getString("prefix") + "register` to get one!");
                 return;
             }
 
@@ -45,7 +44,7 @@ public class CoinFlip implements Command.Class{
                     return;
                 }
 
-                long balance = (long) ChadVar.databaseDevice
+                long balance = (long) DatabaseHandler.handle
                     .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
                 if (bet > balance)
                 {
@@ -75,12 +74,12 @@ public class CoinFlip implements Command.Class{
 
                 if (flip == user)
                 {
-                    ChadVar.databaseDevice
+                    DatabaseHandler.handle
                         .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance+bet);
                     new MessageHandler(e.getChannel()).send("You won `"+bet+"`, you now have `" + (balance+bet) + "`.", "Coin Flip");
                 }
                 else {
-                    ChadVar.databaseDevice
+                    DatabaseHandler.handle
                         .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance-bet);
                     new MessageHandler(e.getChannel()).send("You lost `"+bet+"`, you now have `" + (balance-bet) + "`.", "Coin Flip");
                 }
@@ -201,7 +200,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Gets the author's balance
-                long balance = (long) ChadVar.databaseDevice
+                long balance = (long) DatabaseHandler.handle
                     .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
 
                 // Checks if the user's bet is bigger than the balance.
@@ -212,7 +211,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Gets the opponent's balance
-                long opponentBalance = (long) ChadVar.databaseDevice
+                long opponentBalance = (long) DatabaseHandler.handle
                     .get(e.getGuild(), opponentUser.getStringID() + "_balance");
 
                 // Checks if the bet's bigger than the opponent's balance
@@ -368,9 +367,9 @@ public class CoinFlip implements Command.Class{
                     System.out.println("tails.getName() = " + tails.getName());
                     System.out.println("heads.getName() = " + heads.getName());
                     // Sets the user's balances
-                    ChadVar.databaseDevice
+                    DatabaseHandler.handle
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance+bet);
-                    ChadVar.databaseDevice
+                    DatabaseHandler.handle
                         .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance-bet);
 
                     // Creates the edit string, then applies.
@@ -384,9 +383,9 @@ public class CoinFlip implements Command.Class{
                     System.out.println("tails1.getName() = " + tails.getName());
                     System.out.println("heads.getName() = " + heads.getName());
                     // Sets the user's balances
-                    ChadVar.databaseDevice
+                    DatabaseHandler.handle
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance-bet);
-                    ChadVar.databaseDevice
+                    DatabaseHandler.handle
                         .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance+bet);
 
                     // Creates the edit string, then applies.

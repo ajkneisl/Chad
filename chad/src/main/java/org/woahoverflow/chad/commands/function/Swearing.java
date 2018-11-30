@@ -2,15 +2,14 @@ package org.woahoverflow.chad.commands.function;
 
 import java.util.HashMap;
 import java.util.List;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.Command.Class;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-public class Swearing implements Class {
+public class Swearing implements Command.Class {
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -23,7 +22,7 @@ public class Swearing implements Class {
                 // creates an embed builder and applies values
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Swear Filter");
-                String status = CachingHandler.getGuild(e.getGuild()).getDoc().getBoolean("stop_swear") ? "enabled" :  "disabled";
+                String status = Chad.getGuild(e.getGuild()).getDocument().getBoolean("stop_swear") ? "enabled" :  "disabled";
                 embedBuilder.withDesc("Swearing in this guild is `"+status+"`.");
                 // send
                 messageHandler.sendEmbed(embedBuilder);
@@ -37,9 +36,9 @@ public class Swearing implements Class {
                 // good looking value
                 String toggleString = toggle ? "enabled" : "disabled";
                 // sets in database
-                ChadVar.databaseDevice.set(e.getGuild(), "stop_swear", toggle);
+                DatabaseHandler.handle.set(e.getGuild(), "stop_swear", toggle);
                 // recaches
-                ChadVar.cacheDevice.cacheGuild(e.getGuild());
+                Chad.getGuild(e.getGuild()).cache();
                 // sends message
                 messageHandler.send("Swear filtering has been `"+toggleString+ '`', "Swear Filter");
                 return;

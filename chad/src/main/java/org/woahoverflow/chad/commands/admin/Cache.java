@@ -1,14 +1,16 @@
 package org.woahoverflow.chad.commands.admin;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Chad.CachedGuild;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.RequestBuffer;
 
 public class Cache implements Command.Class{
     @Override
@@ -21,8 +23,8 @@ public class Cache implements Command.Class{
             {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Cache Status");
-                embedBuilder.withDesc("Current Cached Guilds `" + CachingHandler.cachedGuildsSize() + "`\n"+
-                        "Last Cached in Current Guild `" + CachingHandler.getGuild(e.getGuild()).lastCached() + "`\n");
+                embedBuilder.withDesc("Current Cached Guilds `" + Chad.cachedGuilds.size() + "`\n"+
+                        "Last Cached in Current Guild `" + Chad.getGuild(e.getGuild()).getLastCached() + "`\n");
                 messageHandler.sendEmbed(embedBuilder);
                 return;
             }
@@ -32,12 +34,14 @@ public class Cache implements Command.Class{
             {
                 // ReCaches the current guild
                 case "recache":
-                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
+                    Chad.getGuild(e.getGuild()).cache();
                     messageHandler.send("ReCached current guild", "Caching Manager");
                     return;
                 // ReCaches all guilds
                 case "recacheall":
-                    ChadVar.cacheDevice.reCacheAll();
+                    List<IGuild> guilds = RequestBuffer.request(e.getClient()::getGuilds).get();
+                    Chad.cachedGuilds.clear();
+                    guilds.forEach((g) -> Chad.cachedGuilds.put(g, new CachedGuild(g)));
                     messageHandler.send("ReCached all guilds", "Caching Manager");
                     return;
 

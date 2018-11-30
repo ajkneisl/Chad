@@ -2,10 +2,10 @@ package org.woahoverflow.chad.commands.info;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.ui.ChadError;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -31,7 +31,7 @@ public class RedditTop implements Command.Class {
             try {
                 // Gets post
                 int index = 0;
-                post = ChadVar.jsonDevice.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
+                post = JSONHandler.handle.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
@@ -40,7 +40,7 @@ public class RedditTop implements Command.Class {
                 while (post.getBoolean("stickied"))
                 {
                     index++;
-                    post = ChadVar.jsonDevice.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
+                    post = JSONHandler.handle.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)

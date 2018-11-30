@@ -3,18 +3,18 @@ package org.woahoverflow.chad.commands.info;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.Util;
-import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.Command.Category;
-import org.woahoverflow.chad.handle.commands.Command.Class;
-import org.woahoverflow.chad.handle.commands.Command.Data;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.Command.Category;
+import org.woahoverflow.chad.framework.Command.Data;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class Help implements Class {
+public class Help implements Command.Class {
 
     private static final Pattern REGEX = Pattern.compile(", $");
 
@@ -29,7 +29,7 @@ public class Help implements Class {
                     continue;
                 }
                 // If the commandCategory is Admin and the user isn't an Admin, don't show.
-                if (category == Category.ADMIN && !ChadVar.permissionDevice.userIsDeveloper(e.getAuthor()))
+                if (category == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
                 {
                     continue;
                 }
@@ -43,7 +43,7 @@ public class Help implements Class {
                     Data meta = stringDataEntry.getValue();
 
                     // Makes sure the command is in the right area
-                    if (meta.commandCategory != category)
+                    if (meta.getCommandCategory() != category)
                     {
                         continue;
                     }

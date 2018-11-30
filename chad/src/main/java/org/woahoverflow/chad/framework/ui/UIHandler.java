@@ -1,14 +1,14 @@
-package org.woahoverflow.chad.handle.ui;
+package org.woahoverflow.chad.framework.ui;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.Util;
-import org.woahoverflow.chad.handle.ui.panels.GuildPanel;
-import org.woahoverflow.chad.handle.ui.panels.MainPanel;
-import org.woahoverflow.chad.handle.ui.panels.PopUpPanel;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.ui.panels.GuildPanel;
+import org.woahoverflow.chad.framework.ui.panels.MainPanel;
+import org.woahoverflow.chad.framework.ui.panels.PopUpPanel;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.obj.IGuild;
@@ -23,6 +23,7 @@ import java.util.TimerTask;
 
 public class UIHandler
 {
+    public static UIHandler handle;
     // panels
     private int i;
     private final JFrame mainFrame = new JFrame("Chad");
@@ -45,12 +46,12 @@ public class UIHandler
         beginMainFrame();
 
         // UI Updater (updates stats)
-        ChadVar.EXECUTOR_POOL.submit(() -> new Timer().schedule(new TimerTask() {
+        Chad.runThread(() -> new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 update();
             }
-        }, 60000*5,0));
+        }, 60000*5,0), Chad.getInternalConsumer());
     }
 
     public final void addLog(String log, LogLevel level)
@@ -104,18 +105,14 @@ public class UIHandler
             panel.inviteLinkVal.setText("Bot doesn't have permission");
         }
         else {
-            String invite;
-            if (guild.getClient().getOurUser().getPermissionsForGuild(guild).contains(Permissions.CREATE_INVITE))
-            {
-                // creates an invite (watch out,it can spam it)
-                invite = "https://discord.gg/"+guild.getDefaultChannel().createInvite(60, 420, false, true).getCode();
-            }
-            else {
-                invite = "No Permission for Invite!";
-            }
+            // creates an invite (watch out,it can spam it)
+            String invite = guild.getClient().getOurUser().getPermissionsForGuild(guild)
+                .contains(Permissions.CREATE_INVITE) ? "https://discord.gg/" + guild
+                .getDefaultChannel().createInvite(60, 420, false, true).getCode()
+                : "No Permission for Invite!";
             panel.inviteLinkVal.setText(invite);
         }
-        panel.reCacheButton.addActionListener((ev) -> ChadVar.cacheDevice.cacheGuild(guild));
+        panel.reCacheButton.addActionListener((ev) -> Chad.getGuild(guild).cache());
     }
 
     @SuppressWarnings("all")
@@ -130,7 +127,8 @@ public class UIHandler
         });
         mainpanel.exitButton.addActionListener((ActionEvent) -> System.exit(0));
         mainpanel.refreshButton.addActionListener((ActionEvent) -> update());
-        mainpanel.refreshButton2.addActionListener((ActionEvent) -> ChadVar.cacheDevice.reCacheAll());
+        // three lambdas in one :)
+        mainpanel.refreshButton2.addActionListener((ActionEvent) -> RequestBuffer.request(() -> ChadBot.cli.getGuilds().forEach((guild) -> Chad.getGuild(guild).cache())));
 
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
                 java.lang.management.ManagementFactory.getOperatingSystemMXBean();
@@ -158,7 +156,6 @@ public class UIHandler
         mainpanel.coresVal.setText(Integer.toString(available_processors));
         mainpanel.memoryVal.setText(memory);
         mainpanel.shardRespTimeVal.setText(ping + "ms");
-        mainpanel.lastReCacheAllValue.setText(ChadVar.lastCacheAll);
         mainpanel.presenceVal.setText("Loading");
         mainpanel.logs.setEditable(false);
         mainpanel.logs.setText("UI has started.");
@@ -210,10 +207,9 @@ public class UIHandler
         long ping = shard.getResponseTime();
         mainpanel.allGuildsValue.setText(getStats(cli).get("guildAmount"));
         mainpanel.biggestGuildValue.setText(getStats(cli).get("biggestGuild"));
-        mainpanel.botToUserVal.setText(getStats(cli).get("botToPlayer"));
-        mainpanel.lastReCacheAllValue.setText(ChadVar.lastCacheAll);
+        mainpanel.botToUserVal.setText(getStats(cli).get("botToPlayer"));/*
         ChadVar.threadDevice.getMap().forEach((key, val) -> val.forEach((value) -> add()));
-        mainpanel.threadVal.setText(Integer.toString(ChadVar.threadDevice.getMap().size()));
+        mainpanel.threadVal.setText(Integer.toString(ChadVar.threadDevice.getMap().size()));*/
         if (ChadBot.cli.isReady() && ChadBot.cli.getOurUser().getPresence().getText().isPresent()) {
             mainpanel.presenceVal.setText(ChadBot.cli.getOurUser().getPresence().getText().get());
         }

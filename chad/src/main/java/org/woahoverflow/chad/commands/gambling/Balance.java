@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.commands.gambling;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
@@ -13,14 +13,14 @@ public class Balance implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (!ChadVar.databaseDevice.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
+            if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
             {
-                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + CachingHandler
-                    .getGuild(e.getGuild()).getDoc().getString("prefix") + "register` to get one!");
+                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + Chad
+                    .getGuild(e.getGuild()).getDocument().getString("prefix") + "register` to get one!");
                 return;
             }
 
-            new MessageHandler(e.getChannel()).send("Your balance is `"+ChadVar.databaseDevice
+            new MessageHandler(e.getChannel()).send("Your balance is `"+DatabaseHandler.handle
                 .get(e.getGuild(), e.getAuthor().getStringID()+"_balance")+"`.", "Balance");
         };
     }

@@ -1,8 +1,7 @@
-package org.woahoverflow.chad.handle.ui;
+package org.woahoverflow.chad.framework.ui;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import org.woahoverflow.chad.core.ChadVar;
 
 public final class ChadError
 {
@@ -16,7 +15,7 @@ public final class ChadError
         UIHandler.newError(error + '\n' + stackTrace);
 
         // Adds a log to the main UI
-        ChadVar.uiDevice.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
+        UIHandler.handle.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
     }
 
     // Sends a string in an error format
@@ -26,6 +25,6 @@ public final class ChadError
         UIHandler.newError(error);
 
         // Adds a log to the main UI
-        ChadVar.uiDevice.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
+        UIHandler.handle.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
     }
 }

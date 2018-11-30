@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("all")
 public class Purge implements Command.Class  {
 
     @Override
@@ -59,7 +58,7 @@ public class Purge implements Command.Class  {
             RequestBuffer.request(() -> e.getChannel().getMessageHistory(Integer.parseInt(args.get(0))).bulkDelete());
 
             // Sends message confirming
-            IMessage botConfirm = RequestBuffer.request(() -> e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+e.getChannel().getName()+"`")).get();
+            IMessage botConfirm = RequestBuffer.request(() -> e.getChannel().sendMessage("Cleared `"+args.get(0)+"` messages from `"+e.getChannel().getName()+ '`')).get();
 
             // Waits 2 seconds, then deletes the bot's message
             try {

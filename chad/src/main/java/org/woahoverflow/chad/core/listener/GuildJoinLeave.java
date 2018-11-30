@@ -1,10 +1,9 @@
 package org.woahoverflow.chad.core.listener;
 
 import org.bson.Document;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.DatabaseHandler;
-import org.woahoverflow.chad.handle.ui.UIHandler;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
@@ -16,7 +15,7 @@ public final class GuildJoinLeave
     @EventSubscriber
     public void joinGuild(GuildCreateEvent e)
     {
-        if (!ChadVar.databaseDevice.exists(e.getGuild()))
+        if (!DatabaseHandler.handle.exists(e.getGuild()))
         {
             Document doc = new Document();
 
@@ -49,29 +48,28 @@ public final class GuildJoinLeave
             doc.append("stop_swear", false);
             doc.append("swear_message", "No Swearing `&user&`!");
 
-            ChadVar.databaseDevice.getCollection().insertOne(doc);
+            DatabaseHandler.handle.getCollection().insertOne(doc);
             UIHandler.loadGuild(e.getGuild());
-            ChadVar.uiDevice.addLog('<' +e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
-            ChadVar.cacheDevice.cacheGuild(e.getGuild());
+            UIHandler.handle.addLog('<' +e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+            Chad.getGuild(e.getGuild()).cache();
         }
-        ChadVar.cacheDevice.cacheGuild(e.getGuild());
+        Chad.getGuild(e.getGuild()).cache();
     }
 
     @SuppressWarnings("unused")
     @EventSubscriber
     public static void leaveGuild(GuildLeaveEvent e)
     {
-        DatabaseHandler databaseHandler = ChadVar.databaseDevice;
-        Document get = databaseHandler.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
+        Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
         if (get == null) {
             return;
         }
 
-        databaseHandler.getCollection().deleteOne(get);
+        DatabaseHandler.handle.getCollection().deleteOne(get);
 
-        CachingHandler.unCacheGuild(e.getGuild());
+        Chad.unCacheGuild(e.getGuild());
 
-        ChadVar.uiDevice.addLog('<' +e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
+        UIHandler.handle.addLog('<' +e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
     }
 }

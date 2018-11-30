@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.handle;
+package org.woahoverflow.chad.framework.handle;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -11,13 +11,15 @@ import java.util.ArrayList;
 
 public class DatabaseHandler
 {
+    public static final DatabaseHandler handle = new DatabaseHandler();
+
     private final MongoClient cli;
     private MongoCollection<Document> col;
     private final MongoDatabase db;
 
-    public DatabaseHandler(String uri)
+    public DatabaseHandler()
     {
-        cli = new MongoClient(new MongoClientURI(uri));
+        cli = new MongoClient(new MongoClientURI(JSONHandler.handle.get("uri_link")));
         db = cli.getDatabase("Database");
         col = db.getCollection("bot");
     }

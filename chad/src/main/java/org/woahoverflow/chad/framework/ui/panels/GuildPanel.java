@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.handle.ui.panels;
+package org.woahoverflow.chad.framework.ui.panels;
 
 import java.awt.Dimension;
 import java.awt.Insets;

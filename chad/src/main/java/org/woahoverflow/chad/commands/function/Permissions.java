@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -89,14 +89,14 @@ public class Permissions implements Command.Class  {
                         }
 
                         // Adds it to the database and gets the result
-                        int add = ChadVar.permissionDevice.addCommandToRole(role, args.get(0));
+                        int add = PermissionHandler.handle.addCommandToRole(role, args.get(0));
 
                         // If the result was 6 (good) return the amount, if not return the correct error.
                         if (add == 6)
                         {
                             m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
-                            m.sendError(ChadVar.permissionDevice.parseErrorCode(add));
+                            m.sendError(PermissionHandler.handle.parseErrorCode(add));
                         }
                         return;
                     case "remove":
@@ -108,19 +108,19 @@ public class Permissions implements Command.Class  {
                         }
 
                         // Removes it from the database and gets the result
-                        int rem = ChadVar.permissionDevice.removeCommandFromRole(role, args.get(0));
+                        int rem = PermissionHandler.handle.removeCommandFromRole(role, args.get(0));
 
                         // If the result was 6 (good) return the amount, if not return the correct error.
                         if (rem == 6)
                         {
                             m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         } else {
-                            m.sendError(ChadVar.permissionDevice.parseErrorCode(rem));
+                            m.sendError(PermissionHandler.handle.parseErrorCode(rem));
                         }
                         return;
                     case "view":
                         // Gets the permissions to a role
-                        ArrayList<String> ar = (ArrayList<String>) CachingHandler.getGuild(e.getGuild()).getDoc().get(role.getStringID());
+                        ArrayList<String> ar = (ArrayList<String>) Chad.getGuild(e.getGuild()).getDocument().get(role.getStringID());
 
                         // Checks if there's no permissions
                         if (ar == null || ar.size() == 0) {

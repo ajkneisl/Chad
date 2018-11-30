@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.admin;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
@@ -33,8 +33,7 @@ public class SetBalance implements Command.Class {
                 }
 
                 // Sets the balance
-                ChadVar.databaseDevice
-                    .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", Long.parseLong(args.get(0)));
+                DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", Long.parseLong(args.get(0)));
 
                 // Sends the message
                 messageHandler.send("Set your balance to `"+args.get(0)+"`.", "Balance");
@@ -60,7 +59,7 @@ public class SetBalance implements Command.Class {
                 }
 
                 // Sets the balance of the mentioned user
-                ChadVar.databaseDevice
+                DatabaseHandler.handle
                     .set(e.getGuild(), e.getMessage().getMentions().get(0).getStringID() + "_balance", Long.parseLong(args.get(0)));
 
                 // Sends the message

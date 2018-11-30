@@ -1,10 +1,10 @@
 package org.woahoverflow.chad.commands.function;
 
 import java.util.stream.Collectors;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 
@@ -36,14 +36,17 @@ public class Logging implements Command.Class  {
                     boolean actualBoolean = bool.equalsIgnoreCase("off");
 
                     // Sets in the database
-                    ChadVar.databaseDevice.set(e.getGuild(), "logging", actualBoolean);
+                    DatabaseHandler.handle.set(e.getGuild(), "logging", actualBoolean);
 
                     // Sends a log
-                    MessageHandler.sendConfigLog("Logging", bool, Boolean.toString(ChadVar.databaseDevice
+                    MessageHandler.sendConfigLog("Logging", bool, Boolean.toString(DatabaseHandler.handle
                         .getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild());
 
                     // Sends the message
                     messageHandler.send("Changed logging to " + bool, "Changed Logging");
+
+                    // recaches
+                    Chad.getGuild(e.getGuild()).cache();
                     return;
                 }
                 messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
@@ -75,7 +78,7 @@ public class Logging implements Command.Class  {
                 }
 
                 // Gets the current logging channel and makes sure it isn't null
-                String loggingChannel = CachingHandler.getGuild(e.getGuild()).getDoc().getString("logging_channel");
+                String loggingChannel = Chad.getGuild(e.getGuild()).getDocument().getString("logging_channel");
                 if (loggingChannel == null)
                 {
                     messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
@@ -92,7 +95,9 @@ public class Logging implements Command.Class  {
 
                 // Send Message
                 messageHandler.send("Changed logging channel to " + formattedString.trim(), "Changed Logging Channel");
-                ChadVar.databaseDevice.set(e.getGuild(), "logging_channel", channel.getStringID());
+                DatabaseHandler.handle.set(e.getGuild(), "logging_channel", channel.getStringID());
+                // Recaches
+                Chad.getGuild(e.getGuild()).cache();
                 return;
             }
 

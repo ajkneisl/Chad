@@ -1,11 +1,13 @@
-package org.woahoverflow.chad.handle;
+package org.woahoverflow.chad.framework.handle;
 
 import java.awt.Color;
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
 import org.apache.http.util.TextUtils;
 import org.bson.Document;
-import org.woahoverflow.chad.handle.ui.ChadError;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
@@ -80,7 +82,7 @@ public class MessageHandler
     public static void sendLog(EmbedBuilder embedBuilder, IGuild guild)
     {
         // Gets the guild's cached doc
-        Document document = CachingHandler.getGuild(guild).getDoc();
+        Document document = Chad.getGuild(guild).getDocument();
 
         // Checks if logging is enabled
         if (!document.getBoolean("logging"))

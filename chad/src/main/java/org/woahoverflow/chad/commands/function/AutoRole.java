@@ -1,8 +1,9 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -32,10 +33,10 @@ public class AutoRole implements Command.Class  {
             switch (option) {
                 case "on":
                     // Sets the value in the database
-                    ChadVar.databaseDevice.set(e.getGuild(), "role_on_join", true);
+                    DatabaseHandler.handle.set(e.getGuild(), "role_on_join", true);
 
                     // ReCaches the guild
-                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
+                    Chad.getGuild(e.getGuild()).cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -45,10 +46,10 @@ public class AutoRole implements Command.Class  {
                     break;
                 case "off":
                     // Sets the value in the database
-                    ChadVar.databaseDevice.set(e.getGuild(), "role_on_join", false);
+                    DatabaseHandler.handle.set(e.getGuild(), "role_on_join", false);
 
                     // ReCaches the guild
-                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
+                    Chad.getGuild(e.getGuild()).cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder2 = new EmbedBuilder();
@@ -84,8 +85,8 @@ public class AutoRole implements Command.Class  {
                     IRole newRole = roles.get(0);
 
                     // Sets the role ID into the database and recaches
-                    ChadVar.databaseDevice.set(e.getGuild(), "join_role", newRole.getStringID());
-                    ChadVar.cacheDevice.cacheGuild(e.getGuild());
+                    DatabaseHandler.handle.set(e.getGuild(), "join_role", newRole.getStringID());
+                    Chad.getGuild(e.getGuild()).cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder3 = new EmbedBuilder();

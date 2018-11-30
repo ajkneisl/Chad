@@ -1,11 +1,10 @@
 package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.CachingHandler;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.commands.Command.Class;
+import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -15,7 +14,7 @@ import sx.blah.discord.util.PermissionUtils;
 import java.util.HashMap;
 import java.util.List;
 
-public class Kick implements Class
+public class Kick implements Command.Class
 {
     // Patterns for the message forming
     private static final Pattern GUILD_PATTERN = Pattern.compile("&guild&");
@@ -83,10 +82,10 @@ public class Kick implements Class
             }
 
             // Checks if kick message is enabled
-            if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "kick_msg_on"))
+            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "kick_msg_on"))
             {
                 // Gets the message from the cache
-                String message = CachingHandler.getGuild(e.getGuild()).getDoc().getString("kick_message");
+                String message = Chad.getGuild(e.getGuild()).getDocument().getString("kick_message");
 
                 // If the message isn't null, continue
                 if (message != null)

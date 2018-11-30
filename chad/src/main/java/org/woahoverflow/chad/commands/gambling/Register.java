@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.gambling;
 
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
@@ -13,13 +13,13 @@ public class Register implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (ChadVar.databaseDevice.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
+            if (DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
             {
                 new MessageHandler(e.getChannel()).sendError("You've already got an account!");
                 return;
             }
 
-            ChadVar.databaseDevice.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", 0L);
+            DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", 0L);
             new MessageHandler(e.getChannel()).send("You've now got an account!", "Money");
         };
     }

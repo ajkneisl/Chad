@@ -2,11 +2,10 @@ package org.woahoverflow.chad.core.listener;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.Util;
-import org.woahoverflow.chad.handle.ui.ChadError;
+import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.member.UserJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.member.UserLeaveEvent;
@@ -47,10 +46,10 @@ public final class UserLeaveJoin
         MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user join messages on, do that
-        if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "join_msg_on"))
+        if (DatabaseHandler.handle.getBoolean(e.getGuild(), "join_msg_on"))
         {
             // Gets the join message channel
-            String joinMsgCh = ChadVar.databaseDevice.getString(e.getGuild(), "join_message_ch");
+            String joinMsgCh = DatabaseHandler.handle.getString(e.getGuild(), "join_message_ch");
 
             // Makes sure they actually assigned a channel
             if (joinMsgCh != null && !joinMsgCh.equalsIgnoreCase("none")) {
@@ -70,7 +69,7 @@ public final class UserLeaveJoin
                 if (!channel.isDeleted())
                 {
                     // Gets the message, makes sure it isn't null, then sends
-                    String msg = ChadVar.databaseDevice.getString(e.getGuild(), "join_message");
+                    String msg = DatabaseHandler.handle.getString(e.getGuild(), "join_message");
                     if (msg != null)
                     {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
@@ -89,7 +88,7 @@ public final class UserLeaveJoin
 
         // you probably shouldnt put code below this comment
 
-        String joinRoleStringID = ChadVar.databaseDevice.getString(e.getGuild(), "join_role");
+        String joinRoleStringID = DatabaseHandler.handle.getString(e.getGuild(), "join_role");
         if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none"))
         {
             Long joinRoleID = Long.parseLong(joinRoleStringID);
@@ -117,7 +116,7 @@ public final class UserLeaveJoin
             }
 
             // assign the role
-            if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "role_on_join")) {
+            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "role_on_join")) {
                 if (!joinRoleStringID.equals("none")) {
                     e.getUser().addRole(joinRole);
                 }
@@ -145,10 +144,10 @@ public final class UserLeaveJoin
         MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user leave messages on, do that
-        if (ChadVar.databaseDevice.getBoolean(e.getGuild(), "leave_msg_on"))
+        if (DatabaseHandler.handle.getBoolean(e.getGuild(), "leave_msg_on"))
         {
             // Gets the leave message channel
-            String leaveMsgCh = ChadVar.databaseDevice.getString(e.getGuild(), "leave_message_ch");
+            String leaveMsgCh = DatabaseHandler.handle.getString(e.getGuild(), "leave_message_ch");
 
             // Makes sure they actually assigned a channel
             if (leaveMsgCh != null && !leaveMsgCh.equalsIgnoreCase("none")) {
@@ -168,7 +167,7 @@ public final class UserLeaveJoin
                 if (!channel.isDeleted())
                 {
                     // Gets the message, makes sure it isn't null, then sends
-                    String msg = ChadVar.databaseDevice.getString(e.getGuild(), "leave_message");
+                    String msg = DatabaseHandler.handle.getString(e.getGuild(), "leave_message");
                     if (msg != null)
                     {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());

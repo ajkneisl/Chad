@@ -1,10 +1,9 @@
 package org.woahoverflow.chad.commands.fun;
 
 import java.security.SecureRandom;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.handle.MessageHandler;
-import org.woahoverflow.chad.handle.commands.Command;
-import org.woahoverflow.chad.handle.ui.UIHandler;
+import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.io.File;
@@ -33,7 +32,7 @@ public class CatGallery implements Command.Class  {
                 // If the directory is empty
                 if (files.length == 0)
                 {
-                    ChadVar.uiDevice.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
+                    UIHandler.handle.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
                     messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                     return;
                 }
