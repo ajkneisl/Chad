@@ -1,11 +1,14 @@
 package org.woahoverflow.chad.commands.gambling;
 
 import java.security.SecureRandom;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.handle.CachingHandler;
+import org.woahoverflow.chad.handle.MessageHandler;
+import org.woahoverflow.chad.handle.Util;
+import org.woahoverflow.chad.handle.commands.Command;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -21,10 +24,10 @@ public class CoinFlip implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
+            if (!ChadVar.databaseDevice.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
             {
-                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + Chad
-                    .getGuild(e.getGuild()).getDocument().getString("prefix") + "register` to get one!");
+                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + CachingHandler
+                    .getGuild(e.getGuild()).getDoc().getString("prefix") + "register` to get one!");
                 return;
             }
 
@@ -44,7 +47,7 @@ public class CoinFlip implements Command.Class{
                     return;
                 }
 
-                long balance = (long) DatabaseHandler.handle
+                long balance = (long) ChadVar.databaseDevice
                     .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
                 if (bet > balance)
                 {
@@ -74,12 +77,12 @@ public class CoinFlip implements Command.Class{
 
                 if (flip == user)
                 {
-                    DatabaseHandler.handle
+                    ChadVar.databaseDevice
                         .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance+bet);
                     new MessageHandler(e.getChannel()).send("You won `"+bet+"`, you now have `" + (balance+bet) + "`.", "Coin Flip");
                 }
                 else {
-                    DatabaseHandler.handle
+                    ChadVar.databaseDevice
                         .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance-bet);
                     new MessageHandler(e.getChannel()).send("You lost `"+bet+"`, you now have `" + (balance-bet) + "`.", "Coin Flip");
                 }
@@ -200,7 +203,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Gets the author's balance
-                long balance = (long) DatabaseHandler.handle
+                long balance = (long) ChadVar.databaseDevice
                     .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
 
                 // Checks if the user's bet is bigger than the balance.
@@ -211,7 +214,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Gets the opponent's balance
-                long opponentBalance = (long) DatabaseHandler.handle
+                long opponentBalance = (long) ChadVar.databaseDevice
                     .get(e.getGuild(), opponentUser.getStringID() + "_balance");
 
                 // Checks if the bet's bigger than the opponent's balance
@@ -281,71 +284,29 @@ public class CoinFlip implements Command.Class{
                     final IReaction o = RequestBuffer.request(() -> pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF4"))).get();
 
                     // TODO: comment this stuff, I can't be bothered atm
+
                     if (x.getUserReacted(e.getAuthor()) && heads == null)
-                    {
-                        if (tails == null)
-                        {
-                            heads = e.getAuthor();
-                        } else if (!tails.equals(e.getAuthor()))
-                        {
-                            heads = e.getAuthor();
-                        }
-                    }
-
+                        heads = e.getAuthor();
                     if (o.getUserReacted(e.getAuthor()) && tails == null)
-                    {
-                        if (heads == null)
-                        {
-                            tails = e.getAuthor();
-                        } else if (!heads.equals(e.getAuthor()))
-                        {
-                            tails = e.getAuthor();
-                        }
-                    }
-
+                        tails = e.getAuthor();
                     if (x.getUserReacted(opponentUser) && heads == null)
-                    {
-                        if (tails == null)
-                        {
-                            heads = opponentUser;
-                        } else if (!tails.equals(opponentUser))
-                        {
-                            heads = e.getAuthor();
-                        }
-                    }
-
+                        heads = opponentUser;
                     if (o.getUserReacted(opponentUser) && tails == null)
-                    {
-                        if (heads == null)
-                        {
-                            tails = e.getAuthor();
-                        } else if (!heads.equals(opponentUser))
-                        {
-                            tails = e.getAuthor();
-                        }
-                    }
-
+                        tails = opponentUser;
                     if (tails != null)
-                    {
                         System.out.println("tails.getName() = " + tails.getName());
-                    }
-
                     if (heads != null)
-                    {
                         System.out.println("heads.getName() = " + heads.getName());
-                    }
-
                     // If both users have selected one, the loop stops.
-                    if (tails != null & heads != null) {
+                    if (tails != null & heads != null)
                         bothReacted = true;
-                    }
                 }
 
                 // Removes all the reactions
                 RequestBuffer.request(pick::removeAllReactions);
 
                 // Flips the coin :)
-                final int flip = new SecureRandom().nextInt(2);
+                final int flip = new Random().nextInt(2);
 
                 // Ties the user's balances to their name
                 long tailsBalance;
@@ -361,15 +322,15 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // 0 is tails winning, 1 is heads winning
-                if (flip == 0)
+                if (Util.coinflip())
                 {
-                    System.out.println("Tails Winning");
+                    System.out.println("Tails Winning 1");
                     System.out.println("tails.getName() = " + tails.getName());
                     System.out.println("heads.getName() = " + heads.getName());
                     // Sets the user's balances
-                    DatabaseHandler.handle
+                    ChadVar.databaseDevice
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance+bet);
-                    DatabaseHandler.handle
+                    ChadVar.databaseDevice
                         .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance-bet);
 
                     // Creates the edit string, then applies.
@@ -379,13 +340,13 @@ public class CoinFlip implements Command.Class{
                 }
                 else /* flip is 1, so heads wins this */
                 {
-                    System.out.println("Heads Winning");
+                    System.out.println("Heads Winning 2");
                     System.out.println("tails1.getName() = " + tails.getName());
                     System.out.println("heads.getName() = " + heads.getName());
                     // Sets the user's balances
-                    DatabaseHandler.handle
+                    ChadVar.databaseDevice
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance-bet);
-                    DatabaseHandler.handle
+                    ChadVar.databaseDevice
                         .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance+bet);
 
                     // Creates the edit string, then applies.
