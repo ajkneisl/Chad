@@ -1,6 +1,8 @@
 language: java
 jdk:
   - oraclejdk8
+before_install:
+  - chmod +x build.sh
 script:
   - ./chad/build.gradle build --scan -s
 os:
