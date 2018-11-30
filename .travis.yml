@@ -4,7 +4,7 @@ jdk:
 before_install:
   - chmod +x ./chad/gradlew
 script:
-  - ./chad/gradlew build -info
+  - ./chad/gradlew build
 os:
   - linux
 after_success:
