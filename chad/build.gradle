@@ -1,7 +1,3 @@
-plugins {
-    id 'java'
-}
-
 group 'org.woahoverflow'
 version '0.6.2-SNAPSHOT'
 
