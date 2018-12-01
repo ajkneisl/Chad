@@ -108,7 +108,7 @@ public class UIHandler
             // creates an invite (watch out,it can spam it)
             String invite = guild.getClient().getOurUser().getPermissionsForGuild(guild)
                 .contains(Permissions.CREATE_INVITE) ? "https://discord.gg/" + guild
-                .getDefaultChannel().createInvite(60, 420, false, true).getCode()
+                .getDefaultChannel().createInvite(60, 100, false, true).getCode()
                 : "No Permission for Invite!";
             panel.inviteLinkVal.setText(invite);
         }

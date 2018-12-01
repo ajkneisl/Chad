@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.framework.Command;
