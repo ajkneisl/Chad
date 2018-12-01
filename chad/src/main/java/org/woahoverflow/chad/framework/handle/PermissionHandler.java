@@ -31,7 +31,6 @@ public class PermissionHandler
         if (cmd == null)
             return false; // return false if the command doesnt exist
 
-        // system admins can set their own permissions :) (for testing tho don't worry)
         if (cmd instanceof Permissions && userIsDeveloper(user))
             return true;
 
