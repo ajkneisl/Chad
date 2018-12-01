@@ -288,25 +288,17 @@ public class CoinFlip implements Command.Class{
                         if (o.getUserReacted(e.getAuthor()))
                         {
                             if (tails == null)
-                            {
                                 heads = e.getAuthor();
-                            }
                             else if (!tails.equals(e.getAuthor()))
-                            {
                                 heads = e.getAuthor();
-                            }
                         }
 
                         if (o.getUserReacted(opponentUser))
                         {
                             if (tails == null)
-                            {
                                 heads = opponentUser;
-                            }
                             else if (!tails.equals(opponentUser))
-                            {
                                 heads = opponentUser;
-                            }
                         }
                     }
 
@@ -315,33 +307,24 @@ public class CoinFlip implements Command.Class{
                         if (x.getUserReacted(e.getAuthor()))
                         {
                             if (heads == null)
-                            {
                                 tails = e.getAuthor();
-                            }
                             else if (!heads.equals(e.getAuthor()))
-                            {
                                 tails = e.getAuthor();
-                            }
                         }
 
                         if (x.getUserReacted(opponentUser))
                         {
                             if (heads == null)
-                            {
                                 tails = opponentUser;
-                            }
                             else if (!heads.equals(opponentUser))
-                            {
                                 tails = opponentUser;
-                            }
                         }
                     }
 
 
                     // If both users have selected one, the loop stops.
-                    if (tails != null & heads != null) {
+                    if (tails != null & heads != null)
                         bothReacted = true;
-                    }
                 }
 
                 // Removes all the reactions
