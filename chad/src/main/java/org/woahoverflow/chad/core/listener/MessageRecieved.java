@@ -79,7 +79,7 @@ public final class MessageRecieved
                 // if the command is developer only, and the user is NOT a developer, deny them access
                 if (val.getCommandCategory() == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
                 {
-                    new MessageHandler(e.getChannel()).sendError("This command is developer only!");
+                    new MessageHandler(e.getChannel()).sendError("Oh noes! It looks like you're not a developer. Too bad, ain't it?");
                     return;
                 }
 
