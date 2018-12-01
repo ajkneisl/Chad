@@ -58,7 +58,7 @@ public final class MessageRecieved
         }
 
         // If the prefix isn't the correct prefix it returns
-        if (!argArray[0].startsWith(prefix))
+        if (!argArray[0].toLowerCase().startsWith(prefix))
             return;
 
         // Gets the command string aka stuff after jho!
