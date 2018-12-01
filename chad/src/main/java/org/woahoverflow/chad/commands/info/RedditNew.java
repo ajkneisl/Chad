@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info;
 
+import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.framework.Command;
@@ -21,7 +22,13 @@ public class RedditNew implements Command.Class{
             // If there's no arguments
             if (args.isEmpty())
             {
-                new MessageHandler(e.getChannel()).sendError(MessageHandler.INVALID_ARGUMENTS);
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                return;
+            }
+
+            if (!(Pattern.matches("^[a-zA-Z0-9]+$+", args.get(0))))
+            {
+                messageHandler.sendError("Contains invalid characters!");
                 return;
             }
 

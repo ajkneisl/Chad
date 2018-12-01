@@ -67,7 +67,7 @@ public final class Util
         int flip = -1;
         for (int i = 0; i < 100; i++)
             flip = random.nextInt(2);
-        return flip == 0 ? true : false;
+        return flip == 0;
     }
 
     /*public static String replaceLast(String input, String regex, String replacement) {

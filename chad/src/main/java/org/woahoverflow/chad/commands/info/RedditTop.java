@@ -1,5 +1,7 @@
 package org.woahoverflow.chad.commands.info;
 
+import java.io.FileNotFoundException;
+import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.framework.Command;
@@ -26,6 +28,12 @@ public class RedditTop implements Command.Class {
                 return;
             }
 
+            if (!(Pattern.matches("^[a-zA-Z0-9]+$+", args.get(0))))
+            {
+                messageHandler.sendError("Contains invalid characters!");
+                return;
+            }
+
             // Gets a hot post from the selected sub-reddit
             JSONObject post;
             try {
@@ -47,8 +55,7 @@ public class RedditTop implements Command.Class {
                             .getJSONObject("data");
                 }
             } catch (JSONException e1) {
-                ChadError
-                    .throwError("Error with RedditTop in guild " + e.getGuild().getStringID(), e1);
+                ChadError.throwError("Error with RedditTop in guild " + e.getGuild().getStringID(), e1);
                 return;
             } catch (RuntimeException e1) {
                 new MessageHandler(e.getChannel()).sendError("Invalid subreddit.");
