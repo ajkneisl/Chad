@@ -3,7 +3,6 @@ package org.woahoverflow.chad.framework.handle;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.bson.Document;
-import org.woahoverflow.chad.commands.function.Permissions;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Command;
@@ -30,9 +29,6 @@ public class PermissionHandler
 
         if (cmd == null)
             return false; // return false if the command doesnt exist
-
-        if (cmd instanceof Permissions && userIsDeveloper(user))
-            return true;
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
         // developers should always have permission for developer commands
