@@ -24,6 +24,7 @@ import org.woahoverflow.chad.commands.function.Purge;
 import org.woahoverflow.chad.commands.function.Swearing;
 import org.woahoverflow.chad.commands.gambling.Balance;
 import org.woahoverflow.chad.commands.gambling.CoinFlip;
+import org.woahoverflow.chad.commands.gambling.DailyReward;
 import org.woahoverflow.chad.commands.gambling.Register;
 import org.woahoverflow.chad.commands.info.Chad;
 import org.woahoverflow.chad.commands.info.Contributors;
@@ -39,6 +40,7 @@ import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Command.Category;
+import org.woahoverflow.chad.framework.Command.Data;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import sx.blah.discord.handle.obj.StatusType;
 
@@ -139,5 +141,6 @@ public final class ChadVar
         COMMANDS.put("register", new Command.Data(Command.Category.MONEY, new Register()));
         COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, new Balance()));
+        COMMANDS.put("dailyreward", new Data(Category.MONEY, new DailyReward()));
     }
 }
