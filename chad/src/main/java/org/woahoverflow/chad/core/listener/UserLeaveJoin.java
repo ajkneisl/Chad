@@ -72,8 +72,9 @@ public final class UserLeaveJoin
                     String msg = DatabaseHandler.handle.getString(e.getGuild(), "join_message");
                     if (msg != null)
                     {
-                        msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
-                        messageHandler.sendMessage(msg);
+                        msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(msg).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
+                        String finalMsg = msg;
+                        RequestBuffer.request(() -> channel.sendMessage(finalMsg));
                     }
                 }
             }
@@ -167,7 +168,8 @@ public final class UserLeaveJoin
                     if (msg != null)
                     {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
-                        messageHandler.sendMessage(msg);
+                        String finalMsg = msg;
+                        RequestBuffer.request(() -> channel.sendMessage(finalMsg));
                     }
                 }
             }

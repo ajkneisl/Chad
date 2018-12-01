@@ -36,7 +36,7 @@ public class Prefix implements Command.Class  {
                 // Gets the current prefix
                 String prefix = Chad.getGuild(e.getGuild()).getDocument().getString("prefix");
 
-                // Makes sure the prefix isn't over 12 characters long
+                // Makes sure the prefix isn't over 6 characters long
                 if (args.get(1).length() > 6)
                 {
                     messageHandler.sendError("Prefix can't be over 6 characters long!");

@@ -73,7 +73,7 @@ public class SetBalance implements Command.Class {
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("setbal <number> [@user]", "Registers your account with Chad.");
-        return Command.helpCommand(st, "Register", e);
+        st.put("setbal <amount> [@user]", "Registers your account with Chad.");
+        return Command.helpCommand(st, "Set Balance", e);
     }
 }

@@ -15,7 +15,7 @@ public final class Command
     // The command categories
     public enum Category
     {
-        MONEY, ADMIN, PUNISHMENTS, INFO, FUNCTION, FUN, NSFW
+        ADMIN, MONEY, PUNISHMENTS, INFO, FUNCTION, FUN, NSFW
     }
 
     // The class all of the Chad commands implement from

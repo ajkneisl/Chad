@@ -139,9 +139,9 @@ public class Message implements Command.Class  {
                 // Gets a boolean of the on or off
                 boolean set;
                 if (args.get(2).equalsIgnoreCase("on"))
-                    set = false;
-                else if (args.get(2).equalsIgnoreCase("off"))
                     set = true;
+                else if (args.get(2).equalsIgnoreCase("off"))
+                    set = false;
                 else {
                     messageHandler.sendError("Please use on or off!");
                     return;
@@ -343,6 +343,7 @@ public class Message implements Command.Class  {
 
                     // ReCaches the guild
                     Chad.getGuild(e.getGuild()).cache();
+                    return;
                 }
                 messageHandler.sendError("Invalid Type!");
                 return;

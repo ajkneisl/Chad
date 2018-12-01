@@ -31,7 +31,7 @@ public class RedditTop implements Command.Class {
             try {
                 // Gets post
                 int index = 0;
-                post = JSONHandler.handle.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
+                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
@@ -40,7 +40,7 @@ public class RedditTop implements Command.Class {
                 while (post.getBoolean("stickied"))
                 {
                     index++;
-                    post = JSONHandler.handle.read("https://reddit.com/rotationInteger/" + args.get(0) + "/hot.json")
+                    post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
                             .getJSONObject("data")
                             .getJSONArray("children")
                             .getJSONObject(index)

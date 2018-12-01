@@ -99,7 +99,7 @@ public final class Chad
     {
         // To account for the main thread :)
         internalRunningThreads++;
-
+        
         /*
         Chad's Thread Counting
          */

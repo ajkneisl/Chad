@@ -144,7 +144,7 @@ public class ModifyPresence implements Command.Class {
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("modpresence <string>", "Changes the bots rich presence message.");
-        st.put("modpresence status <statusType>", "Changes the bots status.");
+        st.put("modpresence status <dnd/offline/online/idle>", "Changes the bots status.");
         st.put("modpresence <static/rotate>", "Disables or enables the bot's presence rotation.");
         return Command.helpCommand(st, "Modify Presence", e);
     }

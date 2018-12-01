@@ -2,8 +2,10 @@ package org.woahoverflow.chad.commands.gambling;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Command.Class;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -94,6 +96,8 @@ public class DailyReward implements Class {
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("dailyreward", "Claims your daily reward.");
+        return Command.helpCommand(st, "Daily Reward", e);
     }
 }

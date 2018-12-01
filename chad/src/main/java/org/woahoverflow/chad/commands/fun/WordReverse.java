@@ -26,7 +26,7 @@ public class WordReverse implements Command.Class {
 
             // Gets the word & sends
             String word = stringBuilder.toString().trim();
-            new MessageHandler(e.getChannel()).send("Word: `" + word + "`\n" + stringBuilder.reverse().toString().trim(), "Word Reverser");
+            new MessageHandler(e.getChannel()).send("Word: `" + word + "`\n\n`" + stringBuilder.reverse().toString().trim() + '`', "Word Reverser");
         };
     }
 
