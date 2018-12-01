@@ -25,14 +25,11 @@ public class Help implements Command.Class {
             // Go through each commandCategory and add all it's commands to the help string
             for (Category category : Category.values()) {
                 // If the commandCategory is Nsfw and the channel isn't Nsfw, don't show.
-                if (category == Category.NSFW && !e.getChannel().isNSFW()) {
+                if (category == Category.NSFW && !e.getChannel().isNSFW())
                     continue;
-                }
                 // If the commandCategory is Admin and the user isn't an Admin, don't show.
                 if (category == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
-                {
                     continue;
-                }
 
                 // Append the commandCategory.
                 stringBuilder.append('\n').append(Util.fixEnumString(category.toString().toLowerCase())).append(": ");
@@ -44,9 +41,7 @@ public class Help implements Command.Class {
 
                     // Makes sure the command is in the right area
                     if (meta.getCommandCategory() != category)
-                    {
                         continue;
-                    }
 
                     // Adds the command to the builder
                     String str = '`' + stringDataEntry.getKey() + "`, ";

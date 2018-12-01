@@ -52,14 +52,12 @@ public class DatabaseHandler
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null) {
+        if (get == null)
             return null;
-        }
 
         ArrayList<String> ar = (ArrayList<String>) get.get(object);
-        if (ar == null) {
+        if (ar == null)
             return null;
-        }
         return ar;
     }
 
@@ -67,9 +65,8 @@ public class DatabaseHandler
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null) {
+        if (get == null)
             return null;
-        }
 
         return (String) get.get(object);
     }
@@ -78,9 +75,8 @@ public class DatabaseHandler
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null) {
+        if (get == null)
             return null;
-        }
 
         return get.get(object);
     }
@@ -89,9 +85,8 @@ public class DatabaseHandler
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null) {
+        if (get == null)
             return false;
-        }
 
         return get.containsKey(object);
     }
@@ -100,9 +95,8 @@ public class DatabaseHandler
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null) {
+        if (get == null)
             return false;
-        }
 
         return (Boolean) get.get(object);
     }
@@ -111,9 +105,8 @@ public class DatabaseHandler
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
-        if (get == null) {
+        if (get == null)
             return;
-        }
 
         col.updateOne(get, new Document("$set", new Document(object, entry)));
     }

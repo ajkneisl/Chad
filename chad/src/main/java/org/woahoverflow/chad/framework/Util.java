@@ -49,9 +49,8 @@ public final class Util
 
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
-        if (bytes < unit) {
+        if (bytes < unit)
             return bytes + " B";
-        }
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
@@ -67,9 +66,7 @@ public final class Util
         Random random = new Random();
         int flip = -1;
         for (int i = 0; i < 100; i++)
-        {
             flip = random.nextInt(2);
-        }
         return flip == 0 ? true : false;
     }
 

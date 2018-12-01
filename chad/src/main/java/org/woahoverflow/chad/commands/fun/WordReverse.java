@@ -22,9 +22,7 @@ public class WordReverse implements Command.Class {
             // Gets the word from all the arguments
             StringBuilder stringBuilder = new StringBuilder();
             for (String s : args)
-            {
                 stringBuilder.append(s).append(' ');
-            }
 
             // Gets the word & sends
             String word = stringBuilder.toString().trim();

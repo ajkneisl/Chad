@@ -72,15 +72,10 @@ public class Ban implements Command.Class
             // Builds reason
             StringBuilder builtReason = new StringBuilder();
             if (!reason.isEmpty())
-            {
                 for (String s : reason)
-                {
                     builtReason.append(s).append(' ');
-                }
-            }
-            else {
+            else
                 builtReason.append("no reason");
-            }
 
             // Checks if ban message is enabled
             if (DatabaseHandler.handle.getBoolean(e.getGuild(), "ban_msg_on"))
@@ -97,9 +92,7 @@ public class Ban implements Command.Class
 
                     // If the user isn't bot, send the message.
                     if (!user.isBot())
-                    {
                         new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(formattedMessage).build();
-                    }
                 }
             }
 

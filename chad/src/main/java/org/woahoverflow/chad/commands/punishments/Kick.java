@@ -71,15 +71,10 @@ public class Kick implements Command.Class
             // Builds reason
             StringBuilder builtReason = new StringBuilder();
             if (!reason.isEmpty())
-            {
                 for (String s : reason)
-                {
                     builtReason.append(s).append(' ');
-                }
-            }
-            else {
+            else
                 builtReason.append("no reason");
-            }
 
             // Checks if kick message is enabled
             if (DatabaseHandler.handle.getBoolean(e.getGuild(), "kick_msg_on"))
@@ -96,9 +91,7 @@ public class Kick implements Command.Class
 
                     // If the user isn't bot, send the message.
                     if (!user.isBot())
-                    {
                         new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(formattedMessage).build();
-                    }
                 }
             }
 

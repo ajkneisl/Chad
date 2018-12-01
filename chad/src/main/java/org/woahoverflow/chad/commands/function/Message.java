@@ -138,11 +138,11 @@ public class Message implements Command.Class  {
             {
                 // Gets a boolean of the on or off
                 boolean set;
-                if (args.get(2).equalsIgnoreCase("on")) {
+                if (args.get(2).equalsIgnoreCase("on"))
                     set = false;
-                } else if (args.get(2).equalsIgnoreCase("off")) {
+                else if (args.get(2).equalsIgnoreCase("off"))
                     set = true;
-                } else {
+                else {
                     messageHandler.sendError("Please use on or off!");
                     return;
                 }
@@ -238,9 +238,8 @@ public class Message implements Command.Class  {
                     // Gets the old channel name
                     String oldName;
                     if (channelString.equalsIgnoreCase("none"))
-                    {
                         oldName = "none";
-                    } else {
+                    else {
                         // Since it's declared, get it.
                         IChannel oldChannel = RequestBuffer.request(() -> e.getGuild().getChannelByID(Long.parseLong(channelString))).get();
 
@@ -301,9 +300,8 @@ public class Message implements Command.Class  {
                     // Gets the old channel name
                     String oldName;
                     if (channelString.equalsIgnoreCase("none"))
-                    {
                         oldName = "none";
-                    } else {
+                    else {
                         // Since it's declared, get it.
                         IChannel oldChannel = RequestBuffer.request(() -> e.getGuild().getChannelByID(Long.parseLong(channelString))).get();
 

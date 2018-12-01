@@ -86,24 +86,18 @@ public class MessageHandler
 
         // Checks if logging is enabled
         if (!document.getBoolean("logging"))
-        {
             return;
-        }
 
         // Gets the logging channel ID
         String channelID = document.getString("logging_channel");
 
         // Checks if the logging channel is somehow null
         if (TextUtils.isEmpty(channelID))
-        {
             return;
-        }
 
         // Checks if the id is empty, by default it's set to 'none'
         if (channelID.equalsIgnoreCase("none"))
-        {
             return;
-        }
 
         // Attempts to get the logging channel, catching if the string isn't actually an ID.
         IChannel loggingChannel;
@@ -117,9 +111,7 @@ public class MessageHandler
 
         // Checks if the channel is deleted
         if (RequestBuffer.request(loggingChannel::isDeleted).get())
-        {
             return;
-        }
 
         // Applies the timestamp to the footer & applies color
         embedBuilder.withFooterText(Util.getTimeStamp()).withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));

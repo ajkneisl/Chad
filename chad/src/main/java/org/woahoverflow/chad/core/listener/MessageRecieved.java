@@ -30,9 +30,8 @@ public final class MessageRecieved
         String[] argArray = e.getMessage().getContent().split(" ");
 
         // Returns if there are no arguments
-        if (argArray.length == 0) {
+        if (argArray.length == 0)
             return;
-        }
 
         // The guild's cached document
         Document cachedDocument = Chad.getGuild(e.getGuild()).getDocument();
@@ -59,9 +58,8 @@ public final class MessageRecieved
         }
 
         // If the prefix isn't the correct prefix it returns
-        if (!argArray[0].startsWith(prefix)) {
+        if (!argArray[0].startsWith(prefix))
             return;
-        }
 
         // Gets the command string aka stuff after jho!
         String commandString = argArray[0].substring(prefix.length()).toLowerCase();
@@ -71,9 +69,8 @@ public final class MessageRecieved
         args.remove(0);
 
         // If the user has 3 threads currently running, deny them
-        if (!Chad.consumerRunThread(consumer)) {
+        if (!Chad.consumerRunThread(consumer))
             return;
-        }
 
         ChadVar.COMMANDS.forEach((key, val) -> {
             if (commandString.equalsIgnoreCase(key))

@@ -29,26 +29,20 @@ public class PermissionHandler
         Class cmd = ChadVar.COMMANDS.get(command).getCommandClass();
 
         if (cmd == null)
-        {
             return false; // return false if the command doesnt exist
-        }
 
         // system admins can set their own permissions :) (for testing tho don't worry)
-        if (cmd instanceof Permissions && userIsDeveloper(user)) {
+        if (cmd instanceof Permissions && userIsDeveloper(user))
             return true;
-        }
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
         // developers should always have permission for developer commands
-        if (meta.getCommandCategory() == Category.ADMIN && userIsDeveloper(user)) {
+        if (meta.getCommandCategory() == Category.ADMIN && userIsDeveloper(user))
             return true;
-        }
 
         // all users should have access to commands in the fun and info commandCategory
         if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY).anyMatch(category -> meta.getCommandCategory() == category))
-        {
             return true;
-        }
 
         // loop through the users roles, if the role has permission for the command, return true
         // return false if none of the users roles have permission for the command
@@ -66,15 +60,13 @@ public class PermissionHandler
     // grants the specified role access to the specified command in the guild the role belongs to
     public int addCommandToRole(IRole role, String command) throws IndexOutOfBoundsException
     {
-        if (!parseCommand(command)) {
+        if (!parseCommand(command))
             return 0;
-        }
 
         Document cachedDocument = Chad.getGuild(role.getGuild()).getDocument();
 
-        if (cachedDocument == null) {
+        if (cachedDocument == null)
             return 1;
-        }
 
         @SuppressWarnings("all")
         ArrayList<String> arr = (ArrayList<String>) cachedDocument.get(role.getStringID());
@@ -87,9 +79,8 @@ public class PermissionHandler
             Chad.getGuild(role.getGuild()).cache();
             return 6;
         }
-        if (arr.contains(command)) {
+        if (arr.contains(command))
             return 2;
-        }
         ArrayList<String> ar = arr;
         ar.add(command);
         DatabaseHandler.handle.set(role.getGuild(), role.getStringID(), ar);
@@ -100,26 +91,21 @@ public class PermissionHandler
     // wadya get if you turn #addCommandToRole() upside down?
     public int removeCommandFromRole(IRole role, String command)
     {
-        if (!parseCommand(command)) {
+        if (!parseCommand(command))
             return 0;
-        }
 
-        if (DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID()) == null) {
+        if (DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID()) == null)
             return 4;
-        }
 
         Document get = Chad.getGuild(role.getGuild()).getDocument();
 
-        if (get == null) {
+        if (get == null)
             return 1;
-        }
 
         ArrayList<String> ar = DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID());
 
         if (ar == null)
-        {
             return 1;
-        }
 
         ar.remove(command);
         DatabaseHandler.handle.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
@@ -138,21 +124,13 @@ public class PermissionHandler
     public String parseErrorCode(int i)
     {
         if (i == 1)
-        {
             return "An internal error has ocurred";
-        }
         if (i == 2)
-        {
             return "Command is already entered!";
-        }
         if (i == 0)
-        {
             return "Invalid Command!";
-        }
         if (i == 4)
-        {
             return "There's nothing to remove!";
-        }
         return "An internal error has occurred!";
     }
 }

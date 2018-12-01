@@ -87,11 +87,9 @@ public class Logging implements Command.Class  {
 
                 // Sends the log
                 if (loggingChannel.equalsIgnoreCase("none"))
-                {
                     MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), "none", e.getAuthor(), e.getGuild());
-                } else {
+                else
                     MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
-                }
 
                 // Send Message
                 messageHandler.send("Changed logging channel to " + formattedString.trim(), "Changed Logging Channel");
