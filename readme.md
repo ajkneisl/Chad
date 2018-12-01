@@ -1,4 +1,4 @@
-# Chad
+# Chad [![Build Status](https://travis-ci.org/woahoverflow/Chad.svg?branch=master)](https://travis-ci.org/woahoverflow/Chad)
 Chad is a Discord bot mainly developed by [CodeBase](https://github.com/codebasepw) and [sho](https://github.com/shoganeko).<br>
 You can find it's features [here](http://sandbox.woahoverflow.org/projects/chad/features.html).<br>
 Invite to your server [here](
