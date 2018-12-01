@@ -27,7 +27,7 @@ public class PopUpPanel extends JPanel {
         chadLabel.setFont(chadLabel.getFont().deriveFont(chadLabel.getFont().getSize() + 25f));
         add(chadLabel);
         chadLabel.setBounds(10, 10, 85, 45);
-        errorText.setText("Uh oh, an throwError occurred!");
+        errorText.setText("Uh oh, an error occurred!");
         errorText.setFont(errorText.getFont().deriveFont(errorText.getFont().getSize() + 4f));
         add(errorText);
         errorText.setBounds(new Rectangle(new Point(125, 25), errorText.getPreferredSize()));

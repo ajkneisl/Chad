@@ -32,9 +32,11 @@ public final class Util
             //add request header
             con.setRequestProperty("User-Agent", USER_AGENT);
             int responseCode = con.getResponseCode();
-            if (responseCode != 200) {
-                System.out.println("\nThere was an throwError sending a request to url : " + url);
+            if (responseCode != 200)
+            {
+                System.out.println("\nThere was an error sending a request to url : " + url);
                 System.out.println("Response Code : " + responseCode);
+                return "";
             }
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));

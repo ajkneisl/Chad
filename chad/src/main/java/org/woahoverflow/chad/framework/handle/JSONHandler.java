@@ -96,10 +96,20 @@ public class JSONHandler
 
 
     public org.json.JSONObject read(String url) throws JSONException {
-        return new org.json.JSONObject(Util.httpGet(url));
+        if (url == "" || url == null)
+            return null;
+        String httpGet = Util.httpGet(url);
+        if (httpGet == "" || httpGet == null)
+            return null;
+        return new org.json.JSONObject(httpGet);
     }
     public org.json.JSONArray readArray(String url) throws JSONException {
-        return new org.json.JSONArray(Util.httpGet(url));
+        if (url == "" || url == null)
+            return null;
+        String httpGet = Util.httpGet(url);
+        if (httpGet == "" || httpGet == null)
+            return null;
+        return new org.json.JSONArray(httpGet);
     }
 
     public org.json.JSONObject readFile(String file)

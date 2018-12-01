@@ -26,9 +26,9 @@ public class RedditNew implements Command.Class{
                 return;
             }
 
-            if (!(Pattern.matches("^[a-zA-Z0-9]+$+", args.get(0))))
+            if (args.get(0).length() < 3)
             {
-                messageHandler.sendError("Contains invalid characters!");
+                messageHandler.sendError("Invalid Subreddit");
                 return;
             }
 
@@ -36,12 +36,29 @@ public class RedditNew implements Command.Class{
             JSONObject post;
             try {
                 // Gets post
-                int index = 0;
-                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json");
+
+                if (post == null)
+                {
+                    messageHandler.sendError("Invalid Subreddit");
+                    return;
+                }
+
+                if (JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                     .getJSONObject("data")
+                    .getJSONArray("children").isEmpty())
+                {
+                    messageHandler.sendError("Invalid Subreddit");
+                    return;
+                }
+
+                int index = 0;
+                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json").getJSONObject("data")
                     .getJSONArray("children")
                     .getJSONObject(index)
                     .getJSONObject("data");
+
+
                 // Makes sure the post isn't stickied
                 while (post.getBoolean("stickied"))
                 {

@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.io.FileNotFoundException;
 import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,31 +27,42 @@ public class RedditTop implements Command.Class {
                 return;
             }
 
-            if (!(Pattern.matches("^[a-zA-Z0-9]+$+", args.get(0))))
-            {
-                messageHandler.sendError("Contains invalid characters!");
-                return;
-            }
-
             // Gets a hot post from the selected sub-reddit
             JSONObject post;
             try {
                 // Gets post
+                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/hot.json");
+
+                if (post == null)
+                {
+                    messageHandler.sendError("Invalid Subreddit");
+                    return;
+                }
+
+                if (JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
+                    .getJSONObject("data")
+                    .getJSONArray("children").isEmpty())
+                {
+                    messageHandler.sendError("Invalid Subreddit");
+                    return;
+                }
+
                 int index = 0;
-                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
-                        .getJSONObject("data")
-                        .getJSONArray("children")
-                        .getJSONObject(index)
-                        .getJSONObject("data");
+                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/hot.json").getJSONObject("data")
+                    .getJSONArray("children")
+                    .getJSONObject(index)
+                    .getJSONObject("data");
+
+
                 // Makes sure the post isn't stickied
                 while (post.getBoolean("stickied"))
                 {
                     index++;
                     post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/hot.json")
-                            .getJSONObject("data")
-                            .getJSONArray("children")
-                            .getJSONObject(index)
-                            .getJSONObject("data");
+                        .getJSONObject("data")
+                        .getJSONArray("children")
+                        .getJSONObject(index)
+                        .getJSONObject("data");
                 }
             } catch (JSONException e1) {
                 ChadError.throwError("Error with RedditTop in guild " + e.getGuild().getStringID(), e1);
