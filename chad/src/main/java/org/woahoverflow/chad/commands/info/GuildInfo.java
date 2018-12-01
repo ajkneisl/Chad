@@ -24,11 +24,10 @@ public class GuildInfo implements Command.Class{
             int bot = 0;
             for (IUser u : e.getGuild().getUsers())
             {
-                if (!u.isBot()) {
+                if (!u.isBot())
                     human++;
-                } else {
+                else
                     bot++;
-                }
             }
 
             // Applies the description

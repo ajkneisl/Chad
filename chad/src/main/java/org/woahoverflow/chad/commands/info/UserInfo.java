@@ -21,9 +21,7 @@ public class UserInfo implements Command.Class {
 
             // Gets the user from the mentions
             if (!e.getMessage().getMentions().isEmpty() && args.size() == 1)
-            {
                 u = e.getMessage().getMentions().get(0);
-            }
             else {
                 // If user wasn't mentioned, return
                 messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);

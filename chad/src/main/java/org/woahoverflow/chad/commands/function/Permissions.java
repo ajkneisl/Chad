@@ -47,13 +47,8 @@ public class Permissions implements Command.Class  {
 
                     // Checks if any of the roles equal
                     for (IRole rol : rolesList)
-                    {
                         if (rol.getName().equalsIgnoreCase(b.toString().trim()))
-                        {
-                            // If a role was found, assign it to the variable
-                            role = rol;
-                        }
-                    }
+                            role = rol; // If a role was found, assign it to the variable
 
                     // If the role was assigned, break out of the loop
                     if (role != null) break;
@@ -93,11 +88,9 @@ public class Permissions implements Command.Class  {
 
                         // If the result was 6 (good) return the amount, if not return the correct error.
                         if (add == 6)
-                        {
                             m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
-                        } else {
+                        else
                             m.sendError(PermissionHandler.handle.parseErrorCode(add));
-                        }
                         return;
                     case "remove":
                         // The remove can only remove 1 command
@@ -112,11 +105,9 @@ public class Permissions implements Command.Class  {
 
                         // If the result was 6 (good) return the amount, if not return the correct error.
                         if (rem == 6)
-                        {
                             m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
-                        } else {
+                        else
                             m.sendError(PermissionHandler.handle.parseErrorCode(rem));
-                        }
                         return;
                     case "view":
                         // Gets the permissions to a role

@@ -70,9 +70,7 @@ public class PhotoEditor implements Command.Class {
 
             // Makes sure the file doesn't exist already
             while (file.exists())
-            {
                 file = new File(System.getenv("appdata") + "\\chad\\imgcache\\img" + new SecureRandom().nextInt(2000) + ".png");
-            }
 
             // Blur
             if (args.get(0).equalsIgnoreCase("blur"))
@@ -80,9 +78,8 @@ public class PhotoEditor implements Command.Class {
                 try {
                     // Blurs image
                     float[] matrix = new float[400];
-                    for (int i = 0; i < 400; i++) {
+                    for (int i = 0; i < 400; i++)
                         matrix[i] = 1.0f / 400.0f;
-                    }
                     BufferedImageOp op = new ConvolveOp(new Kernel(20, 20, matrix), ConvolveOp.EDGE_NO_OP, null);
                     ImageIO.write(op.filter(im, null), "png", file);
 
@@ -94,10 +91,7 @@ public class PhotoEditor implements Command.Class {
 
                 // Deletes the file
                 if (!file.delete())
-                {
-                    // if the file didn't delete, send a log
-                    UIHandler.handle.addLog("Failed to delete file " + file.getPath(), LogLevel.SEVERE);
-                }
+                    UIHandler.handle.addLog("Failed to delete file " + file.getPath(), LogLevel.SEVERE); // if the file didn't delete, send a log
                 return;
             }
 

@@ -32,9 +32,7 @@ public class RussianRoulette implements Command.Class {
             // Assigns the user to the mentioned user
             IUser unFinalUser;
             if (!e.getMessage().getMentions().isEmpty())
-            {
                 unFinalUser = e.getMessage().getMentions().get(0);
-            }
             else {
                 messageHandler.sendError(MessageHandler.NO_MENTIONS);
                 return;
@@ -93,9 +91,7 @@ public class RussianRoulette implements Command.Class {
 
                 // Checks if the user reacted to the Y
                 if (yReaction.getUserReacted(user))
-                {
                     reacted = false;
-                }
 
                 // Checks if the user reacted with the N
                 if (nReaction.getUserReacted(user))

@@ -29,14 +29,8 @@ public class Contributors implements Command.Class {
             {
                 JSONObject object = null;
                 for (Object obj : o)
-                {
-                    // Checks if the user found is the user that was requested
-                    if (((JSONObject) obj).getString("display_name").equalsIgnoreCase(args.get(1)))
-                    {
-                        // if
+                    if (((JSONObject) obj).getString("display_name").equalsIgnoreCase(args.get(1))) // Checks if the user found is the user that was requested
                         object = (JSONObject) obj;
-                    }
-                }
 
                 // Checks to see if it actually found a correct user.
                 if (object == null)

@@ -69,9 +69,8 @@ public class AutoRole implements Command.Class  {
                     for (String s : args) {
                         stringBuilder.append(s).append(' ');
                         roles = RequestBuffer.request(() -> e.getGuild().getRolesByName(stringBuilder.toString().trim())).get();
-                        if (!roles.isEmpty()) {
+                        if (!roles.isEmpty())
                             break;
-                        }
                     }
 
                     // If there's no roles, return

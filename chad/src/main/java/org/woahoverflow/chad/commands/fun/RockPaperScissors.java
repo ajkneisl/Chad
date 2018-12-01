@@ -33,17 +33,11 @@ public class RockPaperScissors implements Command.Class
                 // Forms the author's value
                 int i = 420;
                 if (args.get(0).equalsIgnoreCase("rock"))
-                {
                     i = 0;
-                }
                 else if (args.get(0).equalsIgnoreCase("paper"))
-                {
                     i = 1;
-                }
                 else if (args.get(0).equalsIgnoreCase("scissors"))
-                {
                      i = 2;
-                }
 
                 // Sends the result
                 messageHandler.send(calculateWinner(i, i2), "Rock Paper Scissors");

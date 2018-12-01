@@ -97,11 +97,9 @@ public final class UserLeaveJoin
 
             // get the bots highest role position in the guild
             int botPosition = 0;
-            for (IRole role : botRoles) {
-                if (role.getPosition() > botPosition) {
+            for (IRole role : botRoles)
+                if (role.getPosition() > botPosition)
                     botPosition = role.getPosition();
-                }
-            }
 
             // can the bot assign the user the configured role?
             if (joinRole.getPosition() > botPosition) {
@@ -116,11 +114,9 @@ public final class UserLeaveJoin
             }
 
             // assign the role
-            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "role_on_join")) {
-                if (!joinRoleStringID.equals("none")) {
+            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "role_on_join"))
+                if (!joinRoleStringID.equals("none"))
                     e.getUser().addRole(joinRole);
-                }
-            }
         }
     }
 

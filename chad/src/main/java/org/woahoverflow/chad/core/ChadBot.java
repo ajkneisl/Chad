@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.core;
 
-import org.json.JSONObject;
 import org.woahoverflow.chad.core.listener.GuildJoinLeave;
 import org.woahoverflow.chad.core.listener.MessageEditEvent;
 import org.woahoverflow.chad.core.listener.MessageRecieved;
@@ -8,7 +7,6 @@ import org.woahoverflow.chad.core.listener.OnReady;
 import org.woahoverflow.chad.core.listener.UserLeaveJoin;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.JSONHandler;
-import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.ClientBuilder;

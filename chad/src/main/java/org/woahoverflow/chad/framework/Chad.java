@@ -43,9 +43,8 @@ public final class Chad
         {
             Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", guild.getStringID())).first();
 
-            if (get == null) {
+            if (get == null)
                 return;
-            }
 
             document = get;
             lastCached = Util.getTimeStamp();
@@ -175,9 +174,7 @@ public final class Chad
     {
         // If it contains the guild, which it should, return it
         if (cachedGuilds.keySet().contains(guild))
-        {
             return cachedGuilds.get(guild);
-        }
 
         // if the guild wasn't cached, cache it
         cachedGuilds.put(guild, new CachedGuild(guild));
@@ -193,12 +190,8 @@ public final class Chad
     public static ThreadConsumer getConsumer(IUser user)
     {
         for (ThreadConsumer cons : threadHash.keySet())
-        {
             if (cons.isDiscordUser() && cons.getUser().equals(user))
-            {
                 return cons;
-            }
-        }
         return new ThreadConsumer(user);
     }
 
@@ -212,13 +205,9 @@ public final class Chad
     {
         // If they're a discord user, add a running thread to the default
         if (consumer.isDiscordUser())
-        {
             runningThreads++;
-        }
-        else {
-            // If not, it's an internal thread
-            internalRunningThreads++;
-        }
+        else
+            internalRunningThreads++; // If not, it's an internal thread
 
         // Run the thread
         Future<?> ranThread = executorService.submit(thread);

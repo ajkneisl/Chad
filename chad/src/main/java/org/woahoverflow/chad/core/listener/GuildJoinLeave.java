@@ -21,11 +21,10 @@ public final class GuildJoinLeave
 
             doc.append("guildid", e.getGuild().getStringID());
             doc.append("prefix", "j!");
-            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES)) {
+            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
                 doc.append("muted_role", "none_np");
-            } else {
+            else
                 doc.append("muted_role", "none");
-            }
             doc.append("muted_role", "none");
             doc.append("logging", false);
             doc.append("logging_channel", "none");
@@ -62,9 +61,8 @@ public final class GuildJoinLeave
     {
         Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
 
-        if (get == null) {
+        if (get == null)
             return;
-        }
 
         DatabaseHandler.handle.getCollection().deleteOne(get);
 

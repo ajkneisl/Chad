@@ -26,9 +26,8 @@ public final class OnReady
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (!ChadVar.rotatePresence) {
+                    if (!ChadVar.rotatePresence)
                         return;
-                    }
                     Object[] ar = ChadVar.presenceRotation.toArray();
                     int rotation = ar.length;
                     ChadVar.currentStatus = (String)ar[new SecureRandom().nextInt(rotation)];
