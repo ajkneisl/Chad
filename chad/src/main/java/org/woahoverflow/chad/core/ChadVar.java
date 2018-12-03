@@ -25,6 +25,7 @@ import org.woahoverflow.chad.commands.function.Swearing;
 import org.woahoverflow.chad.commands.gambling.Balance;
 import org.woahoverflow.chad.commands.gambling.CoinFlip;
 import org.woahoverflow.chad.commands.gambling.DailyReward;
+import org.woahoverflow.chad.commands.gambling.Fight;
 import org.woahoverflow.chad.commands.gambling.Register;
 import org.woahoverflow.chad.commands.info.Chad;
 import org.woahoverflow.chad.commands.info.Contributors;
@@ -142,5 +143,6 @@ public final class ChadVar
         COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, new Balance()));
         COMMANDS.put("dailyreward", new Data(Category.MONEY, new DailyReward()));
+        COMMANDS.put("fight", new Data(Category.MONEY, new Fight()));
     }
 }
