@@ -20,6 +20,13 @@ public class Fight implements Command.Class
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            
+            if (!(args.size() >= 2))
+            {
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                return;
+            }
+            
             // Arguments are removed during user building, so I put them here :)
             final String arg0 = args.get(0);
 
@@ -44,7 +51,7 @@ public class Fight implements Command.Class
                 // Checks if the loop actually found a user
                 if (opponentUser == null)
                 {
-                    new MessageHandler(e.getChannel()).sendError("Invalid User!");
+                    messageHandler.sendError("Invalid User!");
                     return;
                 }
             }
@@ -55,7 +62,7 @@ public class Fight implements Command.Class
                     opponentUser = e.getMessage().getMentions().get(0);
                 }
                 else {
-                    new MessageHandler(e.getChannel()).sendError("Invalid User!");
+                    messageHandler.sendError("Invalid User!");
                     return;
                 }
             }
@@ -87,7 +94,7 @@ public class Fight implements Command.Class
                 // If it's been 10 seconds, exit
                 if (timeout == 10)
                 {
-                    new MessageHandler(e.getChannel()).sendError('`' +user.getName()+"` didn't respond in time!");
+                    messageHandler.sendError('`' +user.getName()+"` didn't respond in time!");
                     return;
                 }
 
@@ -114,7 +121,7 @@ public class Fight implements Command.Class
                 // Checks if the user reacted with the N
                 if (nReaction.getUserReacted(user))
                 {
-                    new MessageHandler(e.getChannel()).send("User Denied!", "CoinFlip");
+                    messageHandler.send("User Denied!", "CoinFlip");
                     return;
                 }
             }
@@ -124,13 +131,13 @@ public class Fight implements Command.Class
             try {
                 bet = Long.parseLong(arg0);
             } catch (NumberFormatException throwaway) {
-                new MessageHandler(e.getChannel()).sendError("Invalid Bet!");
+                messageHandler.sendError("Invalid Bet!");
                 return;
             }
 
             if (!(bet > 0))
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid Number!");
+                messageHandler.sendError("Invalid Number!");
                 return;
             }
 
@@ -141,7 +148,7 @@ public class Fight implements Command.Class
             // Checks if the user's bet is bigger than the balance.
             if (bet > balance)
             {
-                new MessageHandler(e.getChannel()).sendError("Your bet is too large!");
+                messageHandler.sendError("Your bet is too large!");
                 return;
             }
 
@@ -152,21 +159,21 @@ public class Fight implements Command.Class
             // Checks if the bet's bigger than the opponent's balance
             if (bet > opponentBalance)
             {
-                new MessageHandler(e.getChannel()).sendError("Your bet is too large for `"+opponentUser.getName()+"`!");
+                messageHandler.sendError("Your bet is too large for `"+opponentUser.getName()+"`!");
                 return;
             }
 
             // Checks if the author's balance is too big
             if (bet+balance < 0)
             {
-                new MessageHandler(e.getChannel()).sendError("Your balance is too big!\nPlease report this on https://woahoverflow.org/forums");
+                messageHandler.sendError("Your balance is too big!\nPlease report this on https://woahoverflow.org/forums");
                 return;
             }
 
             // Checks if the opponent's balance is too big
             if (bet+opponentBalance < 0)
             {
-                new MessageHandler(e.getChannel()).sendError('`' +opponentUser.getName()+"`'s balance is too big!\nPlease report this on https://woahoverflow.org/forums");
+                messageHandler.sendError('`' +opponentUser.getName()+"`'s balance is too big!\nPlease report this on https://woahoverflow.org/forums");
                 return;
             }
 
