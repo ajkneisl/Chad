@@ -125,6 +125,9 @@ public final class UserLeaveJoin
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
     {
+        // Sets their balance to 0
+        DatabaseHandler.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
+
         // Log if the user leaves
         IGuild guild = e.getGuild();
         MessageHandler messageHandler = new MessageHandler(null);
