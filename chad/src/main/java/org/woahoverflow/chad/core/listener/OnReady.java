@@ -10,11 +10,23 @@ import sx.blah.discord.handle.obj.ActivityType;
 
 import sx.blah.discord.util.RequestBuffer;
 
+/**
+ * The on ready event from Discord
+ *
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public final class OnReady
 {
-    @SuppressWarnings("unused")
+
+    /**
+     * Discord Ready Event
+     *
+     * @param event Discord Ready Event
+     */
     @EventSubscriber
-    public void onReadyEvent(ReadyEvent e)
+    @SuppressWarnings("unused")
+    public void onReadyEvent(ReadyEvent event)
     {
         // Presence Rotations
         Chad.runThread(() -> {
@@ -27,7 +39,7 @@ public final class OnReady
             ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
 
             // Changes the discord presence
-            RequestBuffer.request(() -> e.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
+            RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
 
             // The time between the while loop
             int time = 0;
@@ -55,7 +67,7 @@ public final class OnReady
                     ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
 
                     // Changes the discord presence
-                    RequestBuffer.request(() -> e.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
+                    RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
 
                     // Resets time to 0
                     time = 0;
@@ -64,7 +76,7 @@ public final class OnReady
         }, Chad.getInternalConsumer());
 
         // UI Begin
-        UIHandler.handle.addLog("Bot started with " + e.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
+        UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
         UIHandler.handle.update();
     }
 }

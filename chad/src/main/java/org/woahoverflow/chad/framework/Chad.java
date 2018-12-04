@@ -23,15 +23,29 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RequestBuffer;
 
-// This class is the main framework for running commands
+/**
+ * Main framework for Chad
+ *
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public final class Chad
 {
+
+    /**
+     * A Cached Guild
+     */
     public static final class CachedGuild
     {
         private String lastCached;
         private final IGuild guild;
         private Document document;
 
+        /**
+         * Constructor
+         *
+         * @param guild The guild to be cached
+         */
         public CachedGuild(IGuild guild)
         {
             this.guild = guild;
@@ -39,6 +53,9 @@ public final class Chad
             cache();
         }
 
+        /**
+         * ReCaches the guild
+         */
         public void cache()
         {
             Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", guild.getStringID())).first();
@@ -50,43 +67,70 @@ public final class Chad
             lastCached = Util.getTimeStamp();
         }
 
+        /**
+         * @return The guild
+         */
         public IGuild getGuild() {
             return guild;
         }
 
+        /**
+         * @return The cached document
+         */
         public Document getDocument() {
             return document;
         }
 
+        /**
+         * @return The date it's last cached
+         */
         public String getLastCached() {
             return lastCached;
         }
     }
 
+    /**
+     * A Thread Consumer
+     */
     public static final class ThreadConsumer
     {
         private final boolean discordUser;
         private IUser user;
 
+        /**
+         * Local Constructor for non IUsers
+         */
         ThreadConsumer()
         {
             discordUser = false;
         }
 
+        /**
+         * Local Constructor for IUsers
+         *
+         * @param user The user to create it for
+         */
         ThreadConsumer(IUser user)
         {
             this.user = user;
             discordUser = true;
         }
 
+        /**
+         * @return If the user is an IUser
+         */
         public boolean isDiscordUser() {
             return discordUser;
         }
 
+        /**
+         * @return The user
+         */
         public IUser getUser() {
             return user;
         }
     }
+
     public static int runningThreads;
     public static int internalRunningThreads;
     public static final ConcurrentHashMap<IGuild, CachedGuild> cachedGuilds = new ConcurrentHashMap<>();
@@ -179,8 +223,9 @@ public final class Chad
 
     /**
      * Gets a cached guild
-     * @param guild the guild to get a cached version of
-     * @return the cached guild
+     *
+     * @param guild The guild to get a cached version of
+     * @return The cached guild
      */
     public static CachedGuild getGuild(IGuild guild)
     {
@@ -194,8 +239,9 @@ public final class Chad
     }
 
     /**
-     * Uncaches a guild
-     * @param guild the guild to be uncached
+     * UnCaches a guild
+     *
+     * @param guild The guild to be uncached
      */
     public static void unCacheGuild(IGuild guild)
     {
@@ -204,8 +250,9 @@ public final class Chad
 
     /**
      * Gets a user's thread consumer
-     * @param user the user
-     * @return the user's thread consumer
+     *
+     * @param user The user
+     * @return The user's thread consumer
      */
     public static ThreadConsumer getConsumer(IUser user)
     {
@@ -217,7 +264,8 @@ public final class Chad
 
     /**
      * Gets the internal thread consumer
-     * @return the local internal consumer
+     *
+     * @return The local internal consumer
      */
     public static ThreadConsumer getInternalConsumer()
     {
@@ -226,8 +274,9 @@ public final class Chad
 
     /**
      * Runs a thread
-     * @param thread the thread to be run
-     * @param consumer the consumer to tie it to
+     *
+     * @param thread The thread to be run
+     * @param consumer The consumer to tie it to
      */
     public static void runThread(Runnable thread, ThreadConsumer consumer)
     {
@@ -255,9 +304,10 @@ public final class Chad
     }
 
     /**
-     * Makes sure a threadconsumer can run it
-     * @param consumer the thread consumer
-     * @return if it can run it
+     * Makes sure a thread consumer can run it
+     *
+     * @param consumer The thread consumer
+     * @return If it can run it
      */
     public static boolean consumerRunThread(ThreadConsumer consumer)
     {

@@ -10,6 +10,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class PopUpPanel extends JPanel {
     public PopUpPanel() {
         initComponents();

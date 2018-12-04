@@ -8,22 +8,35 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.util.RequestBuffer;
 
+/**
+ * Discord Message Edit Event
+ *
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public final class MessageEditEvent
 {
+
+    /**
+     * Discord's Message Edit Event
+     *
+     * @param event Message Edit Event
+     */
     @EventSubscriber
-    public void messageEditEvent(sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent e)
+    @SuppressWarnings("unused")
+    public void messageEditEvent(sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent event)
     {
-        if (Chad.getGuild(e.getGuild()).getDocument().getBoolean("stop_swear"))
+        if (Chad.getGuild(event.getGuild()).getDocument().getBoolean("stop_swear"))
         {
-            String[] argArray = e.getNewMessage().getContent().split(" ");
+            String[] argArray = event.getNewMessage().getContent().split(" ");
 
             // Gets the message from the cache :)
-            String msg = Chad.getGuild(e.getGuild()).getDocument().getString("swear_message");
-            msg = msg != null ? COMPILE.matcher(msg).replaceAll(e.getAuthor().getName()) : "No Swearing!";
+            String msg = Chad.getGuild(event.getGuild()).getDocument().getString("swear_message");
+            msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
             for (String s : argArray) {
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {
-                    new MessageHandler(e.getChannel()).send(msg, "Swearing");
-                    RequestBuffer.request(() -> e.getMessage().delete());
+                    new MessageHandler(event.getChannel()).send(msg, "Swearing");
+                    RequestBuffer.request(() -> event.getMessage().delete());
                 }
             }
         }

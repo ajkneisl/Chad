@@ -9,19 +9,31 @@ import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
 import sx.blah.discord.handle.obj.Permissions;
 
+/**
+ * The Discord guild and join events
+ *
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public final class GuildJoinLeave
 {
-    @SuppressWarnings("unused")
+
+    /**
+     * Discord's Joining Guild Event
+     *
+     * @param event Guild Create Event
+     */
     @EventSubscriber
-    public void joinGuild(GuildCreateEvent e)
+    @SuppressWarnings("unused")
+    public void joinGuild(GuildCreateEvent event)
     {
-        if (!DatabaseHandler.handle.exists(e.getGuild()))
+        if (!DatabaseHandler.handle.exists(event.getGuild()))
         {
             Document doc = new Document();
 
-            doc.append("guildid", e.getGuild().getStringID());
+            doc.append("guildid", event.getGuild().getStringID());
             doc.append("prefix", "j!");
-            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
+            if (!event.getClient().getOurUser().getPermissionsForGuild(event.getGuild()).contains(Permissions.MANAGE_ROLES))
                 doc.append("muted_role", "none_np");
             else
                 doc.append("muted_role", "none");
@@ -48,26 +60,31 @@ public final class GuildJoinLeave
             doc.append("swear_message", "No Swearing `&user&`!");
 
             DatabaseHandler.handle.getCollection().insertOne(doc);
-            UIHandler.displayGuild(e.getGuild());
-            UIHandler.handle.addLog('<' +e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
-            Chad.getGuild(e.getGuild()).cache();
+            UIHandler.displayGuild(event.getGuild());
+            UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+            Chad.getGuild(event.getGuild()).cache();
         }
-        Chad.getGuild(e.getGuild()).cache();
+        Chad.getGuild(event.getGuild()).cache();
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Discord's Leave Guild Event
+     *
+     * @param event Guild Leave Event
+     */
     @EventSubscriber
-    public static void leaveGuild(GuildLeaveEvent e)
+    @SuppressWarnings("unused")
+    public static void leaveGuild(GuildLeaveEvent event)
     {
-        Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", e.getGuild().getStringID())).first();
+        Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", event.getGuild().getStringID())).first();
 
         if (get == null)
             return;
 
         DatabaseHandler.handle.getCollection().deleteOne(get);
 
-        Chad.unCacheGuild(e.getGuild());
+        Chad.unCacheGuild(event.getGuild());
 
-        UIHandler.handle.addLog('<' +e.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
+        UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
     }
 }

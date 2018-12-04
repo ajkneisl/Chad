@@ -1,6 +1,8 @@
 package org.woahoverflow.chad.framework;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -11,18 +13,36 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-@SuppressWarnings("SameReturnValue")
+/**
+ * The Utility class for Chad
+ *
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public final class Util
 {
+
+    /**
+     * The user agent
+     */
     private static final String USER_AGENT = "Mozilla/5.0";
 
-    // Gets the current timestamp
+    /**
+     * Gets the current timestamp
+     *
+     * @return The current timestamp
+     */
     public static String getTimeStamp()
     {
         return new SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().getTime());
     }
 
-    @SuppressWarnings("all")
+    /**
+     * Gets a String from an http
+     *
+     * @param url The URL to request
+     * @return The gotten String
+     */
     public static String httpGet(String url) {
         try {
             URL obj = new URL(url);
@@ -43,27 +63,25 @@ public final class Util
             String response = in.lines().collect(Collectors.joining());
             in.close();
             return response;
+        } catch (MalformedURLException | ProtocolException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
             return "";
         }
-    }
-
-    public static String humanReadableByteCount(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
-        if (bytes < unit)
-            return bytes + " B";
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
-        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+        return "";
     }
 
     public static String fixEnumString(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
-    // true for heads, false for tails
-    public static boolean coinflip()
+    /**
+     * Flips a coin
+     *
+     * @return Returns either true or false, it's randomized
+     */
+    public static boolean coinFlip()
     {
         Random random = new Random();
         int flip = -1;
@@ -71,21 +89,4 @@ public final class Util
             flip = random.nextInt(2);
         return flip == 0;
     }
-
-    /*public static String replaceLast(String input, String regex, String replacement) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        if (!matcher.find()) {
-            return input;
-        }
-        int lastMatchStart=0;
-        do {
-            lastMatchStart=matcher.start();
-        } while (matcher.find());
-        matcher.find(lastMatchStart);
-        StringBuffer sb = new StringBuffer(input.length());
-        matcher.appendReplacement(sb, replacement);
-        matcher.appendTail(sb);
-        return sb.toString();
-    }*/
 }

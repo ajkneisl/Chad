@@ -18,16 +18,34 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-@SuppressWarnings({"ALL", "deprecation"})
+@SuppressWarnings("all")
+/**
+ * Handles all web and local JSON content
+ *
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class JSONHandler
 {
+
+    /**
+     * The global instance of the JSON handler
+     */
     public static final JSONHandler handle = new JSONHandler().forceCheck();
-    // Handles JSONHandler data, including the bot.json files and reading from network
+
+    /**
+     * Private Constructor
+     */
     public JSONHandler()
     {
         super();
     }
-    
+
+    /**
+     * Makes sure all of the files exist
+     *
+     * @return The instance
+     */
     public JSONHandler forceCheck()
     {
         try
@@ -67,6 +85,12 @@ public class JSONHandler
         return this;
     }
 
+    /**
+     * Get an entry from the bot.json file
+     *
+     * @param entry The object to get
+     * @return The retrieved object
+     */
     public String get(String entry)
     {
         JSONParser parser = new JSONParser();
@@ -80,6 +104,13 @@ public class JSONHandler
         return "";
     }
 
+    /**
+     * Sets an object in the bot.json file
+     *
+     * @param object The object to set
+     * @param input The input to set the object to
+     * @throws IOException
+     */
     public void set(String object, String input) throws IOException
     {
         File file = new File(System.getenv("appdata") + "\\chad\\bot.json");
@@ -94,7 +125,13 @@ public class JSONHandler
         Files.write(resultingJson, file, Charsets.UTF_8);
     }
 
-
+    /**
+     * Reads a JSONObject from a URL
+     *
+     * @param url The URL to read from
+     * @return The JSONObject
+     * @throws JSONException
+     */
     public org.json.JSONObject read(String url) throws JSONException {
         if (url == "" || url == null)
             return null;
@@ -103,6 +140,14 @@ public class JSONHandler
             return null;
         return new org.json.JSONObject(httpGet);
     }
+
+    /**
+     * Reads a JSONArray from a URL
+     *
+     * @param url The URL to read from
+     * @return The JSONArray
+     * @throws JSONException
+     */
     public org.json.JSONArray readArray(String url) throws JSONException {
         if (url == "" || url == null)
             return null;
@@ -112,6 +157,12 @@ public class JSONHandler
         return new org.json.JSONArray(httpGet);
     }
 
+    /**
+     * Reads a local file into a JSONObject
+     *
+     * @param file The file to read from
+     * @return The JSONObject
+     */
     public org.json.JSONObject readFile(String file)
     {
         JSONParser parser = new JSONParser();
@@ -126,10 +177,17 @@ public class JSONHandler
         return null;
     }
 
-    @SuppressWarnings("deprecation")
-    public void writeFile(String filep, String object, String input) throws IOException
+    /**
+     * Writes to a JSON file
+     *
+     * @param fileString The file in the Chad directory
+     * @param object The object
+     * @param input The new value for the object
+     * @throws IOException
+     */
+    public void writeFile(String fileString, String object, String input) throws IOException
     {
-        File file = new File(System.getenv("appdata") + "\\chad\\" + filep);
+        File file = new File(System.getenv("appdata") + "\\chad\\" + fileString);
         String jsonString = Files.toString(file, Charsets.UTF_8);
         JsonElement jelement = new JsonParser().parse(jsonString);
         JsonObject jobject = jelement.getAsJsonObject();

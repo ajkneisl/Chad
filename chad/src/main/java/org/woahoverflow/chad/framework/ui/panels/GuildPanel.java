@@ -8,6 +8,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class GuildPanel extends JPanel {
 
     public GuildPanel()

@@ -12,8 +12,17 @@ import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 
+/**
+ * Main class within Chad
+ *
+ * @author sho, codebasepw
+ * @since forever
+ */
 public final class ChadBot {
-    // Makes sure the token and URI_LINK values in bot.json are filled in.
+
+    /*
+    Makes sure bot.json is fulled
+     */
     static
     {
         JSONHandler h = new JSONHandler().forceCheck();
@@ -26,8 +35,16 @@ public final class ChadBot {
         }
     }
 
+    /**
+     * Main Client Instance
+     */
     public static final IDiscordClient cli = new ClientBuilder().withToken(new JSONHandler().forceCheck().get("token")).withRecommendedShardCount().build();
 
+    /**
+     * Main Method
+     *
+     * @param args Java Arguments
+     */
     public static void main(String[] args)
     {
         // Logs in and registers the listeners

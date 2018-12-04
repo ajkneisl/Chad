@@ -3,9 +3,21 @@ package org.woahoverflow.chad.framework.ui;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/**
+ * Sends an error to the UI
+ *
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public final class ChadError
 {
-    // Catches a throwable, and sends a string in an error format
+
+    /**
+     * Throws an error
+     *
+     * @param error The string error
+     * @param throwable The throwable
+     */
     public static void throwError(String error, Throwable throwable)
     {
         // Forms the stacktrace from the throwable
@@ -18,7 +30,11 @@ public final class ChadError
         UIHandler.handle.addLog("Error Occurred!", UIHandler.LogLevel.EXCEPTION);
     }
 
-    // Sends a string in an error format
+    /**
+     * Throws an error
+     *
+     * @param error The string error
+     */
     public static void throwError(String error)
     {
         // Initiates the error UI with the string error

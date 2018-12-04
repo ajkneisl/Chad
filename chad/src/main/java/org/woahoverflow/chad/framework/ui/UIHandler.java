@@ -6,7 +6,6 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.ui.panels.GuildPanel;
 import org.woahoverflow.chad.framework.ui.panels.MainPanel;
 import org.woahoverflow.chad.framework.ui.panels.PopUpPanel;
@@ -20,6 +19,12 @@ import sx.blah.discord.util.RequestBuffer;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The UI Handler
+ *
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class UIHandler
 {
     private static boolean activeUpdate;
@@ -63,7 +68,12 @@ public class UIHandler
         }, Chad.getInternalConsumer());
     }
 
-    // Adds a log to the UI
+    /**
+     * Adds a log to the UI
+     *
+     * @param log The log string
+     * @param level The log level
+     */
     public final void addLog(String log, LogLevel level)
     {
         mainpanel.logs.append('\n' +"["+ level +"] "+ log);
@@ -71,6 +81,7 @@ public class UIHandler
 
     /**
      * Creates a popup error
+     *
      * @param error The error string
      */
     static void newError(String error)
@@ -90,6 +101,7 @@ public class UIHandler
 
     /**
      * Creates a popup error with a guild's information
+     *
      * @param error The error string
      * @param guild The guild where the error occurred
      */
@@ -108,6 +120,7 @@ public class UIHandler
 
     /**
      * Creates a popup with the guild's information
+     *
      * @param guild The guild to be displayed
      */
     public static void displayGuild(IGuild guild)
@@ -168,7 +181,7 @@ public class UIHandler
                 java.lang.management.ManagementFactory.getOperatingSystemMXBean();
 
         // Gets memory amount
-        String memory = Util.humanReadableByteCount(os.getTotalPhysicalMemorySize(), true);
+        String memory = os.getTotalPhysicalMemorySize()/1000/1000+"mb";
 
         // Gets the available threads (it's not actually the physical cores)
         int availableProcessors = os.getAvailableProcessors();
@@ -184,7 +197,7 @@ public class UIHandler
                 displayGuild(ChadBot.cli.getGuildByID(Long.parseLong(mainpanel.guildList.getText().trim())));
             } catch (NumberFormatException e)
             {
-                // If it's invalid, eerror
+                // If it's invalid, error
                 newError("Invalid Guild");
             }
         });
@@ -213,8 +226,9 @@ public class UIHandler
 
     /**
      * Gets the statistics for the main UI
-     * @param cli the IDiscordClient
-     * @return a hashmap full of statistics
+     *
+     * @param cli The IDiscordClient
+     * @return A hashmap full of statistics
      */
     private static HashMap<String, String> getStats(IDiscordClient cli)
     {
@@ -255,7 +269,7 @@ public class UIHandler
     {
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
                 java.lang.management.ManagementFactory.getOperatingSystemMXBean();
-        String memory = Util.humanReadableByteCount(os.getTotalPhysicalMemorySize(), true);
+        String memory = os.getTotalPhysicalMemorySize()/1000/1000+"mb";
         int availableProcessors = os.getAvailableProcessors();
         IShard shard = ChadBot.cli.getShards().get(0);
         long ping = shard.getResponseTime();

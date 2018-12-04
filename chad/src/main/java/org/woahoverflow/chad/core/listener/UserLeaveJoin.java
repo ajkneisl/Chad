@@ -20,12 +20,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * User joining and Leaving events
+ *
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public final class UserLeaveJoin
 {
 
     private static final Pattern USER_PATTERN = Pattern.compile("&user&");
     private static final Pattern GUILD_PATTERN = Pattern.compile("&guild&");
 
+    /**
+     * The event when a user joins
+     *
+     * @param e The event
+     */
     @SuppressWarnings("unused")
     @EventSubscriber
     public void userJoin(UserJoinEvent e)
@@ -87,7 +98,7 @@ public final class UserLeaveJoin
             return;
         }
 
-        // you probably shouldnt put code below this comment
+        // you probably shouldn't put code below this comment
 
         String joinRoleStringID = DatabaseHandler.handle.getString(e.getGuild(), "join_role");
         if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none"))
@@ -121,6 +132,11 @@ public final class UserLeaveJoin
         }
     }
 
+    /**
+     * The event when a user leaves
+     *
+     * @param e The event
+     */
     @SuppressWarnings("unused")
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
@@ -130,7 +146,6 @@ public final class UserLeaveJoin
 
         // Log if the user leaves
         IGuild guild = e.getGuild();
-        MessageHandler messageHandler = new MessageHandler(null);
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");

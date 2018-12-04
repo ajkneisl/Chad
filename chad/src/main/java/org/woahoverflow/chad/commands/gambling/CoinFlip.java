@@ -344,7 +344,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // 0 is tails winning, 1 is heads winning
-                if (Util.coinflip())
+                if (Util.coinFlip())
                 {
                     // Sets the user's balances
                     DatabaseHandler.handle
@@ -377,8 +377,8 @@ public class CoinFlip implements Command.Class{
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("coinflip <amount to bet> <tails/heads>", "College?");
-        st.put("coinflip <amount to bet> <@user>", "Play coinflip with another user!");
+        st.put("coinFlip <amount to bet> <tails/heads>", "College?");
+        st.put("coinFlip <amount to bet> <@user>", "Play coinFlip with another user!");
         return Command.helpCommand(st, "CoinFlip", e);
     }
 }

@@ -48,6 +48,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Storing of Static Variables that don't have a home
+ *
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public final class ChadVar
 {
 
@@ -114,7 +120,7 @@ public final class ChadVar
 
         // MONEY!
         COMMANDS.put("register", new Command.Data(Command.Category.MONEY, new Register()));
-        COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
+        COMMANDS.put("coinFlip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, new Balance()));
         COMMANDS.put("dailyreward", new Data(Category.MONEY, new DailyReward()));
     }

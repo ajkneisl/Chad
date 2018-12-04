@@ -9,6 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class MainPanel extends JPanel {
     public MainPanel() {
         initComponents();

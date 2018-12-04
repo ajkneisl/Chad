@@ -17,41 +17,51 @@ import java.util.Arrays;
 import java.util.List;
 import sx.blah.discord.util.RequestBuffer;
 
+/**
+ * Message Received
+ *
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public final class MessageRecieved
 {
-
     static final Pattern COMPILE = Pattern.compile("&user&");
 
-    @SuppressWarnings("unused")
+    /**
+     * Discord's Message Received Event
+     *
+     * @param event Message Received Event
+     */
     @EventSubscriber
-    public void messageReceived(MessageReceivedEvent e)
+    @SuppressWarnings("unused")
+    public void messageReceived(MessageReceivedEvent event)
     {
         // Gets the message, then splits all the different parts with a space.
-        String[] argArray = e.getMessage().getContent().split(" ");
+        String[] argArray = event.getMessage().getContent().split(" ");
 
         // Returns if there are no arguments
         if (argArray.length == 0)
             return;
 
         // The guild's cached document
-        Document cachedDocument = Chad.getGuild(e.getGuild()).getDocument();
+        Document cachedDocument = Chad.getGuild(event.getGuild()).getDocument();
 
         // The guild's prefix
         String prefix = cachedDocument.getString("prefix").toLowerCase();
 
         // The user's threadconsumer
-        ThreadConsumer consumer = Chad.getConsumer(e.getAuthor());
+        ThreadConsumer consumer = Chad.getConsumer(event.getAuthor());
 
         // Makes sure the words aren't swears :) (if enabled)
         if (cachedDocument.getBoolean("stop_swear"))
         {
             // Gets the message from the cache :)
             String msg = cachedDocument.getString("swear_message");
-            msg = msg != null ? COMPILE.matcher(msg).replaceAll(e.getAuthor().getName()) : "No Swearing!";
+            msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
             for (String s : argArray) {
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {
-                    new MessageHandler(e.getChannel()).send(msg, "Swearing");
-                    RequestBuffer.request(() -> e.getMessage().delete());
+                    new MessageHandler(event.getChannel()).send(msg, "Swearing");
+                    RequestBuffer.request(() -> event.getMessage().delete());
                     return;
                 }
             }
@@ -77,19 +87,19 @@ public final class MessageRecieved
             {
 
                 // if the command is developer only, and the user is NOT a developer, deny them access
-                if (val.getCommandCategory() == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
+                if (val.getCommandCategory() == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                 {
-                    new MessageHandler(e.getChannel()).sendError("Oh noes! It looks like you're not a developer. Too bad, ain't it?");
+                    new MessageHandler(event.getChannel()).sendError("Oh noes! It looks like you're not a developer. Too bad, ain't it?");
                     return;
                 }
 
                 // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-                if (!PermissionHandler.handle.userHasPermission(key, e.getAuthor(), e.getGuild()) && !e.getAuthor().getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
+                if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
-                    new MessageHandler(e.getChannel()).sendError("You don't have permission for this command!");
+                    new MessageHandler(event.getChannel()).sendError("You don't have permission for this command!");
                     return;
                 }
-                Runnable thread = args.size() == 1 && args.get(0).equalsIgnoreCase("help") ? val.getCommandClass().help(e) : val.getCommandClass().run(e, args);
+                Runnable thread = args.size() == 1 && args.get(0).equalsIgnoreCase("help") ? val.getCommandClass().help(event) : val.getCommandClass().run(event, args);
 
                 // add the command thread to the handler
                 Chad.runThread(thread, consumer);

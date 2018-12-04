@@ -11,12 +11,19 @@ import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+/**
+ * Handles almost all messages within Chad
+ *
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class MessageHandler
 {
     // All the messages that're used in commands.
@@ -29,21 +36,42 @@ public class MessageHandler
     public static final String INTERNAL_EXCEPTION = "Internal Exception!";
 
     private final IChannel channel;
+
+    /**
+     * Public Constructor
+     * @param channel The channel to send the messages in
+     */
     public MessageHandler(IChannel channel)
     {
         this.channel = channel;
     }
 
-    // Sends a raw message
+    /**
+     * Sends a raw message
+     *
+     * @param message The message to be sent
+     */
     public final void sendMessage(String message)
     {
+        // Makes sure the bot has permission in the guild
+        if (!channel.getClient().getOurUser().getPermissionsForGuild(channel.getGuild()).contains(Permissions.SEND_MESSAGES))
+            return;
+
         // Requests the message to be sent
-        RequestBuffer.request(() ->channel.sendMessage(message));
+        RequestBuffer.request(() -> channel.sendMessage(message));
     }
 
-    // Sends the embed and applies default items.
+    /**
+     * Sends an embed and applies the default values
+     *
+     * @param embedBuilder The embed builder to send
+     */
     public final void sendEmbed(EmbedBuilder embedBuilder)
     {
+        // Makes sure the bot has permission in the guild
+        if (!channel.getClient().getOurUser().getPermissionsForGuild(channel.getGuild()).contains(Permissions.EMBED_LINKS))
+            return;
+
         // Applies the timestamp to the footer
         embedBuilder.withFooterText(Util.getTimeStamp());
 
@@ -54,7 +82,11 @@ public class MessageHandler
         RequestBuffer.request(() -> channel.sendMessage(embedBuilder.build()));
     }
 
-    // Default method for sending errors.
+    /**
+     * Sends an error with the default embed builder
+     *
+     * @param error The error string to be sent
+     */
     public final void sendError(String error)
     {
         // Creates an embed builder and applies the throwError to the description
@@ -66,7 +98,12 @@ public class MessageHandler
         sendEmbed(embedBuilder);
     }
 
-    // Sends a embed message with a title and message.
+    /**
+     * Builds an embed
+     *
+     * @param msg The message string of the embed
+     * @param title The title string of the embed
+     */
     public final void send(String msg, String title)
     {
         // Creates an embed builder and applies msg and title
@@ -78,7 +115,12 @@ public class MessageHandler
         sendEmbed(embedBuilder);
     }
 
-    // Base log sender
+    /**
+     * Sends an embed to the guild's logging channel
+     *
+     * @param embedBuilder The embed to send
+     * @param guild The guild to send in
+     */
     public static void sendLog(EmbedBuilder embedBuilder, IGuild guild)
     {
         // Gets the guild's cached doc
@@ -120,7 +162,15 @@ public class MessageHandler
         RequestBuffer.request(() -> loggingChannel.sendMessage(embedBuilder.build()));
     }
 
-    // Logger for punishments
+    /**
+     * Sends a local guild log for a punishment
+     *
+     * @param punishment The punishment string
+     * @param punished The user who's been punished
+     * @param moderator The user who performed the action
+     * @param guild The guild that it was performed in
+     * @param reason The reason for the punishment
+     */
     public static void sendPunishLog(String punishment, IUser punished, IUser moderator, IGuild guild, List<String> reason)
     {
         // Creates a string of the reasons
@@ -134,16 +184,32 @@ public class MessageHandler
         sendLog(embedBuilder, guild);
     }
 
-    // Logger for config changes within the guild
+    /**
+     * Sends a local guild log for a config change
+     *
+     * @param changedValue The changed value
+     * @param newValue The new value
+     * @param oldValue The old value
+     * @param moderator The user who changed the value
+     * @param guild The guild in which it was changed
+     */
     public static void sendConfigLog(String changedValue, String newValue, String oldValue, IUser moderator, IGuild guild)
     {
         EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("Config Change : " + changedValue).appendField("New Value", newValue, true).appendField("Old Value", oldValue, true).appendField("Admin", moderator.getName(), true).withFooterText(Util.getTimeStamp());
         sendLog(embedBuilder, guild);
     }
 
-    // Sends a file
+    /**
+     * Sends a file in the channel
+     *
+     * @param file The file to be sent
+     */
     public final void sendFile(File file)
     {
+        // Makes sure the bot has permission in the guild
+        if (!channel.getClient().getOurUser().getPermissionsForGuild(channel.getGuild()).contains(Permissions.ATTACH_FILES))
+            return;
+
         RequestBuffer.request(() -> {
             try {
                 channel.sendFile(file);
