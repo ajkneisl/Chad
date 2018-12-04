@@ -39,7 +39,7 @@ public class RussianRoulette implements Command.Class {
             }
 
             // If the user equals themselves or chad, deny
-            if (unFinalUser.equals(e.getAuthor()) && unFinalUser.equals(e.getClient().getOurUser()))
+            if (unFinalUser.equals(e.getAuthor()) || unFinalUser.equals(e.getClient().getOurUser()))
             {
                 messageHandler.sendError("You can't play with that person!");
                 return;
