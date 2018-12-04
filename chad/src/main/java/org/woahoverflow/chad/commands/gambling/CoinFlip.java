@@ -381,8 +381,8 @@ public class CoinFlip implements Command.Class{
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("coinFlip <amount to bet> <tails/heads>", "College?");
-        st.put("coinFlip <amount to bet> <@user>", "Play coinFlip with another user!");
+        st.put("coinflip <amount to bet> <tails/heads>", "College?");
+        st.put("coinflip <amount to bet> <@user>", "Play CoinFlip with another user!");
         return Command.helpCommand(st, "CoinFlip", e);
     }
 }

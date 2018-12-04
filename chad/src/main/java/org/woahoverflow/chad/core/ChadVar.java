@@ -120,7 +120,7 @@ public final class ChadVar
 
         // MONEY!
         COMMANDS.put("register", new Command.Data(Command.Category.MONEY, new Register()));
-        COMMANDS.put("coinFlip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
+        COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, new Balance()));
         COMMANDS.put("dailyreward", new Data(Category.MONEY, new DailyReward()));
     }
