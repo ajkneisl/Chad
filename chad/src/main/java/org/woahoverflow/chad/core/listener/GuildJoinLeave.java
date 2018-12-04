@@ -48,7 +48,7 @@ public final class GuildJoinLeave
             doc.append("swear_message", "No Swearing `&user&`!");
 
             DatabaseHandler.handle.getCollection().insertOne(doc);
-            UIHandler.loadGuild(e.getGuild());
+            UIHandler.displayGuild(e.getGuild());
             UIHandler.handle.addLog('<' +e.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
             Chad.getGuild(e.getGuild()).cache();
         }

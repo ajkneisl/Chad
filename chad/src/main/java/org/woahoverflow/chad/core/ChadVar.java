@@ -57,7 +57,7 @@ public final class ChadVar
     // Used in ModPresence
     public static StatusType statusType = StatusType.ONLINE;
     public static String currentStatus = "";
-    public static int rotationInteger = 60000*5; // 5 minutes
+    public static int rotationInteger = 60; // 5 minutes
     public static boolean rotatePresence = true;
     public static final List<String> presenceRotation = new ArrayList<>();
 
@@ -65,31 +65,6 @@ public final class ChadVar
     public static final ConcurrentHashMap<String, Command.Data> COMMANDS = new ConcurrentHashMap<>();
     public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
 
-    // static blocks
-    static {
-        presenceRotation.add("hello!");
-        presenceRotation.add("gamers");
-        presenceRotation.add("epic gamers");
-        presenceRotation.add("a bad game");
-        presenceRotation.add("j!help");
-        presenceRotation.add("j!prefix set *");
-        presenceRotation.add("what's going on gamers");
-        presenceRotation.add("invite me please");
-        presenceRotation.add("yeet");
-        presenceRotation.add("yeet yote yeet yote");
-        presenceRotation.add("chad is a kike");
-        presenceRotation.add("my mom beats me");
-        presenceRotation.add("chad till your dead");
-        presenceRotation.add("chad for life");
-        presenceRotation.add("suck my chad");
-        presenceRotation.add("git push you off the swing");
-        presenceRotation.add("git pull my dick");
-        presenceRotation.add("git reword essay");
-        presenceRotation.add("r/rule34");
-        presenceRotation.add("sneeki breeki");
-        presenceRotation.add("someone stole my sweet role");
-        presenceRotation.add("j!lewdneko... FBI open up!");
-    }
     static {
         // FUN!
         COMMANDS.put("random", new Command.Data(Command.Category.FUN, new Random()));

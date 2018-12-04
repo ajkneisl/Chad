@@ -94,7 +94,9 @@ public final class Chad
     private static final ThreadConsumer internalThreadConsumer = new ThreadConsumer();
     public static final ConcurrentHashMap<ThreadConsumer, ArrayList<Future<?>>> threadHash = new ConcurrentHashMap<>();
 
-    // Global Initialization Event
+    /**
+     * Global Init Event
+     */
     public static void init()
     {
         // To account for the main thread :)
@@ -168,8 +170,18 @@ public final class Chad
                 UIHandler.handle.addLog("Avoided adding user " + ((JSONObject) v).getString("display_name"), LogLevel.INFO);
             }
         }), getInternalConsumer());
+
+        /*
+        Adds all the presences
+         */
+        runThread(() -> JSONHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v)), getInternalConsumer());
     }
 
+    /**
+     * Gets a cached guild
+     * @param guild the guild to get a cached version of
+     * @return the cached guild
+     */
     public static CachedGuild getGuild(IGuild guild)
     {
         // If it contains the guild, which it should, return it
@@ -181,12 +193,20 @@ public final class Chad
         return cachedGuilds.get(guild);
     }
 
+    /**
+     * Uncaches a guild
+     * @param guild the guild to be uncached
+     */
     public static void unCacheGuild(IGuild guild)
     {
         cachedGuilds.remove(guild);
     }
 
-    // returns a user's threadconsumer
+    /**
+     * Gets a user's thread consumer
+     * @param user the user
+     * @return the user's thread consumer
+     */
     public static ThreadConsumer getConsumer(IUser user)
     {
         for (ThreadConsumer cons : threadHash.keySet())
@@ -195,12 +215,20 @@ public final class Chad
         return new ThreadConsumer(user);
     }
 
-    // returns the internal thread consumer
+    /**
+     * Gets the internal thread consumer
+     * @return the local internal consumer
+     */
     public static ThreadConsumer getInternalConsumer()
     {
         return internalThreadConsumer;
     }
 
+    /**
+     * Runs a thread
+     * @param thread the thread to be run
+     * @param consumer the consumer to tie it to
+     */
     public static void runThread(Runnable thread, ThreadConsumer consumer)
     {
         // If they're a discord user, add a running thread to the default
@@ -226,6 +254,11 @@ public final class Chad
         }
     }
 
+    /**
+     * Makes sure a threadconsumer can run it
+     * @param consumer the thread consumer
+     * @return if it can run it
+     */
     public static boolean consumerRunThread(ThreadConsumer consumer)
     {
         return threadHash.get(consumer) == null || threadHash.get(consumer).size() < 3;
