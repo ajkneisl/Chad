@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.framework.Command;
@@ -13,6 +12,10 @@ import sx.blah.discord.util.EmbedBuilder;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class RedditNew implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

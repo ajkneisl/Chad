@@ -8,7 +8,12 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import java.util.HashMap;
 import java.util.List;
 
-// command registers user into the database, specifically into their guild's mongodb
+/**
+ * Registers users into the MongoDB
+ *
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class Register implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

@@ -19,6 +19,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class PhotoEditor implements Command.Class {
 
     @Override

@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class Purge implements Command.Class  {
 
     @Override

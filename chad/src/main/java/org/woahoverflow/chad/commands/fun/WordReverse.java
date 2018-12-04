@@ -7,6 +7,10 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class WordReverse implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

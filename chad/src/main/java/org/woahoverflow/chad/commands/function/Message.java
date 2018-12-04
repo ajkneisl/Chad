@@ -13,6 +13,10 @@ import sx.blah.discord.util.RequestBuffer;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class Message implements Command.Class  {
 
     private static final Pattern LARGE_CODE_BLOCK = Pattern.compile("```");

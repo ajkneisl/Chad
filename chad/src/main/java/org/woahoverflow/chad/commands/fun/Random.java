@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class Random implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

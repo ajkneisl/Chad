@@ -18,6 +18,10 @@ import java.util.List;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class CoinFlip implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

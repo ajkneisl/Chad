@@ -11,6 +11,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class GuildInfo implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

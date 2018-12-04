@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@SuppressWarnings("all")
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class Permissions implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -27,11 +30,9 @@ public class Permissions implements Command.Class  {
                 args.remove(0);
 
                 // Assign variables
-                StringBuilder b = new StringBuilder();
-                List<IRole> rolesList = new ArrayList<>();
+                StringBuilder stringBuiler = new StringBuilder();
                 IRole role = null;
                 int i = 0;
-                int i1 = 0;
 
                 // Builds the role name
                 for (String s : args)
@@ -40,14 +41,15 @@ public class Permissions implements Command.Class  {
                     i++;
 
                     // Appends the string
-                    b.append(s).append(" ");
+                    stringBuiler.append(s).append(' ');
 
                     // Requests the roles from the guild
-                    rolesList = RequestBuffer.request(() -> e.getGuild().getRoles()).get();
+                    List<IRole> rolesList = RequestBuffer.request(() -> e.getGuild().getRoles())
+                        .get();
 
                     // Checks if any of the roles equal
                     for (IRole rol : rolesList)
-                        if (rol.getName().equalsIgnoreCase(b.toString().trim()))
+                        if (rol.getName().equalsIgnoreCase(stringBuiler.toString().trim()))
                             role = rol; // If a role was found, assign it to the variable
 
                     // If the role was assigned, break out of the loop
@@ -62,6 +64,7 @@ public class Permissions implements Command.Class  {
                 }
 
                 // Removes the amount of arguments that the role name used
+                int i1 = 0;
                 while (i > i1)
                 {
                     i1++;
@@ -114,14 +117,14 @@ public class Permissions implements Command.Class  {
                         ArrayList<String> ar = (ArrayList<String>) Chad.getGuild(e.getGuild()).getDocument().get(role.getStringID());
 
                         // Checks if there's no permissions
-                        if (ar == null || ar.size() == 0) {
+                        if (ar == null || ar.isEmpty()) {
                             m.sendError("There's no permissions in this role!");
                             return;
                         }
 
                         // Creates an embed builder and applies the title
                         EmbedBuilder embedBuilder = new EmbedBuilder();
-                        embedBuilder.withTitle("Viewing Permissions for `" + role.getName()+"`");
+                        embedBuilder.withTitle("Viewing Permissions for `" + role.getName()+ '`');
 
                         // Builds all the permissions
                         StringBuilder stringBuilder = new StringBuilder();

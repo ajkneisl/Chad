@@ -12,6 +12,10 @@ import sx.blah.discord.handle.obj.StatusType;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class ModifyPresence implements Command.Class {
 
     @Override

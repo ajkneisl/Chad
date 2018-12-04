@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import sx.blah.discord.util.RequestBuffer;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class Cache implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

@@ -11,6 +11,10 @@ import org.woahoverflow.chad.framework.handle.DatabaseHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class DailyReward implements Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {

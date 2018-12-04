@@ -9,6 +9,10 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class Swearing implements Command.Class {
 
     @Override

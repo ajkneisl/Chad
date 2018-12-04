@@ -11,6 +11,10 @@ import sx.blah.discord.util.EmbedBuilder;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class CurrentThreads implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {

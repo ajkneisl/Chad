@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author codebasepw
+ * @since 0.6.3 B2
+ */
 public class AutoRole implements Command.Class  {
 
     @Override

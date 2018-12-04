@@ -14,6 +14,10 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class Help implements Command.Class {
 
     private static final Pattern REGEX = Pattern.compile(", $");

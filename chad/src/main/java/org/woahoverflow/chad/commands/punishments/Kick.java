@@ -14,6 +14,10 @@ import sx.blah.discord.util.PermissionUtils;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.6.3 B2
+ */
 public class Kick implements Command.Class
 {
     // Patterns for the message forming

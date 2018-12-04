@@ -10,6 +10,10 @@ import sx.blah.discord.util.EmbedBuilder;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sho
+ * @since 0.6.3 B2
+ */
 public class Prefix implements Command.Class  {
 
     @Override
