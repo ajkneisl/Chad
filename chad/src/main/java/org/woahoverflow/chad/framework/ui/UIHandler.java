@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.framework.ui;
 
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -18,46 +19,60 @@ import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class UIHandler
 {
+    private static boolean activeUpdate;
     public static UIHandler handle;
+
     // panels
     private int i;
     private final JFrame mainFrame = new JFrame("Chad");
     private final MainPanel mainpanel = new MainPanel();
     private final IDiscordClient cli;
+
+    /**
+     * Main Constructor for the UI
+     * @param cli the IDiscordClient
+     */
     public UIHandler(IDiscordClient cli)
     {
+        activeUpdate = true;
 
         this.cli = cli;
-        // mainpanel
-        mainFrame.getContentPane().add(mainpanel);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // makes it look better :)
         } catch (@SuppressWarnings("all") Exception e) { // it needs to shut the fuck up
             e.printStackTrace();
         }
-        mainFrame.setVisible(true);
-        mainFrame.pack();
-        mainFrame.setResizable(false);
+
+        // Begins the main frame
         beginMainFrame();
 
         // UI Updater (updates stats)
-        Chad.runThread(() -> new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
+        Chad.runThread(() -> {
+            while (activeUpdate)
+            {
+                try {
+                    TimeUnit.MINUTES.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 update();
             }
-        }, 60000*5,0), Chad.getInternalConsumer());
+        }, Chad.getInternalConsumer());
     }
 
+    // Adds a log to the UI
     public final void addLog(String log, LogLevel level)
     {
         mainpanel.logs.append('\n' +"["+ level +"] "+ log);
     }
+
+    /**
+     * Creates a popup error
+     * @param error The error string
+     */
     static void newError(String error)
     {
         PopUpPanel panel = new PopUpPanel();
@@ -73,7 +88,11 @@ public class UIHandler
 
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Creates a popup error with a guild's information
+     * @param error The error string
+     * @param guild The guild where the error occurred
+     */
     static void newError(String error, IGuild guild)
     {
         PopUpPanel panel = new PopUpPanel();
@@ -83,11 +102,15 @@ public class UIHandler
         panel.errorContent.setEditable(false);
         panel.errorContent.setText(error);
         frame.setSize(488, 239);
-        panel.guildButton.addActionListener((ev) -> loadGuild(guild));
+        panel.guildButton.addActionListener((ev) -> displayGuild(guild));
         panel.exitButton.addActionListener((ev) -> frame.dispose());
     }
 
-    public static void loadGuild(IGuild guild)
+    /**
+     * Creates a popup with the guild's information
+     * @param guild The guild to be displayed
+     */
+    public static void displayGuild(IGuild guild)
     {
         JFrame frame = new JFrame("Guild : " + guild.getStringID());
         GuildPanel panel = new GuildPanel();
@@ -115,54 +138,84 @@ public class UIHandler
         panel.reCacheButton.addActionListener((ev) -> Chad.getGuild(guild).cache());
     }
 
-    @SuppressWarnings("all")
+    /**
+     * Begins the main UI
+     */
     private void beginMainFrame()
     {
-        mainpanel.getAllGuilds.addActionListener((ActionEvent) -> {
+        // The echo guilds command
+        mainpanel.getAllGuilds.addActionListener((ev) -> {
           i = 0;
           ChadBot.cli.getGuilds().forEach((g) -> {
-                add();
-                addLog("<" + i + "> "+g.getName()+" ["+g.getStringID()+"]", LogLevel.INFO);
+              // Counts the amount of guilds parsed
+              add();
+              // Sends the log
+              addLog("<" + i + "> "+g.getName()+" ["+g.getStringID()+ ']', LogLevel.INFO);
           });
         });
-        mainpanel.exitButton.addActionListener((ActionEvent) -> System.exit(0));
-        mainpanel.refreshButton.addActionListener((ActionEvent) -> update());
-        // three lambdas in one :)
-        mainpanel.refreshButton2.addActionListener((ActionEvent) -> RequestBuffer.request(() -> ChadBot.cli.getGuilds().forEach((guild) -> Chad.getGuild(guild).cache())));
 
+        // Sets the exit button
+        mainpanel.exitButton.addActionListener((ev) -> System.exit(0));
+
+        // Sets the refresh button
+        mainpanel.refreshButton.addActionListener((ev) -> update());
+
+        // Caches all the guilds
+        mainpanel.refreshButton2.addActionListener((ev) -> RequestBuffer.request(() -> ChadBot.cli.getGuilds().forEach((guild) -> Chad.getGuild(guild).cache())));
+
+        // Gets the OperatingSystemMXBean
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
                 java.lang.management.ManagementFactory.getOperatingSystemMXBean();
 
+        // Gets memory amount
         String memory = Util.humanReadableByteCount(os.getTotalPhysicalMemorySize(), true);
 
-        int available_processors = os.getAvailableProcessors();
-        long ping = 69;
-        try {
-            ping = ChadBot.cli.getShards().get(0).getResponseTime();
-        } catch (IndexOutOfBoundsException e)
-        {
-            // throwaway :(
-        }
+        // Gets the available threads (it's not actually the physical cores)
+        int availableProcessors = os.getAvailableProcessors();
 
-        mainpanel.guildGo.addActionListener((ActionEvent) ->
+        // Gets the ping to the first shard
+        long ping = ChadBot.cli.getShards().get(0).getResponseTime();
+
+        // Goes to a guild
+        mainpanel.guildGo.addActionListener((ev) ->
         {
             try{
-                loadGuild(ChadBot.cli.getGuildByID(Long.parseLong(mainpanel.guildList.getText().trim())));
-            } catch (java.lang.NullPointerException | NumberFormatException e)
+                // Displays the guild with the text from the input
+                displayGuild(ChadBot.cli.getGuildByID(Long.parseLong(mainpanel.guildList.getText().trim())));
+            } catch (NumberFormatException e)
             {
+                // If it's invalid, eerror
                 newError("Invalid Guild");
             }
         });
-        mainpanel.coresVal.setText(Integer.toString(available_processors));
+
+        // Set the cores value
+        mainpanel.coresVal.setText(Integer.toString(availableProcessors));
+
+        // Sets the memory value
         mainpanel.memoryVal.setText(memory);
+
+        // Sets the shard response value
         mainpanel.shardRespTimeVal.setText(ping + "ms");
+
+        // Sets the presence value
         mainpanel.presenceVal.setText("Loading");
+
+        // So the main logs can't be edited
         mainpanel.logs.setEditable(false);
+
+        // The startup message
         mainpanel.logs.setText("UI has started.");
+
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setSize(1157, 842);
     }
 
+    /**
+     * Gets the statistics for the main UI
+     * @param cli the IDiscordClient
+     * @return a hashmap full of statistics
+     */
     private static HashMap<String, String> getStats(IDiscordClient cli)
     {
 
@@ -195,21 +248,21 @@ public class UIHandler
         return hashmap;
     }
 
+    /**
+     * Updates the UI
+     */
     public final void update()
     {
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
                 java.lang.management.ManagementFactory.getOperatingSystemMXBean();
-
         String memory = Util.humanReadableByteCount(os.getTotalPhysicalMemorySize(), true);
-
         int availableProcessors = os.getAvailableProcessors();
         IShard shard = ChadBot.cli.getShards().get(0);
         long ping = shard.getResponseTime();
         mainpanel.allGuildsValue.setText(getStats(cli).get("guildAmount"));
         mainpanel.biggestGuildValue.setText(getStats(cli).get("biggestGuild"));
-        mainpanel.botToUserVal.setText(getStats(cli).get("botToPlayer"));/*
-        ChadVar.threadDevice.getMap().forEach((key, val) -> val.forEach((value) -> add()));
-        mainpanel.threadVal.setText(Integer.toString(ChadVar.threadDevice.getMap().size()));*/
+        mainpanel.botToUserVal.setText(getStats(cli).get("botToPlayer"));
+        mainpanel.threadVal.setText(String.valueOf(Chad.threadHash.size()));
         if (ChadBot.cli.isReady() && ChadBot.cli.getOurUser().getPresence().getText().isPresent()) {
             mainpanel.presenceVal.setText(ChadBot.cli.getOurUser().getPresence().getText().get());
         }
@@ -218,11 +271,17 @@ public class UIHandler
         mainpanel.memoryVal.setText(memory);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Log Levels
+     */
     public enum LogLevel
     {
         INFO, WARNING, SEVERE, EXCEPTION, CACHING
     }
+
+    /**
+     * Local Method, for lamdba
+     */
     private void add()
     {
         i++;
