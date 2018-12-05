@@ -6,6 +6,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.RequestBuffer;
 
 public class Nsfw implements Command.Class  {
     @Override
@@ -13,15 +15,22 @@ public class Nsfw implements Command.Class  {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
 
+            // Makes sure they've got permissions
+            if (!RequestBuffer.request(() -> e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.MANAGE_CHANNEL)).get())
+            {
+                messageHandler.sendError(MessageHandler.BOT_NO_PERMISSION);
+                return;
+            }
+
             // If the channel is NSFW, revoke, if not, add
-            if (e.getChannel().isNSFW())
+            if (RequestBuffer.request(() -> e.getChannel().isNSFW()).get())
             {
                 messageHandler.send("Removed NSFW status from this channel!", "Nsfw");
-                e.getChannel().changeNSFW(false);
+                RequestBuffer.request(() -> e.getChannel().changeNSFW(false));
             }
             else {
                 messageHandler.send("Added NSFW status to this channel!", "Nsfw");
-                e.getChannel().changeNSFW(true);
+                RequestBuffer.request(() -> e.getChannel().changeNSFW(true));
             }
         };
     }
