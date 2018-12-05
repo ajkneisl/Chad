@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info;
 
+import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -18,11 +19,10 @@ public class ChangeLog implements Command.Class
             EmbedBuilder embedBuilder = new EmbedBuilder();
 
             // Builds it
-            embedBuilder.withTitle("**Change Log** : 0.6.3 B2");
+            embedBuilder.withTitle("**Change Log** : 0.7.0");
             embedBuilder.withDesc(
-                "`changelog command` : this command\n"
-                        + "`improved internal stuff` : you won't notice this, but I do :)\n"
-                        + "`prefix capitalization` : capitalization no longer matters within prefixes"
+                "`fixed help commands` : some didn't have help commands, they're good now\n"
+                        + "`music commands` : there's now music!\n"
             );
 
             // Sends the message
@@ -32,6 +32,8 @@ public class ChangeLog implements Command.Class
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("changelog", "Gets the current change log");
+        return Command.helpCommand(st, "Change Log", e);
     }
 }
