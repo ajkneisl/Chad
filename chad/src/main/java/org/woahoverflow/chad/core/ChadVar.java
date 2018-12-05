@@ -27,6 +27,7 @@ import org.woahoverflow.chad.commands.gambling.CoinFlip;
 import org.woahoverflow.chad.commands.gambling.DailyReward;
 import org.woahoverflow.chad.commands.gambling.Register;
 import org.woahoverflow.chad.commands.info.Chad;
+import org.woahoverflow.chad.commands.info.ChangeLog;
 import org.woahoverflow.chad.commands.info.Contributors;
 import org.woahoverflow.chad.commands.info.GuildInfo;
 import org.woahoverflow.chad.commands.info.Help;
@@ -91,6 +92,7 @@ public final class ChadVar
         COMMANDS.put("rtop", new Command.Data(Command.Category.INFO, new RedditTop()));
         COMMANDS.put("rnew", new Command.Data(Command.Category.INFO, new RedditNew()));
         COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
+        COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
 
         // PUNISHMENTS!
         COMMANDS.put("kick", new Command.Data(Command.Category.PUNISHMENTS, new Kick()));
