@@ -61,9 +61,31 @@ public class Play implements Command.Class
                 return;
             }
 
+            if (!(args.size() >= 2))
+            {
+                new MessageHandler(e.getChannel()).sendError(MessageHandler.INVALID_ARGUMENTS);
+                return;
+            }
+
+            String stringOption;
+            if (args.get(0).equalsIgnoreCase("youtube") || args.get(0).equalsIgnoreCase("yt"))
+            {
+                stringOption = "ytsearch:";
+            }
+            else if (args.get(0).equalsIgnoreCase("soundcloud") || args.get(0).equalsIgnoreCase("sc"))
+            {
+                stringOption = "scsearch:";
+            }
+            else {
+                new MessageHandler(e.getChannel()).sendError("Please use `YouTube` or `SoundCloud`!");
+                return;
+            }
+
+            args.remove(0);
+
             String string = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
-            playerManager.loadItemOrdered(manager, "ytsearch:"+string,
+            playerManager.loadItemOrdered(manager, stringOption+string,
                 new AudioLoadResultHandler() {
                     @Override
                     public void trackLoaded(AudioTrack track) {
