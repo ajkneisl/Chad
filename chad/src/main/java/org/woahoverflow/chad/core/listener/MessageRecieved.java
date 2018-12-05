@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Chad.ThreadConsumer;
+import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Command.Category;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadVar;
@@ -83,9 +84,32 @@ public final class MessageRecieved
             return;
 
         ChadVar.COMMANDS.forEach((key, val) -> {
-            if (commandString.equalsIgnoreCase(key))
+            if (val.usesAliases())
             {
+                for (String alias : val.getCommandAliases()) {
+                    if (alias.equalsIgnoreCase(commandString)) {
+                        // if the command is developer only, and the user is NOT a developer, deny them access
+                        if (val.getCommandCategory() == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
+                        {
+                            new MessageHandler(event.getChannel()).sendError("Oh noes! It looks like you're not a developer. Too bad, ain't it?");
+                            return;
+                        }
 
+                        // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
+                        if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
+                        {
+                            new MessageHandler(event.getChannel()).sendError("You don't have permission for this command!");
+                            return;
+                        }
+                        Runnable thread = args.size() == 1 && args.get(0).equalsIgnoreCase("help") ? val.getCommandClass().help(event) : val.getCommandClass().run(event, args);
+
+                        // add the command thread to the handler
+                        Chad.runThread(thread, consumer);
+                    }
+                }
+            }
+            else if (commandString.equalsIgnoreCase(key))
+            {
                 // if the command is developer only, and the user is NOT a developer, deny them access
                 if (val.getCommandCategory() == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                 {

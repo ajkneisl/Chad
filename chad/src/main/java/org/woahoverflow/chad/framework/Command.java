@@ -2,6 +2,7 @@ package org.woahoverflow.chad.framework;
 
 import java.awt.Color;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;
@@ -45,9 +46,26 @@ public final class Command
         // The command's category
         private final Category commandCategory;
         private final Command.Class commandClass;
+        private String[] commandAliases = {};
+        private final boolean usesAliases;
 
         /**
-         * The constructor for data
+         * The constructor for data with aliases
+         *
+         * @param category The command's category
+         * @param commandClass The command's class
+         * @param commandAliases The command's aliases
+         */
+        public Data(Category category, Command.Class commandClass, String... commandAliases)
+        {
+            this.commandAliases = commandAliases;
+            commandCategory = category;
+            this.commandClass = commandClass;
+            usesAliases = true;
+        }
+
+        /**
+         * The constructor for data without aliases
          *
          * @param category The command's category
          * @param commandClass The command's class
@@ -56,6 +74,7 @@ public final class Command
         {
             commandCategory = category;
             this.commandClass = commandClass;
+            usesAliases = false;
         }
 
         /**
@@ -70,6 +89,25 @@ public final class Command
          */
         public Command.Class getCommandClass() {
             return commandClass;
+        }
+
+        /**
+         * @return The command's aliases
+         */
+        public String[] getCommandAliases()
+        {
+            if (!usesAliases())
+                return null;
+
+            return commandAliases;
+        }
+
+        /**
+         * @return If it uses aliases
+         */
+        public boolean usesAliases()
+        {
+            return usesAliases;
         }
     }
 

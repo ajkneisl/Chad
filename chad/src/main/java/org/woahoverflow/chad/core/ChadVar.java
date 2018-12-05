@@ -2,7 +2,6 @@ package org.woahoverflow.chad.core;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
@@ -96,22 +95,22 @@ public final class ChadVar
     static {
         // FUN!
         COMMANDS.put("random", new Command.Data(Command.Category.FUN, new Random()));
-        COMMANDS.put("pe", new Command.Data(Command.Category.FUN, new PhotoEditor()));
-        COMMANDS.put("8ball", new Command.Data(Command.Category.FUN, new EightBall()));
-        COMMANDS.put("catgallery", new Command.Data(Command.Category.FUN, new CatGallery()));
+        COMMANDS.put("pe", new Command.Data(Command.Category.FUN, new PhotoEditor(), "photoeditor"));
+        COMMANDS.put("8ball", new Command.Data(Command.Category.FUN, new EightBall(), "eightball"));
+        COMMANDS.put("catgallery", new Command.Data(Command.Category.FUN, new CatGallery(), "catgal"));
         COMMANDS.put("catfact", new Command.Data(Command.Category.FUN, new CatFact()));
-        COMMANDS.put("rrl", new Command.Data(Command.Category.FUN, new RussianRoulette()));
-        COMMANDS.put("wr", new Command.Data(Command.Category.FUN, new WordReverse()));
-        COMMANDS.put("rps", new Command.Data(Command.Category.FUN, new RockPaperScissors()));
+        COMMANDS.put("rrl", new Command.Data(Command.Category.FUN, new RussianRoulette(), "russianroulette"));
+        COMMANDS.put("wr", new Command.Data(Command.Category.FUN, new WordReverse(), "wordreverse"));
+        COMMANDS.put("rps", new Command.Data(Command.Category.FUN, new RockPaperScissors(), "rockpaperscissors"));
 
         // INFO!
         COMMANDS.put("help", new Command.Data(Command.Category.INFO, new Help()));
-        COMMANDS.put("userinfo", new Command.Data(Command.Category.INFO, new UserInfo()));
+        COMMANDS.put("userinfo", new Command.Data(Command.Category.INFO, new UserInfo(), "uinfo"));
         COMMANDS.put("steam", new Command.Data(Command.Category.INFO, new Steam()));
         COMMANDS.put("chad", new Command.Data(Command.Category.INFO, new Chad()));
-        COMMANDS.put("guildinfo", new Command.Data(Command.Category.INFO, new GuildInfo()));
-        COMMANDS.put("rtop", new Command.Data(Command.Category.INFO, new RedditTop()));
-        COMMANDS.put("rnew", new Command.Data(Command.Category.INFO, new RedditNew()));
+        COMMANDS.put("guildinfo", new Command.Data(Command.Category.INFO, new GuildInfo(), "ginfo"));
+        COMMANDS.put("rtop", new Command.Data(Command.Category.INFO, new RedditTop(), "reddittop"));
+        COMMANDS.put("rnew", new Command.Data(Command.Category.INFO, new RedditNew(), "redditnew"));
         COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
         COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
 
@@ -130,8 +129,8 @@ public final class ChadVar
         COMMANDS.put("swearfilter", new Command.Data(Category.FUNCTION, new Swearing()));
 
         // Nsfw !
-        COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, new NB4K()));
-        COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko()));
+        COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, new NB4K(), "porn"));
+        COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko(), "neko"));
 
         // ADMIN!
         COMMANDS.put("threads", new Command.Data(Command.Category.ADMIN, new CurrentThreads()));
@@ -145,7 +144,7 @@ public final class ChadVar
         COMMANDS.put("register", new Command.Data(Command.Category.MONEY, new Register()));
         COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, new Balance()));
-        COMMANDS.put("dailyreward", new Data(Category.MONEY, new DailyReward()));
+        COMMANDS.put("dailyreward", new Data(Category.MONEY, new DailyReward(), "drw"));
 
         // MUSIC
         COMMANDS.put("play", new Data(Category.MUSIC, new Play()));
