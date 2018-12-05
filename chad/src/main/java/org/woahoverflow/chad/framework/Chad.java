@@ -1,5 +1,7 @@
 package org.woahoverflow.chad.framework;
 
+import static org.woahoverflow.chad.core.ChadVar.musicManagers;
+import static org.woahoverflow.chad.core.ChadVar.playerManager;
 import static org.woahoverflow.chad.core.ChadVar.swearWords;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import org.bson.Document;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.framework.audio.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;
 import org.woahoverflow.chad.framework.handle.JSONHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
@@ -222,12 +225,31 @@ public final class Chad
     }
 
     /**
+     * Gets a guild's audio player
+     */
+    public static synchronized GuildMusicManager getMusicManager(IGuild guild)
+    {
+        long guildId = guild.getLongID();
+        GuildMusicManager musicManager = musicManagers.get(guildId);
+
+        if (musicManager == null)
+        {
+            musicManager = new GuildMusicManager(playerManager, guildId);
+            musicManagers.put(guildId, musicManager);
+        }
+
+        guild.getAudioManager().setAudioProvider(musicManager.getAudioProvider());
+
+        return musicManager;
+    }
+
+    /**
      * Gets a cached guild
      *
      * @param guild The guild to get a cached version of
      * @return The cached guild
      */
-    public static CachedGuild getGuild(IGuild guild)
+    public static synchronized CachedGuild getGuild(IGuild guild)
     {
         // If it contains the guild, which it should, return it
         if (cachedGuilds.keySet().contains(guild))
@@ -243,7 +265,7 @@ public final class Chad
      *
      * @param guild The guild to be uncached
      */
-    public static void unCacheGuild(IGuild guild)
+    public static synchronized void unCacheGuild(IGuild guild)
     {
         cachedGuilds.remove(guild);
     }
@@ -254,7 +276,7 @@ public final class Chad
      * @param user The user
      * @return The user's thread consumer
      */
-    public static ThreadConsumer getConsumer(IUser user)
+    public static synchronized ThreadConsumer getConsumer(IUser user)
     {
         for (ThreadConsumer cons : threadHash.keySet())
             if (cons.isDiscordUser() && cons.getUser().equals(user))
@@ -267,7 +289,7 @@ public final class Chad
      *
      * @return The local internal consumer
      */
-    public static ThreadConsumer getInternalConsumer()
+    public static synchronized ThreadConsumer getInternalConsumer()
     {
         return internalThreadConsumer;
     }
@@ -278,7 +300,7 @@ public final class Chad
      * @param thread The thread to be run
      * @param consumer The consumer to tie it to
      */
-    public static void runThread(Runnable thread, ThreadConsumer consumer)
+    public static synchronized void runThread(Runnable thread, ThreadConsumer consumer)
     {
         // If they're a discord user, add a running thread to the default
         if (consumer.isDiscordUser())
@@ -309,7 +331,7 @@ public final class Chad
      * @param consumer The thread consumer
      * @return If it can run it
      */
-    public static boolean consumerRunThread(ThreadConsumer consumer)
+    public static synchronized boolean consumerRunThread(ThreadConsumer consumer)
     {
         return threadHash.get(consumer) == null || threadHash.get(consumer).size() < 3;
     }

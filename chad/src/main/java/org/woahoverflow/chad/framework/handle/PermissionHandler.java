@@ -53,7 +53,7 @@ public class PermissionHandler
             return true;
 
         // all users should have access to commands in the fun and info commandCategory
-        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY).anyMatch(category -> meta.getCommandCategory() == category))
+        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY, Category.MUSIC).anyMatch(category -> meta.getCommandCategory() == category))
             return true;
 
         // loop through the users roles, if the role has permission for the command, return true

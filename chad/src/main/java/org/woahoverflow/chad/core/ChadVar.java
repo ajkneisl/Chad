@@ -1,5 +1,11 @@
 package org.woahoverflow.chad.core;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import org.woahoverflow.chad.commands.admin.Cache;
 import org.woahoverflow.chad.commands.admin.CurrentThreads;
 import org.woahoverflow.chad.commands.admin.ModifyPresence;
@@ -35,6 +41,10 @@ import org.woahoverflow.chad.commands.info.RedditNew;
 import org.woahoverflow.chad.commands.info.RedditTop;
 import org.woahoverflow.chad.commands.info.Steam;
 import org.woahoverflow.chad.commands.info.UserInfo;
+import org.woahoverflow.chad.commands.music.Leave;
+import org.woahoverflow.chad.commands.music.Play;
+import org.woahoverflow.chad.commands.music.Skip;
+import org.woahoverflow.chad.commands.music.Stop;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
 import org.woahoverflow.chad.commands.punishments.Ban;
@@ -42,6 +52,7 @@ import org.woahoverflow.chad.commands.punishments.Kick;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Command.Category;
 import org.woahoverflow.chad.framework.Command.Data;
+import org.woahoverflow.chad.framework.audio.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import sx.blah.discord.handle.obj.StatusType;
 
@@ -60,6 +71,16 @@ public final class ChadVar
 
     // Utilized in MessageHandler (thanks mr zacanager)
     public static final List<String> swearWords = new ArrayList<>();
+
+    // Music stuff
+    public static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+    public static ConcurrentHashMap<Long, GuildMusicManager> musicManagers = new ConcurrentHashMap<>();
+    static
+    {
+        AudioSourceManagers.registerRemoteSources(playerManager);
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+        playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
+    }
 
     // Used in ModPresence
     public static StatusType statusType = StatusType.ONLINE;
@@ -125,5 +146,11 @@ public final class ChadVar
         COMMANDS.put("coinflip", new Command.Data(Command.Category.MONEY, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.MONEY, new Balance()));
         COMMANDS.put("dailyreward", new Data(Category.MONEY, new DailyReward()));
+
+        // MUSIC
+        COMMANDS.put("play", new Data(Category.MUSIC, new Play()));
+        COMMANDS.put("stop", new Data(Category.MUSIC, new Stop()));
+        COMMANDS.put("leave", new Data(Category.MUSIC, new Leave()));
+        COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
     }
 }
