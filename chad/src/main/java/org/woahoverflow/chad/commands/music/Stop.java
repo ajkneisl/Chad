@@ -25,7 +25,7 @@ public class Stop implements Command.Class
             }
 
             Chad.getMusicManager(e.getGuild()).player.setPaused(true);
-            messageHandler.sendMessage("Stopped playing songs!");
+            messageHandler.sendMessage("Music is now paused!");
         };
     }
 
