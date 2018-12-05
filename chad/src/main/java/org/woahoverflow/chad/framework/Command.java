@@ -119,7 +119,7 @@ public final class Command
      * @param messageReceivedEvent The messagerecievedevent
      * @return The help runnable
      */
-    public static Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent messageReceivedEvent)
+    public static synchronized Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent messageReceivedEvent)
     {
         return () -> {
             String prefix = DatabaseHandler.handle.getString(messageReceivedEvent.getGuild(), "prefix");

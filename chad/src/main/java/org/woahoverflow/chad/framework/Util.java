@@ -32,7 +32,7 @@ public final class Util
      *
      * @return The current timestamp
      */
-    public static String getTimeStamp()
+    public static synchronized String getTimeStamp()
     {
         return new SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().getTime());
     }
@@ -43,7 +43,7 @@ public final class Util
      * @param url The URL to request
      * @return The gotten String
      */
-    public static String httpGet(String url) {
+    public static synchronized String httpGet(String url) {
         try {
             URL obj = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
@@ -72,7 +72,7 @@ public final class Util
         return "";
     }
 
-    public static String fixEnumString(String input) {
+    public static synchronized String fixEnumString(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
@@ -81,7 +81,7 @@ public final class Util
      *
      * @return Returns either true or false, it's randomized
      */
-    public static boolean coinFlip()
+    public static synchronized boolean coinFlip()
     {
         Random random = new Random();
         int flip = -1;
