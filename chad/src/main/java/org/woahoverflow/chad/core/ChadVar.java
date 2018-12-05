@@ -41,9 +41,9 @@ import org.woahoverflow.chad.commands.info.RedditTop;
 import org.woahoverflow.chad.commands.info.Steam;
 import org.woahoverflow.chad.commands.info.UserInfo;
 import org.woahoverflow.chad.commands.music.Leave;
+import org.woahoverflow.chad.commands.music.Pause;
 import org.woahoverflow.chad.commands.music.Play;
 import org.woahoverflow.chad.commands.music.Skip;
-import org.woahoverflow.chad.commands.music.Stop;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
 import org.woahoverflow.chad.commands.punishments.Ban;
@@ -148,7 +148,7 @@ public final class ChadVar
 
         // MUSIC
         COMMANDS.put("play", new Data(Category.MUSIC, new Play()));
-        COMMANDS.put("stop", new Data(Category.MUSIC, new Stop()));
+        COMMANDS.put("stop", new Data(Category.MUSIC, new Pause()));
         COMMANDS.put("leave", new Data(Category.MUSIC, new Leave()));
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
     }

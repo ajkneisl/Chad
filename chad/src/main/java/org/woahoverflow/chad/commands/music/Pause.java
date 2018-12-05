@@ -11,7 +11,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
  * @author sho
  * @since 0.7.0
  */
-public class Stop implements Command.Class
+public class Pause implements Command.Class
 {
 
     @Override
