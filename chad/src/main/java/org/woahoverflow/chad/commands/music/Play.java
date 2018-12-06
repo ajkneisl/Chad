@@ -15,6 +15,7 @@ import org.woahoverflow.chad.framework.audio.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.handle.obj.Permissions;
 
 /**
  * @author sho
@@ -64,6 +65,13 @@ public class Play implements Command.Class
             if (!(args.size() >= 2))
             {
                 new MessageHandler(e.getChannel()).sendError(MessageHandler.INVALID_ARGUMENTS);
+                return;
+            }
+
+            if (finalConnect && !channel.getModifiedPermissions(e.getClient().getOurUser()).contains(
+                Permissions.VOICE_CONNECT) || !channel.getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.VOICE_SPEAK))
+            {
+                new MessageHandler(e.getChannel()).sendError("I don't have permission to speak/join in channel `"+channel.getName()+"`!");
                 return;
             }
 
