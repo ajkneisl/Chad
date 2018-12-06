@@ -148,7 +148,7 @@ public final class ChadVar
 
         // MUSIC
         COMMANDS.put("play", new Data(Category.MUSIC, new Play()));
-        COMMANDS.put("stop", new Data(Category.MUSIC, new Pause()));
+        COMMANDS.put("pause", new Data(Category.MUSIC, new Pause()));
         COMMANDS.put("leave", new Data(Category.MUSIC, new Leave()));
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
     }

@@ -6,6 +6,7 @@ import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IVoiceChannel;
 
 /**
  * @author sho
@@ -26,6 +27,14 @@ public class Pause implements Command.Class
 
             Chad.getMusicManager(e.getGuild()).player.setPaused(true);
             messageHandler.sendMessage("Music is now paused!");
+
+            IVoiceChannel channel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
+
+            if (channel.getConnectedUsers().size() == 1)
+            {
+                channel.leave();
+                new MessageHandler(e.getChannel()).sendMessage("It's quite empty in `"+channel.getName()+"`!");
+            }
         };
     }
 
