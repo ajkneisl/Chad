@@ -5,12 +5,8 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.Cache;
-import org.woahoverflow.chad.commands.admin.CurrentThreads;
-import org.woahoverflow.chad.commands.admin.ModifyPresence;
-import org.woahoverflow.chad.commands.admin.SetBalance;
-import org.woahoverflow.chad.commands.admin.Shutdown;
-import org.woahoverflow.chad.commands.admin.SystemInfo;
+import org.woahoverflow.chad.commands.admin.*;
+import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
 import org.woahoverflow.chad.commands.fun.EightBall;
@@ -140,6 +136,7 @@ public final class ChadVar
         COMMANDS.put("cache", new Command.Data(Command.Category.ADMIN, new Cache()));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.ADMIN,new Shutdown()));
         COMMANDS.put("setbal", new Command.Data(Command.Category.ADMIN, new SetBalance()));
+        COMMANDS.put("createplayer", new Data(Category.ADMIN, new CreatePlayer()));
 
         // MONEY!
         COMMANDS.put("register", new Command.Data(Command.Category.MONEY, new Register()));
@@ -153,5 +150,8 @@ public final class ChadVar
         COMMANDS.put("leave", new Data(Category.MUSIC, new Leave()));
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume()));
+
+        // FIGHT
+        COMMANDS.put("attack", new Data(Category.FIGHT, new Attack()));
     }
 }

@@ -30,10 +30,10 @@ public class MessageHandler
     public static final String INVALID_USER = "That user couldn't be found!";
     public static final String BOT_NO_PERMISSION = "Chad doesn't have permission for this!";
     public static final String USER_NO_PERMISSION = "You don't have permission for this command!";
-    public static final String CHANNEL_NOT_NSFW = "This channel isn't Nsfw!";
-    public static final String INVALID_ARGUMENTS = "Invalid Arguments!";
+    public static final String CHANNEL_NOT_NSFW = "This channel isn't NSFW!";
+    public static final String INVALID_ARGUMENTS = "Invalid arguments!";
     public static final String NO_MENTIONS = "You didn't mention anyone!";
-    public static final String INTERNAL_EXCEPTION = "Internal Exception!";
+    public static final String INTERNAL_EXCEPTION = "Internal exception!";
 
     private final IChannel channel;
 
