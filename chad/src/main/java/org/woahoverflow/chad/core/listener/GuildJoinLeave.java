@@ -63,6 +63,7 @@ public final class GuildJoinLeave
             UIHandler.displayGuild(event.getGuild());
             UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
             Chad.getGuild(event.getGuild()).cache();
+            event.getGuild().getDefaultChannel().sendMessage("Hello, I'm Chad!\nMy prefix is by default `j!`, to set it you can do `j!prefix set <prefix>`\nFor more information about my commands, go to https://woahoverflow.org/chad");
         }
         Chad.getGuild(event.getGuild()).cache();
     }
