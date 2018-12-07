@@ -24,12 +24,18 @@ public class PermissionHandler
 {
 
     /**
-     * The global instance for the Permission Handler
+     * The global handle for the Permission Handler
      */
     public static final PermissionHandler handle = new PermissionHandler();
-    // check if the user is in the list of developers
+
+    /**
+     * Checks if a user is a developer
+     *
+     * @param user The user
+     * @return If they're a verified developer
+     */
     public boolean userIsDeveloper(IUser user) {
-        return ChadVar.GLOBAL_PERMISSIONS.get(user.getStringID()) == PermissionHandler.Levels.SYSTEM_ADMINISTRATOR;
+        return ChadVar.DEVELOPERS.contains(user.getLongID());
     }
 
     /**
@@ -64,26 +70,19 @@ public class PermissionHandler
                 .requireNonNull(DatabaseHandler.handle.getArray(guild, r.getStringID())).contains(command));
     }
 
-    // TODO: remove this
-    public enum Levels
-    {
-        SYSTEM_ADMINISTRATOR
-    }
-
     /**
      * Add a command to a role
      *
      * @param role The role to add to
      * @param command The command to add
      * @return The return code
-     * @throws IndexOutOfBoundsException
      */
-    public int addCommandToRole(IRole role, String command) throws IndexOutOfBoundsException
+    public int addCommandToRole(IRole role, String command)
     {
         if (!parseCommand(command))
             return 0;
 
-        Document cachedDocument = Chad.getGuild(role.getGuild()).getDocument();
+        Document cachedDocument = Chad.getGuild(role.getGuild().getLongID()).getDocument();
 
         if (cachedDocument == null)
             return 1;
@@ -96,7 +95,7 @@ public class PermissionHandler
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);
             DatabaseHandler.handle.set(role.getGuild(), role.getStringID(), ar);
-            Chad.getGuild(role.getGuild()).cache();
+            Chad.getGuild(role.getGuild().getLongID()).cache();
             return 6;
         }
         if (arr.contains(command))
@@ -104,7 +103,7 @@ public class PermissionHandler
         ArrayList<String> ar = arr;
         ar.add(command);
         DatabaseHandler.handle.set(role.getGuild(), role.getStringID(), ar);
-        Chad.getGuild(role.getGuild()).cache();
+        Chad.getGuild(role.getGuild().getLongID()).cache();
         return 6;
     }
 
@@ -123,7 +122,7 @@ public class PermissionHandler
         if (DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID()) == null)
             return 4;
 
-        Document get = Chad.getGuild(role.getGuild()).getDocument();
+        Document get = Chad.getGuild(role.getGuild().getLongID()).getDocument();
 
         if (get == null)
             return 1;
@@ -135,7 +134,7 @@ public class PermissionHandler
 
         ar.remove(command);
         DatabaseHandler.handle.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
-        Chad.getGuild(role.getGuild()).cache();
+        Chad.getGuild(role.getGuild().getLongID()).cache();
         return 6;
 
     }

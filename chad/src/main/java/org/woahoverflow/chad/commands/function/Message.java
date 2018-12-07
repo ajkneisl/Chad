@@ -44,7 +44,7 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current join message
-                String old = Chad.getGuild(e.getGuild()).getDocument().getString("join_message");
+                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("join_message");
 
                 // Sets the new one into the database
                 DatabaseHandler.handle.set(e.getGuild(), "join_message", formattedText.trim());
@@ -56,7 +56,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Join Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild()).cache();
+                Chad.getGuild(e.getGuild().getLongID()).cache();
                 return;
             }
 
@@ -70,7 +70,7 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current leave message
-                String old = Chad.getGuild(e.getGuild()).getDocument().getString("leave_message");
+                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("leave_message");
 
                 // Sets the new one into the database
                 DatabaseHandler.handle.set(e.getGuild(), "leave_message", formattedText.trim());
@@ -82,7 +82,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Leave Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild()).cache();
+                Chad.getGuild(e.getGuild().getLongID()).cache();
                 return;
             }
 
@@ -96,7 +96,7 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current ban message
-                String old = Chad.getGuild(e.getGuild()).getDocument().getString("ban_message");
+                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("ban_message");
 
                 // Sets the new one into the database
                 DatabaseHandler.handle.set(e.getGuild(), "ban_message", formattedText.trim());
@@ -108,7 +108,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Ban Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild()).cache();
+                Chad.getGuild(e.getGuild().getLongID()).cache();
                 return;
             }
 
@@ -122,7 +122,7 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current ban message
-                String old = Chad.getGuild(e.getGuild()).getDocument().getString("kick_message");
+                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("kick_message");
 
                 // Sets the new one into the database
                 DatabaseHandler.handle.set(e.getGuild(), "kick_message", formattedText.trim());
@@ -133,7 +133,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Kick Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild()).cache();
+                Chad.getGuild(e.getGuild().getLongID()).cache();
                 return;
             }
 
@@ -164,7 +164,7 @@ public class Message implements Command.Class  {
                     DatabaseHandler.handle.set(e.getGuild(), "join_msg_on", set);
 
                     // Recaches the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     return;
                 }
 
@@ -182,7 +182,7 @@ public class Message implements Command.Class  {
                     DatabaseHandler.handle.set(e.getGuild(), "ban_msg_on", set);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     return;
                 }
 
@@ -200,7 +200,7 @@ public class Message implements Command.Class  {
                     DatabaseHandler.handle.set(e.getGuild(), "kick_msg_on", set);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     return;
                 }
 
@@ -218,7 +218,7 @@ public class Message implements Command.Class  {
                     DatabaseHandler.handle.set(e.getGuild(), "leave_msg_on", set);
 
                     // ReCaches in the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     return;
                 }
                 messageHandler.sendError("Invalid Type!");
@@ -284,7 +284,7 @@ public class Message implements Command.Class  {
                     MessageHandler.sendConfigLog("Join Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild());
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     return;
                 }
 
@@ -346,7 +346,7 @@ public class Message implements Command.Class  {
                     MessageHandler.sendConfigLog("Leave Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild());
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     return;
                 }
                 messageHandler.sendError("Invalid Type!");

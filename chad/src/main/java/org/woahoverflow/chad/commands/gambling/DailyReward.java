@@ -25,7 +25,7 @@ public class DailyReward implements Class {
             if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
             {
                 messageHandler.sendError("You don't have an account! \n Use `" + Chad
-                    .getGuild(e.getGuild()).getDocument().getString("prefix") + "register` to get one!");
+                    .getGuild(e.getGuild().getLongID()).getDocument().getString("prefix") + "register` to get one!");
                 return;
             }
 

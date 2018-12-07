@@ -19,7 +19,7 @@ public class DatabaseHandler
 {
 
     /**
-     * The global instance for the Database
+     * The global handle for the Database
      */
     public static final DatabaseHandler handle = new DatabaseHandler();
 
@@ -33,7 +33,7 @@ public class DatabaseHandler
      */
     private DatabaseHandler()
     {
-        cli = new MongoClient(new MongoClientURI(JSONHandler.handle.get("uri_link")));
+        cli = new MongoClient(new MongoClientURI(JsonHandler.handle.get("uri_link")));
         db = cli.getDatabase("Database");
         col = db.getCollection("bot");
     }
@@ -85,7 +85,7 @@ public class DatabaseHandler
      * @param object The array's name
      * @return The retrieved array
      */
-    public final ArrayList<String> getArray(IGuild guild, String object)
+    public final synchronized ArrayList<String> getArray(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
@@ -105,7 +105,7 @@ public class DatabaseHandler
      * @param object The string's name
      * @return The retrieved string
      */
-    public final String getString(IGuild guild, String object)
+    public final synchronized String getString(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
@@ -122,7 +122,7 @@ public class DatabaseHandler
      * @param object The object's name
      * @return The retrieved object
      */
-    public final Object get(IGuild guild, String object)
+    public final synchronized Object get(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
@@ -139,7 +139,7 @@ public class DatabaseHandler
      * @param object The object to check
      * @return If the object exists
      */
-    public final boolean contains(IGuild guild, String object)
+    public final synchronized boolean contains(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
@@ -156,7 +156,7 @@ public class DatabaseHandler
      * @param object The boolean's name
      * @return The retrieved object
      */
-    public final boolean getBoolean(IGuild guild, String object)
+    public final synchronized boolean getBoolean(IGuild guild, String object)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
@@ -173,7 +173,7 @@ public class DatabaseHandler
      * @param object The object to set
      * @param entry The new value for the object
      */
-    public final void set(IGuild guild, String object, Object entry)
+    public final synchronized void set(IGuild guild, String object, Object entry)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
 
@@ -189,7 +189,7 @@ public class DatabaseHandler
      * @param guild The guild to check
      * @return If the document exists
      */
-    public final boolean exists(IGuild guild)
+    public final synchronized boolean exists(IGuild guild)
     {
         Document get = col.find(new Document("guildid", guild.getStringID())).first();
         return get != null;

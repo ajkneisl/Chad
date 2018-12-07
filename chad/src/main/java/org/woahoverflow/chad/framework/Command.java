@@ -2,7 +2,6 @@ package org.woahoverflow.chad.framework;
 
 import java.awt.Color;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;

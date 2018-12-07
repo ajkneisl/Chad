@@ -6,7 +6,7 @@ import org.woahoverflow.chad.core.listener.MessageRecieved;
 import org.woahoverflow.chad.core.listener.OnReady;
 import org.woahoverflow.chad.core.listener.UserLeaveJoin;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.ClientBuilder;
@@ -25,10 +25,10 @@ public final class ChadBot {
      */
     static
     {
-        JSONHandler h = new JSONHandler().forceCheck();
+        JsonHandler h = new JsonHandler().forceCheck();
         if (h.get("token").isEmpty() || h.get("uri_link").isEmpty())
         {
-            UIHandler handle = new UIHandler(null);
+            UIHandler handle = new UIHandler();
             handle.addLog("bot.json is empty!", LogLevel.SEVERE);
             // Exits
             System.exit(1);
@@ -38,7 +38,7 @@ public final class ChadBot {
     /**
      * Main Client Instance
      */
-    public static final IDiscordClient cli = new ClientBuilder().withToken(new JSONHandler().forceCheck().get("token")).withRecommendedShardCount().build();
+    public static final IDiscordClient cli = new ClientBuilder().withToken(new JsonHandler().forceCheck().get("token")).withRecommendedShardCount().build();
 
     /**
      * Main Method

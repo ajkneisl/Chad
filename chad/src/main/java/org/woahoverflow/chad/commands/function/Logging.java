@@ -50,7 +50,7 @@ public class Logging implements Command.Class  {
                     messageHandler.send("Changed logging to " + bool, "Changed Logging");
 
                     // recaches
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     return;
                 }
                 messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
@@ -82,7 +82,7 @@ public class Logging implements Command.Class  {
                 }
 
                 // Gets the current logging channel and makes sure it isn't null
-                String loggingChannel = Chad.getGuild(e.getGuild()).getDocument().getString("logging_channel");
+                String loggingChannel = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("logging_channel");
                 if (loggingChannel == null)
                 {
                     messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
@@ -99,7 +99,7 @@ public class Logging implements Command.Class  {
                 messageHandler.send("Changed logging channel to " + formattedString.trim(), "Changed Logging Channel");
                 DatabaseHandler.handle.set(e.getGuild(), "logging_channel", channel.getStringID());
                 // Recaches
-                Chad.getGuild(e.getGuild()).cache();
+                Chad.getGuild(e.getGuild().getLongID()).cache();
                 return;
             }
 

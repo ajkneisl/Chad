@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.info;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -39,7 +39,7 @@ public class RedditNew implements Command.Class{
             JSONObject post;
             try {
                 // Gets post
-                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json");
+                post = JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json");
 
                 if (post == null)
                 {
@@ -47,7 +47,7 @@ public class RedditNew implements Command.Class{
                     return;
                 }
 
-                if (JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                if (JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                     .getJSONObject("data")
                     .getJSONArray("children").isEmpty())
                 {
@@ -56,7 +56,7 @@ public class RedditNew implements Command.Class{
                 }
 
                 int index = 0;
-                post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json").getJSONObject("data")
+                post = JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json").getJSONObject("data")
                     .getJSONArray("children")
                     .getJSONObject(index)
                     .getJSONObject("data");
@@ -66,7 +66,7 @@ public class RedditNew implements Command.Class{
                 while (post.getBoolean("stickied"))
                 {
                     index++;
-                    post = JSONHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                    post = JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)

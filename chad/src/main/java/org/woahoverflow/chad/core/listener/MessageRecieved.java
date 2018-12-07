@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Chad.ThreadConsumer;
-import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Command.Category;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadVar;
@@ -45,13 +44,13 @@ public final class MessageRecieved
             return;
 
         // The guild's cached document
-        Document cachedDocument = Chad.getGuild(event.getGuild()).getDocument();
+        Document cachedDocument = Chad.getGuild(event.getGuild().getLongID()).getDocument();
 
         // The guild's prefix
         String prefix = cachedDocument.getString("prefix").toLowerCase();
 
         // The user's threadconsumer
-        ThreadConsumer consumer = Chad.getConsumer(event.getAuthor());
+        ThreadConsumer consumer = Chad.getConsumer(event.getAuthor().getLongID());
 
         // Makes sure the words aren't swears :) (if enabled)
         if (cachedDocument.getBoolean("stop_swear"))

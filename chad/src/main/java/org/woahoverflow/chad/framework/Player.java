@@ -7,9 +7,9 @@ public class Player {
 
     public Player()
     {
-        this.playerHealth = 10;
-        this.swordHealth = 10;
-        this.armorHealth = 10;
+        playerHealth = 10;
+        swordHealth = 10;
+        armorHealth = 10;
     }
 
     public Player(int playerHealth, int swordHealth, int armorHealth)
@@ -21,61 +21,61 @@ public class Player {
 
     public int getPlayerHealth()
     {
-        return this.playerHealth;
+        return playerHealth;
     }
 
     public int getSwordHealth()
     {
-        return this.swordHealth;
+        return swordHealth;
     }
 
     public int getArmorHealth()
     {
-        return this.armorHealth;
+        return armorHealth;
     }
 
     public void setPlayerHealth(int health)
     {
-        this.playerHealth = health;
+        playerHealth = health;
     }
 
     public void setSwordHealth(int health)
     {
-        this.swordHealth = health;
+        swordHealth = health;
     }
 
     public void setArmorHealth(int health)
     {
-        this.armorHealth = health;
+        armorHealth = health;
     }
 
     public void incrementPlayerHealth(int val)
     {
-        this.playerHealth += val;
+        playerHealth += val;
     }
 
     public void incrementSwordHealth(int val)
     {
-        this.swordHealth += val;
+        swordHealth += val;
     }
 
     public void incrementArmorHealth(int val)
     {
-        this.armorHealth += val;
+        armorHealth += val;
     }
 
     public void decrementPlayerHealth(int val)
     {
-        this.playerHealth -= val;
+        playerHealth -= val;
     }
 
     public void decrementSwordHealth(int val)
     {
-        this.swordHealth -= val;
+        swordHealth -= val;
     }
 
     public void decrementArmorHealth(int val)
     {
-        this.armorHealth -= val;
+        armorHealth -= val;
     }
 }

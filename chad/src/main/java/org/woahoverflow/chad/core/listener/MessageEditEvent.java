@@ -26,12 +26,12 @@ public final class MessageEditEvent
     @SuppressWarnings("unused")
     public void messageEditEvent(sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent event)
     {
-        if (Chad.getGuild(event.getGuild()).getDocument().getBoolean("stop_swear"))
+        if (Chad.getGuild(event.getGuild().getLongID()).getDocument().getBoolean("stop_swear"))
         {
             String[] argArray = event.getNewMessage().getContent().split(" ");
 
             // Gets the message from the cache :)
-            String msg = Chad.getGuild(event.getGuild()).getDocument().getString("swear_message");
+            String msg = Chad.getGuild(event.getGuild().getLongID()).getDocument().getString("swear_message");
             msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
             for (String s : argArray) {
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {

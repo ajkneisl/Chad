@@ -61,11 +61,12 @@ public final class GuildJoinLeave
 
             DatabaseHandler.handle.getCollection().insertOne(doc);
             UIHandler.displayGuild(event.getGuild());
-            UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
-            Chad.getGuild(event.getGuild()).cache();
+            UIHandler.handle
+                .addLog('<' +event.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+            Chad.getGuild(event.getGuild().getLongID()).cache();
             event.getGuild().getDefaultChannel().sendMessage("Hello, I'm Chad!\nMy prefix is by default `j!`, to set it you can do `j!prefix set <prefix>`\nFor more information about my commands, go to https://woahoverflow.org/chad");
         }
-        Chad.getGuild(event.getGuild()).cache();
+        Chad.getGuild(event.getGuild().getLongID()).cache();
     }
 
     /**
@@ -84,7 +85,7 @@ public final class GuildJoinLeave
 
         DatabaseHandler.handle.getCollection().deleteOne(get);
 
-        Chad.unCacheGuild(event.getGuild());
+        Chad.unCacheGuild(event.getGuild().getLongID());
 
         UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
     }

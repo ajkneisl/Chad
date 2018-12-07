@@ -21,7 +21,7 @@ public class Permissions implements Command.Class  {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler m = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
 
             // Accesses the permissions to a specific role
             if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role"))
@@ -59,7 +59,14 @@ public class Permissions implements Command.Class  {
                 // Make sure there's enough arguments for the rest
                 if (args.size() == i)
                 {
-                    m.sendError("Invalid Role!");
+                    messageHandler.sendError("Invalid Role!");
+                    return;
+                }
+
+                // Makes sure role isn't null
+                if (role == null)
+                {
+                    messageHandler.sendError("Invalid Role!");
                     return;
                 }
 
@@ -82,7 +89,7 @@ public class Permissions implements Command.Class  {
                         // The add can only add 1 command
                         if (args.size() != 1)
                         {
-                            m.sendError(MessageHandler.INVALID_ARGUMENTS);
+                            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                             return;
                         }
 
@@ -91,15 +98,15 @@ public class Permissions implements Command.Class  {
 
                         // If the result was 6 (good) return the amount, if not return the correct error.
                         if (add == 6)
-                            m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                            messageHandler.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         else
-                            m.sendError(PermissionHandler.handle.parseErrorCode(add));
+                            messageHandler.sendError(PermissionHandler.handle.parseErrorCode(add));
                         return;
                     case "remove":
                         // The remove can only remove 1 command
                         if (args.size() != 1)
                         {
-                            m.sendError(MessageHandler.INVALID_ARGUMENTS);
+                            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                             return;
                         }
 
@@ -108,17 +115,17 @@ public class Permissions implements Command.Class  {
 
                         // If the result was 6 (good) return the amount, if not return the correct error.
                         if (rem == 6)
-                            m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                            messageHandler.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         else
-                            m.sendError(PermissionHandler.handle.parseErrorCode(rem));
+                            messageHandler.sendError(PermissionHandler.handle.parseErrorCode(rem));
                         return;
                     case "view":
                         // Gets the permissions to a role
-                        ArrayList<String> ar = (ArrayList<String>) Chad.getGuild(e.getGuild()).getDocument().get(role.getStringID());
+                        ArrayList<String> ar = (ArrayList<String>) Chad.getGuild(e.getGuild().getLongID()).getDocument().get(role.getStringID());
 
                         // Checks if there's no permissions
                         if (ar == null || ar.isEmpty()) {
-                            m.sendError("There's no permissions in this role!");
+                            messageHandler.sendError("There's no permissions in this role!");
                             return;
                         }
 
@@ -132,14 +139,14 @@ public class Permissions implements Command.Class  {
 
                         // Replaces the first ',' and sends.
                         embedBuilder.withDesc(stringBuilder.toString().trim().replaceFirst(",", ""));
-                        m.sendEmbed(embedBuilder);
+                        messageHandler.sendEmbed(embedBuilder);
                         return;
                     default:
-                        m.sendError(MessageHandler.INVALID_ARGUMENTS);
+                        messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                         return;
                 }
             }
-            m.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
         };
     }
 

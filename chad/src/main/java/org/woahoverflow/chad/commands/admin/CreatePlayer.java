@@ -25,11 +25,12 @@ public class CreatePlayer implements Command.Class {
             int swordHealth = Integer.parseInt(args.get(1));
             int armorHealth = Integer.parseInt(args.get(2));
 
-            Player player = PlayerManager.INSTANCE.createNewPlayer(e.getAuthor(), playerHealth, swordHealth, armorHealth);
+            Player player = PlayerManager.handle
+                .createNewPlayer(e.getAuthor(), playerHealth, swordHealth, armorHealth);
 
             messageHandler.sendError("Player health: " + player.getPlayerHealth() + "\nSword health: " + player.getSwordHealth() + "\nArmor health: " + player.getArmorHealth() + "\nRunning test...");
 
-            PlayerManager.INSTANCE.attackPlayer(e.getAuthor(), 1);
+            PlayerManager.handle.attackPlayer(e.getAuthor(), 1);
         };
     }
 

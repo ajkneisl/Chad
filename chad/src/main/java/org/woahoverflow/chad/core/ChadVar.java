@@ -5,7 +5,13 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.*;
+import org.woahoverflow.chad.commands.admin.Cache;
+import org.woahoverflow.chad.commands.admin.CreatePlayer;
+import org.woahoverflow.chad.commands.admin.CurrentThreads;
+import org.woahoverflow.chad.commands.admin.ModifyPresence;
+import org.woahoverflow.chad.commands.admin.SetBalance;
+import org.woahoverflow.chad.commands.admin.Shutdown;
+import org.woahoverflow.chad.commands.admin.SystemInfo;
 import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
@@ -49,7 +55,6 @@ import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Command.Category;
 import org.woahoverflow.chad.framework.Command.Data;
 import org.woahoverflow.chad.framework.audio.obj.GuildMusicManager;
-import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.ArrayList;
@@ -65,12 +70,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class ChadVar
 {
 
-    // Utilized in MessageHandler (thanks mr zacanager)
+    /**
+     * All the swear words for the swear filter
+     */
     public static final List<String> swearWords = new ArrayList<>();
 
-    // Music stuff
-    public static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-    public static ConcurrentHashMap<Long, GuildMusicManager> musicManagers = new ConcurrentHashMap<>();
+    /**
+     * The universal player manager for music playing
+     */
+    public static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+
+    /**
+     * The music manager for guilds
+     */
+    public static final ConcurrentHashMap<Long, GuildMusicManager> musicManagers = new ConcurrentHashMap<>();
+
+    /*
+      Registers sources for the player manager
+     */
     static
     {
         AudioSourceManagers.registerRemoteSources(playerManager);
@@ -78,17 +95,44 @@ public final class ChadVar
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
     }
 
-    // Used in ModPresence
+    /**
+     * The status type (idle, online, offline, dnd)
+     */
     public static StatusType statusType = StatusType.ONLINE;
+
+    /**
+     * The current status string
+     */
     public static String currentStatus = "";
-    public static int rotationInteger = 60; // 5 minutes
+
+    /**
+     * The amount of time to take to rotate between presences
+     */
+    public static final int rotationInteger = 60*5; // 5 minutes
+
+    /**
+     * If it should rotate presence at all
+     */
     public static boolean rotatePresence = true;
+
+    /**
+     * The presences to rotate between
+     */
     public static final List<String> presenceRotation = new ArrayList<>();
 
-    // HashMaps
+    /**
+     * The full list of Commands
+     */
     public static final ConcurrentHashMap<String, Command.Data> COMMANDS = new ConcurrentHashMap<>();
-    public static final ConcurrentHashMap<String, PermissionHandler.Levels> GLOBAL_PERMISSIONS = new ConcurrentHashMap<>();
 
+    /**
+     * List of Verified Developers
+     */
+    public static final List<Long> DEVELOPERS = new ArrayList<>();
+
+    /*
+      Define all of the Commands
+     */
     static {
         // FUN!
         COMMANDS.put("random", new Command.Data(Command.Category.FUN, new Random()));

@@ -124,7 +124,7 @@ public class MessageHandler
     public static void sendLog(EmbedBuilder embedBuilder, IGuild guild)
     {
         // Gets the guild's cached doc
-        Document document = Chad.getGuild(guild).getDocument();
+        Document document = Chad.getGuild(guild.getLongID()).getDocument();
 
         // Checks if logging is enabled
         if (!document.getBoolean("logging"))

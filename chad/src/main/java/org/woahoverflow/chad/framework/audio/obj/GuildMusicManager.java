@@ -22,11 +22,6 @@ public class GuildMusicManager
     public final TrackScheduler scheduler;
 
     /**
-     * The Guild's ID
-     */
-    private final long guildId;
-
-    /**
      * Creates a Guild Music Manager
      *
      * @param manager The manager
@@ -34,8 +29,6 @@ public class GuildMusicManager
      */
     public GuildMusicManager(AudioPlayerManager manager, long guildId)
     {
-        this.guildId = guildId;
-
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player, guildId);
 

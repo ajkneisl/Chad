@@ -26,7 +26,7 @@ public class Swearing implements Command.Class {
                 // creates an embed builder and applies values
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Swear Filter");
-                String status = Chad.getGuild(e.getGuild()).getDocument().getBoolean("stop_swear") ? "enabled" :  "disabled";
+                String status = Chad.getGuild(e.getGuild().getLongID()).getDocument().getBoolean("stop_swear") ? "enabled" :  "disabled";
                 embedBuilder.withDesc("Swearing in this guild is `"+status+"`.");
                 // send
                 messageHandler.sendEmbed(embedBuilder);
@@ -42,7 +42,7 @@ public class Swearing implements Command.Class {
                 // sets in database
                 DatabaseHandler.handle.set(e.getGuild(), "stop_swear", toggle);
                 // recaches
-                Chad.getGuild(e.getGuild()).cache();
+                Chad.getGuild(e.getGuild().getLongID()).cache();
                 // sends message
                 messageHandler.send("Swear filtering has been `"+toggleString+ '`', "Swear Filter");
                 return;

@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.framework.handle;
 
+import java.util.concurrent.ConcurrentHashMap;
 import org.woahoverflow.chad.framework.Player;
 import sx.blah.discord.handle.obj.IUser;
 
@@ -7,9 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerManager {
-    public static PlayerManager INSTANCE = new PlayerManager();
+    public static final PlayerManager handle = new PlayerManager();
 
-    public Map<IUser, Player> players = new HashMap();
+    private static final ConcurrentHashMap<IUser, Player> players = new ConcurrentHashMap<>();
 
     public Player createNewPlayer(IUser user, int playerHealth, int swordHealth, int armorHealth)
     {

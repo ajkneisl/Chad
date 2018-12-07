@@ -84,7 +84,7 @@ public class Kick implements Command.Class
             if (DatabaseHandler.handle.getBoolean(e.getGuild(), "kick_msg_on"))
             {
                 // Gets the message from the cache
-                String message = Chad.getGuild(e.getGuild()).getDocument().getString("kick_message");
+                String message = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("kick_message");
 
                 // If the message isn't null, continue
                 if (message != null)

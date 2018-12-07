@@ -40,7 +40,7 @@ public class AutoRole implements Command.Class  {
                     DatabaseHandler.handle.set(e.getGuild(), "role_on_join", true);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -53,7 +53,7 @@ public class AutoRole implements Command.Class  {
                     DatabaseHandler.handle.set(e.getGuild(), "role_on_join", false);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder2 = new EmbedBuilder();
@@ -89,7 +89,7 @@ public class AutoRole implements Command.Class  {
 
                     // Sets the role ID into the database and recaches
                     DatabaseHandler.handle.set(e.getGuild(), "join_role", newRole.getStringID());
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder3 = new EmbedBuilder();

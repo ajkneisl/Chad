@@ -85,7 +85,7 @@ public class Ban implements Command.Class
             if (DatabaseHandler.handle.getBoolean(e.getGuild(), "ban_msg_on"))
             {
                 // Gets the message from the cache
-                String message = Chad.getGuild(e.getGuild()).getDocument().getString("ban_message");
+                String message = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("ban_message");
 
                 // If the message isn't null, continue
                 if (message != null)

@@ -28,7 +28,7 @@ public class Cache implements Command.Class{
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Cache Status");
                 embedBuilder.withDesc("Current Cached Guilds `" + Chad.cachedGuilds.size() + "`\n"+
-                        "Last Cached in Current Guild `" + Chad.getGuild(e.getGuild()).getLastCached() + "`\n");
+                        "Last Cached in Current Guild `" + Chad.getGuild(e.getGuild().getLongID()).getLastCached() + "`\n");
                 messageHandler.sendEmbed(embedBuilder);
                 return;
             }
@@ -38,14 +38,14 @@ public class Cache implements Command.Class{
             {
                 // ReCaches the current guild
                 case "recache":
-                    Chad.getGuild(e.getGuild()).cache();
+                    Chad.getGuild(e.getGuild().getLongID()).cache();
                     messageHandler.send("ReCached current guild", "Caching Manager");
                     return;
                 // ReCaches all guilds
                 case "recacheall":
                     List<IGuild> guilds = RequestBuffer.request(e.getClient()::getGuilds).get();
                     Chad.cachedGuilds.clear();
-                    guilds.forEach((g) -> Chad.cachedGuilds.put(g, new CachedGuild(g)));
+                    guilds.forEach((g) -> Chad.cachedGuilds.put(g.getLongID(), new CachedGuild(g.getLongID())));
                     messageHandler.send("ReCached all guilds", "Caching Manager");
                     return;
 

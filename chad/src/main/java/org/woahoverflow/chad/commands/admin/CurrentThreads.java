@@ -29,10 +29,8 @@ public class CurrentThreads implements Command.Class{
                 if (key.isDiscordUser())
                 {
                     stringBuilder.append('`')
-                        .append(key.getUser().getLongID())
-                        .append("` **")
-                        .append(key.getUser().getName())
-                        .append("**: ")
+                        .append(key.getUserId())
+                        .append("`: ")
                         .append(val.size())
                         .append('\n');
                 }

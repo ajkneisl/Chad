@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -23,7 +23,7 @@ public class Steam implements Command.Class  {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
             
             // Gets the steam api token from the bot.json
-            String key = JSONHandler.handle.get("steam_api_token");
+            String key = JsonHandler.handle.get("steam_api_token");
 
             // Checks if the arguments are invalid
             if (args.isEmpty() || args.size() == 1)
@@ -39,7 +39,7 @@ public class Steam implements Command.Class  {
                 String intention = args.get(0);
                 
                 // Gets the user's steam id by their username
-                JSONObject steamUser = JSONHandler.handle
+                JSONObject steamUser = JsonHandler.handle
                     .read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + key + "&vanityurl=" + args.get(1))
                     .getJSONObject("response");
                 
@@ -54,7 +54,7 @@ public class Steam implements Command.Class  {
                 String steamId = steamUser.getString("steamid");
                 
                 // Gets the user's profile
-                JSONObject steamUserProfile = JSONHandler.handle
+                JSONObject steamUserProfile = JsonHandler.handle
                     .read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + steamId).getJSONObject("response").getJSONArray("players").getJSONObject(0);
                 
                 // The user's name
@@ -76,7 +76,7 @@ public class Steam implements Command.Class  {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.withFooterIcon(steamUserProfile.getString("avatar"));
                     
-                    JSONArray csgoStats = JSONHandler.handle.read(
+                    JSONArray csgoStats = JsonHandler.handle.read(
                         "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="
                             + key + "&steamid=" + steamId).getJSONObject("playerstats")
                         .getJSONArray("stats");

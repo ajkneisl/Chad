@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.nsfw;
 
 import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -29,7 +29,7 @@ public class NB4K implements Command.Class  {
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.withTitle("4k Pornography [Nsfw]");
-            embedBuilder.withImage(JSONHandler.handle.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
+            embedBuilder.withImage(JsonHandler.handle.read("https://nekobot.xyz/api/image?type=4k").getString("message"));
             messageHandler.sendEmbed(embedBuilder);
         };
     }

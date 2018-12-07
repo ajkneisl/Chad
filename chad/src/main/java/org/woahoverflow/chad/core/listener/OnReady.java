@@ -30,7 +30,10 @@ public final class OnReady
     {
         // Presence Rotations
         Chad.runThread(() -> {
-            // The first randomized presence
+
+            // If the presence rotation is disabled, return
+            if (!ChadVar.rotatePresence)
+                return;
 
             // Rotation Values
             Object[] ar = ChadVar.presenceRotation.toArray();

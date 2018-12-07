@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -26,7 +26,7 @@ public class Contributors implements Command.Class {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
             // Creates embed builder and gets the JSON array from the cdn
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            JSONArray o = JSONHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
+            JSONArray o = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
 
             // Checks if the user is trying to see a specific profile
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("view"))
