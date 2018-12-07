@@ -1,5 +1,7 @@
 package org.woahoverflow.chad.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.woahoverflow.chad.core.listener.GuildJoinLeave;
 import org.woahoverflow.chad.core.listener.MessageEditEvent;
 import org.woahoverflow.chad.core.listener.MessageRecieved;
@@ -19,6 +21,12 @@ import sx.blah.discord.api.IDiscordClient;
  * @since forever
  */
 public final class ChadBot {
+    public final static Logger logger = LoggerFactory.getLogger(ChadBot.class);
+
+    public static Logger getLogger()
+    {
+        return logger;
+    }
 
     /*
     Makes sure bot.json is fulled
