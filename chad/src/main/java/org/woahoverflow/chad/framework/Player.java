@@ -1,22 +1,29 @@
 package org.woahoverflow.chad.framework;
 
+/**
+ * @author sho, codebasepw
+ * @since 0.7.0
+ */
 public class Player {
     private int playerHealth;
     private int swordHealth;
     private int armorHealth;
+    private long balance;
 
-    public Player()
-    {
-        playerHealth = 10;
-        swordHealth = 10;
-        armorHealth = 10;
-    }
-
-    public Player(int playerHealth, int swordHealth, int armorHealth)
+    public Player(int playerHealth, int swordHealth, int armorHealth, long balance)
     {
         this.playerHealth = playerHealth;
         this.swordHealth = swordHealth;
         this.armorHealth = armorHealth;
+        this.balance = balance;
+    }
+
+    public long getBalance() {
+        return balance;
+    }
+
+    public void setBalance(long balance) {
+        this.balance = balance;
     }
 
     public int getPlayerHealth()
