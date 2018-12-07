@@ -49,4 +49,13 @@ public class GuildMusicManager
     {
         return new AudioProvider(player);
     }
+
+    /**
+     * Clear the current queue and stop the current track
+     */
+    public void clear()
+    {
+        scheduler.queue.clear();
+        player.stopTrack();
+    }
 }

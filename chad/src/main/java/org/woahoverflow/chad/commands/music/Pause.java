@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.audio.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -19,21 +20,30 @@ public class Pause implements Command.Class
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
-            if (e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel() == null)
+
+            // The channel the bot is in
+            IVoiceChannel channel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
+
+            // If it's connected
+            if (channel == null)
             {
                 messageHandler.sendError("I'm not connected!");
                 return;
             }
 
-            Chad.getMusicManager(e.getGuild()).player.setPaused(true);
+            GuildMusicManager musicManager = Chad.getMusicManager(e.getGuild());
+
+            // Pauses
+            musicManager.player.setPaused(true);
+
             messageHandler.sendMessage("Music is now paused!");
 
-            IVoiceChannel channel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
-
+            // If no one's there, leave
             if (channel.getConnectedUsers().size() == 1)
             {
                 channel.leave();
-                new MessageHandler(e.getChannel()).sendMessage("It's quite empty in `"+channel.getName()+"`!");
+                messageHandler.sendMessage("It's quite empty in `"+channel.getName()+"`!");
+                musicManager.clear();
             }
         };
     }

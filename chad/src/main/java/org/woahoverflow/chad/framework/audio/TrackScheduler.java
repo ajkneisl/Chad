@@ -4,8 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.ArrayList;
+import java.util.List;
 import org.woahoverflow.chad.core.ChadBot;
 import sx.blah.discord.handle.obj.IGuild;
 
@@ -24,7 +24,7 @@ public class TrackScheduler extends AudioEventAdapter
     /**
      * The Guild's queue
      */
-    public final BlockingQueue<AudioTrack> queue;
+    public final List<AudioTrack> queue;
 
     /**
      * The Guild's ID
@@ -41,7 +41,7 @@ public class TrackScheduler extends AudioEventAdapter
     {
         this.guildId = guildId;
         this.player = player;
-        queue = new LinkedBlockingQueue<>();
+        queue = new ArrayList<>();
     }
 
     /**
@@ -53,16 +53,22 @@ public class TrackScheduler extends AudioEventAdapter
     {
         if (!player.startTrack(track, true))
         {
-            queue.offer(track);
+            queue.add(track);
         }
     }
 
     /**
      * Skips to the next song
      */
-    public void nextTrack()
+    public boolean nextTrack()
     {
-        player.startTrack(queue.poll(), false);
+        if (queue.isEmpty())
+            return false;
+
+        AudioTrack track = queue.get(0);
+        player.startTrack(track, false);
+        queue.remove(track);
+        return true;
     }
 
     /**

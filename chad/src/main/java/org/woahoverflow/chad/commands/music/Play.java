@@ -26,55 +26,65 @@ public class Play implements Command.Class
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
+            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+
+            // The channel the author's in
             IVoiceChannel channel = e.getAuthor().getVoiceStateForGuild(e.getGuild()).getChannel();
 
+            // Makes sure the author's in a channel
             if (channel == null)
             {
-                new MessageHandler(e.getChannel()).sendError("You aren't in a channel!");
+                messageHandler.sendError("You aren't in a channel!");
                 return;
             }
 
+            // If the bot needs to connect to the author's channel
             boolean connect = false;
-
             if (e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel() == null)
             {
                 connect = true;
             }
             else if (!channel.equals(e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel()))
             {
-                new MessageHandler(e.getChannel()).sendError("You aren't in the same channel as Chad!");
+                messageHandler.sendError("You aren't in the same channel as Chad!");
                 return;
             }
 
+            // Finalize the connect value
             final boolean finalConnect = connect;
 
+            // The guild's music manager
             GuildMusicManager manager = Chad.getMusicManager(e.getGuild());
 
+            // If the music is paused, unpause it
             if (args.isEmpty())
             {
-                if (Chad.getMusicManager(e.getGuild()).player.isPaused())
+                if (manager.player.isPaused())
                 {
-                    Chad.getMusicManager(e.getGuild()).player.setPaused(false);
-                    new MessageHandler(e.getChannel()).sendMessage("Music is now un-paused!");
+                    manager.player.setPaused(false);
+                    messageHandler.sendMessage("Music is now un-paused!");
                     return;
                 }
-                new MessageHandler(e.getChannel()).sendError(MessageHandler.INVALID_ARGUMENTS);
+
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
 
+            // Makes sure there's 2+ arguments [.play (yt/sc) (name)]
             if (!(args.size() >= 2))
             {
-                new MessageHandler(e.getChannel()).sendError(MessageHandler.INVALID_ARGUMENTS);
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
 
-            if (finalConnect && !channel.getModifiedPermissions(e.getClient().getOurUser()).contains(
-                Permissions.VOICE_CONNECT) || !channel.getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.VOICE_SPEAK))
+            // If the bot doesn't have permission to connect, return
+            if (finalConnect && !channel.getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.VOICE_CONNECT) || !channel.getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.VOICE_SPEAK))
             {
-                new MessageHandler(e.getChannel()).sendError("I don't have permission to speak/join in channel `"+channel.getName()+"`!");
+                messageHandler.sendError("I don't have permission to speak/join in channel `"+channel.getName()+"`!");
                 return;
             }
 
+            // Gets the option from the arguments (soundcloud/youtube)
             String stringOption;
             if (args.get(0).equalsIgnoreCase("youtube") || args.get(0).equalsIgnoreCase("yt"))
             {
@@ -85,19 +95,24 @@ public class Play implements Command.Class
                 stringOption = "scsearch:";
             }
             else {
-                new MessageHandler(e.getChannel()).sendError("Please use `YouTube` or `SoundCloud`!");
+                messageHandler.sendError("Please use `YouTube` or `SoundCloud`!");
                 return;
             }
 
+            // Removes the soundcloud or youtube option
             args.remove(0);
 
+            // Builds the music name
             String string = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
+            // Queues the song
             playerManager.loadItemOrdered(manager, stringOption+string,
                 new AudioLoadResultHandler() {
+
+                    // When a track is loaded (https, not used)
                     @Override
                     public void trackLoaded(AudioTrack track) {
-                        new MessageHandler(e.getChannel()).send("Queued " + track.getInfo().title + " by " + track.getInfo().author, "Chad");
+                        messageHandler.send("Queued " + track.getInfo().title + " by " + track.getInfo().author, "Chad");
 
                         if (finalConnect)
                             channel.join();
@@ -105,6 +120,7 @@ public class Play implements Command.Class
                         manager.scheduler.queue(track);
                     }
 
+                    // When a value is search (thru soundcloud/youtube, used)
                     @Override
                     public void playlistLoaded(AudioPlaylist playlist) {
                         if (finalConnect)
@@ -114,24 +130,25 @@ public class Play implements Command.Class
 
                         if (track == null)
                         {
-                            new MessageHandler(e.getChannel()).sendError("Invalid Song!");
+                            messageHandler.sendError("Invalid Song!");
                             return;
                         }
 
                         manager.scheduler.queue(playlist.getTracks().get(0));
-                        new MessageHandler(e.getChannel()).sendMessage("Queued `" + track.getInfo().title + "` by `" + track.getInfo().author + "`\n"
-                            + track.getInfo().uri);
+                        messageHandler.sendMessage("Queued `" + track.getInfo().title + "` by `" + track.getInfo().author + "`\n" + track.getInfo().uri);
                     }
 
+                    // If an option wasn't found
                     @Override
                     public void noMatches() {
-                        new MessageHandler(e.getChannel()).sendError("No matches for `"+string+"`!");
+                        messageHandler.sendError("No matches for `"+string+"`!");
                     }
 
+                    // If there's an exception
                     @Override
                     public void loadFailed(FriendlyException exception) {
                         exception.printStackTrace();
-                        new MessageHandler(e.getChannel()).sendError(MessageHandler.INTERNAL_EXCEPTION);
+                        messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                     }
                 });
         };

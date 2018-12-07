@@ -17,14 +17,19 @@ public class Leave implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
+            // The channel that
             IVoiceChannel channel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
+
+            // If Chad's in a channel, leave
             if (channel != null)
             {
                 channel.leave();
                 new MessageHandler(e.getChannel()).sendMessage("Left the voice channel `"+channel.getName()+"`!");
-                Chad.getMusicManager(e.getGuild()).scheduler.queue.clear();
+                Chad.getMusicManager(e.getGuild()).clear();
                 return;
             }
+
+            // If Chad's not playing music
             new MessageHandler(e.getChannel()).sendError("You aren't in a channel!");
         };
     }
