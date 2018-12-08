@@ -8,6 +8,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.PermissionUtils;
 
@@ -105,14 +106,14 @@ public class Ban implements Command.Class
             {
                 e.getGuild().banUser(user);
                 reason.add("None");
-                messageHandler.send("Successfully banned " + user.getName() + " for no reason.", "Banned User");
+                messageHandler.sendEmbed(new EmbedBuilder().appendDesc("Successfully banned " + user.getName() + " for no reason."));
                 MessageHandler.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
                 return;
             }
 
             // Bans the user.
             e.getGuild().banUser(user);
-            messageHandler.send("Successfully banned " + user.getName() + " for " + builtReason.toString().trim() + '.', "Banned User");
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully banned " + user.getName() + " for " + builtReason.toString().trim() + '.'));
             MessageHandler.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
         };
     }

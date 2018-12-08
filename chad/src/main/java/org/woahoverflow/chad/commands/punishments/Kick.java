@@ -8,6 +8,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.PermissionUtils;
 
@@ -104,14 +105,14 @@ public class Kick implements Command.Class
             {
                 e.getGuild().kickUser(user);
                 reason.add("None");
-                messageHandler.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully kicked " + user.getName() + " for no reason."));
                 MessageHandler.sendPunishLog("Kick", user, e.getAuthor(), e.getGuild(), reason);
                 return;
             }
 
             // Kicks the user.
             e.getGuild().kickUser(user);
-            messageHandler.send("Successfully kicked " + user.getName() + " for " + builtReason.toString().trim() + '.', "Kicked User");
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully kicked " + user.getName() + " for " + builtReason.toString().trim() + '.'));
             MessageHandler.sendPunishLog("Kick", user, e.getAuthor(), e.getGuild(), reason);
         };
     }
