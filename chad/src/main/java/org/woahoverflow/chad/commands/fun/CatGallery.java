@@ -1,14 +1,13 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.security.SecureRandom;
 import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -20,26 +19,17 @@ public class CatGallery implements Command.Class  {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
 
-            // Gets the catpictures directory
-            File[] files = new File(System.getenv("appdata") + "\\chad\\catpictures\\").listFiles();
+            // The embed builder
+            EmbedBuilder embedBuilder = new EmbedBuilder();
 
-            // If the directory is somehow null
-            if (files == null)
-            {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                return;
-            }
+            // The API we use for our cat images :)
+            String url = "https://api.thecatapi.com/v1/images/search?size=full";
 
-            // If the directory is empty
-            if (files.length == 0)
-            {
-                UIHandler.handle.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                return;
-            }
+            embedBuilder.withImage(
+                JsonHandler.handle.readArray(url).getJSONObject(0).getString("url")
+            );
 
-            // Sends a random picture from the folder
-            messageHandler.sendFile(files[new SecureRandom().nextInt(files.length)]);
+            messageHandler.sendEmbed(embedBuilder);
         };
     }
 
