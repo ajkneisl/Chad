@@ -89,10 +89,9 @@ public class MessageHandler
      */
     public final void sendError(String error)
     {
-        // Creates an embed builder and applies the throwError to the description
+        // Creates an embed builder and applies the error to the description
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.withTitle("Error");
-        embedBuilder.withDesc(error);
+        embedBuilder.withDesc("__"+error+"__");
 
         // Sends
         sendEmbed(embedBuilder);
