@@ -1,9 +1,12 @@
 package org.woahoverflow.chad.commands.fight;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.PlayerManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -75,8 +78,6 @@ public class Attack implements Command.Class
                 }
             }
 
-            IMessage acceptMessage = askToPlay(e, e.getAuthor(), opponentUser);
-
             // only used once, but thanks lambda
             final IUser user = opponentUser;
 
@@ -103,28 +104,41 @@ public class Attack implements Command.Class
                 // Increases the timeout value
                 timeout++;
 
-                // Gets both reactions
-                IReaction yReaction = RequestBuffer.request(() -> acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))).get();
-                IReaction nReaction = RequestBuffer.request(() -> acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))).get();
+                Player authorPlayer = PlayerManager.handle.getPlayer(e.getAuthor().getLongID());
 
-                // Checks if the user reacted to the Y
-                if (yReaction.getUserReacted(user))
+                // opponent existence sanity check
+                if (PlayerManager.handle.getPlayer(opponentUser.getLongID()) == null)
                 {
-                    //TODO: Game
-
-                    acceptMessage.delete(); // delete the accept message, we dont need it anymore
-
-
-
-                    messageHandler.sendError("Thread died.");
-                    reacted = false;
+                    messageHandler.sendMessage(String.format("Oh noes! %s doesn't exist. It really do be like that sometimes, don't it?", opponentUser.mention()));
+                    return;
                 }
 
-                // Checks if the user reacted with the N
-                if (nReaction.getUserReacted(user))
+                // author health sanity check
+                if (authorPlayer.getPlayerHealth() < 1)
                 {
-                    messageHandler.send("They didn't want to play :'(", "CoinFlip");
+                    messageHandler.sendMessage(String.format("Slow down there cowboy, dead men tell no tales."));
                     return;
+                }
+
+                // randomize damage and decrement opponent's health
+                int damage = new Random().nextInt(3);
+                PlayerManager.handle.attackPlayer(opponentUser.getLongID(), damage);
+
+                messageHandler.sendMessage(String.format("You did %s damage to %s", damage, opponentUser.mention()));
+
+                // after attack, decrement author sword health by the same amount of damage done to the opponent
+                authorPlayer.decrementSwordHealth(damage);
+
+                // opponent death sanity check
+                if (PlayerManager.handle.getPlayer(opponentUser.getLongID()).getPlayerHealth() < 1)
+                {
+                    messageHandler.sendMessage(String.format("Well done kinsman, you managed to finish off %s!", opponentUser.mention()));
+                }
+
+                // author sword sanity check
+                if (authorPlayer.getSwordHealth() < 1)
+                {
+                    messageHandler.sendMessage(String.format("Oh noes! Your sword broke!"));
                 }
             }
         };

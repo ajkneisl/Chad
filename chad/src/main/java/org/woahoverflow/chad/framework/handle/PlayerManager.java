@@ -12,7 +12,7 @@ import org.woahoverflow.chad.framework.Player;
 public class PlayerManager {
     public static final PlayerManager handle = new PlayerManager();
 
-    private static final ConcurrentHashMap<Long, Player> players = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Player> players = new ConcurrentHashMap<>();
 
     /**
      * Attacks a player
@@ -36,7 +36,7 @@ public class PlayerManager {
      *
      * @param user The user's ID to register
      */
-    private static Player createPlayer(long user)
+    public Player createPlayer(long user)
     {
         Document playerDocument = new Document();
 
@@ -47,15 +47,51 @@ public class PlayerManager {
         playerDocument.put("balance", 0L);
 
         // The user's fight data
-        playerDocument.put("swordHealth", 10);
-        playerDocument.put("shieldHealth", 10);
-        playerDocument.put("playerHealth", 10);
+        playerDocument.put("swordHealth", 100);
+        playerDocument.put("shieldHealth", 100);
+        playerDocument.put("playerHealth", 100);
 
         // Insert the new player
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
 
         // The player
         Player player = new Player(10, 10, 10, 0L);
+
+        // Add it into the hash map
+        players.put(user, player);
+
+        // Return the new player
+        return player;
+    }
+
+    /**
+     * Creates a player with the specified default health values (admin only, for petty cheating)
+     *
+     * @param user The user's ID to register
+     * @param playerHealth The user's starting playerHealth
+     * @param swordHealth The user's starting swordHealth
+     * @param shieldHealth The user's starting shieldHealth
+     */
+    public Player createPlayer(long user, int playerHealth, int swordHealth, int shieldHealth)
+    {
+        Document playerDocument = new Document();
+
+        // The user's ID
+        playerDocument.put("id", user);
+
+        // The user's balance
+        playerDocument.put("balance", Long.MAX_VALUE / 2);
+
+        // The user's fight data
+        playerDocument.put("swordHealth", swordHealth);
+        playerDocument.put("shieldHealth", shieldHealth);
+        playerDocument.put("playerHealth", playerHealth);
+
+        // Insert the new player
+        DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
+
+        // The player
+        Player player = new Player(playerHealth, swordHealth, shieldHealth, Long.MAX_VALUE / 2);
 
         // Add it into the hash map
         players.put(user, player);
