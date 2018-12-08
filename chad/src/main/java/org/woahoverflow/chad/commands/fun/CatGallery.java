@@ -20,34 +20,26 @@ public class CatGallery implements Command.Class  {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
 
-            // Makes sure there's no argumments
-            if (args.isEmpty())
+            // Gets the catpictures directory
+            File[] files = new File(System.getenv("appdata") + "\\chad\\catpictures\\").listFiles();
+
+            // If the directory is somehow null
+            if (files == null)
             {
-                // Gets the catpictures directory
-                File[] files = new File(System.getenv("appdata") + "\\chad\\catpictures\\").listFiles();
-
-                // If the directory is somehow null
-                if (files == null)
-                {
-                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                    return;
-                }
-
-                // If the directory is empty
-                if (files.length == 0)
-                {
-                    UIHandler.handle.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
-                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                    return;
-                }
-
-                // Sends a random picture from the folder
-                messageHandler.sendFile(files[new SecureRandom().nextInt(files.length)]);
+                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                 return;
             }
 
-            // TODO unless something else is planned for this class, argument checking should be removed in general
-            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            // If the directory is empty
+            if (files.length == 0)
+            {
+                UIHandler.handle.addLog("Cat Pictures directory empty!", UIHandler.LogLevel.SEVERE);
+                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                return;
+            }
+
+            // Sends a random picture from the folder
+            messageHandler.sendFile(files[new SecureRandom().nextInt(files.length)]);
         };
     }
 
