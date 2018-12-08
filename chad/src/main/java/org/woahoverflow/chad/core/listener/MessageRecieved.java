@@ -97,7 +97,7 @@ public final class MessageRecieved
                         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
                         if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                         {
-                            new MessageHandler(event.getChannel()).sendError("You don't have permission for this command!");
+                            new MessageHandler(event.getChannel()).sendError(MessageHandler.USER_NO_PERMISSION);
                             return;
                         }
                         Runnable thread = args.size() == 1 && args.get(0).equalsIgnoreCase("help") ? val.getCommandClass().help(event) : val.getCommandClass().run(event, args);
@@ -114,14 +114,14 @@ public final class MessageRecieved
                 // if the command is developer only, and the user is NOT a developer, deny them access
                 if (val.getCommandCategory() == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                 {
-                    new MessageHandler(event.getChannel()).sendError("Oh noes! It looks like you're not a developer. Too bad, ain't it?");
+                    new MessageHandler(event.getChannel()).sendError("This command is Developer only!");
                     return;
                 }
 
                 // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
                 if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
-                    new MessageHandler(event.getChannel()).sendError("You don't have permission for this command!");
+                    new MessageHandler(event.getChannel()).sendError(MessageHandler.USER_NO_PERMISSION);
                     return;
                 }
                 Runnable thread = args.size() == 1 && args.get(0).equalsIgnoreCase("help") ? val.getCommandClass().help(event) : val.getCommandClass().run(event, args);
