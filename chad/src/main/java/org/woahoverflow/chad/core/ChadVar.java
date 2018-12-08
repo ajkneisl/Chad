@@ -74,6 +74,11 @@ public final class ChadVar
      */
     public static final ConcurrentHashMap<String, Boolean> launchOptions = new ConcurrentHashMap<>();
 
+    /**
+     * Gigantic Words List
+     */
+    public static List<String> wordsList = new ArrayList<>();
+
     /*
     Add all of the available launch options
      */

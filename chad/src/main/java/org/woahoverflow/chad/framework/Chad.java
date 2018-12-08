@@ -4,6 +4,12 @@ import static org.woahoverflow.chad.core.ChadVar.musicManagers;
 import static org.woahoverflow.chad.core.ChadVar.playerManager;
 import static org.woahoverflow.chad.core.ChadVar.swearWords;
 
+import com.google.common.net.HttpHeaders;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -12,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import javax.net.ssl.HttpsURLConnection;
 import org.bson.Document;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadBot;
@@ -244,6 +252,34 @@ public final class Chad
         Adds all the presences
          */
         runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v)), getInternalConsumer());
+
+        /*
+        Gets all the words from the CDN
+         */
+        runThread(() ->
+        {
+            try {
+                // Defines the URL and Connection
+                URL url = new URL("https://cdn.woahoverflow.org/chad/data/words.txt");
+                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+                // Sets the properties of the connection
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT);
+
+                @SuppressWarnings("all")
+                // Creates a buffered reader at the word url
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+
+                // Adds the words to the list
+                ChadVar.wordsList = in.lines().collect(Collectors.toList());
+
+                // Closes the reader
+                in.close();
+            } catch (@SuppressWarnings("all") IOException e1) {
+                e1.printStackTrace();
+            }
+        }, getInternalConsumer());
     }
 
     /**

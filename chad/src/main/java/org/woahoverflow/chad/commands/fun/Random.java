@@ -1,22 +1,14 @@
 package org.woahoverflow.chad.commands.fun;
 
-import com.google.common.net.HttpHeaders;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.stream.Collectors;
 import org.json.JSONObject;
+import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,7 +49,7 @@ public class Random implements Command.Class {
                             }
 
                             // Gets the random numbers and sends
-                            messageHandler.send("Number is : " + rand.nextInt(i), "Random Number");
+                            messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your random number is `"+rand.nextInt(i)+"`. (out of `"+i+"`)"));
                         } catch (NumberFormatException throwaway)
                         {
                             messageHandler.sendError("Invalid Number");
@@ -66,7 +58,7 @@ public class Random implements Command.Class {
                     }
 
                     // Sends a random number within 100
-                    messageHandler.send("Number is : " + rand.nextInt(100), "Random Number");
+                    messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your random number is `"+rand.nextInt(100)+"`."));
                     return;
                 case "quote":
                     // Gets a random quote
@@ -74,46 +66,21 @@ public class Random implements Command.Class {
                     
                     // Builds the embed
                     EmbedBuilder embedBuilder = new EmbedBuilder();
-                    embedBuilder.withTitle("Random Quote");
                     embedBuilder.appendField("Author", obj.getString("author"), true);
 
-                    // Switches commandCategory's first letter to be uppercase
-                    String s1 = obj.getString("cat").substring(0, 1).toUpperCase();
-                    String cap = s1 + obj.getString("cat").substring(1);
-
-                    embedBuilder.appendField("Category", cap, true);
-                    embedBuilder.appendField("Quote", obj.getString("quote"), false);
+                    embedBuilder.appendField("Quote", obj.getString("quote"), true);
 
                     // Sends the embed
                     messageHandler.sendEmbed(embedBuilder);
                     return;
                 case "word":
+                    String word = ChadVar.wordsList.get(new java.util.Random().nextInt(ChadVar.wordsList.size()));
 
-                    List<String> wordList = new ArrayList<>();
-                    try {
-                        // Defines the URL and Connection
-                        URL url = new URL("https://cdn.woahoverflow.org/chad/data/words.txt");
-                        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-
-                        // Sets the properties of the connection
-                        con.setRequestMethod("GET");
-                        con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT);
-
-                        @SuppressWarnings("all")
-                        // Creates a buffered reader at the word url
-                        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-
-                        // Adds the words to the list
-                        wordList = in.lines().collect(Collectors.toList());
-
-                        // Closes the reader
-                        in.close();
-                    } catch (@SuppressWarnings("all") IOException e1) {
-                      e1.printStackTrace();
-                    }
+                    // Makes the first letter of the word uppercase
+                    String uppercaseWord = word.toUpperCase().charAt(0)+word.substring(1);
 
                     // Gets a random word and sends it
-                    messageHandler.send(wordList.get(new SecureRandom().nextInt(300000)),"Word");
+                    messageHandler.sendEmbed(new EmbedBuilder().withDesc(uppercaseWord));
                     return;
                 default:
                     messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
