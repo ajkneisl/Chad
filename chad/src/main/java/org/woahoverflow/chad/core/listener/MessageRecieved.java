@@ -107,7 +107,9 @@ public final class MessageRecieved
                     }
                 }
             }
-            else if (commandString.equalsIgnoreCase(key))
+
+            // If it doesn't use aliases, or none of the aliases were the command
+            if (commandString.equalsIgnoreCase(key))
             {
                 // if the command is developer only, and the user is NOT a developer, deny them access
                 if (val.getCommandCategory() == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))

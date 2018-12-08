@@ -12,6 +12,7 @@ import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
 import java.util.ArrayList;
+import sx.blah.discord.handle.obj.Permissions;
 
 /**
  * Handles permissions within Chad
@@ -61,6 +62,10 @@ public class PermissionHandler
 
         // All users should have access to these categories
         if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY, Category.MUSIC).anyMatch(category -> meta.getCommandCategory() == category))
+            return true;
+
+        // If the user is Administrator, they should have all guild related permissions
+        if (user.getPermissionsForGuild(guild).contains(Permissions.ADMINISTRATOR))
             return true;
 
         // loop through the users roles, if the role has permission for the command, return true
