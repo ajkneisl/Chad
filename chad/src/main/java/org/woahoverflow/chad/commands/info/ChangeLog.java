@@ -20,10 +20,12 @@ public class ChangeLog implements Command.Class
 
             // Builds it
             embedBuilder.withTitle("**Change Log** : 0.7.0");
-            embedBuilder.withDesc(
-                "`fixed help commands` : some didn't have help commands, they're good now\n"
-                        + "`music commands` : there's now music!\n"
-            );
+
+            String changeLogBuilder =
+                "`adjusted help command` : The help command now only shows what commands you have permission to, and the format has changed!\n\n"
+                    + "`music` : Chad now has music! To try it out, type `j!play yt <song name>`!\n\n";
+
+            embedBuilder.withDesc(changeLogBuilder);
 
             // Sends the message
             new MessageHandler(e.getChannel()).sendEmbed(embedBuilder);

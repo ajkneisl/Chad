@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.music;
 
+import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Command;
@@ -48,6 +49,8 @@ public class Volume implements Command.Class{
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("volume <number>", "Sets the volume of the music.");
+        return Command.helpCommand(st, "Skip", e);
     }
 }

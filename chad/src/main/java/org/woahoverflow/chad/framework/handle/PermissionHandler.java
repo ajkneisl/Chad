@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.framework.handle;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 import org.bson.Document;
 import org.woahoverflow.chad.core.ChadVar;
@@ -46,6 +45,7 @@ public class PermissionHandler
      * @param guild The guild in which it's happening
      * @return If the user has permission to perform it
      */
+    @SuppressWarnings("unchecked")
     public boolean userHasPermission(String command, IUser user, IGuild guild)
     {
         Class cmd = ChadVar.COMMANDS.get(command).getCommandClass();
@@ -54,20 +54,20 @@ public class PermissionHandler
             return false; // return false if the command doesnt exist
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
+
         // developers should always have permission for developer commands
-        if (meta.getCommandCategory() == Category.ADMIN && userIsDeveloper(user))
+        if (meta.getCommandCategory() == Category.DEVELOPER && userIsDeveloper(user))
             return true;
 
-        // all users should have access to commands in the fun and info commandCategory
+        // All users should have access to these categories
         if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY, Category.MUSIC).anyMatch(category -> meta.getCommandCategory() == category))
             return true;
 
         // loop through the users roles, if the role has permission for the command, return true
         // return false if none of the users roles have permission for the command
         return user.getRolesForGuild(guild).stream()
-            .filter(r -> DatabaseHandler.handle.getArray(guild, r.getStringID()) != null)
-            .anyMatch(r -> Objects
-                .requireNonNull(DatabaseHandler.handle.getArray(guild, r.getStringID())).contains(command));
+            .filter(r -> Chad.getGuild(guild.getLongID()).getDocument().get(r.getStringID()) != null)
+            .anyMatch(r -> ((ArrayList<String>) Chad.getGuild(guild.getLongID()).getDocument().get(r.getStringID())).contains(command));
     }
 
     /**

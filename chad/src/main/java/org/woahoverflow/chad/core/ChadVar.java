@@ -173,14 +173,14 @@ public final class ChadVar
         COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, new NB4K(), "porn"));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko(), "neko"));
 
-        // ADMIN!
-        COMMANDS.put("threads", new Command.Data(Command.Category.ADMIN, new CurrentThreads()));
-        COMMANDS.put("modpresence", new Command.Data(Command.Category.ADMIN, new ModifyPresence()));
-        COMMANDS.put("systeminfo", new Command.Data(Command.Category.ADMIN, new SystemInfo()));
-        COMMANDS.put("cache", new Command.Data(Command.Category.ADMIN, new Cache()));
-        COMMANDS.put("shutdown", new Command.Data(Command.Category.ADMIN,new Shutdown()));
-        COMMANDS.put("setbal", new Command.Data(Command.Category.ADMIN, new SetBalance()));
-        COMMANDS.put("createplayer", new Data(Category.ADMIN, new CreatePlayer()));
+        // DEVELOPER!
+        COMMANDS.put("threads", new Command.Data(Command.Category.DEVELOPER, new CurrentThreads()));
+        COMMANDS.put("modpresence", new Command.Data(Command.Category.DEVELOPER, new ModifyPresence()));
+        COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo()));
+        COMMANDS.put("cache", new Command.Data(Command.Category.DEVELOPER, new Cache()));
+        COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
+        COMMANDS.put("setbal", new Command.Data(Command.Category.DEVELOPER, new SetBalance()));
+        COMMANDS.put("createplayer", new Data(Category.DEVELOPER, new CreatePlayer()));
 
         // MONEY!
         COMMANDS.put("register", new Command.Data(Command.Category.MONEY, new Register()));

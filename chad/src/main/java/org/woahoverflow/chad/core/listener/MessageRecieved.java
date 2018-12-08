@@ -88,7 +88,7 @@ public final class MessageRecieved
                 for (String alias : val.getCommandAliases()) {
                     if (alias.equalsIgnoreCase(commandString)) {
                         // if the command is developer only, and the user is NOT a developer, deny them access
-                        if (val.getCommandCategory() == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
+                        if (val.getCommandCategory() == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                         {
                             new MessageHandler(event.getChannel()).sendError("This command is Developer only!");
                             return;
@@ -110,7 +110,7 @@ public final class MessageRecieved
             else if (commandString.equalsIgnoreCase(key))
             {
                 // if the command is developer only, and the user is NOT a developer, deny them access
-                if (val.getCommandCategory() == Category.ADMIN && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
+                if (val.getCommandCategory() == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                 {
                     new MessageHandler(event.getChannel()).sendError("Oh noes! It looks like you're not a developer. Too bad, ain't it?");
                     return;
