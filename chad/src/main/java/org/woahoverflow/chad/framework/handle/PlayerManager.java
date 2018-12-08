@@ -116,4 +116,16 @@ public class PlayerManager {
         // If it's not in there, create one
         return createPlayer(user);
     }
+
+    /**
+     * Checks if a user's data already exists within the database
+     *
+     * @param user The user to check
+     * @return If it exists
+     */
+    public boolean userDataExists(long user)
+    {
+        Document get = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().find(new Document("id", user)).first();
+        return get != null;
+    }
 }
