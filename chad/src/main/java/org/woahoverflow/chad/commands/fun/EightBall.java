@@ -9,6 +9,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -31,7 +32,11 @@ public class EightBall implements Command.Class  {
             JSONArray answers = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
 
             // Sends the answer
-            messageHandler.send((String) answers.get(new SecureRandom().nextInt(answers.length())), "8Ball");
+            messageHandler.sendEmbed(
+                new EmbedBuilder().withDesc(
+                    answers.getString(new SecureRandom().nextInt(answers.length()))
+                )
+            );
         };
     }
 
