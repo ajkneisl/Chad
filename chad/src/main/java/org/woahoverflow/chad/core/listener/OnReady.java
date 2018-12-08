@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.core.listener;
 
 import java.security.SecureRandom;
+import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.ui.UIHandler;
@@ -79,7 +80,13 @@ public final class OnReady
         }, Chad.getInternalConsumer());
 
         // UI Begin
-        UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
-        UIHandler.handle.update();
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
+        }
+        else {
+            UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
+            UIHandler.handle.update();
+        }
     }
 }

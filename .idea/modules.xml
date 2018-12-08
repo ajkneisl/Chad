@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Chad.iml" filepath="$PROJECT_DIR$/Chad.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chad.iml" filepath="$PROJECT_DIR$/.idea/modules/chad.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chad_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chad_main.iml" group="chad" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chad_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chad_test.iml" group="chad" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chad_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Chad_main.iml" group="Chad" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chad_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Chad_test.iml" group="Chad" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.woahoverflow-Chad.iml" filepath="$PROJECT_DIR$/.idea/modules/org.woahoverflow-Chad.iml" />
     </modules>
   </component>
 </project>

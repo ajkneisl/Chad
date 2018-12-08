@@ -69,6 +69,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class ChadVar
 {
+    /**
+     * Launch Arguments
+     */
+    public static final ConcurrentHashMap<String, Boolean> launchOptions = new ConcurrentHashMap<>();
+
+    /*
+    Add all of the available launch options
+     */
+    static
+    {
+        launchOptions.put("-denyui", false);
+        launchOptions.put("-denyuiupdate", false);
+    }
 
     /**
      * All the swear words for the swear filter

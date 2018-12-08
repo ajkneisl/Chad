@@ -5,11 +5,11 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.ui.panels.GuildPanel;
 import org.woahoverflow.chad.framework.ui.panels.MainPanel;
 import org.woahoverflow.chad.framework.ui.panels.PopUpPanel;
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -26,12 +26,6 @@ import java.util.List;
  */
 public class UIHandler
 {
-
-    /**
-     * If the UI will actively update every 5 minutes
-     */
-    private static boolean activeUpdate;
-
     /**
      * The handle of this class
      */
@@ -58,9 +52,11 @@ public class UIHandler
      */
     public UIHandler()
     {
-        // Sets the Active Update
-        activeUpdate = true;
-
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().warn("UI has been disabled!");
+            return;
+        }
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // makes it look better :)
         } catch (@SuppressWarnings("all") Exception e) { // it needs to shut the fuck up
@@ -72,7 +68,13 @@ public class UIHandler
 
         // UI Updater (updates stats)
         Chad.runThread(() -> {
-            while (activeUpdate)
+            if (!ChadVar.launchOptions.get("-denyuiupdate"))
+            {
+                ChadBot.getLogger().warn("UI Updating has been disabled!");
+                return;
+            }
+
+            while (!ChadVar.launchOptions.get("-denyuiupdate"))
             {
                 try {
                     TimeUnit.MINUTES.sleep(5);
@@ -92,6 +94,28 @@ public class UIHandler
      */
     public final void addLog(String log, LogLevel level)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            if (level.equals(LogLevel.EXCEPTION))
+            {
+                ChadBot.getLogger().error(log);
+                return;
+            }
+            if (level.equals(LogLevel.INFO))
+            {
+                ChadBot.getLogger().info(log);
+                return;
+            }
+            if (level.equals(LogLevel.WARNING))
+            {
+                ChadBot.getLogger().warn(log);
+                return;
+            }
+
+            ChadBot.getLogger().info(log);
+            return;
+        }
+
         mainpanel.logs.append('\n' +"["+ level +"] "+ log);
     }
 
@@ -102,6 +126,11 @@ public class UIHandler
      */
     static void newError(String error)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().error(error);
+            return;
+        }
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : Chad");
         panel.errorContent.setEditable(false);
@@ -123,6 +152,11 @@ public class UIHandler
      */
     static void newError(String error, IGuild guild)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().error("Error in Guild {}: {}", guild.getStringID(), error);
+            return;
+        }
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : " + guild.getStringID());
         frame.getContentPane().add(panel);
@@ -141,6 +175,11 @@ public class UIHandler
      */
     public static void displayGuild(IGuild guild)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().error("UI is denied, cannot display guild!");
+            return;
+        }
         JFrame frame = new JFrame("Guild : " + guild.getStringID());
         GuildPanel panel = new GuildPanel();
         frame.setVisible(true);
@@ -247,7 +286,6 @@ public class UIHandler
     /**
      * Gets the statistics for the main UI
      *
-     * @param cli The IDiscordClient
      * @return A hashmap full of statistics
      */
     private static HashMap<String, String> getStats()

@@ -1,7 +1,9 @@
 package org.woahoverflow.chad.core;
 
-import org.slf4j.Logger;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.woahoverflow.chad.core.listener.GuildJoinLeave;
 import org.woahoverflow.chad.core.listener.MessageEditEvent;
 import org.woahoverflow.chad.core.listener.MessageRecieved;
@@ -21,7 +23,8 @@ import sx.blah.discord.api.IDiscordClient;
  * @since forever
  */
 public final class ChadBot {
-    public final static Logger logger = LoggerFactory.getLogger(ChadBot.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(ChadBot.class);
 
     public static Logger getLogger()
     {
@@ -29,12 +32,11 @@ public final class ChadBot {
     }
 
     /*
-    Makes sure bot.json is fulled
+    Makes sure bot.json is filled
      */
     static
     {
-        JsonHandler h = new JsonHandler().forceCheck();
-        if (h.get("token").isEmpty() || h.get("uri_link").isEmpty())
+        if (JsonHandler.handle.get("token").isEmpty() || JsonHandler.handle.get("uri_link").isEmpty())
         {
             UIHandler handle = new UIHandler();
             handle.addLog("bot.json is empty!", LogLevel.SEVERE);
@@ -46,7 +48,7 @@ public final class ChadBot {
     /**
      * Main Client Instance
      */
-    public static final IDiscordClient cli = new ClientBuilder().withToken(new JsonHandler().forceCheck().get("token")).withRecommendedShardCount().build();
+    public static final IDiscordClient cli = new ClientBuilder().withToken(JsonHandler.handle.get("token")).withRecommendedShardCount().build();
 
     /**
      * Main Method
@@ -55,6 +57,25 @@ public final class ChadBot {
      */
     public static void main(String[] args)
     {
+        // Disables MongoDB's logging, as it's just clutter and not really needed
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger rootLogger = loggerContext.getLogger("org.mongodb.driver");
+        rootLogger.setLevel(Level.OFF);
+
+        // Calculates the launch options
+        if (args.length >= 1)
+        {
+            for (int i = 0; args.length > i; i++)
+            {
+                final int i2 = i;
+                ChadVar.launchOptions.forEach((st, bol) -> {
+                    // If the launch option is valid, enter it
+                    if (args[i2].equalsIgnoreCase(st))
+                        ChadVar.launchOptions.put(st, true);
+                });
+            }
+        }
+
         // Logs in and registers the listeners
         cli.login();
         cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageRecieved(), new OnReady(), new UserLeaveJoin(), new MessageEditEvent());
