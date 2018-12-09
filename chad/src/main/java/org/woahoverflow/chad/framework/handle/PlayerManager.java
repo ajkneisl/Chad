@@ -38,34 +38,14 @@ public class PlayerManager {
      */
     public Player createPlayer(long user)
     {
-        Document playerDocument = new Document();
+        if (!userDataExists(user))
+            return null;
 
-        // The user's ID
-        playerDocument.put("id", user);
-
-        // The user's balance
-        playerDocument.put("balance", 0L);
-
-        // The user's fight data
-        playerDocument.put("swordHealth", 100);
-        playerDocument.put("shieldHealth", 100);
-        playerDocument.put("playerHealth", 100);
-
-        // Insert the new player
-        DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
-
-        // The player
-        Player player = new Player(10, 10, 10, 0L);
-
-        // Add it into the hash map
-        players.put(user, player);
-
-        // Return the new player
-        return player;
+        return createPlayer(user, 100, 100, 100);
     }
 
     /**
-     * Creates a player with the specified default health values (admin only, for petty cheating)
+     * Creates a player with the specified default health values
      *
      * @param user The user's ID to register
      * @param playerHealth The user's starting playerHealth
@@ -74,6 +54,9 @@ public class PlayerManager {
      */
     public Player createPlayer(long user, int playerHealth, int swordHealth, int shieldHealth)
     {
+        if (!userDataExists(user))
+            return null;
+
         Document playerDocument = new Document();
 
         // The user's ID
