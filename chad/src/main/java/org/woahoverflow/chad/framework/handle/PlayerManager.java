@@ -43,34 +43,10 @@ public class PlayerManager {
      */
     private Player createPlayer(long user)
     {
-        Document playerDocument = new Document();
+        if (!userDataExists(user))
+            return null;
 
-        // The user's ID
-        playerDocument.put("id", user);
-
-        // The user's balance
-        playerDocument.put("balance", 0L);
-
-        // The user's fight data
-        playerDocument.put("sword_health", 100);
-        playerDocument.put("shield_health", 100);
-        playerDocument.put("health", 100);
-
-        // Other default user data
-        playerDocument.put("marry_data", "none&none");
-        playerDocument.put("profile_description", "No description!");
-
-        // Insert the new player
-        DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
-
-        // The player
-        Player player = parsePlayer(playerDocument, user);
-
-        // Add it into the hash map
-        players.put(user, player);
-
-        // Return the new player
-        return player;
+        return createPlayer(user, 100, 100, 100);
     }
 
     /**
@@ -101,6 +77,9 @@ public class PlayerManager {
      */
     public Player createPlayer(long user, int playerHealth, int swordHealth, int shieldHealth)
     {
+        if (!userDataExists(user))
+            return null;
+
         Document playerDocument = new Document();
 
         // The user's ID

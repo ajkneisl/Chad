@@ -10,12 +10,11 @@ import org.woahoverflow.chad.framework.handle.PlayerManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
-/*
+
 public class Attack implements Command.Class
 {
     public MessageHandler messageHandler;
@@ -115,11 +114,11 @@ public class Attack implements Command.Class
                 }
 
                 // author health sanity check
-                if (authorPlayer.getPlayerHealth() < 1)
+                /*if (authorPlayer.getPlayerHealth() < 1)
                 {
                     messageHandler.sendMessage(String.format("Slow down there cowboy, dead men tell no tales."));
                     return;
-                }
+                }*/
 
                 // randomize damage and decrement opponent's health
                 int damage = new Random().nextInt(3);
@@ -128,10 +127,10 @@ public class Attack implements Command.Class
                 messageHandler.sendMessage(String.format("You did %s damage to %s", damage, opponentUser.mention()));
 
                 // after attack, decrement author sword health by the same amount of damage done to the opponent
-                authorPlayer.decrementSwordHealth(damage);
+                //authorPlayer.decrementSwordHealth(damage);
 
                 // opponent death sanity check
-                if (PlayerManager.handle.getPlayer(opponentUser.getLongID()).getPlayerHealth() < 1)
+                /*if (PlayerManager.handle.getPlayer(opponentUser.getLongID()).getPlayerHealth() < 1)
                 {
                     messageHandler.sendMessage(String.format("Well done kinsman, you managed to finish off %s!", opponentUser.mention()));
                 }
@@ -140,7 +139,7 @@ public class Attack implements Command.Class
                 if (authorPlayer.getSwordHealth() < 1)
                 {
                     messageHandler.sendMessage(String.format("Oh noes! Your sword broke!"));
-                }
+                }*/
             }
         };
     }
@@ -196,4 +195,3 @@ public class Attack implements Command.Class
         message.edit(content);
     }
 }
-*/
