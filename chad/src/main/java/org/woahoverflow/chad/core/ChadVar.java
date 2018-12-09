@@ -13,6 +13,7 @@ import org.woahoverflow.chad.commands.admin.SetBalance;
 import org.woahoverflow.chad.commands.admin.Shutdown;
 import org.woahoverflow.chad.commands.admin.SystemInfo;
 //import org.woahoverflow.chad.commands.fight.Attack;
+import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
 import org.woahoverflow.chad.commands.fun.Cuddle;
@@ -222,6 +223,6 @@ public final class ChadVar
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume()));
 
         // FIGHT
-        //COMMANDS.put("attack", new Data(Category.FIGHT, new Attack()));
+        COMMANDS.put("attack", new Data(Category.FIGHT, new Attack()));
     }
 }
