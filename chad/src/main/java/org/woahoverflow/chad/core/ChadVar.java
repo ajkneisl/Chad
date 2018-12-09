@@ -12,11 +12,15 @@ import org.woahoverflow.chad.commands.admin.ModifyPresence;
 import org.woahoverflow.chad.commands.admin.SetBalance;
 import org.woahoverflow.chad.commands.admin.Shutdown;
 import org.woahoverflow.chad.commands.admin.SystemInfo;
-import org.woahoverflow.chad.commands.fight.Attack;
+//import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
+import org.woahoverflow.chad.commands.fun.Cuddle;
+import org.woahoverflow.chad.commands.fun.DivorcePlayer;
 import org.woahoverflow.chad.commands.fun.EightBall;
+import org.woahoverflow.chad.commands.fun.MarryPlayer;
 import org.woahoverflow.chad.commands.fun.PhotoEditor;
+import org.woahoverflow.chad.commands.fun.Profile;
 import org.woahoverflow.chad.commands.fun.Random;
 import org.woahoverflow.chad.commands.fun.RockPaperScissors;
 import org.woahoverflow.chad.commands.fun.RussianRoulette;
@@ -161,6 +165,10 @@ public final class ChadVar
         COMMANDS.put("rrl", new Command.Data(Command.Category.FUN, new RussianRoulette(), "russianroulette"));
         COMMANDS.put("wr", new Command.Data(Command.Category.FUN, new WordReverse(), "wordreverse"));
         COMMANDS.put("rps", new Command.Data(Command.Category.FUN, new RockPaperScissors(), "rockpaperscissors"));
+        COMMANDS.put("divorce", new Data(Category.FUN, new DivorcePlayer()));
+        COMMANDS.put("marry", new Data(Category.FUN, new MarryPlayer()));
+        COMMANDS.put("cuddle", new Data(Category.FUN, new Cuddle()));
+        COMMANDS.put("profile", new Data(Category.FUN, new Profile()));
 
         // INFO!
         COMMANDS.put("help", new Command.Data(Command.Category.INFO, new Help()));
@@ -214,6 +222,6 @@ public final class ChadVar
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume()));
 
         // FIGHT
-        COMMANDS.put("attack", new Data(Category.FIGHT, new Attack()));
+        //COMMANDS.put("attack", new Data(Category.FIGHT, new Attack()));
     }
 }

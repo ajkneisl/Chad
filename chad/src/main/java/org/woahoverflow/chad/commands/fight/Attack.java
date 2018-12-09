@@ -15,6 +15,7 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
+/*
 public class Attack implements Command.Class
 {
     public MessageHandler messageHandler;
@@ -195,3 +196,4 @@ public class Attack implements Command.Class
         message.edit(content);
     }
 }
+*/

@@ -1,8 +1,10 @@
 package org.woahoverflow.chad.framework.handle;
 
+import com.mongodb.client.MongoCollection;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Player;
+import org.woahoverflow.chad.framework.Player.DataType;
 
 /**
  * Manages Player instances
@@ -14,6 +16,11 @@ public class PlayerManager {
 
     private final ConcurrentHashMap<Long, Player> players = new ConcurrentHashMap<>();
 
+    public void reAddPlayer(long user)
+    {
+        if (players.keySet().contains(user))
+            players.put(user, getPlayer(user));
+    }
     /**
      * Attacks a player
      *
@@ -25,10 +32,8 @@ public class PlayerManager {
         Player player = getPlayer(user);
 
         //unregisterPlayer(user);
-        player.decrementPlayerHealth(damage);
 
         //registerPlayer(user, player);
-        System.out.println("Player health value is: " + getPlayer(user).getPlayerHealth());
     }
 
     /**
@@ -36,7 +41,7 @@ public class PlayerManager {
      *
      * @param user The user's ID to register
      */
-    public Player createPlayer(long user)
+    private Player createPlayer(long user)
     {
         Document playerDocument = new Document();
 
@@ -47,15 +52,19 @@ public class PlayerManager {
         playerDocument.put("balance", 0L);
 
         // The user's fight data
-        playerDocument.put("swordHealth", 100);
-        playerDocument.put("shieldHealth", 100);
-        playerDocument.put("playerHealth", 100);
+        playerDocument.put("sword_health", 100);
+        playerDocument.put("shield_health", 100);
+        playerDocument.put("health", 100);
+
+        // Other default user data
+        playerDocument.put("marry_data", "none&none");
+        playerDocument.put("profile_description", "No description!");
 
         // Insert the new player
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
 
         // The player
-        Player player = new Player(10, 10, 10, 0L);
+        Player player = parsePlayer(playerDocument, user);
 
         // Add it into the hash map
         players.put(user, player);
@@ -64,6 +73,24 @@ public class PlayerManager {
         return player;
     }
 
+    /**
+     * Gets a player's data from the database
+     *
+     * @param playerDataDocument The player to get
+     * @return The player retrieved
+     */
+    private Player parsePlayer(Document playerDataDocument, long user)
+    {
+        final ConcurrentHashMap<DataType, Object> playerData = new ConcurrentHashMap<>();
+
+        // Sets the data
+        for (DataType type : DataType.values())
+        {
+            playerData.put(type, playerDataDocument.get(type.toString().toLowerCase()));
+        }
+
+        return new Player(playerData, user);
+    }
     /**
      * Creates a player with the specified default health values (admin only, for petty cheating)
      *
@@ -91,13 +118,11 @@ public class PlayerManager {
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
 
         // The player
-        Player player = new Player(playerHealth, swordHealth, shieldHealth, Long.MAX_VALUE / 2);
 
         // Add it into the hash map
-        players.put(user, player);
 
         // Return the new player
-        return player;
+        return null;
     }
 
     /**
@@ -111,6 +136,17 @@ public class PlayerManager {
         if (players.containsKey(user))
         {
             return players.get(user);
+        }
+
+        if (userDataExists(user))
+        {
+            MongoCollection<Document> col = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection();
+            Document get = col.find(new Document("id", user)).first();
+
+            if (get == null)
+                return null;
+
+            return parsePlayer(get, user);
         }
 
         // If it's not in there, create one

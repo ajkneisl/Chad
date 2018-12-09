@@ -27,7 +27,7 @@ public class CreatePlayer implements Command.Class {
 
             Player player = PlayerManager.handle.createPlayer(e.getAuthor().getLongID(), playerHealth, swordHealth, armorHealth);
 
-            messageHandler.sendMessage("Created you a new player (" + player.getPlayerHealth() + "," + player.getSwordHealth() + "," + player.getArmorHealth() + ")");
+            //messageHandler.sendMessage("Created you a new player (" + player.getPlayerHealth() + "," + player.getSwordHealth() + "," + player.getArmorHealth() + ")");
 
             PlayerManager.handle.attackPlayer(e.getAuthor().getLongID(), 1);
         };

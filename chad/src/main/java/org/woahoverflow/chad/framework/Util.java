@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.util.RequestBuffer;
 
 /**
  * The Utility class for Chad
@@ -88,5 +91,17 @@ public final class Util
         for (int i = 0; i < 100; i++)
             flip = random.nextInt(2);
         return flip == 0;
+    }
+
+    /**
+     * Checks if a guild exists within the Client
+     *
+     * @param cli The client
+     * @param guild The guild's ID
+     * @return If it exists/still exists
+     */
+    public static synchronized boolean guildExists(IDiscordClient cli, Long guild)
+    {
+        return RequestBuffer.request(cli::getGuilds).get().stream().anyMatch(g -> g.getLongID() == guild);
     }
 }

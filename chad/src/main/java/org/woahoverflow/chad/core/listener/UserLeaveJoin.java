@@ -2,9 +2,13 @@ package org.woahoverflow.chad.core.listener;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
+import org.woahoverflow.chad.framework.Player;
+import org.woahoverflow.chad.framework.Player.DataType;
+import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.framework.handle.PlayerManager;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.member.UserJoinEvent;
@@ -12,6 +16,7 @@ import sx.blah.discord.handle.impl.events.guild.member.UserLeaveEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -144,6 +149,34 @@ public final class UserLeaveJoin
         // Sets their balance to 0
         DatabaseHandler.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
 
+        // Removes their marriage status
+        Player player = PlayerManager.handle.getPlayer(e.getUser().getLongID());
+        if (!(((String) player.getObject(DataType.MARRY_DATA)).split("&")[0].equalsIgnoreCase("none") || ((String) player.getObject(DataType.MARRY_DATA)).split("&")[1].equalsIgnoreCase("none")))
+        {
+            // Data
+            String[] marriageData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
+
+            // Author's Status
+            player.setObject(DataType.MARRY_DATA, "none&none");
+
+            // Sets the other player's status
+            try {
+                long guildId = Long.parseLong(marriageData[1]);
+                if (!Util.guildExists(e.getClient(), guildId))
+                {
+                    player.setObject(DataType.MARRY_DATA, "none&none");
+                }
+                else {
+                    long userId = Long.parseLong(marriageData[0]);
+                    IGuild guild = e.getClient().getGuildByID(guildId);
+                    IUser user = guild.getUserByID(userId);
+
+                    PlayerManager.handle.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
+                }
+            } catch (NumberFormatException throwaway) {
+                // :(
+            }
+        }
         // Log if the user leaves
         IGuild guild = e.getGuild();
         EmbedBuilder embedBuilder = new EmbedBuilder();
