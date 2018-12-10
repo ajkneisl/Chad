@@ -4,6 +4,7 @@ import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -72,15 +73,18 @@ public class Respawn implements Command.Class {
 
                     messageHandler.sendMessage("Successfully respawned you with half stats. Your balance will remain the same.");
                     reacted = false;
+                    return;
                 }
 
                 // Checks if the user reacted with the N
                 if (nReaction.getUserReacted(e.getAuthor()))
                 {
-                    messageHandler.sendError("Ok, we won't respawn you.");
+                    messageHandler.sendMessage("Ok, we won't respawn you.");
                     return;
                 }
             }
+
+            ChadError.throwError("Respawn thread died");
         };
     }
 
