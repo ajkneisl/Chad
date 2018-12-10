@@ -61,7 +61,7 @@ public class PermissionHandler
             return true;
 
         // All users should have access to these categories
-        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY, Category.MUSIC).anyMatch(category -> meta.getCommandCategory() == category))
+        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.MONEY, Category.MUSIC, Category.FIGHT).anyMatch(category -> meta.getCommandCategory() == category))
             return true;
 
         // If the user is Administrator, they should have all guild related permissions
