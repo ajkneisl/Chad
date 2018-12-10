@@ -42,11 +42,11 @@ public class Player {
         playerData.put(DataType.MARRY_DATA, "none&none");
         playerData.put(DataType.PROFILE_TITLE, "none");
 
-        playerData.put(DataType.LAST_ATTACKED_TIME, Util.getCurrentEpoch());
-        playerData.put(DataType.LAST_ATTACKER, null);
-        playerData.put(DataType.LAST_ATTACK_TIME, Util.getCurrentEpoch());
-        playerData.put(DataType.LAST_TARGET, null);
-        playerData.put(DataType.LAST_CUDDLE_TIME, Util.getCurrentEpoch());
+        playerData.put(DataType.LAST_ATTACKED_TIME, System.currentTimeMillis());
+        playerData.put(DataType.LAST_ATTACKER, "none");
+        playerData.put(DataType.LAST_ATTACK_TIME, System.currentTimeMillis());
+        playerData.put(DataType.LAST_TARGET, "none");
+        playerData.put(DataType.LAST_CUDDLE_TIME, System.currentTimeMillis());
     }
 
     /**

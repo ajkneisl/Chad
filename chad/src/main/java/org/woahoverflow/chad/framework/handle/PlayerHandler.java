@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.Player.DataType;
+import org.woahoverflow.chad.framework.Util;
 
 /**
  * Manages Player instances
@@ -72,6 +73,12 @@ public class PlayerHandler {
         playerDocument.put("profile_description", "No description!");
         playerDocument.put("profile_title", "none");
 
+        playerDocument.put("last_attacked_time", System.currentTimeMillis());
+        playerDocument.put("last_attacker", "none");
+        playerDocument.put("last_attack_time", System.currentTimeMillis());
+        playerDocument.put("last_target", "none");
+        playerDocument.put("last_cuddle_time", System.currentTimeMillis());
+
         // Insert the new player
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
 
@@ -130,6 +137,12 @@ public class PlayerHandler {
         playerDocument.put("marry_data", "none&none");
         playerDocument.put("profile_description", "No description!");
         playerDocument.put("profile_title", "none");
+
+        playerDocument.put("last_attacked_time", System.currentTimeMillis());
+        playerDocument.put("last_attacker", "none");
+        playerDocument.put("last_attack_time", System.currentTimeMillis());
+        playerDocument.put("last_target", "none");
+        playerDocument.put("last_cuddle_time", System.currentTimeMillis());
 
         // Insert the new player
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
