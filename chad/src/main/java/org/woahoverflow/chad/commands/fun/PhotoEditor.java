@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.security.SecureRandom;
 import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho, codebasepw
@@ -74,16 +76,16 @@ public class PhotoEditor implements Command.Class {
                 return;
             }
 
-            // Creates a image in "imgcache"
-            File file = new File(System.getenv("appdata") + "\\chad\\imgcache\\img" + new SecureRandom().nextInt(2000) + ".png");
-
-            // Makes sure the file doesn't exist already
-            while (file.exists())
-                file = new File(System.getenv("appdata") + "\\chad\\imgcache\\img" + new SecureRandom().nextInt(2000) + ".png");
-
             // Blur
             if (args.get(0).equalsIgnoreCase("blur"))
             {
+                // Creates a image in "imgcache"
+                File file = new File(System.getenv("appdata") + "\\chad\\imgcache\\img" + new SecureRandom().nextInt(2000) + ".png");
+
+                // Makes sure the file doesn't exist already
+                while (file.exists())
+                    file = new File(System.getenv("appdata") + "\\chad\\imgcache\\img" + new SecureRandom().nextInt(2000) + ".png");
+
                 try {
                     // Blurs image
                     float[] matrix = new float[400];
@@ -104,7 +106,14 @@ public class PhotoEditor implements Command.Class {
                 return;
             }
 
-            // TODO: add more stuff to this, it's kinda lonely down here
+            // Deepfry
+            if (args.get(0).equalsIgnoreCase("deepfry"))
+            {
+                messageHandler.sendEmbed(new EmbedBuilder().withImage(
+                    JsonHandler.handle.read("https://nekobot.xyz/api/imagegen?type=deepfry&image=" + url).getString("message"))
+                );
+                return;
+            }
 
             // If none of the arguments were met, return;
             messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
@@ -115,6 +124,7 @@ public class PhotoEditor implements Command.Class {
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("pe blur <image>", "Blurs a photo.");
+        st.put("pe deepfry <image>", "Deep-fries a photo.");
         return Command.helpCommand(st, "Photo Editor", e);
     }
 }
