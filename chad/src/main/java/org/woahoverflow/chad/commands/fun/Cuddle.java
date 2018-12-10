@@ -39,26 +39,14 @@ public class Cuddle implements Command.Class {
                         long partnerLastCuddleTime = (long)partnerPlayer.getObject(Player.DataType.LAST_CUDDLE_TIME);
                         long authorLastCuddleTime = (long)authorPlayer.getObject(Player.DataType.LAST_CUDDLE_TIME);
 
-                        // player sanity checks
-                        if (partnerPlayer == null)
-                        {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                            return;
-                        }
-
-                        if (authorPlayer == null)
-                        {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                            return;
-                        }
-
                         // epoch sanity checks
                         long currentTimestamp = System.currentTimeMillis();
                         long searchTimestamp = authorLastCuddleTime;
                         long difference = Math.abs(currentTimestamp - searchTimestamp);
-                        int HOUR = 60 * 60 * 1000;
-                        if (difference < HOUR) {
-                            messageHandler.sendError(String.format("Sorry, you need to wait an hour between cuddles! Time left: %s", TimeUnit.MILLISECONDS.toMinutes(HOUR - difference) + " minutes"));
+                        int hour = 60 * 60 * 1000;
+
+                        if (difference < hour) {
+                            messageHandler.sendError(String.format("Sorry, you need to wait an hour between cuddles! Time left: %s", TimeUnit.MILLISECONDS.toMinutes(hour - difference) + " minutes"));
                             return;
                         }
 
@@ -67,7 +55,7 @@ public class Cuddle implements Command.Class {
 
                         String[] marriageData = ((String) authorPlayer.getObject(Player.DataType.MARRY_DATA)).split("&");
 
-                        if (marriageData[0] == partner.getStringID())
+                        if (marriageData[0].equals(partner.getStringID()))
                         {
                             messageHandler.sendMessage("You cuddled your partner, " + partner.mention() + "! (+2 HEALTH)");
 
@@ -80,7 +68,7 @@ public class Cuddle implements Command.Class {
                             partnerPlayer.setObject(Player.DataType.HEALTH, (int)partnerPlayer.getObject(Player.DataType.HEALTH) + 1);
                             authorPlayer.setObject(Player.DataType.HEALTH, (int)authorPlayer.getObject(Player.DataType.HEALTH) + 1);
                         }
-                    } catch (Exception ex) {
+                    } catch (RuntimeException ex) {
                         ex.printStackTrace();
                     }
                 }
