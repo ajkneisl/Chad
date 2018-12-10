@@ -21,7 +21,7 @@ public class Player {
      */
     public enum DataType
     {
-        BALANCE, HEALTH, SWORD_HEALTH, SHIELD_HEALTH, MARRY_DATA, PROFILE_DESCRIPTION, PROFILE_TITLE
+        BALANCE, HEALTH, SWORD_HEALTH, SHIELD_HEALTH, MARRY_DATA, PROFILE_DESCRIPTION, PROFILE_TITLE, LAST_ATTACKED_TIME, LAST_ATTACKER, LAST_ATTACK_TIME, LAST_TARGET, LAST_CUDDLE_TIME
     }
 
     /**
@@ -41,6 +41,12 @@ public class Player {
         playerData.put(DataType.HEALTH, 100L);
         playerData.put(DataType.MARRY_DATA, "none&none");
         playerData.put(DataType.PROFILE_TITLE, "none");
+
+        playerData.put(DataType.LAST_ATTACKED_TIME, Util.getCurrentEpoch());
+        playerData.put(DataType.LAST_ATTACKER, null);
+        playerData.put(DataType.LAST_ATTACK_TIME, Util.getCurrentEpoch());
+        playerData.put(DataType.LAST_TARGET, null);
+        playerData.put(DataType.LAST_CUDDLE_TIME, Util.getCurrentEpoch());
     }
 
     /**

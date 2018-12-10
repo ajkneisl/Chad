@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Random;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
@@ -103,5 +109,22 @@ public final class Util
     public static synchronized boolean guildExists(IDiscordClient cli, Long guild)
     {
         return RequestBuffer.request(cli::getGuilds).get().stream().anyMatch(g -> g.getLongID() == guild);
+    }
+
+    public static String getCurrentDateTime()
+    {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date));
+        return dateFormat.format(date);
+    }
+
+    public static long getCurrentEpoch()
+    {
+        String timeDateStr = getCurrentDateTime();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-dd-MM HH:mm:ss.SSS");
+        LocalDateTime dt = LocalDateTime.parse(timeDateStr, dtf);
+        Instant instant = dt.toInstant(ZoneOffset.UTC);
+        return instant.toEpochMilli();
     }
 }
