@@ -62,13 +62,24 @@ public class Cuddle implements Command.Class {
                             return;
                         }
 
-                        messageHandler.sendMessage("You cuddled " + partner.mention() + "! (+1 HEALTH)");
-
                         partnerPlayer.setObject(Player.DataType.LAST_CUDDLE_TIME, System.currentTimeMillis());
                         authorPlayer.setObject(Player.DataType.LAST_CUDDLE_TIME, System.currentTimeMillis());
 
-                        partnerPlayer.setObject(Player.DataType.HEALTH, (int)partnerPlayer.getObject(Player.DataType.HEALTH) + 1);
-                        authorPlayer.setObject(Player.DataType.HEALTH, (int)authorPlayer.getObject(Player.DataType.HEALTH) + 1);
+                        String[] marriageData = ((String) authorPlayer.getObject(Player.DataType.MARRY_DATA)).split("&");
+
+                        if (marriageData[0] == partner.getStringID())
+                        {
+                            messageHandler.sendMessage("You cuddled your partner, " + partner.mention() + "! (+2 HEALTH)");
+
+                            partnerPlayer.setObject(Player.DataType.HEALTH, (int)partnerPlayer.getObject(Player.DataType.HEALTH) + 2);
+                            authorPlayer.setObject(Player.DataType.HEALTH, (int)authorPlayer.getObject(Player.DataType.HEALTH) + 2);
+                        } else
+                        {
+                            messageHandler.sendMessage("You cuddled " + partner.mention() + "! (+1 HEALTH)");
+
+                            partnerPlayer.setObject(Player.DataType.HEALTH, (int)partnerPlayer.getObject(Player.DataType.HEALTH) + 1);
+                            authorPlayer.setObject(Player.DataType.HEALTH, (int)authorPlayer.getObject(Player.DataType.HEALTH) + 1);
+                        }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
