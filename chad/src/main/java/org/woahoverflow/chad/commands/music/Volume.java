@@ -34,9 +34,9 @@ public class Volume implements Command.Class{
             }
 
             // Makes sure the value isn't over 1000
-            if (1000 > volume)
+            if (1000 < volume)
             {
-                messageHandler.sendError("Please use values below 1000!\nPersonally, I suggest you use `100`. Anything above is distorted.");
+                messageHandler.sendError("Please use values below 1000!\nPersonally, I suggest you use 100. Anything above is distorted.");
                 return;
             }
 
