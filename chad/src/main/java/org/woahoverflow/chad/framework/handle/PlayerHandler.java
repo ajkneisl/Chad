@@ -102,9 +102,6 @@ public class PlayerHandler {
      */
     public Player createSetPlayer(long user, int playerHealth, int swordHealth, int shieldHealth, long balance)
     {
-        if (!userDataExists(user))
-            return null;
-
         Document playerDocument = new Document();
 
         // The user's ID
