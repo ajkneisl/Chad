@@ -33,6 +33,12 @@ public class Attack implements Command.Class
             IUser opponent = e.getMessage().getMentions().get(0);
             IUser author = e.getAuthor();
 
+            if (opponent.getLongID() == author.getLongID())
+            {
+                messageHandler.sendError("You can't attack yourself!");
+                return;
+            }
+
             // nullpointer sanity check
             if (opponent == null)
             {
@@ -60,6 +66,20 @@ public class Attack implements Command.Class
                 plyOpponent.setObject(Player.DataType.HEALTH, (int)plyOpponent.getObject(Player.DataType.HEALTH) - damage);
 
                 messageHandler.sendMessage(String.format("You did %s damage to %s!", damage, opponent.mention()));
+            }
+
+            // health sanity check
+            if ((int)plyOpponent.getObject(Player.DataType.HEALTH) < 1)
+            {
+                messageHandler.sendMessage(author.mention() + " managed to finish off " + opponent.mention() + "!");
+                return;
+            }
+
+            // author sword sanity check
+            if ((int)plyAuthor.getObject(Player.DataType.SWORD_HEALTH) < 1)
+            {
+                messageHandler.sendMessage("Your sword broke, " + author.mention() + "!");
+                return;
             }
         };
     }
