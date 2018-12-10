@@ -14,6 +14,7 @@ import org.woahoverflow.chad.commands.admin.Shutdown;
 import org.woahoverflow.chad.commands.admin.SystemInfo;
 //import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fight.Attack;
+import org.woahoverflow.chad.commands.fight.Respawn;
 import org.woahoverflow.chad.commands.fight.ViewPlayer;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
@@ -226,5 +227,6 @@ public final class ChadVar
         // FIGHT
         COMMANDS.put("attack", new Data(Category.FIGHT, new Attack()));
         COMMANDS.put("viewplayer", new Data(Category.FIGHT, new ViewPlayer()));
+        COMMANDS.put("respawn", new Data(Category.FIGHT, new Respawn()));
     }
 }

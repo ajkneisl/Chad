@@ -21,6 +21,17 @@ public class PlayerHandler {
         if (players.keySet().contains(user))
             players.put(user, getPlayer(user));
     }
+
+    /**
+     * Removes a player dataset from the database
+     *
+     * @param user
+     */
+    public void removePlayer(long user)
+    {
+       players.remove(user);
+    }
+
     /**
      * Attacks a player
      *

@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.commands.admin;
 
 import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -24,11 +25,13 @@ public class CreatePlayer implements Command.Class {
             int swordHealth = Integer.parseInt(args.get(1));
             int armorHealth = Integer.parseInt(args.get(2));
 
-            //Player player = PlayerHandler.handle.createSetPlayer(e.getAuthor().getLongID(), playerHealth, swordHealth, armorHealth);
+            Player player = PlayerHandler.handle.createSetPlayer(e.getAuthor().getLongID(), playerHealth, swordHealth, armorHealth, 0L);
 
-            //messageHandler.sendMessage("Created you a new player (" + player.getPlayerHealth() + "," + player.getSwordHealth() + "," + player.getArmorHealth() + ")");
+            playerHealth = (int)player.getObject(Player.DataType.HEALTH);
+            swordHealth = (int)player.getObject(Player.DataType.SWORD_HEALTH);
+            armorHealth = (int)player.getObject(Player.DataType.SHIELD_HEALTH);
 
-            PlayerHandler.handle.attackPlayer(e.getAuthor().getLongID(), 1);
+            messageHandler.sendMessage("Created you a new player (" + playerHealth + "," + swordHealth + "," + armorHealth + ")");
         };
     }
 
