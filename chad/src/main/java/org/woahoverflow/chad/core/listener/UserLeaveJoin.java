@@ -8,7 +8,7 @@ import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.framework.handle.PlayerManager;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.member.UserJoinEvent;
@@ -150,7 +150,7 @@ public final class UserLeaveJoin
         DatabaseHandler.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
 
         // Removes their marriage status
-        Player player = PlayerManager.handle.getPlayer(e.getUser().getLongID());
+        Player player = PlayerHandler.handle.getPlayer(e.getUser().getLongID());
         if (!(((String) player.getObject(DataType.MARRY_DATA)).split("&")[0].equalsIgnoreCase("none") || ((String) player.getObject(DataType.MARRY_DATA)).split("&")[1].equalsIgnoreCase("none")))
         {
             // Data
@@ -171,7 +171,7 @@ public final class UserLeaveJoin
                     IGuild guild = e.getClient().getGuildByID(guildId);
                     IUser user = guild.getUserByID(userId);
 
-                    PlayerManager.handle.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
+                    PlayerHandler.handle.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
                 }
             } catch (NumberFormatException throwaway) {
                 // :(

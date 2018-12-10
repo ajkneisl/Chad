@@ -2,11 +2,10 @@ package org.woahoverflow.chad.commands.fight;
 
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.handle.PlayerManager;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -42,8 +41,8 @@ public class Attack implements Command.Class
             }
 
             // grab player datasets
-            Player plyOpponent = PlayerManager.handle.getPlayer(opponent.getLongID());
-            Player plyAuthor = PlayerManager.handle.getPlayer(author.getLongID());
+            Player plyOpponent = PlayerHandler.handle.getPlayer(opponent.getLongID());
+            Player plyAuthor = PlayerHandler.handle.getPlayer(author.getLongID());
 
             // generate damage value
             int damage = new Random().nextInt(3);

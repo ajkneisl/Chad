@@ -7,7 +7,7 @@ import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.Player.DataType;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.handle.PlayerManager;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
@@ -20,7 +20,7 @@ public class DivorcePlayer implements Command.Class
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
-            Player player = PlayerManager.handle.getPlayer(e.getAuthor().getLongID());
+            Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
 
             // Player's marry data, in format `player_id&guild_id`
             String[] playerMarryData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
@@ -69,7 +69,7 @@ public class DivorcePlayer implements Command.Class
             player.setObject(DataType.MARRY_DATA, "none&none");
 
             // Set the divorced player
-            PlayerManager.handle.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
+            PlayerHandler.handle.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
 
             messageHandler.sendEmbed(new EmbedBuilder().withDesc("Divorced player `" + user.getName() + "`."));
         };

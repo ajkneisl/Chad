@@ -4,7 +4,7 @@ import com.mongodb.client.MongoCollection;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;
-import org.woahoverflow.chad.framework.handle.PlayerManager;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 
 /**
  * @author sho, codebasepw
@@ -21,7 +21,7 @@ public class Player {
      */
     public enum DataType
     {
-        BALANCE, HEALTH, SWORD_HEALTH, SHIELD_HEALTH, MARRY_DATA, PROFILE_DESCRIPTION
+        BALANCE, HEALTH, SWORD_HEALTH, SHIELD_HEALTH, MARRY_DATA, PROFILE_DESCRIPTION, PROFILE_TITLE
     }
 
     /**
@@ -40,6 +40,7 @@ public class Player {
         playerData.put(DataType.BALANCE, 0L);
         playerData.put(DataType.HEALTH, 100L);
         playerData.put(DataType.MARRY_DATA, "none&none");
+        playerData.put(DataType.PROFILE_TITLE, "none");
     }
 
     /**
@@ -72,7 +73,7 @@ public class Player {
 
         col.updateOne(get, new Document("$set", new Document(dataType.toString().toLowerCase(), value)));
 
-        PlayerManager.handle.reAddPlayer(user);
+        PlayerHandler.handle.reAddPlayer(user);
     }
 
     /**

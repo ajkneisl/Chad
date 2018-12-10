@@ -7,7 +7,7 @@ import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.Player.DataType;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.handle.PlayerManager;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -45,13 +45,13 @@ public class MarryPlayer implements Command.Class{
             }
 
             // The author's player instance
-            Player player = PlayerManager.handle.getPlayer(e.getAuthor().getLongID());
+            Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
 
             // Player's marry data, in format `player_id&guild_id`
             String[] playerMarryData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
 
             // The other person's marry data
-            String[] otherPlayerMarryData = ((String) PlayerManager.handle.getPlayer(otherPerson.getLongID()).getObject(DataType.MARRY_DATA)).split("&");
+            String[] otherPlayerMarryData = ((String) PlayerHandler.handle.getPlayer(otherPerson.getLongID()).getObject(DataType.MARRY_DATA)).split("&");
 
             // Makes sure it's just the username and the guild id
             if (otherPlayerMarryData.length != 2)
@@ -137,7 +137,7 @@ public class MarryPlayer implements Command.Class{
 
             // Sets the new marriage data
             player.setObject(DataType.MARRY_DATA, otherPerson.getStringID()+ '&' +e.getGuild().getStringID());
-            PlayerManager.handle.getPlayer(otherPerson.getLongID()).setObject(DataType.MARRY_DATA, e.getAuthor().getStringID()+ '&' +e.getGuild().getStringID());
+            PlayerHandler.handle.getPlayer(otherPerson.getLongID()).setObject(DataType.MARRY_DATA, e.getAuthor().getStringID()+ '&' +e.getGuild().getStringID());
 
             messageHandler.sendEmbed(new EmbedBuilder().withDesc("Congratulations `"+otherPerson.getName()+"` and `"+e.getAuthor().getName()+"` are now married!"));
         };

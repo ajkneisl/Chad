@@ -11,8 +11,8 @@ import org.woahoverflow.chad.framework.Player.DataType;
  * @author sho, codebasepw
  * @since 0.7.0
  */
-public class PlayerManager {
-    public static final PlayerManager handle = new PlayerManager();
+public class PlayerHandler {
+    public static final PlayerHandler handle = new PlayerHandler();
 
     private final ConcurrentHashMap<Long, Player> players = new ConcurrentHashMap<>();
 
@@ -43,10 +43,35 @@ public class PlayerManager {
      */
     private Player createPlayer(long user)
     {
-        if (!userDataExists(user))
-            return null;
+        Document playerDocument = new Document();
 
-        return createPlayer(user, 100, 100, 100);
+        // The user's ID
+        playerDocument.put("id", user);
+
+        // The user's balance
+        playerDocument.put("balance", 0L);
+
+        // The user's fight data
+        playerDocument.put("sword_health", 100);
+        playerDocument.put("shield_health", 100);
+        playerDocument.put("health", 100);
+
+        // Other default user data
+        playerDocument.put("marry_data", "none&none");
+        playerDocument.put("profile_description", "No description!");
+        playerDocument.put("profile_title", "none");
+
+        // Insert the new player
+        DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
+
+        // The player
+        Player player = parsePlayer(playerDocument, user);
+
+        // Add it into the hash map
+        players.put(user, player);
+
+        // Return the new player
+        return player;
     }
 
     /**
@@ -75,7 +100,7 @@ public class PlayerManager {
      * @param swordHealth The user's starting swordHealth
      * @param shieldHealth The user's starting shieldHealth
      */
-    public Player createPlayer(long user, int playerHealth, int swordHealth, int shieldHealth)
+    public Player createSetPlayer(long user, int playerHealth, int swordHealth, int shieldHealth, long balance)
     {
         if (!userDataExists(user))
             return null;
@@ -86,22 +111,39 @@ public class PlayerManager {
         playerDocument.put("id", user);
 
         // The user's balance
-        playerDocument.put("balance", Long.MAX_VALUE / 2);
+        playerDocument.put("balance", balance);
 
         // The user's fight data
-        playerDocument.put("swordHealth", swordHealth);
-        playerDocument.put("shieldHealth", shieldHealth);
-        playerDocument.put("playerHealth", playerHealth);
+        playerDocument.put("sword_health", swordHealth);
+        playerDocument.put("shield_health", shieldHealth);
+        playerDocument.put("health", playerHealth);
+
+        // Other default user data
+        playerDocument.put("marry_data", "none&none");
+        playerDocument.put("profile_description", "No description!");
+        playerDocument.put("profile_title", "none");
 
         // Insert the new player
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
 
-        // The player
+        // Creates the player with the new set data
+        ConcurrentHashMap<DataType, Object> playerData = new ConcurrentHashMap<>();
+
+        playerData.put(DataType.SWORD_HEALTH, swordHealth);
+        playerData.put(DataType.SHIELD_HEALTH, shieldHealth);
+        playerData.put(DataType.PROFILE_DESCRIPTION, "No description!");
+        playerData.put(DataType.BALANCE, balance);
+        playerData.put(DataType.HEALTH, playerHealth);
+        playerData.put(DataType.MARRY_DATA, "none&none");
+        playerData.put(DataType.PROFILE_TITLE, "none");
+
+        Player player = new Player(playerData, user);
 
         // Add it into the hash map
+        players.put(user, player);
 
         // Return the new player
-        return null;
+        return player;
     }
 
     /**

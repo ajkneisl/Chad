@@ -2,13 +2,16 @@ package org.woahoverflow.chad.commands.fun;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.Command.Class;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.Player.DataType;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.handle.PlayerManager;
+import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
@@ -18,13 +21,16 @@ import sx.blah.discord.util.EmbedBuilder;
  * @author sho
  * @since 0.7.0
  */
-public class Profile implements Command.Class{
+public class Profile implements Class{
+
+    private static final Pattern LARGE_CODE_BLOCK = Pattern.compile("```");
+    private static final Pattern SMALL_CODE_BLOCK = Pattern.compile("`");
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             // Default variables
-            Player player = PlayerManager.handle.getPlayer(e.getAuthor().getLongID());
+            Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
             MessageHandler messageHandler = new MessageHandler(e.getChannel());
 
             // If there's no arguments, get the author's profile
@@ -33,10 +39,21 @@ public class Profile implements Command.Class{
                 // Setup the embed builder
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withImage(e.getAuthor().getAvatarURL());
-                embedBuilder.withTitle(e.getAuthor().getName());
+
+                String title = e.getAuthor().getName();
+                // Profile Title
+                {
+                    String titleData = (String) player.getObject(DataType.PROFILE_TITLE);
+
+                    if (!titleData.equals("none"))
+                        title += ' ' + titleData;
+                }
 
                 // The embed's description
-                String content = "**Description** : `"+player.getObject(DataType.PROFILE_DESCRIPTION)+"`\n";
+                String content = "";
+                content += "**Description** : `"+SMALL_CODE_BLOCK
+                    .matcher(LARGE_CODE_BLOCK.matcher((String) player.getObject(DataType.PROFILE_DESCRIPTION)).replaceAll("<lcb>"))
+                    .replaceAll("<scb>")+"`\n";
 
                 // Marriage Data
                 {
@@ -92,6 +109,7 @@ public class Profile implements Command.Class{
 
                 // Send
                 embedBuilder.withDesc(content);
+                embedBuilder.withTitle(title);
                 messageHandler.sendEmbed(embedBuilder);
                 return;
             }
@@ -99,13 +117,26 @@ public class Profile implements Command.Class{
             if (args.size() == 1 && e.getMessage().getMentions().size() == 1)
             {
                 IUser targetUser = e.getMessage().getMentions().get(0);
-                Player targetUserProfile = PlayerManager.handle.getPlayer(targetUser.getLongID());
+                Player targetUserProfile = PlayerHandler.handle.getPlayer(targetUser.getLongID());
 
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withImage(targetUser.getAvatarURL());
-                embedBuilder.withTitle(targetUser.getName());
 
-                String content = "**Description** : `"+targetUserProfile.getObject(DataType.PROFILE_DESCRIPTION)+"`\n";
+                String title = targetUser.getName();
+
+                // Profile Title
+                {
+                    String titleData = (String) targetUserProfile.getObject(DataType.PROFILE_TITLE);
+
+                    if (!titleData.equals("none"))
+                        title += ' ' + titleData;
+                }
+
+                String content = "";
+                content += "**Description** : `"+SMALL_CODE_BLOCK
+                    .matcher(LARGE_CODE_BLOCK.matcher((String) targetUserProfile.getObject(DataType.PROFILE_DESCRIPTION)).replaceAll("<lcb>"))
+                    .replaceAll("<scb>")+"`\n";
+
 
                 // Marriage Data
                 {
@@ -157,17 +188,22 @@ public class Profile implements Command.Class{
                 // Send
                 embedBuilder.withDesc(content);
                 messageHandler.sendEmbed(embedBuilder);
+                embedBuilder.withTitle(title);
                 return;
             }
 
             // If they're setting their own description
-            if (args.size() >= 1 && args.get(0).equalsIgnoreCase("desc"))
+            if (args.size() >= 1 && args.get(0).equalsIgnoreCase("desc") && e.getMessage().getMentions().isEmpty())
             {
                 // Remove the `desc`
                 args.remove(0);
 
                 // Build the new description
                 String builtString = args.stream().map(s -> s + ' ').collect(Collectors.joining());
+
+                String showString = SMALL_CODE_BLOCK
+                    .matcher(LARGE_CODE_BLOCK.matcher(builtString).replaceAll("<lcb>"))
+                    .replaceAll("<scb>");
 
                 // Make sure it's not too long
                 if (builtString.length() > 200)
@@ -178,8 +214,120 @@ public class Profile implements Command.Class{
 
                 // Set and send
                 player.setObject(DataType.PROFILE_DESCRIPTION, builtString);
-                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set your description to `"+builtString+"`!"));
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set your description to `"+showString+"`!"));
+                return;
             }
+
+            // If they're setting their own description
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("desc") && e.getMessage().getMentions().size() == 1 && PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
+            {
+                IUser targetUser = e.getMessage().getMentions().get(0);
+
+                // If it's somehow mixed
+                if (!args.get(1).contains(targetUser.getStringID()))
+                {
+                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                    return;
+                }
+
+                // Remove the `desc`
+                args.remove(0);
+
+                // Remove the player
+                args.remove(0);
+
+                // Build the new description
+                String builtString = args.stream().map(s -> s + ' ').collect(Collectors.joining());
+
+                // The formatted string to show
+                String showString = SMALL_CODE_BLOCK
+                    .matcher(LARGE_CODE_BLOCK.matcher(builtString).replaceAll("<lcb>"))
+                    .replaceAll("<scb>");
+
+                // Make sure it's not too long
+                if (builtString.length() > 200)
+                {
+                    messageHandler.sendError("Your description is too long!");
+                    return;
+                }
+
+                // The target user's player instance
+                Player otherPlayer = PlayerHandler.handle.getPlayer(targetUser.getLongID());
+
+                // Set and send
+                otherPlayer.setObject(DataType.PROFILE_DESCRIPTION, builtString);
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set `"+targetUser.getName()+"`'s title to `"+showString+"`!"));
+                return;
+            }
+
+            // Developer only, setting their own title
+            if (args.size() >= 1 && args.get(0).equalsIgnoreCase("title") && PermissionHandler.handle.userIsDeveloper(e.getAuthor()) && e.getMessage().getMentions().isEmpty())
+            {
+                // Remove the `title`
+                args.remove(0);
+
+                // Build the new title
+                String builtString = args.stream().map(s -> s + ' ').collect(Collectors.joining());
+
+                String showString = SMALL_CODE_BLOCK
+                    .matcher(LARGE_CODE_BLOCK.matcher(builtString).replaceAll("<lcb>"))
+                    .replaceAll("<scb>");
+
+                // Makes sure the title isn't too long
+                if (builtString.length() > 30)
+                {
+                    messageHandler.sendError("Your title is too long!");
+                    return;
+                }
+
+                // Set and send
+                player.setObject(DataType.PROFILE_TITLE, builtString);
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set your title to `"+showString+"`!"));
+                return;
+            }
+
+            // Developer only, setting someone else's title
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("title") && e.getMessage().getMentions().size() == 1 && PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
+            {
+                if (!args.get(1).contains(e.getMessage().getMentions().get(0).getStringID()))
+                {
+                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                    return;
+                }
+
+                // Remove the `title`
+                args.remove(0);
+
+                // Removes the pinged user
+                args.remove(0);
+
+                // Build the new title
+                String builtString = args.stream().map(s -> s + ' ').collect(Collectors.joining());
+
+                String showString = SMALL_CODE_BLOCK
+                    .matcher(LARGE_CODE_BLOCK.matcher(builtString).replaceAll("<lcb>"))
+                    .replaceAll("<scb>");
+
+                // Makes sure the title isn't too long
+                if (builtString.length() > 30)
+                {
+                    messageHandler.sendError("Your title is too long!");
+                    return;
+                }
+
+                // Get the other player's IUser instance
+                IUser otherIUser = e.getMessage().getMentions().get(0);
+
+                // Get the other user's player instance
+                Player otherUser = PlayerHandler.handle.getPlayer(otherIUser.getLongID());
+
+                // Set and send
+                otherUser.setObject(DataType.PROFILE_TITLE, builtString);
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set `"+otherIUser.getName()+"`'s title to `"+showString+"`!"));
+                return;
+            }
+
+            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
         };
     }
 
