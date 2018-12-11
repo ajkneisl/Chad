@@ -46,7 +46,15 @@ public class Cuddle implements Command.Class {
                         int hour = 60 * 60 * 1000;
 
                         if (difference < hour) {
-                            messageHandler.sendError(String.format("Sorry, you need to wait an hour between cuddles! Time left: %s", TimeUnit.MILLISECONDS.toMinutes(hour - difference) + " minutes"));
+                            messageHandler.sendError(String.format("Sorry, you need to wait an hour between cuddles! Time left: %s minutes.", TimeUnit.MILLISECONDS.toMinutes(hour - difference)));
+                            return;
+                        }
+
+                        searchTimestamp = partnerLastCuddleTime;
+                        difference = Math.abs(currentTimestamp - searchTimestamp);
+
+                        if (difference < hour) {
+                            messageHandler.sendError(String.format("Sorry, %s can't cuddle right now. Try again in %s minutes.", partner.mention(), TimeUnit.MILLISECONDS.toMinutes(hour - difference)));
                             return;
                         }
 
