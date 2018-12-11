@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fight;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import org.woahoverflow.chad.framework.Command;
@@ -13,7 +14,10 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
-
+/**
+ * @author codebasepw
+ * @since 0.7.0
+ */
 public class Attack implements Command.Class
 {
     public MessageHandler messageHandler;
@@ -36,13 +40,6 @@ public class Attack implements Command.Class
             if (opponent.getLongID() == author.getLongID())
             {
                 messageHandler.sendError("You can't attack yourself!");
-                return;
-            }
-
-            // nullpointer sanity check
-            if (opponent == null)
-            {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
                 return;
             }
 
@@ -71,14 +68,14 @@ public class Attack implements Command.Class
             // health sanity check
             if ((int)plyOpponent.getObject(Player.DataType.HEALTH) < 1)
             {
-                messageHandler.sendMessage(author.mention() + " managed to finish off " + opponent.mention() + "!");
+                messageHandler.sendMessage(author.mention() + " managed to finish off " + opponent.mention() + '!');
                 return;
             }
 
             // author sword sanity check
             if ((int)plyAuthor.getObject(Player.DataType.SWORD_HEALTH) < 1)
             {
-                messageHandler.sendMessage("Your sword broke, " + author.mention() + "!");
+                messageHandler.sendMessage("Your sword broke, " + author.mention() + '!');
                 return;
             }
         };
@@ -86,7 +83,9 @@ public class Attack implements Command.Class
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("attack <@user>", "Attacks a player.");
+        return Command.helpCommand(st, "Attack", e);
     }
 
     public IMessage askToPlay(MessageReceivedEvent e, IUser authorUser, IUser opponentUser)

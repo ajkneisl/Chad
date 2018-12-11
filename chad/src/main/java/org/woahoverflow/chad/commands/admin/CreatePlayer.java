@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import java.util.HashMap;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -8,8 +9,11 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import java.util.List;
 
+/**
+ * @author codebasepw
+ * @since 0.7.0
+ */
 public class CreatePlayer implements Command.Class {
-
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -31,12 +35,15 @@ public class CreatePlayer implements Command.Class {
             swordHealth = (int)player.getObject(Player.DataType.SWORD_HEALTH);
             armorHealth = (int)player.getObject(Player.DataType.SHIELD_HEALTH);
 
-            messageHandler.sendMessage("Created you a new player (" + playerHealth + "," + swordHealth + "," + armorHealth + ")");
+            messageHandler.sendMessage("Created you a new player (" + playerHealth + ',' + swordHealth + ','
+                + armorHealth + ')');
         };
     }
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("createplayer <health> <sword health> <shield health>", "Crates a new player.");
+        return Command.helpCommand(st, "Create Player", e);
     }
 }

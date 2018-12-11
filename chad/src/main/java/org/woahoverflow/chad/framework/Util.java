@@ -19,7 +19,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.util.RequestBuffer;
 
 /**

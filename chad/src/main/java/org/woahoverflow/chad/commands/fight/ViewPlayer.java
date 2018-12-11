@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fight;
 
+import java.util.HashMap;
 import org.woahoverflow.chad.framework.Command;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -49,6 +50,8 @@ public class ViewPlayer implements Command.Class {
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        //st.put("", "");
+        return Command.helpCommand(st, "View Player", e);
     }
 }

@@ -1,7 +1,9 @@
 package org.woahoverflow.chad.commands.function;
 
+import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.Command.Class;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -17,7 +19,10 @@ import java.util.List;
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */
-public class Permissions implements Command.Class  {
+public class Permissions implements Class  {
+
+    private static final Pattern COMMA = Pattern.compile(",");
+
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -30,7 +35,7 @@ public class Permissions implements Command.Class  {
                 args.remove(0);
 
                 // Assign variables
-                StringBuilder stringBuiler = new StringBuilder();
+                StringBuilder stringBuilder = new StringBuilder();
                 IRole role = null;
                 int i = 0;
 
@@ -41,7 +46,7 @@ public class Permissions implements Command.Class  {
                     i++;
 
                     // Appends the string
-                    stringBuiler.append(s).append(' ');
+                    stringBuilder.append(s).append(' ');
 
                     // Requests the roles from the guild
                     List<IRole> rolesList = RequestBuffer.request(() -> e.getGuild().getRoles())
@@ -49,7 +54,7 @@ public class Permissions implements Command.Class  {
 
                     // Checks if any of the roles equal
                     for (IRole rol : rolesList)
-                        if (rol.getName().equalsIgnoreCase(stringBuiler.toString().trim()))
+                        if (rol.getName().equalsIgnoreCase(stringBuilder.toString().trim()))
                             role = rol; // If a role was found, assign it to the variable
 
                     // If the role was assigned, break out of the loop
@@ -134,11 +139,12 @@ public class Permissions implements Command.Class  {
                         embedBuilder.withTitle("Viewing Permissions for `" + role.getName()+ '`');
 
                         // Builds all the permissions
-                        StringBuilder stringBuilder = new StringBuilder();
-                        ar.forEach((v) -> stringBuilder.append(", ").append(v));
+                        StringBuilder stringBuilder2 = new StringBuilder();
+                        ar.forEach((v) -> stringBuilder2.append(", ").append(v));
 
                         // Replaces the first ',' and sends.
-                        embedBuilder.withDesc(stringBuilder.toString().trim().replaceFirst(",", ""));
+                        embedBuilder.withDesc(
+                            COMMA.matcher(stringBuilder2.toString().trim()).replaceFirst(""));
                         messageHandler.sendEmbed(embedBuilder);
                         return;
                     default:

@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Player;
 import org.woahoverflow.chad.framework.Player.DataType;
-import org.woahoverflow.chad.framework.Util;
 
 /**
  * Manages Player instances
@@ -26,7 +25,7 @@ public class PlayerHandler {
     /**
      * Removes a player dataset from the database
      *
-     * @param user
+     * @param user The user to remove
      */
     public void removePlayer(long user)
     {
