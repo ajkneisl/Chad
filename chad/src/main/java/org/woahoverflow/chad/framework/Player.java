@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.framework;
 
 import com.mongodb.client.MongoCollection;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.handle.DatabaseHandler;
@@ -16,12 +17,20 @@ public class Player {
      * The user's ID
      */
     private final long user;
+
     /**
      * The types of data you can request from a player.
      */
     public enum DataType
     {
-        BALANCE, HEALTH, SWORD_HEALTH, SHIELD_HEALTH, MARRY_DATA, PROFILE_DESCRIPTION, PROFILE_TITLE, LAST_ATTACKED_TIME, LAST_ATTACKER, LAST_ATTACK_TIME, LAST_TARGET, LAST_CUDDLE_TIME
+        // Other
+        BALANCE, HEALTH, SWORD_HEALTH, SHIELD_HEALTH, LAST_ATTACKED_TIME, LAST_ATTACKER, LAST_ATTACK_TIME, LAST_TARGET, LAST_CUDDLE_TIME,
+
+        // Profile
+        PROFILE_UPVOTE, PROFILE_DOWNVOTE, PROFILE_DESCRIPTION, PROFILE_TITLE,
+
+        // Data
+        GUILD_DATA, MARRY_DATA, VOTE_DATA
     }
 
     /**
@@ -47,6 +56,12 @@ public class Player {
         playerData.put(DataType.LAST_ATTACK_TIME, System.currentTimeMillis());
         playerData.put(DataType.LAST_TARGET, "none");
         playerData.put(DataType.LAST_CUDDLE_TIME, System.currentTimeMillis());
+
+        playerData.put(DataType.PROFILE_DOWNVOTE, 0L);
+        playerData.put(DataType.PROFILE_UPVOTE, 0L);
+
+        playerData.put(DataType.VOTE_DATA, new ArrayList<>());
+        playerData.put(DataType.GUILD_DATA, new ArrayList<>());
     }
 
     /**
@@ -79,7 +94,7 @@ public class Player {
 
         col.updateOne(get, new Document("$set", new Document(dataType.toString().toLowerCase(), value)));
 
-        PlayerHandler.handle.reAddPlayer(user);
+        PlayerHandler.handle.refreshPlayer(user);
     }
 
     /**

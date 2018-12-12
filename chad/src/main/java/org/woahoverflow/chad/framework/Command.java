@@ -23,7 +23,7 @@ public final class Command
      */
     public enum Category
     {
-        DEVELOPER, MONEY, PUNISHMENTS, INFO, FUNCTION, FUN, NSFW, MUSIC, FIGHT
+        DEVELOPER, GAMBLING, PUNISHMENTS, INFO, ADMINISTRATOR, FUN, NSFW, MUSIC, FIGHTING, COMMUNITY
     }
 
     /**

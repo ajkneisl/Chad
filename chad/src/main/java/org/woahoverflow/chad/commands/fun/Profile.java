@@ -41,6 +41,8 @@ public class Profile implements Class{
                 embedBuilder.withImage(e.getAuthor().getAvatarURL());
 
                 String title = e.getAuthor().getName();
+                // The embed's description
+
                 // Profile Title
                 {
                     String titleData = (String) player.getObject(DataType.PROFILE_TITLE);
@@ -49,8 +51,21 @@ public class Profile implements Class{
                         title += ' ' + titleData;
                 }
 
-                // The embed's description
+                // Votes
                 String content = "";
+                {
+                    long upvotes = (long) player.getObject(DataType.PROFILE_UPVOTE);
+                    long downvotes = (long) player.getObject(DataType.PROFILE_DOWNVOTE);
+                    long calculatedVotes = upvotes-downvotes;
+
+                    if (calculatedVotes < 0)
+                    {
+                        content+= "**Warning** You have a bad reputation! \n";
+                    }
+
+                    title += String.format("  %s (+%s|-%s)", calculatedVotes, upvotes, downvotes);
+                }
+
                 content += "**Description** : `"+SMALL_CODE_BLOCK
                     .matcher(LARGE_CODE_BLOCK.matcher((String) player.getObject(DataType.PROFILE_DESCRIPTION)).replaceAll("<lcb>"))
                     .replaceAll("<scb>")+"`\n";
@@ -133,6 +148,21 @@ public class Profile implements Class{
                 }
 
                 String content = "";
+                // Votes
+                {
+                    long upvotes = (long) targetUserProfile.getObject(DataType.PROFILE_UPVOTE);
+                    long downvotes = (long) targetUserProfile.getObject(DataType.PROFILE_DOWNVOTE);
+                    long calculatedVotes = upvotes-downvotes;
+
+
+                    if (calculatedVotes <= 0)
+                    {
+                        content+= "**Warning** User has a bad reputation!\n";
+                    }
+
+                    title += String.format("  %s (+%s|-%s)", calculatedVotes, upvotes, downvotes);
+                }
+
                 content += "**Description** : `"+SMALL_CODE_BLOCK
                     .matcher(LARGE_CODE_BLOCK.matcher((String) targetUserProfile.getObject(DataType.PROFILE_DESCRIPTION)).replaceAll("<lcb>"))
                     .replaceAll("<scb>")+"`\n";

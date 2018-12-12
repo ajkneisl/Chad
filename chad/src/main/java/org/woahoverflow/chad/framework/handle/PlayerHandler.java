@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.framework.handle;
 
 import com.mongodb.client.MongoCollection;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Player;
@@ -16,7 +17,12 @@ public class PlayerHandler {
 
     private final ConcurrentHashMap<Long, Player> players = new ConcurrentHashMap<>();
 
-    public void reAddPlayer(long user)
+    /**
+     * Refreshes a player into the hashmap
+     *
+     * @param user The user to refresh
+     */
+    public void refreshPlayer(long user)
     {
         if (players.keySet().contains(user))
             players.put(user, getPlayer(user));
@@ -29,7 +35,18 @@ public class PlayerHandler {
      */
     public void removePlayer(long user)
     {
-       players.remove(user);
+        // Removes it from the hashmap
+        players.remove(user);
+
+        // Removes it from the database
+        MongoCollection<Document> col = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection();
+        Document get = col.find(new Document("id", user)).first();
+
+        if (get == null)
+            return;
+        col.deleteOne(get);
+
+
     }
 
     /**
@@ -77,6 +94,13 @@ public class PlayerHandler {
         playerDocument.put("last_attack_time", System.currentTimeMillis());
         playerDocument.put("last_target", "none");
         playerDocument.put("last_cuddle_time", System.currentTimeMillis());
+
+        playerDocument.put("profile_downvote", 0L);
+        playerDocument.put("profile_upvote", 0L);
+
+        playerDocument.put("guild_data", new ArrayList<>());
+        playerDocument.put("vote_data", new ArrayList<>());
+
 
         // Insert the new player
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
@@ -143,21 +167,17 @@ public class PlayerHandler {
         playerDocument.put("last_target", "none");
         playerDocument.put("last_cuddle_time", System.currentTimeMillis());
 
+        playerDocument.put("profile_downvote", 0L);
+        playerDocument.put("profile_upvote", 0L);
+
+        playerDocument.put("guild_data", new ArrayList<>());
+        playerDocument.put("vote_data", new ArrayList<>());
+
         // Insert the new player
         DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
 
-        // Creates the player with the new set data
-        ConcurrentHashMap<DataType, Object> playerData = new ConcurrentHashMap<>();
-
-        playerData.put(DataType.SWORD_HEALTH, swordHealth);
-        playerData.put(DataType.SHIELD_HEALTH, shieldHealth);
-        playerData.put(DataType.PROFILE_DESCRIPTION, "No description!");
-        playerData.put(DataType.BALANCE, balance);
-        playerData.put(DataType.HEALTH, playerHealth);
-        playerData.put(DataType.MARRY_DATA, "none&none");
-        playerData.put(DataType.PROFILE_TITLE, "none");
-
-        Player player = new Player(playerData, user);
+        // Creates the player
+        Player player = parsePlayer(playerDocument, user);
 
         // Add it into the hash map
         players.put(user, player);
@@ -200,7 +220,7 @@ public class PlayerHandler {
      * @param user The user to check
      * @return If it exists
      */
-    public boolean userDataExists(long user)
+    private boolean userDataExists(long user)
     {
         Document get = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().find(new Document("id", user)).first();
         return get != null;
