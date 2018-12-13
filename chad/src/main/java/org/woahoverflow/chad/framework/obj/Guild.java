@@ -220,7 +220,7 @@ public class Guild
         ArrayList<String> permissionSet = getRolePermissions(role);
 
         // Make sure the command is an actual command
-        if (ChadVar.COMMANDS.containsKey(command))
+        if (!ChadVar.COMMANDS.containsKey(command))
             return 3;
 
         // Make sure it doesn't already have that permission
