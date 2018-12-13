@@ -1,6 +1,11 @@
 package org.woahoverflow.chad.framework.obj;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import org.bson.Document;
+import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 
 public class Guild
@@ -40,6 +45,11 @@ public class Guild
      * The guild's full set of data
      */
     private ConcurrentHashMap<DataType, Object> guildData = new ConcurrentHashMap<>();
+
+    /**
+     * The guild's full set of permission data
+     */
+    private final ConcurrentHashMap<Long, ArrayList<String>> permissionData = new ConcurrentHashMap<>();
 
     /**
      * Default Constructor, sets it with default data.
@@ -103,7 +113,7 @@ public class Guild
     {
         guildData.put(dataType, value);
 
-        DatabaseManager.USER_DATA.setObject(guild, dataType.toString(), value);
+        DatabaseManager.GUILD_DATA.setObject(guild, dataType.toString().toLowerCase(), value);
     }
 
     /**
@@ -118,6 +128,27 @@ public class Guild
     }
 
     /**
+     * Gets data from a string
+     *
+     * @param dataType The data's key
+     * @return The retrieved data
+     */
+    public Object getObject(String dataType)
+    {
+        return DatabaseManager.USER_DATA.getObject(guild, dataType);
+    }
+
+    /**
+     * Sets data from a string
+     */
+    public void setObject(String dataType, Object value)
+    {
+        DatabaseManager.GUILD_DATA.setObject(guild, dataType.toLowerCase(), value);
+
+        GuildHandler.handle.refreshGuild(guild);
+    }
+
+    /**
      * Gets the guild's ID
      *
      * @return The guild's ID
@@ -125,5 +156,86 @@ public class Guild
     public long getGuildID()
     {
         return guild;
+    }
+
+    /**
+     * Gets the permissions for a role
+     *
+     * @param role The role to get permissions for
+     * @return The role's permissions
+     */
+    public ArrayList<String> getRolePermissions(long role)
+    {
+        // If the data's in the permission hash-map, return that
+        if (permissionData.containsKey(role))
+            return permissionData.get(role);
+
+        // Get the permissions from the database
+        Object permissions = DatabaseManager.GUILD_DATA.getObject(guild, Long.toString(role));
+
+        // If it doesn't exist
+        if (permissions == null)
+        {
+            ArrayList<String> permissionSet = new ArrayList<>();
+
+            // Put it in local storage
+            permissionData.put(role, permissionSet);
+
+            // Put it in the database
+            DatabaseManager.GUILD_DATA.setObject(guild, Long.toString(role), permissionSet);
+
+            return permissionSet;
+        }
+
+        // The permission set
+        ArrayList<String> permissionSet;
+
+        // Try to cast it
+        try {
+            permissionSet = (ArrayList<String>) permissions;
+        } catch (ClassCastException castException)
+        {
+            // If it for some reason doesn't cast properly
+            ChadBot.getLogger().error("Permission set failed to cast to an array-list!", castException);
+            return new ArrayList<>();
+        }
+
+        // Add it to the local storage
+        permissionData.put(role, permissionSet);
+
+        // Return the retrieved set
+        return permissionSet;
+    }
+
+    /**
+     * Adds a permission to a role
+     *
+     * @param role The role to add to
+     * @param command The command to add
+     * @return The error/success code
+     */
+    public int addPermissionToRole(long role, String command)
+    {
+        // Get the role's permissions
+        ArrayList<String> permissionSet = getRolePermissions(role);
+
+        // Make sure the command is an actual command
+        if (ChadVar.COMMANDS.containsKey(command))
+            return 3;
+
+        // Make sure it doesn't already have that permission
+        if (permissionSet.contains(command))
+            return 1;
+
+        // Add it
+        permissionSet.add(command);
+
+        // Re-add to hashmap
+        permissionData.put(role, permissionSet);
+
+        // Re-add to database
+        DatabaseManager.GUILD_DATA.setObject(guild, Long.toString(role), permissionSet);
+
+        return 0;
     }
 }

@@ -44,7 +44,7 @@ public class DatabaseManager
     /**
      * Handle for Guild Data
      */
-    public static final DatabaseHandle GUILD_DATA = handle.getSeparateCollection("bot", "guildid");
+    public static final DatabaseHandle GUILD_DATA = handle.getSeparateCollection("bot", "id");
 
     /**
      * Private Constructor

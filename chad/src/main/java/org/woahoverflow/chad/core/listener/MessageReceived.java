@@ -1,7 +1,6 @@
 package org.woahoverflow.chad.core.listener;
 
 import java.util.regex.Pattern;
-import org.bson.Document;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Chad.ThreadConsumer;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
@@ -25,7 +24,7 @@ import sx.blah.discord.util.RequestBuffer;
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */
-public final class MessageRecieved
+public final class MessageReceived
 {
     static final Pattern COMPILE = Pattern.compile("&user&");
 
@@ -49,6 +48,8 @@ public final class MessageRecieved
 
         // The guild's prefix
         String prefix = ((String) guild.getObject(Guild.DataType.PREFIX)).toLowerCase();
+
+        System.out.println("Effective Prefix " + prefix);
 
         // The user's threadconsumer
         ThreadConsumer consumer = Chad.getConsumer(event.getAuthor().getLongID());

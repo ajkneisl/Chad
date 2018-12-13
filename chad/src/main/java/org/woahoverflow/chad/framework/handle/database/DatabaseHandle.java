@@ -75,8 +75,7 @@ public class DatabaseHandle
      */
     public final synchronized boolean documentExists(Object key)
     {
-        Document get = collection.find(new Document(keyObject, key)).first();
-        return get != null;
+        return !(collection.find(new Document(keyObject, key)).first() == null);
     }
 
     /**

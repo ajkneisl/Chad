@@ -2,9 +2,9 @@ package org.woahoverflow.chad.framework.handle;
 
 import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
+import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Guild;
-import org.woahoverflow.chad.framework.obj.Player.DataType;
 
 public class GuildHandler
 {
@@ -135,11 +135,13 @@ public class GuildHandler
         // If the guild's in in the hash map, return it
         if (guilds.containsKey(guild))
         {
+            ChadBot.getLogger().info("{} has an instance within the hash map", guild);
             return guilds.get(guild);
         }
 
         if (DatabaseManager.GUILD_DATA.documentExists(guild))
         {
+            ChadBot.getLogger().info("{} has an instance within the database", guild);
             Document get = DatabaseManager.GUILD_DATA.collection.find(new Document("id", guild)).first();
 
             if (get == null)
@@ -151,6 +153,8 @@ public class GuildHandler
 
             return parseGuild(get, guild);
         }
+
+        ChadBot.getLogger().info("{} doesn't have an instance", guild);
 
         // If it doesn't exist, make one
         Guild guildInstance = createPlayer(guild);

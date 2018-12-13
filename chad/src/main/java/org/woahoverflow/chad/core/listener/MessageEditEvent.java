@@ -1,12 +1,10 @@
 package org.woahoverflow.chad.core.listener;
 
-import static org.woahoverflow.chad.core.listener.MessageRecieved.COMPILE;
+import static org.woahoverflow.chad.core.listener.MessageReceived.COMPILE;
 
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.handle.database.DatabaseHandle;
 import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.util.RequestBuffer;

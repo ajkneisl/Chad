@@ -8,6 +8,7 @@ import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Class;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -88,10 +89,18 @@ public class PermissionHandler
         if (!parseCommand(command))
             return 0;
 
-        @SuppressWarnings("all")
-        ArrayList<String> arr = (ArrayList<String>) DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID());
+        Object unCastedArray = DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID());
 
-        if (arr == null || arr.isEmpty())
+        if (!(unCastedArray instanceof ArrayList))
+        {
+            ArrayList<String> ar = new ArrayList<>();
+            ar.add(command);
+            DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
+            return 6;
+        }
+
+        ArrayList<String> arr = (ArrayList<String>) unCastedArray;
+        if (arr.isEmpty())
         {
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);

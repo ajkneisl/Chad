@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
@@ -24,8 +25,7 @@ public class CatFact implements Command.Class  {
 
             // Sends the fact
             new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc(
-                PlayerHandler.handle.getPlayer(e.getAuthor().getLongID()).getObject(
-                    DataType.GUILD_DATA).toString()));
+                Integer.toString(GuildHandler.handle.getGuild(e.getGuild().getLongID()).addPermissionToRole(e.getAuthor().getLongID(), args.get(0)))));
 
             // i don't even know how i could comprehend something so complicated like this
         };

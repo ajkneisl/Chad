@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.woahoverflow.chad.core.listener.GuildJoinLeave;
 import org.woahoverflow.chad.core.listener.MessageEditEvent;
-import org.woahoverflow.chad.core.listener.MessageRecieved;
+import org.woahoverflow.chad.core.listener.MessageReceived;
 import org.woahoverflow.chad.core.listener.OnReady;
 import org.woahoverflow.chad.core.listener.UserLeaveJoin;
 import org.woahoverflow.chad.framework.Chad;
@@ -78,7 +78,7 @@ public final class ChadBot {
 
         // Logs in and registers the listeners
         cli.login();
-        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageRecieved(), new OnReady(), new UserLeaveJoin(), new MessageEditEvent());
+        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageReceived(), new OnReady(), new UserLeaveJoin(), new MessageEditEvent());
 
         // Initializes the framework & a lot of stuff
         Chad.init();
