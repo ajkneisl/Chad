@@ -23,7 +23,7 @@ public class Guild
         LOGGING, LOGGING_CHANNEL,
 
         // Messages
-        JOIN_MESSAGE_ON, LEAVE_MESSAGE_ON, JOIN_MESSAGE_CHANNEL, LEAVE_MESSAGE_CHANNEL,
+        JOIN_MESSAGE_ON, LEAVE_MESSAGE_ON, JOIN_MESSAGE_CHANNEL, LEAVE_MESSAGE_CHANNEL, BAN_MESSAGE_ON, KICK_MESSAGE_ON,
         BAN_MESSAGE, KICK_MESSAGE, JOIN_MESSAGE, LEAVE_MESSAGE,
 
         // Join Role
@@ -66,6 +66,9 @@ public class Guild
 
         guildData.put(DataType.BAN_MESSAGE, "`&user& has been banned for `&reason&`!");
         guildData.put(DataType.KICK_MESSAGE, "`&user& has been kicked for `&reason&`!");
+
+        guildData.put(DataType.BAN_MESSAGE_ON, true);
+        guildData.put(DataType.KICK_MESSAGE_ON, true);
 
         // Join Role
         guildData.put(DataType.JOIN_ROLE, "none");

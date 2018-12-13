@@ -7,6 +7,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 
@@ -44,8 +45,7 @@ public class Logging implements Command.Class  {
                     boolean actualBoolean = bool.equalsIgnoreCase("off");
 
                     // Sets in the database
-                    //TODO: not sure how to fix this
-                    //DatabaseManager.handle.set(e.getGuild(), "logging", actualBoolean);
+                    GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, actualBoolean);
 
                     // Sends a log
                     MessageHandler.sendConfigLog("Logging", bool, Boolean.toString((boolean) guild.getObject(Guild.DataType.LOGGING)), e.getAuthor(), e.getGuild());
@@ -101,8 +101,10 @@ public class Logging implements Command.Class  {
 
                 // Send Message
                 messageHandler.send("Changed logging channel to " + formattedString.trim(), "Changed Logging Channel");
-                //TODO: not sure how to fix this
-                //DatabaseManager.handle.set(e.getGuild(), "logging_channel", channel.getStringID());
+
+                // Sets in the database
+                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, loggingChannel);
+
                 // Recaches
                 GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                 return;

@@ -7,6 +7,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -87,11 +88,9 @@ public class Ban implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if ban message is enabled
-            //TODO: which one is the boolean?
-            if ((boolean) guild.getObject(Guild.DataType.BAN_MESSAGE))
+            if ((boolean) guild.getObject(DataType.BAN_MESSAGE_ON))
             {
                 // Gets the message from the cache
-                //TODO: not sure if this is a string or a boolean, but its the only one
                 String message = (String) guild.getObject(Guild.DataType.BAN_MESSAGE);
 
                 // If the message isn't null, continue

@@ -79,6 +79,9 @@ public class GuildHandler
         guildDocument.put("leave_message", "`&user&` has left the server!");
         guildDocument.put("join_message", "`&user&` has been banned for `&reason&`!");
 
+        guildDocument.put("ban_message_on", true);
+        guildDocument.put("kick_message_on", true);
+
         // Join Role
         guildDocument.put("role_on_join", false);
         guildDocument.put("join_role", "none");
@@ -111,15 +114,15 @@ public class GuildHandler
      */
     private Guild parseGuild(Document guildDataDocument, long guild)
     {
-        final ConcurrentHashMap<DataType, Object> guildData = new ConcurrentHashMap<>();
+        final ConcurrentHashMap<Guild.DataType, Object> guildData = new ConcurrentHashMap<>();
 
         // Sets the data
-        for (DataType type : DataType.values())
+        for (Guild.DataType type : Guild.DataType.values())
         {
             guildData.put(type, guildDataDocument.get(type.toString().toLowerCase()));
         }
 
-        return new Guild(guild);
+        return new Guild(guildData, guild);
     }
 
     /**
