@@ -2,10 +2,12 @@ package org.woahoverflow.chad.commands.function;
 
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -27,6 +29,8 @@ public class Permissions implements Class  {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // Accesses the permissions to a specific role
             if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role"))
@@ -126,13 +130,15 @@ public class Permissions implements Class  {
                         return;
                     case "view":
                         // Gets the permissions to a role
-                        ArrayList<String> ar = (ArrayList<String>) Chad.getGuild(e.getGuild().getLongID()).getDocument().get(role.getStringID());
+                        //TODO: not sure how to fix this
+                        //ArrayList<String> ar = (ArrayList<String>) Chad.getGuild(e.getGuild().getLongID()).getDocument().get(role.getStringID());
 
                         // Checks if there's no permissions
-                        if (ar == null || ar.isEmpty()) {
+                        //TODO: not sure how to fix this
+                        /*if (ar == null || ar.isEmpty()) {
                             messageHandler.sendError("There's no permissions in this role!");
                             return;
-                        }
+                        }*/
 
                         // Creates an embed builder and applies the title
                         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -140,7 +146,8 @@ public class Permissions implements Class  {
 
                         // Builds all the permissions
                         StringBuilder stringBuilder2 = new StringBuilder();
-                        ar.forEach((v) -> stringBuilder2.append(", ").append(v));
+                        //TODO: not sure how to fix this
+                        //ar.forEach((v) -> stringBuilder2.append(", ").append(v));
 
                         // Replaces the first ',' and sends.
                         embedBuilder.withDesc(

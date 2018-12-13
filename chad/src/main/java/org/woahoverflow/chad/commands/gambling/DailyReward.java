@@ -24,7 +24,7 @@ public class DailyReward implements Class {
             The format of the Daily Reward database entry is *userid*_ldr = MM.dd.yyyy
              */
             // If the user hasn't claimed the daily reward ever
-            if (!DatabaseManager.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_ldr"))
+            /*if (!DatabaseManager.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_ldr"))
             {
                 // Get the user's current balance
                 long userBalance = (long) DatabaseManager.handle.get(e.getGuild(), e.getAuthor().getStringID()+"_balance");
@@ -85,7 +85,7 @@ public class DailyReward implements Class {
             DatabaseManager.handle.set(e.getGuild(), e.getAuthor().getStringID()+"_balance", currentBalance + 2000);
 
             // Send the message
-            messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");
+            messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");*/
         };
     }
 

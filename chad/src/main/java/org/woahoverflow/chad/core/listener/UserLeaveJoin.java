@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.bson.Document;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
@@ -76,10 +78,11 @@ public final class UserLeaveJoin
         MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user join messages on, do that
-        if (DatabaseManager.handle.getBoolean(e.getGuild(), "join_msg_on"))
+        Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+        if ((boolean) g.getObject(Guild.DataType.JOIN_MESSAGE))
         {
             // Gets the join message channel
-            String joinMsgCh = DatabaseManager.handle.getString(e.getGuild(), "join_message_ch");
+            String joinMsgCh = (String) g.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL);
 
             // Makes sure they actually assigned a channel
             if (joinMsgCh != null && !joinMsgCh.equalsIgnoreCase("none")) {
@@ -99,7 +102,7 @@ public final class UserLeaveJoin
                 if (!channel.isDeleted())
                 {
                     // Gets the message, makes sure it isn't null, then sends
-                    String msg = DatabaseManager.handle.getString(e.getGuild(), "join_message");
+                    String msg = (String) g.getObject(Guild.DataType.JOIN_MESSAGE);
                     if (msg != null)
                     {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(msg).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
@@ -119,7 +122,7 @@ public final class UserLeaveJoin
 
         // you probably shouldn't put code below this comment
 
-        String joinRoleStringID = DatabaseManager.handle.getString(e.getGuild(), "join_role");
+        String joinRoleStringID = (String) g.getObject(Guild.DataType.JOIN_ROLE);
         if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none"))
         {
             Long joinRoleID = Long.parseLong(joinRoleStringID);
@@ -145,7 +148,7 @@ public final class UserLeaveJoin
             }
 
             // assign the role
-            if (DatabaseManager.handle.getBoolean(e.getGuild(), "role_on_join"))
+            if ((boolean) g.getObject(Guild.DataType.ROLE_ON_JOIN))
                 if (!joinRoleStringID.equals("none"))
                     e.getUser().addRole(joinRole);
         }
@@ -168,10 +171,13 @@ public final class UserLeaveJoin
         // Add the joined guild
         guildData.remove(e.getGuild().getLongID());
 
+        Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+
         if (guildData.isEmpty())
         {
             // If it's the last guild that they're in with Chad, remove theirs
-            MongoCollection<Document> col = DatabaseManager.handle.getSeparateCollection("user_data").getCollection();
+            //TODO: what should the identifier field be?
+            MongoCollection<Document> col = DatabaseManager.handle.getSeparateCollection("user_data", "").collection;
 
             Document document = col.find(new Document("id", e.getUser().getLongID())).first();
 
@@ -186,7 +192,8 @@ public final class UserLeaveJoin
         }
 
         // Sets their balance to 0
-        DatabaseManager.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
+        //TODO: not sure how im supposed to fix this
+        //DatabaseManager.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
 
         // Log if the user leaves
         IGuild guild = e.getGuild();
@@ -203,10 +210,10 @@ public final class UserLeaveJoin
         MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user leave messages on, do that
-        if (DatabaseManager.handle.getBoolean(e.getGuild(), "leave_msg_on"))
+        if ((boolean) g.getObject(Guild.DataType.LEAVE_MESSAGE_ON))
         {
             // Gets the leave message channel
-            String leaveMsgCh = DatabaseManager.handle.getString(e.getGuild(), "leave_message_ch");
+            String leaveMsgCh = (String) g.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL);
 
             // Makes sure they actually assigned a channel
             if (leaveMsgCh != null && !leaveMsgCh.equalsIgnoreCase("none")) {
@@ -226,7 +233,7 @@ public final class UserLeaveJoin
                 if (!channel.isDeleted())
                 {
                     // Gets the message, makes sure it isn't null, then sends
-                    String msg = DatabaseManager.handle.getString(e.getGuild(), "leave_message");
+                    String msg = (String) g.getObject(Guild.DataType.LEAVE_MESSAGE);
                     if (msg != null)
                     {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());

@@ -210,13 +210,13 @@ public final class ChadVar
         COMMANDS.put("threads", new Command.Data(Command.Category.DEVELOPER, new CurrentThreads()));
         COMMANDS.put("modpresence", new Command.Data(Command.Category.DEVELOPER, new ModifyPresence()));
         COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo()));
-        COMMANDS.put("cache", new Command.Data(Command.Category.DEVELOPER, new Cache()));
+        //COMMANDS.put("cache", new Command.Data(Command.Category.DEVELOPER, new Cache()));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
         COMMANDS.put("setbal", new Command.Data(Command.Category.DEVELOPER, new SetBalance()));
         COMMANDS.put("createplayer", new Data(Category.DEVELOPER, new CreatePlayer()));
 
         // GAMBLING!
-        COMMANDS.put("register", new Command.Data(Command.Category.GAMBLING, new Register()));
+        //COMMANDS.put("register", new Command.Data(Command.Category.GAMBLING, new Register()));
         COMMANDS.put("coinflip", new Command.Data(Command.Category.GAMBLING, new CoinFlip()));
         COMMANDS.put("balance", new Command.Data(Command.Category.GAMBLING, new Balance()));
         COMMANDS.put("dailyreward", new Data(Category.GAMBLING, new DailyReward(), "drw"));

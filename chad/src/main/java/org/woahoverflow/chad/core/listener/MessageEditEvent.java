@@ -4,7 +4,10 @@ import static org.woahoverflow.chad.core.listener.MessageRecieved.COMPILE;
 
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.database.DatabaseHandle;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -28,12 +31,15 @@ public final class MessageEditEvent
     @SuppressWarnings("unused")
     public void messageEditEvent(sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent event)
     {
-        if (Chad.getGuild(event.getGuild().getLongID()).getDocument().getBoolean("stop_swear"))
+        Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
+        boolean stop_swear = (boolean) guild.getObject(Guild.DataType.SWEAR_FILTER);
+
+        if (stop_swear)
         {
             String[] argArray = event.getNewMessage().getContent().split(" ");
 
             // Gets the message from the cache :)
-            String msg = Chad.getGuild(event.getGuild().getLongID()).getDocument().getString("swear_message");
+            String msg = (String) guild.getObject(Guild.DataType.SWEAR_FILTER_MESSAGE);
             msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
             for (String s : argArray) {
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {

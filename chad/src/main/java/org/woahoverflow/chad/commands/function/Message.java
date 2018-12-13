@@ -3,9 +3,11 @@ package org.woahoverflow.chad.commands.function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.RequestBuffer;
@@ -27,6 +29,8 @@ public class Message implements Command.Class  {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+
             // Makes sure there's arguments
             if (args.isEmpty())
             {
@@ -44,10 +48,11 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current join message
-                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("join_message");
+                String old = (String) guild.getObject(Guild.DataType.JOIN_MESSAGE);
 
                 // Sets the new one into the database
-                DatabaseManager.handle.set(e.getGuild(), "join_message", formattedText.trim());
+                //TODO: not sure how to fix this
+                //DatabaseManager.handle.set(e.getGuild(), "join_message", formattedText.trim());
 
                 // Sends the confirmation message
                 messageHandler.sendMessage("Set the guild's join message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
@@ -56,7 +61,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Join Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild().getLongID()).cache();
+                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                 return;
             }
 
@@ -70,10 +75,11 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current leave message
-                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("leave_message");
+                String old = (String) guild.getObject(Guild.DataType.LEAVE_MESSAGE);
 
                 // Sets the new one into the database
-                DatabaseManager.handle.set(e.getGuild(), "leave_message", formattedText.trim());
+                //TODO: not sure how to fix this
+                //DatabaseManager.handle.set(e.getGuild(), "leave_message", formattedText.trim());
 
                 // Sends the confirmation message
                 messageHandler.sendMessage("Set the guild's leave message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
@@ -82,7 +88,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Leave Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild().getLongID()).cache();
+                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                 return;
             }
 
@@ -96,10 +102,11 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current ban message
-                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("ban_message");
+                String old = (String) guild.getObject(Guild.DataType.BAN_MESSAGE);
 
                 // Sets the new one into the database
-                DatabaseManager.handle.set(e.getGuild(), "ban_message", formattedText.trim());
+                //TODO: not sure how to fix this
+                //DatabaseManager.handle.set(e.getGuild(), "ban_message", formattedText.trim());
 
                 // Sends the confirmation message
                 messageHandler.sendMessage("Set the guild's ban message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
@@ -108,7 +115,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Ban Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild().getLongID()).cache();
+                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                 return;
             }
 
@@ -122,10 +129,11 @@ public class Message implements Command.Class  {
                 String formattedText = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Gets the current ban message
-                String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("kick_message");
+                String old = (String) guild.getObject(Guild.DataType.KICK_MESSAGE);
 
                 // Sets the new one into the database
-                DatabaseManager.handle.set(e.getGuild(), "kick_message", formattedText.trim());
+                //TODO: not sure how to fix this
+                //DatabaseManager.handle.set(e.getGuild(), "kick_message", formattedText.trim());
 
                 messageHandler.sendMessage("Set the guild's kick message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
 
@@ -133,7 +141,7 @@ public class Message implements Command.Class  {
                 MessageHandler.sendConfigLog("Kick Message", formattedText.trim(), old, e.getAuthor(), e.getGuild());
 
                 // ReCaches the guild
-                Chad.getGuild(e.getGuild().getLongID()).cache();
+                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                 return;
             }
 
@@ -159,13 +167,14 @@ public class Message implements Command.Class  {
 
                     // Sends the log
                     MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(
-                        DatabaseManager.handle.getBoolean(e.getGuild(),"join_msg_on")), e.getAuthor(), e.getGuild());
+                            (boolean) guild.getObject(Guild.DataType.JOIN_MESSAGE_ON)), e.getAuthor(), e.getGuild());
 
                     // Sets it in the database
-                    DatabaseManager.handle.set(e.getGuild(), "join_msg_on", set);
+                    //TODO: not sure how to fix this
+                    //DatabaseManager.handle.set(e.getGuild(), "join_msg_on", set);
 
                     // Recaches the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
 
@@ -177,14 +186,14 @@ public class Message implements Command.Class  {
 
                     // Sends the log
                     MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(
-                        DatabaseManager.handle
-                        .getBoolean(e.getGuild(),"ban_msg_on")), e.getAuthor(), e.getGuild());
+                            (boolean) guild.getObject(Guild.DataType.BAN_MESSAGE)), e.getAuthor(), e.getGuild());
 
                     // Sets it in the database
-                    DatabaseManager.handle.set(e.getGuild(), "ban_msg_on", set);
+                    //TODO: not sure how to fix this
+                    //DatabaseManager.handle.set(e.getGuild(), "ban_msg_on", set);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
 
@@ -196,14 +205,14 @@ public class Message implements Command.Class  {
 
                     // Sends the log
                     MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(
-                        DatabaseManager.handle
-                        .getBoolean(e.getGuild(),"kick_msg_on")), e.getAuthor(), e.getGuild());
+                            (boolean) guild.getObject(Guild.DataType.KICK_MESSAGE)), e.getAuthor(), e.getGuild());
 
                     // Sets in the database
-                    DatabaseManager.handle.set(e.getGuild(), "kick_msg_on", set);
+                    //TODO: not sure how to fix this
+                    //DatabaseManager.handle.set(e.getGuild(), "kick_msg_on", set);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
 
@@ -215,14 +224,14 @@ public class Message implements Command.Class  {
 
                     // Sends the log
                     MessageHandler.sendConfigLog("Leave Message Toggle", Boolean.toString(set), Boolean.toString(
-                        DatabaseManager.handle
-                        .getBoolean(e.getGuild(),"leave_msg_on")), e.getAuthor(), e.getGuild());
+                            (boolean) guild.getObject(Guild.DataType.LEAVE_MESSAGE_ON)), e.getAuthor(), e.getGuild());
 
                     // Sets in the database
-                    DatabaseManager.handle.set(e.getGuild(), "leave_msg_on", set);
+                    //TODO: not sure how to fix this
+                    //DatabaseManager.handle.set(e.getGuild(), "leave_msg_on", set);
 
                     // ReCaches in the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
                 messageHandler.sendError("Invalid Type!");
@@ -233,8 +242,7 @@ public class Message implements Command.Class  {
                 if (args.get(1).equalsIgnoreCase("join"))
                 {
                     // Get the channel string
-                    String channelString = DatabaseManager.handle
-                        .getString(e.getGuild(), "join_message_ch");
+                    String channelString = (String) guild.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL);
 
                     // Makes sure the channel string isn't null
                     if (channelString == null)
@@ -279,7 +287,8 @@ public class Message implements Command.Class  {
                     IChannel newChannel = channelsWithName.get(0);
 
                     // Sets the channel in the database
-                    DatabaseManager.handle.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
+                    //TODO: not sure how to fix this
+                    //DatabaseManager.handle.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
 
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's join channel to `"+newChannel.getName()+ '`');
@@ -288,15 +297,14 @@ public class Message implements Command.Class  {
                     MessageHandler.sendConfigLog("Join Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild());
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
 
                 if (args.get(1).equalsIgnoreCase("leave"))
                 {
                     // Get the channel string
-                    String channelString = DatabaseManager.handle
-                        .getString(e.getGuild(), "leave_message_ch");
+                    String channelString = (String) guild.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL);
 
                     // Makes sure the channel string isn't null
                     if (channelString == null)
@@ -341,7 +349,8 @@ public class Message implements Command.Class  {
                     IChannel newChannel = channelsWithName.get(0);
 
                     // Sets the channel in the database
-                    DatabaseManager.handle.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
+                    //TODO: not sure how to fix this
+                    //DatabaseManager.handle.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
 
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's leave channel to `"+newChannel.getName()+ '`');
@@ -350,7 +359,7 @@ public class Message implements Command.Class  {
                     MessageHandler.sendConfigLog("Leave Message Channel", newChannel.getName(), oldName, e.getAuthor(), e.getGuild());
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
                 messageHandler.sendError("Invalid Type!");

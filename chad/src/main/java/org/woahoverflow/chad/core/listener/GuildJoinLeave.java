@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.handle.database.DatabaseHandle;
@@ -86,7 +88,7 @@ public final class GuildJoinLeave
             UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
 
             // Cache the guild
-            Chad.getGuild(event.getGuild().getLongID()).cache();
+            GuildHandler.handle.refreshGuild(event.getGuild().getLongID());
 
             // The guild's default channel
             IChannel defaultChannel = RequestBuffer.request(() -> event.getGuild().getDefaultChannel()).get();
@@ -114,7 +116,7 @@ public final class GuildJoinLeave
                 }
             }
         }
-        Chad.getGuild(event.getGuild().getLongID()).cache();
+        GuildHandler.handle.refreshGuild(event.getGuild().getLongID());
     }
 
     /**
@@ -130,10 +132,11 @@ public final class GuildJoinLeave
         handle.removeDocument(event.getGuild().getStringID());
 
         // Removed the guild's cached document
-        Chad.unCacheGuild(event.getGuild().getLongID());
+        //TODO: pretty sure this is how this is supposed to work
+        GuildHandler.handle.removeGuild(event.getGuild().getLongID());
 
         // Un Cache the guild
-        Chad.unCacheGuild(event.getGuild().getLongID());
+        //TODO: pretty sure ya only need to do it once :/
 
         // Send a log
         UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);

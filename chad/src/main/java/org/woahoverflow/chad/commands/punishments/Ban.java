@@ -2,9 +2,11 @@ package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -31,6 +33,8 @@ public class Ban implements Command.Class
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // Checks if the bot has permission to ban
             if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.BAN))
@@ -83,10 +87,12 @@ public class Ban implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if ban message is enabled
-            if (DatabaseManager.handle.getBoolean(e.getGuild(), "ban_msg_on"))
+            //TODO: which one is the boolean?
+            if ((boolean) guild.getObject(Guild.DataType.BAN_MESSAGE))
             {
                 // Gets the message from the cache
-                String message = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("ban_message");
+                //TODO: not sure if this is a string or a boolean, but its the only one
+                String message = (String) guild.getObject(Guild.DataType.BAN_MESSAGE);
 
                 // If the message isn't null, continue
                 if (message != null)

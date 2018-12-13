@@ -1,10 +1,14 @@
 package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -40,7 +44,7 @@ public class AutoRole implements Command.Class  {
                     DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "role_on_join", true);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -53,7 +57,7 @@ public class AutoRole implements Command.Class  {
                     DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "role_on_join", false);
 
                     // ReCaches the guild
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder2 = new EmbedBuilder();
@@ -89,7 +93,8 @@ public class AutoRole implements Command.Class  {
 
                     // Sets the role ID into the database and recaches
                     DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "join_role", newRole.getStringID());
-                    Chad.getGuild(e.getGuild().getLongID()).cache();
+                    Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+                    //guild.cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder3 = new EmbedBuilder();

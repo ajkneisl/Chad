@@ -7,6 +7,7 @@ import javax.swing.WindowConstants;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.ui.panels.GuildPanel;
 import org.woahoverflow.chad.framework.ui.panels.MainPanel;
 import org.woahoverflow.chad.framework.ui.panels.PopUpPanel;
@@ -203,7 +204,7 @@ public class UIHandler
                 : "No Permission for Invite!";
             panel.inviteLinkVal.setText(invite);
         }
-        panel.reCacheButton.addActionListener((ev) -> Chad.getGuild(guild.getLongID()).cache());
+        panel.reCacheButton.addActionListener((ev) -> GuildHandler.handle.refreshGuild(guild.getLongID()));
     }
 
     /**
@@ -236,7 +237,7 @@ public class UIHandler
         mainpanel.refreshButton.addActionListener((ev) -> update());
 
         // Caches all the guilds
-        mainpanel.refreshButton2.addActionListener((ev) -> RequestBuffer.request(() -> ChadBot.cli.getGuilds().forEach((guild) -> Chad.getGuild(guild.getLongID()).cache())));
+        mainpanel.refreshButton2.addActionListener((ev) -> RequestBuffer.request(() -> ChadBot.cli.getGuilds().forEach((guild) -> GuildHandler.handle.refreshGuild(guild.getLongID()))));
 
         // Gets the OperatingSystemMXBean
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)

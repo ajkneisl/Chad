@@ -3,10 +3,14 @@ package org.woahoverflow.chad.commands.gambling;
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Player;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -28,6 +32,10 @@ public class CoinFlip implements Command.Class{
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+            Player author = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+            Player opponent;
+
             if (args.size() == 2 && e.getMessage().getAttachments().isEmpty() && args.get(1).equalsIgnoreCase("tails") || args.get(1).equalsIgnoreCase("heads"))
             {
                 long bet;
@@ -44,8 +52,7 @@ public class CoinFlip implements Command.Class{
                     return;
                 }
 
-                long balance = (long) DatabaseManager.handle
-                    .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
+                long balance = (long) author.getObject(Player.DataType.BALANCE);
                 if (bet > balance)
                 {
                     messageHandler.sendError("Your bet is too large!");
@@ -74,13 +81,11 @@ public class CoinFlip implements Command.Class{
 
                 if (flip == user)
                 {
-                    DatabaseManager.handle
-                        .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance+bet);
+                    author.setObject(Player.DataType.BALANCE, balance+bet);
                     messageHandler.send("You won `"+bet+"`, you now have `" + (balance+bet) + "`.", "Coin Flip");
                 }
                 else {
-                    DatabaseManager.handle
-                        .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance-bet);
+                    author.setObject(Player.DataType.BALANCE, balance-bet);
                     messageHandler.send("You lost `"+bet+"`, you now have `" + (balance-bet) + "`.", "Coin Flip");
                 }
             }
@@ -128,6 +133,8 @@ public class CoinFlip implements Command.Class{
 
                 // only used once, but thanks lamda
                 final IUser user = opponentUser;
+
+                opponent = PlayerHandler.handle.getPlayer(opponentUser.getLongID());
 
                 // Sends the invitation message
                 IMessage acceptMessage = RequestBuffer.request(() -> e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + user.getName() + "`?")).get();
@@ -200,8 +207,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Gets the author's balance
-                long balance = (long) DatabaseManager.handle
-                    .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
+                long balance = (long) author.getObject(Player.DataType.BALANCE);
 
                 // Checks if the user's bet is bigger than the balance.
                 if (bet > balance)
@@ -211,8 +217,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Gets the opponent's balance
-                long opponentBalance = (long) DatabaseManager.handle
-                    .get(e.getGuild(), opponentUser.getStringID() + "_balance");
+                long opponentBalance = (long) author.getObject(Player.DataType.BALANCE);
 
                 // Checks if the bet's bigger than the opponent's balance
                 if (bet > opponentBalance)
@@ -344,10 +349,8 @@ public class CoinFlip implements Command.Class{
                 if (Util.coinFlip())
                 {
                     // Sets the user's balances
-                    DatabaseManager.handle
-                        .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance+bet);
-                    DatabaseManager.handle
-                        .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance-bet);
+                    //TODO: tails = tailsBalance+bet
+                    //TODO: heads = headsBalance-bet
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +tails.getName()+"` has won `" + bet + "`!"
@@ -357,10 +360,8 @@ public class CoinFlip implements Command.Class{
                 else /* flip is 1, so heads wins this */
                 {
                     // Sets the user's balances
-                    DatabaseManager.handle
-                        .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance-bet);
-                    DatabaseManager.handle
-                        .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance+bet);
+                    //TODO: tails = tailsBalance-bet
+                    //TODO: heads = headsBalance+bet
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +heads.getName()+"` has won `" + bet + "`!"

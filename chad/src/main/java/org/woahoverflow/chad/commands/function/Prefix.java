@@ -1,9 +1,11 @@
 package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -21,13 +23,16 @@ public class Prefix implements Command.Class  {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+
             // If there's no arguments, show the prefix
             if (args.isEmpty())
             {
                 // Sets up embed builder with the prefix in it
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Prefix");
-                embedBuilder.withDesc(Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("prefix"));
+                //TODO: not sure how to fix this
+                //embedBuilder.withDesc(Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("prefix"));
 
                 // Sends
                 messageHandler.sendEmbed(embedBuilder);
@@ -38,7 +43,7 @@ public class Prefix implements Command.Class  {
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("set"))
             {
                 // Gets the current prefix
-                String prefix = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("prefix");
+                String prefix = (String) guild.getObject(Guild.DataType.PREFIX);
 
                 // Makes sure the prefix isn't over 6 characters long
                 if (args.get(1).length() > 6)
@@ -51,8 +56,9 @@ public class Prefix implements Command.Class  {
                 MessageHandler.sendConfigLog("Prefix", args.get(1), prefix, e.getAuthor(), e.getGuild());
 
                 // Sets the prefix in the database & recaches the guild
-                DatabaseManager.handle.set(e.getGuild(), "prefix", args.get(1));
-                Chad.getGuild(e.getGuild().getLongID()).cache();
+                //TODO: not sure how to fix this
+                //DatabaseManager.handle.set(e.getGuild(), "prefix", args.get(1));
+                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
 
                 // Sends a the message
                 messageHandler.send("Your prefix is now " + args.get(1), "Changed Prefix");

@@ -4,10 +4,12 @@ import java.util.regex.Pattern;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Chad.ThreadConsumer;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
@@ -43,20 +45,19 @@ public final class MessageRecieved
         if (argArray.length == 0)
             return;
 
-        // The guild's cached document
-        Document cachedDocument = Chad.getGuild(event.getGuild().getLongID()).getDocument();
+        Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
 
         // The guild's prefix
-        String prefix = cachedDocument.getString("prefix").toLowerCase();
+        String prefix = ((String) guild.getObject(Guild.DataType.PREFIX)).toLowerCase();
 
         // The user's threadconsumer
         ThreadConsumer consumer = Chad.getConsumer(event.getAuthor().getLongID());
 
         // Makes sure the words aren't swears :) (if enabled)
-        if (cachedDocument.getBoolean("stop_swear"))
+        if ((boolean) guild.getObject(Guild.DataType.SWEAR_FILTER))
         {
             // Gets the message from the cache :)
-            String msg = cachedDocument.getString("swear_message");
+            String msg = (String) guild.getObject(Guild.DataType.SWEAR_FILTER_MESSAGE);
             msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
             for (String s : argArray) {
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {
