@@ -161,13 +161,13 @@ public final class ChadVar
     static {
         // FUN!
         COMMANDS.put("random", new Command.Data(Command.Category.FUN, new Random()));
-        COMMANDS.put("pe", new Command.Data(Command.Category.FUN, new PhotoEditor(), "photoeditor"));
-        COMMANDS.put("8ball", new Command.Data(Command.Category.FUN, new EightBall(), "eightball"));
+        COMMANDS.put("photoeditor", new Command.Data(Command.Category.FUN, new PhotoEditor(), "pe"));
+        COMMANDS.put("eightball", new Command.Data(Command.Category.FUN, new EightBall(), "8ball"));
         COMMANDS.put("catgallery", new Command.Data(Command.Category.FUN, new CatGallery(), "catgal"));
         COMMANDS.put("catfact", new Command.Data(Command.Category.FUN, new CatFact()));
-        COMMANDS.put("rrl", new Command.Data(Command.Category.FUN, new RussianRoulette(), "russianroulette"));
-        COMMANDS.put("wr", new Command.Data(Command.Category.FUN, new WordReverse(), "wordreverse"));
-        COMMANDS.put("rps", new Command.Data(Command.Category.FUN, new RockPaperScissors(), "rockpaperscissors"));
+        COMMANDS.put("russianroulette", new Command.Data(Command.Category.FUN, new RussianRoulette(), "rrl"));
+        COMMANDS.put("wordreverse", new Command.Data(Command.Category.FUN, new WordReverse(), "wr"));
+        COMMANDS.put("rockpaperscissors", new Command.Data(Command.Category.FUN, new RockPaperScissors(), "rps"));
 
         // COMMUNITY!
         COMMANDS.put("divorce", new Data(Category.COMMUNITY, new DivorcePlayer()));
@@ -183,8 +183,8 @@ public final class ChadVar
         COMMANDS.put("steam", new Command.Data(Command.Category.INFO, new Steam()));
         COMMANDS.put("chad", new Command.Data(Command.Category.INFO, new Chad()));
         COMMANDS.put("guildinfo", new Command.Data(Command.Category.INFO, new GuildInfo(), "ginfo"));
-        COMMANDS.put("rtop", new Command.Data(Command.Category.INFO, new RedditTop(), "reddittop"));
-        COMMANDS.put("rnew", new Command.Data(Command.Category.INFO, new RedditNew(), "redditnew"));
+        COMMANDS.put("reddittop", new Command.Data(Command.Category.INFO, new RedditTop(), "rtop"));
+        COMMANDS.put("redditnew", new Command.Data(Command.Category.INFO, new RedditNew(), "rnew"));
         COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
         COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
 
@@ -196,14 +196,14 @@ public final class ChadVar
         COMMANDS.put("prefix", new Command.Data(Command.Category.ADMINISTRATOR, new Prefix()));
         COMMANDS.put("logging", new Command.Data(Command.Category.ADMINISTRATOR, new Logging()));
         COMMANDS.put("purge", new Command.Data(Command.Category.ADMINISTRATOR, new Purge()));
-        COMMANDS.put("im", new Command.Data(Command.Category.ADMINISTRATOR, new Message()));
-        COMMANDS.put("autorole", new Command.Data(Command.Category.ADMINISTRATOR, new AutoRole()));
-        COMMANDS.put("perms", new Command.Data(Command.Category.ADMINISTRATOR, new Permissions()));
+        COMMANDS.put("instantmessage", new Command.Data(Command.Category.ADMINISTRATOR, new Message(), "im"));
+        COMMANDS.put("autorole", new Command.Data(Command.Category.ADMINISTRATOR, new AutoRole(), "ar"));
+        COMMANDS.put("permissions", new Command.Data(Command.Category.ADMINISTRATOR, new Permissions(), "perms"));
         COMMANDS.put("nsfw", new Command.Data(Command.Category.ADMINISTRATOR, new Nsfw()));
-        COMMANDS.put("swearfilter", new Command.Data(Category.ADMINISTRATOR, new Swearing()));
+        COMMANDS.put("swearfilter", new Command.Data(Category.ADMINISTRATOR, new Swearing(), "sf"));
 
         // Nsfw !
-        COMMANDS.put("4k", new Command.Data(Command.Category.NSFW, new NB4K(), "porn"));
+        COMMANDS.put("porn", new Command.Data(Command.Category.NSFW, new NB4K(), "4k"));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko(), "neko"));
 
         // DEVELOPER!
@@ -217,8 +217,8 @@ public final class ChadVar
 
         // GAMBLING!
         //COMMANDS.put("register", new Command.Data(Command.Category.GAMBLING, new Register()));
-        COMMANDS.put("coinflip", new Command.Data(Command.Category.GAMBLING, new CoinFlip()));
-        COMMANDS.put("balance", new Command.Data(Command.Category.GAMBLING, new Balance()));
+        COMMANDS.put("coinflip", new Command.Data(Command.Category.GAMBLING, new CoinFlip(), "cf"));
+        COMMANDS.put("balance", new Command.Data(Command.Category.GAMBLING, new Balance(), "bal"));
         COMMANDS.put("dailyreward", new Data(Category.GAMBLING, new DailyReward(), "drw"));
 
         // MUSIC
@@ -230,7 +230,7 @@ public final class ChadVar
 
         // FIGHTING
         COMMANDS.put("attack", new Data(Category.FIGHTING, new Attack()));
-        COMMANDS.put("viewplayer", new Data(Category.FIGHTING, new ViewPlayer()));
+        COMMANDS.put("viewplayer", new Data(Category.FIGHTING, new ViewPlayer(), "vp"));
         COMMANDS.put("respawn", new Data(Category.FIGHTING, new Respawn()));
     }
 }
