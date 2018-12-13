@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Chad.ThreadConsumer;
-import org.woahoverflow.chad.framework.Command.Category;
+import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
@@ -60,7 +60,7 @@ public final class MessageRecieved
             msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
             for (String s : argArray) {
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {
-                    new MessageHandler(event.getChannel()).send(msg, "Swearing");
+                    new MessageHandler(event.getChannel(), event.getAuthor()).send(msg, "Swearing");
                     RequestBuffer.request(() -> event.getMessage().delete());
                     return;
                 }
@@ -90,14 +90,14 @@ public final class MessageRecieved
                         // if the command is developer only, and the user is NOT a developer, deny them access
                         if (val.getCommandCategory() == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                         {
-                            new MessageHandler(event.getChannel()).sendError("This command is Developer only!");
+                            new MessageHandler(event.getChannel(), event.getAuthor()).sendError("This command is Developer only!");
                             return;
                         }
 
                         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
                         if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                         {
-                            new MessageHandler(event.getChannel()).sendError(MessageHandler.USER_NO_PERMISSION);
+                            new MessageHandler(event.getChannel(), event.getAuthor()).sendError(MessageHandler.USER_NO_PERMISSION);
                             return;
                         }
                         Runnable thread = args.size() == 1 && args.get(0).equalsIgnoreCase("help") ? val.getCommandClass().help(event) : val.getCommandClass().run(event, args);
@@ -114,14 +114,14 @@ public final class MessageRecieved
                 // if the command is developer only, and the user is NOT a developer, deny them access
                 if (val.getCommandCategory() == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                 {
-                    new MessageHandler(event.getChannel()).sendError("This command is Developer only!");
+                    new MessageHandler(event.getChannel(), event.getAuthor()).sendError("This command is Developer only!");
                     return;
                 }
 
                 // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
                 if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
-                    new MessageHandler(event.getChannel()).sendError(MessageHandler.USER_NO_PERMISSION);
+                    new MessageHandler(event.getChannel(), event.getAuthor()).sendError(MessageHandler.USER_NO_PERMISSION);
                     return;
                 }
                 Runnable thread = args.size() == 1 && args.get(0).equalsIgnoreCase("help") ? val.getCommandClass().help(event) : val.getCommandClass().run(event, args);

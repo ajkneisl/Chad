@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.fun;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.security.SecureRandom;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
@@ -31,7 +31,7 @@ public class PhotoEditor implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Makes sure the user has attached a file
             if (e.getMessage().getAttachments().isEmpty())
@@ -50,7 +50,7 @@ public class PhotoEditor implements Command.Class {
             // Makes sure the attachment is a PNG or JPG
             if (!(e.getMessage().getAttachments().get(0).getUrl().endsWith(".png") || e.getMessage().getAttachments().get(0).getUrl().endsWith(".jpg")))
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid Format! \n Please use PNG or JPG");
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Format! \n Please use PNG or JPG");
                 return;
             }
 

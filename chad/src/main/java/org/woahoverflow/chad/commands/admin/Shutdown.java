@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.admin;
 
 import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -21,7 +21,7 @@ public class Shutdown implements Command.Class  {
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
             // Warns that the bot is shutting down
-            new MessageHandler(e.getChannel()).send("Shutting down in 10 seconds...", "Warning");
+            new MessageHandler(e.getChannel(), e.getAuthor()).send("Shutting down in 10 seconds...", "Warning");
 
             // Warns within the UI
             UIHandler.handle.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);

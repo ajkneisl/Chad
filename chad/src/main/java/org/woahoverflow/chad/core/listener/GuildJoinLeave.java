@@ -1,13 +1,21 @@
 package org.woahoverflow.chad.core.listener;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
+import org.woahoverflow.chad.framework.handle.database.DatabaseHandle;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.RequestBuffer;
 
 /**
  * The Discord guild and join events
@@ -19,29 +27,41 @@ public final class GuildJoinLeave
 {
 
     /**
+     * The handle for the guild's data
+     */
+    private final DatabaseHandle handle = DatabaseManager.handle.getSeparateCollection("bot", "guildid");
+
+    /**
      * Discord's Joining Guild Event
      *
      * @param event Guild Create Event
      */
     @EventSubscriber
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "unchecked"})
     public void joinGuild(GuildCreateEvent event)
     {
-        if (!DatabaseHandler.handle.exists(event.getGuild()))
+        // Makes sure all users are into the database
+        event.getGuild().getUsers().forEach(user ->
+            Chad.runThread(() -> {
+                Player player = PlayerHandler.handle.getPlayer(user.getLongID());
+
+                ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
+
+                if (!guildData.contains(event.getGuild().getLongID()))
+                {
+                    guildData.add(event.getGuild().getLongID());
+                    player.setObject(DataType.GUILD_DATA, guildData);
+                }
+            }, Chad.getInternalConsumer()));
+
+        if (!handle.documentExists(event.getGuild().getStringID()))
         {
             Document doc = new Document();
 
-            doc.append("guildid", event.getGuild().getStringID());
+            doc.append("guildid", event.getGuild().getLongID());
             doc.append("prefix", "j!");
-            if (!event.getClient().getOurUser().getPermissionsForGuild(event.getGuild()).contains(Permissions.MANAGE_ROLES))
-                doc.append("muted_role", "none_np");
-            else
-                doc.append("muted_role", "none");
-            doc.append("muted_role", "none");
             doc.append("logging", false);
             doc.append("logging_channel", "none");
-            doc.append("cmd_requires_admin", false);
-            doc.append("music_requires_admin", false);
             doc.append("role_on_join", false);
             doc.append("join_role", "none");
             doc.append("ban_message", "You have been banned from &guild&. \n &reason&");
@@ -59,12 +79,40 @@ public final class GuildJoinLeave
             doc.append("stop_swear", false);
             doc.append("swear_message", "No Swearing `&user&`!");
 
-            DatabaseHandler.handle.getCollection().insertOne(doc);
+            // Display the new guild in the UI
             UIHandler.displayGuild(event.getGuild());
-            UIHandler.handle
-                .addLog('<' +event.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+
+            // Send a log with the new guild
+            UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Joined Guild", UIHandler.LogLevel.INFO);
+
+            // Cache the guild
             Chad.getGuild(event.getGuild().getLongID()).cache();
-            event.getGuild().getDefaultChannel().sendMessage("Hello, I'm Chad!\nMy prefix is by default `j!`, to set it you can do `j!prefix set <prefix>`\nFor more information about my commands, go to https://woahoverflow.org/chad");
+
+            // The guild's default channel
+            IChannel defaultChannel = RequestBuffer.request(() -> event.getGuild().getDefaultChannel()).get();
+
+            // The join message
+            final String joinMessage = "Hello, I'm Chad!\nMy prefix is by default `j!`, to set it you can do `j!prefix set <prefix>`\nFor more information about my commands, go to https://woahoverflow.org/chad";
+
+            // If the bot has permission to, send the join message into the default channel
+            if (RequestBuffer.request(() -> defaultChannel.getModifiedPermissions(event.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES)).get())
+                RequestBuffer.request(() -> event.getGuild().getDefaultChannel().sendMessage(joinMessage));
+            else
+            {
+                // Parse through all of the guilds, and if the bot has permission send the join message.
+                List<IChannel> guilds = RequestBuffer.request(() -> event.getGuild().getChannels()).get();
+                int channelSize = guilds.size();
+
+                for (int i = 0; channelSize > i; i++)
+                {
+                    IChannel channel = guilds.get(0);
+
+                    if (RequestBuffer.request(() -> channel.getModifiedPermissions(event.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES)).get())
+                    {
+                        RequestBuffer.request(() -> channel.sendMessage(joinMessage));
+                    }
+                }
+            }
         }
         Chad.getGuild(event.getGuild().getLongID()).cache();
     }
@@ -76,17 +124,18 @@ public final class GuildJoinLeave
      */
     @EventSubscriber
     @SuppressWarnings("unused")
-    public static void leaveGuild(GuildLeaveEvent event)
+    public void leaveGuild(GuildLeaveEvent event)
     {
-        Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", event.getGuild().getStringID())).first();
+        // Delete the guild's document
+        handle.removeDocument(event.getGuild().getStringID());
 
-        if (get == null)
-            return;
-
-        DatabaseHandler.handle.getCollection().deleteOne(get);
-
+        // Removed the guild's cached document
         Chad.unCacheGuild(event.getGuild().getLongID());
 
+        // Un Cache the guild
+        Chad.unCacheGuild(event.getGuild().getLongID());
+
+        // Send a log
         UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);
     }
 }

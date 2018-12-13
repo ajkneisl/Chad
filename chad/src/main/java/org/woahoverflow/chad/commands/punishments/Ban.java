@@ -2,8 +2,8 @@ package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
@@ -30,7 +30,7 @@ public class Ban implements Command.Class
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Checks if the bot has permission to ban
             if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.BAN))
@@ -83,7 +83,7 @@ public class Ban implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if ban message is enabled
-            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "ban_msg_on"))
+            if (DatabaseManager.handle.getBoolean(e.getGuild(), "ban_msg_on"))
             {
                 // Gets the message from the cache
                 String message = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("ban_message");

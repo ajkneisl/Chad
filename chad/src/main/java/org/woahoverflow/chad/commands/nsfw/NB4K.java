@@ -1,6 +1,6 @@
 package org.woahoverflow.chad.commands.nsfw;
 
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -18,12 +18,12 @@ public class NB4K implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Checks if channel is Nsfw
             if (!e.getChannel().isNSFW())
             {
-                new MessageHandler(e.getChannel()).sendError(MessageHandler.CHANNEL_NOT_NSFW);
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendError(MessageHandler.CHANNEL_NOT_NSFW);
                 return;
             }
 

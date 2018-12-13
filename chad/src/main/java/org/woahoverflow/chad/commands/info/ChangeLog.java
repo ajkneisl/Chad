@@ -2,7 +2,7 @@ package org.woahoverflow.chad.commands.info;
 
 import java.util.HashMap;
 import java.util.List;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -28,7 +28,7 @@ public class ChangeLog implements Command.Class
             embedBuilder.withDesc(changeLogBuilder);
 
             // Sends the message
-            new MessageHandler(e.getChannel()).sendEmbed(embedBuilder);
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(embedBuilder);
         };
     }
 

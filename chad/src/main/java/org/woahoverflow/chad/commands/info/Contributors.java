@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.info;
 import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -23,7 +23,7 @@ public class Contributors implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             // Creates embed builder and gets the JSON array from the cdn
             EmbedBuilder embedBuilder = new EmbedBuilder();
             JSONArray o = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");

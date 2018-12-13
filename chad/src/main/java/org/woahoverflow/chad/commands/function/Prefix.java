@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -19,7 +19,7 @@ public class Prefix implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // If there's no arguments, show the prefix
             if (args.isEmpty())
@@ -51,7 +51,7 @@ public class Prefix implements Command.Class  {
                 MessageHandler.sendConfigLog("Prefix", args.get(1), prefix, e.getAuthor(), e.getGuild());
 
                 // Sets the prefix in the database & recaches the guild
-                DatabaseHandler.handle.set(e.getGuild(), "prefix", args.get(1));
+                DatabaseManager.handle.set(e.getGuild(), "prefix", args.get(1));
                 Chad.getGuild(e.getGuild().getLongID()).cache();
 
                 // Sends a the message

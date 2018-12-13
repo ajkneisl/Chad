@@ -3,8 +3,8 @@ package org.woahoverflow.chad.commands.function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
@@ -25,7 +25,7 @@ public class Message implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Makes sure there's arguments
             if (args.isEmpty())
@@ -47,7 +47,7 @@ public class Message implements Command.Class  {
                 String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("join_message");
 
                 // Sets the new one into the database
-                DatabaseHandler.handle.set(e.getGuild(), "join_message", formattedText.trim());
+                DatabaseManager.handle.set(e.getGuild(), "join_message", formattedText.trim());
 
                 // Sends the confirmation message
                 messageHandler.sendMessage("Set the guild's join message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
@@ -73,7 +73,7 @@ public class Message implements Command.Class  {
                 String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("leave_message");
 
                 // Sets the new one into the database
-                DatabaseHandler.handle.set(e.getGuild(), "leave_message", formattedText.trim());
+                DatabaseManager.handle.set(e.getGuild(), "leave_message", formattedText.trim());
 
                 // Sends the confirmation message
                 messageHandler.sendMessage("Set the guild's leave message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
@@ -99,7 +99,7 @@ public class Message implements Command.Class  {
                 String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("ban_message");
 
                 // Sets the new one into the database
-                DatabaseHandler.handle.set(e.getGuild(), "ban_message", formattedText.trim());
+                DatabaseManager.handle.set(e.getGuild(), "ban_message", formattedText.trim());
 
                 // Sends the confirmation message
                 messageHandler.sendMessage("Set the guild's ban message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
@@ -125,7 +125,7 @@ public class Message implements Command.Class  {
                 String old = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("kick_message");
 
                 // Sets the new one into the database
-                DatabaseHandler.handle.set(e.getGuild(), "kick_message", formattedText.trim());
+                DatabaseManager.handle.set(e.getGuild(), "kick_message", formattedText.trim());
 
                 messageHandler.sendMessage("Set the guild's kick message to `"+ SMALL_CODE_BLOCK.matcher(LARGE_CODE_BLOCK.matcher(formattedText.trim()).replaceAll("<large code-block>")).replaceAll("<small code-block>") + '`');
 
@@ -158,10 +158,11 @@ public class Message implements Command.Class  {
                     messageHandler.sendMessage("Set the guild's join message toggle to `"+set+ '`');
 
                     // Sends the log
-                    MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(DatabaseHandler.handle.getBoolean(e.getGuild(),"join_msg_on")), e.getAuthor(), e.getGuild());
+                    MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(
+                        DatabaseManager.handle.getBoolean(e.getGuild(),"join_msg_on")), e.getAuthor(), e.getGuild());
 
                     // Sets it in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "join_msg_on", set);
+                    DatabaseManager.handle.set(e.getGuild(), "join_msg_on", set);
 
                     // Recaches the guild
                     Chad.getGuild(e.getGuild().getLongID()).cache();
@@ -175,11 +176,12 @@ public class Message implements Command.Class  {
                     messageHandler.sendMessage("Set the guild's ban message toggle to `"+set+ '`');
 
                     // Sends the log
-                    MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(DatabaseHandler.handle
+                    MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(
+                        DatabaseManager.handle
                         .getBoolean(e.getGuild(),"ban_msg_on")), e.getAuthor(), e.getGuild());
 
                     // Sets it in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "ban_msg_on", set);
+                    DatabaseManager.handle.set(e.getGuild(), "ban_msg_on", set);
 
                     // ReCaches the guild
                     Chad.getGuild(e.getGuild().getLongID()).cache();
@@ -193,11 +195,12 @@ public class Message implements Command.Class  {
                     messageHandler.sendMessage("Set the guild's kick message toggle to `"+set+ '`');
 
                     // Sends the log
-                    MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(DatabaseHandler.handle
+                    MessageHandler.sendConfigLog("Kick Message Toggle", Boolean.toString(set), Boolean.toString(
+                        DatabaseManager.handle
                         .getBoolean(e.getGuild(),"kick_msg_on")), e.getAuthor(), e.getGuild());
 
                     // Sets in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "kick_msg_on", set);
+                    DatabaseManager.handle.set(e.getGuild(), "kick_msg_on", set);
 
                     // ReCaches the guild
                     Chad.getGuild(e.getGuild().getLongID()).cache();
@@ -211,11 +214,12 @@ public class Message implements Command.Class  {
                     messageHandler.sendMessage("Set the guild's leave message toggle to `"+set+ '`');
 
                     // Sends the log
-                    MessageHandler.sendConfigLog("Leave Message Toggle", Boolean.toString(set), Boolean.toString(DatabaseHandler.handle
+                    MessageHandler.sendConfigLog("Leave Message Toggle", Boolean.toString(set), Boolean.toString(
+                        DatabaseManager.handle
                         .getBoolean(e.getGuild(),"leave_msg_on")), e.getAuthor(), e.getGuild());
 
                     // Sets in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "leave_msg_on", set);
+                    DatabaseManager.handle.set(e.getGuild(), "leave_msg_on", set);
 
                     // ReCaches in the guild
                     Chad.getGuild(e.getGuild().getLongID()).cache();
@@ -229,7 +233,7 @@ public class Message implements Command.Class  {
                 if (args.get(1).equalsIgnoreCase("join"))
                 {
                     // Get the channel string
-                    String channelString = DatabaseHandler.handle
+                    String channelString = DatabaseManager.handle
                         .getString(e.getGuild(), "join_message_ch");
 
                     // Makes sure the channel string isn't null
@@ -275,7 +279,7 @@ public class Message implements Command.Class  {
                     IChannel newChannel = channelsWithName.get(0);
 
                     // Sets the channel in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
+                    DatabaseManager.handle.set(e.getGuild(), "join_message_ch", newChannel.getStringID());
 
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's join channel to `"+newChannel.getName()+ '`');
@@ -291,7 +295,7 @@ public class Message implements Command.Class  {
                 if (args.get(1).equalsIgnoreCase("leave"))
                 {
                     // Get the channel string
-                    String channelString = DatabaseHandler.handle
+                    String channelString = DatabaseManager.handle
                         .getString(e.getGuild(), "leave_message_ch");
 
                     // Makes sure the channel string isn't null
@@ -337,7 +341,7 @@ public class Message implements Command.Class  {
                     IChannel newChannel = channelsWithName.get(0);
 
                     // Sets the channel in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
+                    DatabaseManager.handle.set(e.getGuild(), "leave_message_ch", newChannel.getStringID());
 
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's leave channel to `"+newChannel.getName()+ '`');

@@ -1,8 +1,8 @@
-package org.woahoverflow.chad.framework.audio.obj;
+package org.woahoverflow.chad.framework.obj;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import org.woahoverflow.chad.framework.audio.TrackScheduler;
+import org.woahoverflow.chad.framework.handle.TrackScheduler;
 
 /**
  * @author sho

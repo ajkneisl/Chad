@@ -3,9 +3,9 @@ package org.woahoverflow.chad.commands.fun;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Player;
-import org.woahoverflow.chad.framework.Player.DataType;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -25,7 +25,7 @@ public class MarryPlayer implements Command.Class{
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // If they didn't mention anyone
             if (e.getMessage().getMentions().isEmpty())

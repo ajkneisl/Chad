@@ -4,9 +4,10 @@ import java.util.stream.Stream;
 import org.bson.Document;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Command.Category;
-import org.woahoverflow.chad.framework.Command.Class;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Command.Category;
+import org.woahoverflow.chad.framework.obj.Command.Class;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -22,7 +23,6 @@ import sx.blah.discord.handle.obj.Permissions;
  */
 public class PermissionHandler
 {
-
     /**
      * The global handle for the Permission Handler
      */
@@ -34,7 +34,8 @@ public class PermissionHandler
      * @param user The user
      * @return If they're a verified developer
      */
-    public boolean userIsDeveloper(IUser user) {
+    public boolean userIsDeveloper(IUser user)
+    {
         return ChadVar.DEVELOPERS.contains(user.getLongID());
     }
 
@@ -71,8 +72,8 @@ public class PermissionHandler
         // loop through the users roles, if the role has permission for the command, return true
         // return false if none of the users roles have permission for the command
         return user.getRolesForGuild(guild).stream()
-            .filter(r -> Chad.getGuild(guild.getLongID()).getDocument().get(r.getStringID()) != null)
-            .anyMatch(r -> ((ArrayList<String>) Chad.getGuild(guild.getLongID()).getDocument().get(r.getStringID())).contains(command));
+            .filter(r -> DatabaseManager.GUILD_DATA.getObject(guild.getLongID(), r.getStringID()) != null)
+            .anyMatch(r -> ((ArrayList<String>) DatabaseManager.GUILD_DATA.getObject(guild.getLongID(), r.getStringID()) ).contains(command));
     }
 
     /**
@@ -87,28 +88,21 @@ public class PermissionHandler
         if (!parseCommand(command))
             return 0;
 
-        Document cachedDocument = Chad.getGuild(role.getGuild().getLongID()).getDocument();
-
-        if (cachedDocument == null)
-            return 1;
-
         @SuppressWarnings("all")
-        ArrayList<String> arr = (ArrayList<String>) cachedDocument.get(role.getStringID());
+        ArrayList<String> arr = (ArrayList<String>) DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID());
 
         if (arr == null || arr.isEmpty())
         {
             ArrayList<String> ar = new ArrayList<>();
             ar.add(command);
-            DatabaseHandler.handle.set(role.getGuild(), role.getStringID(), ar);
-            Chad.getGuild(role.getGuild().getLongID()).cache();
+            DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
             return 6;
         }
         if (arr.contains(command))
             return 2;
         ArrayList<String> ar = arr;
         ar.add(command);
-        DatabaseHandler.handle.set(role.getGuild(), role.getStringID(), ar);
-        Chad.getGuild(role.getGuild().getLongID()).cache();
+        DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
         return 6;
     }
 
@@ -119,27 +113,23 @@ public class PermissionHandler
      * @param command The command to remove
      * @return The return code
      */
+    @SuppressWarnings("unchecked")
     public int removeCommandFromRole(IRole role, String command)
     {
         if (!parseCommand(command))
             return 0;
 
-        if (DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID()) == null)
+        if (DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID()) == null)
             return 4;
 
-        Document get = Chad.getGuild(role.getGuild().getLongID()).getDocument();
-
-        if (get == null)
-            return 1;
-
-        ArrayList<String> ar = DatabaseHandler.handle.getArray(role.getGuild(), role.getStringID());
+        ArrayList<String> ar = (ArrayList<String>) DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID());
 
         if (ar == null)
             return 1;
 
         ar.remove(command);
-        DatabaseHandler.handle.getCollection().updateOne(get, new Document("$set", new Document(role.getStringID(), ar)));
-        Chad.getGuild(role.getGuild().getLongID()).cache();
+
+        DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
         return 6;
 
     }

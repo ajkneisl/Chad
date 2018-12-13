@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.admin;
 import java.util.stream.Collectors;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
@@ -24,7 +24,7 @@ public class ModifyPresence implements Command.Class {
             // Checks if there's no arguments
             if (args.isEmpty())
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid Arguments");
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Arguments");
                 return;
             }
 
@@ -140,7 +140,7 @@ public class ModifyPresence implements Command.Class {
             }
 
             // Sends the message
-            new MessageHandler(e.getChannel()).sendMessage(message);
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendMessage(message);
         };
     }
 

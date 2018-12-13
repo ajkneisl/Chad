@@ -2,7 +2,7 @@ package org.woahoverflow.chad.commands.info;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.ui.ChadError;
@@ -20,7 +20,7 @@ public class RedditNew implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // If there's no arguments
             if (args.isEmpty())
@@ -77,7 +77,7 @@ public class RedditNew implements Command.Class{
                     .throwError("Error with RedditNew in guild " + e.getGuild().getStringID(), e1);
                 return;
             } catch (RuntimeException e1) {
-                new MessageHandler(e.getChannel()).sendError("Invalid subreddit.");
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid subreddit.");
                 return;
             }
 

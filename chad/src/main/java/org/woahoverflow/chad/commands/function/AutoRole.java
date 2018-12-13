@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
@@ -22,7 +22,7 @@ public class AutoRole implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Makes sure the arguments are empty
             if (args.isEmpty())
@@ -37,7 +37,7 @@ public class AutoRole implements Command.Class  {
             switch (option) {
                 case "on":
                     // Sets the value in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "role_on_join", true);
+                    DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "role_on_join", true);
 
                     // ReCaches the guild
                     Chad.getGuild(e.getGuild().getLongID()).cache();
@@ -50,7 +50,7 @@ public class AutoRole implements Command.Class  {
                     break;
                 case "off":
                     // Sets the value in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "role_on_join", false);
+                    DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "role_on_join", false);
 
                     // ReCaches the guild
                     Chad.getGuild(e.getGuild().getLongID()).cache();
@@ -88,7 +88,7 @@ public class AutoRole implements Command.Class  {
                     IRole newRole = roles.get(0);
 
                     // Sets the role ID into the database and recaches
-                    DatabaseHandler.handle.set(e.getGuild(), "join_role", newRole.getStringID());
+                    DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "join_role", newRole.getStringID());
                     Chad.getGuild(e.getGuild().getLongID()).cache();
 
                     // Builds the embed and sends it

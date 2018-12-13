@@ -2,8 +2,8 @@ package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
@@ -29,7 +29,7 @@ public class Kick implements Command.Class
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Checks if the bot has permission to kick
             if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK))
@@ -82,7 +82,7 @@ public class Kick implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if kick message is enabled
-            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "kick_msg_on"))
+            if ((boolean) DatabaseManager.GUILD_DATA.getObject(e.getGuild().getLongID(), "kick_msg_on"))
             {
                 // Gets the message from the cache
                 String message = Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("kick_message");

@@ -3,9 +3,9 @@ package org.woahoverflow.chad.commands.info;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Command.Category;
-import org.woahoverflow.chad.framework.Command.Data;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Command.Category;
+import org.woahoverflow.chad.framework.obj.Command.Data;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
@@ -66,7 +66,7 @@ public class Help implements Command.Class {
             stringBuilder.append("\n\nYou can only see the commands you have permission to!");
 
             // Sends the message
-            new MessageHandler(e.getChannel()).send(stringBuilder.toString(), "Chad's Commands");
+            new MessageHandler(e.getChannel(), e.getAuthor()).send(stringBuilder.toString(), "Chad's Commands");
        };
     }
 

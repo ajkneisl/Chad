@@ -1,6 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -15,7 +15,7 @@ public class WordReverse implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             // Makes sure the arguments aren't empty
             if (args.isEmpty())
             {
@@ -30,7 +30,7 @@ public class WordReverse implements Command.Class {
 
             // Gets the word & sends
             String word = stringBuilder.toString().trim();
-            new MessageHandler(e.getChannel()).send("Word: `" + word + "`\n\n`" + stringBuilder.reverse().toString().trim() + '`', "Word Reverser");
+            new MessageHandler(e.getChannel(), e.getAuthor()).send("Word: `" + word + "`\n\n`" + stringBuilder.reverse().toString().trim() + '`', "Word Reverser");
         };
     }
 

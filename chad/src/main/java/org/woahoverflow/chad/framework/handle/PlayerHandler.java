@@ -4,8 +4,9 @@ import com.mongodb.client.MongoCollection;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
-import org.woahoverflow.chad.framework.Player;
-import org.woahoverflow.chad.framework.Player.DataType;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 
 /**
  * Manages Player instances
@@ -39,7 +40,8 @@ public class PlayerHandler {
         players.remove(user);
 
         // Removes it from the database
-        MongoCollection<Document> col = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection();
+        MongoCollection<Document> col = DatabaseManager.USER_DATA.collection;
+
         Document get = col.find(new Document("id", user)).first();
 
         if (get == null)
@@ -102,8 +104,8 @@ public class PlayerHandler {
         playerDocument.put("vote_data", new ArrayList<>());
 
 
-        // Insert the new player
-        DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
+        // Insert the new player=
+        DatabaseManager.USER_DATA.collection.insertOne(playerDocument);
 
         // The player
         Player player = parsePlayer(playerDocument, user);
@@ -174,7 +176,7 @@ public class PlayerHandler {
         playerDocument.put("vote_data", new ArrayList<>());
 
         // Insert the new player
-        DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().insertOne(playerDocument);
+        DatabaseManager.USER_DATA.collection.insertOne(playerDocument);
 
         // Creates the player
         Player player = parsePlayer(playerDocument, user);
@@ -201,8 +203,7 @@ public class PlayerHandler {
 
         if (userDataExists(user))
         {
-            MongoCollection<Document> col = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection();
-            Document get = col.find(new Document("id", user)).first();
+            Document get = DatabaseManager.USER_DATA.collection.find(new Document("id", user)).first();
 
             if (get == null)
                 return null;
@@ -210,8 +211,12 @@ public class PlayerHandler {
             return parsePlayer(get, user);
         }
 
+        Player player = createPlayer(user);
+
+        players.put(user, player);
+
         // If it's not in there, create one
-        return createPlayer(user);
+        return player;
     }
 
     /**
@@ -222,7 +227,7 @@ public class PlayerHandler {
      */
     private boolean userDataExists(long user)
     {
-        Document get = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection().find(new Document("id", user)).first();
+        Document get = DatabaseManager.USER_DATA.collection.find(new Document("id", user)).first();
         return get != null;
     }
 }

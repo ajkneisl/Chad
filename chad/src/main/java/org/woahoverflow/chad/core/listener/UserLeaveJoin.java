@@ -1,11 +1,13 @@
 package org.woahoverflow.chad.core.listener;
 
+import com.mongodb.client.MongoCollection;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.framework.Player;
-import org.woahoverflow.chad.framework.Player.DataType;
-import org.woahoverflow.chad.framework.Util;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.bson.Document;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
@@ -16,7 +18,6 @@ import sx.blah.discord.handle.impl.events.guild.member.UserLeaveEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -46,9 +47,22 @@ public final class UserLeaveJoin
     @EventSubscriber
     public void userJoin(UserJoinEvent e)
     {
+        // Add it to the user's data set
+        Player player = PlayerHandler.handle.getPlayer(e.getUser().getLongID());
+
+        @SuppressWarnings("unchecked")
+        ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
+
+        if (!guildData.contains(e.getGuild().getLongID()))
+            guildData.add(e.getGuild().getLongID());
+
+        player.setObject(
+            DataType.GUILD_DATA,
+            guildData
+        );
+
         // Logs the user's join
         IGuild guild = e.getGuild();
-        MessageHandler messageHandler = new MessageHandler(null);
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -62,10 +76,10 @@ public final class UserLeaveJoin
         MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user join messages on, do that
-        if (DatabaseHandler.handle.getBoolean(e.getGuild(), "join_msg_on"))
+        if (DatabaseManager.handle.getBoolean(e.getGuild(), "join_msg_on"))
         {
             // Gets the join message channel
-            String joinMsgCh = DatabaseHandler.handle.getString(e.getGuild(), "join_message_ch");
+            String joinMsgCh = DatabaseManager.handle.getString(e.getGuild(), "join_message_ch");
 
             // Makes sure they actually assigned a channel
             if (joinMsgCh != null && !joinMsgCh.equalsIgnoreCase("none")) {
@@ -85,7 +99,7 @@ public final class UserLeaveJoin
                 if (!channel.isDeleted())
                 {
                     // Gets the message, makes sure it isn't null, then sends
-                    String msg = DatabaseHandler.handle.getString(e.getGuild(), "join_message");
+                    String msg = DatabaseManager.handle.getString(e.getGuild(), "join_message");
                     if (msg != null)
                     {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(msg).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
@@ -99,13 +113,13 @@ public final class UserLeaveJoin
         // does the bot have MANAGE_ROLES?
         if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
         {
-            messageHandler.sendError("Auto role assignment failed; Bot doesn't have permission: MANAGE_ROLES.");
+            new MessageHandler(e.getGuild().getDefaultChannel(), e.getUser()).sendError("Auto role assignment failed; Bot doesn't have permission: MANAGE_ROLES.");
             return;
         }
 
         // you probably shouldn't put code below this comment
 
-        String joinRoleStringID = DatabaseHandler.handle.getString(e.getGuild(), "join_role");
+        String joinRoleStringID = DatabaseManager.handle.getString(e.getGuild(), "join_role");
         if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none"))
         {
             Long joinRoleID = Long.parseLong(joinRoleStringID);
@@ -120,18 +134,18 @@ public final class UserLeaveJoin
 
             // can the bot assign the user the configured role?
             if (joinRole.getPosition() > botPosition) {
-                new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.");
+                new MessageHandler(e.getGuild().getDefaultChannel(), null).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.");
                 return;
             }
 
             // is the role @everyone?
             if (joinRole.isEveryoneRole()) {
-                new MessageHandler(e.getGuild().getDefaultChannel()).sendError("Auto role assignment failed; Misconfigured role.");
+                new MessageHandler(e.getGuild().getDefaultChannel(), null).sendError("Auto role assignment failed; Misconfigured role.");
                 return;
             }
 
             // assign the role
-            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "role_on_join"))
+            if (DatabaseManager.handle.getBoolean(e.getGuild(), "role_on_join"))
                 if (!joinRoleStringID.equals("none"))
                     e.getUser().addRole(joinRole);
         }
@@ -146,37 +160,34 @@ public final class UserLeaveJoin
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
     {
-        // Sets their balance to 0
-        DatabaseHandler.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
-
-        // Removes their marriage status
+        // Remove it from the user's data set
         Player player = PlayerHandler.handle.getPlayer(e.getUser().getLongID());
-        if (!(((String) player.getObject(DataType.MARRY_DATA)).split("&")[0].equalsIgnoreCase("none") || ((String) player.getObject(DataType.MARRY_DATA)).split("&")[1].equalsIgnoreCase("none")))
+
+        ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
+
+        // Add the joined guild
+        guildData.remove(e.getGuild().getLongID());
+
+        if (guildData.isEmpty())
         {
-            // Data
-            String[] marriageData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
+            // If it's the last guild that they're in with Chad, remove theirs
+            MongoCollection<Document> col = DatabaseManager.handle.getSeparateCollection("user_data").getCollection();
 
-            // Author's Status
-            player.setObject(DataType.MARRY_DATA, "none&none");
+            Document document = col.find(new Document("id", e.getUser().getLongID())).first();
 
-            // Sets the other player's status
-            try {
-                long guildId = Long.parseLong(marriageData[1]);
-                if (!Util.guildExists(e.getClient(), guildId))
-                {
-                    player.setObject(DataType.MARRY_DATA, "none&none");
-                }
-                else {
-                    long userId = Long.parseLong(marriageData[0]);
-                    IGuild guild = e.getClient().getGuildByID(guildId);
-                    IUser user = guild.getUserByID(userId);
-
-                    PlayerHandler.handle.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
-                }
-            } catch (NumberFormatException throwaway) {
-                // :(
-            }
+            if (document != null)
+                col.deleteOne(document);
         }
+        else {
+            player.setObject(
+                DataType.GUILD_DATA,
+                guildData
+            );
+        }
+
+        // Sets their balance to 0
+        DatabaseManager.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
+
         // Log if the user leaves
         IGuild guild = e.getGuild();
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -192,10 +203,10 @@ public final class UserLeaveJoin
         MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user leave messages on, do that
-        if (DatabaseHandler.handle.getBoolean(e.getGuild(), "leave_msg_on"))
+        if (DatabaseManager.handle.getBoolean(e.getGuild(), "leave_msg_on"))
         {
             // Gets the leave message channel
-            String leaveMsgCh = DatabaseHandler.handle.getString(e.getGuild(), "leave_message_ch");
+            String leaveMsgCh = DatabaseManager.handle.getString(e.getGuild(), "leave_message_ch");
 
             // Makes sure they actually assigned a channel
             if (leaveMsgCh != null && !leaveMsgCh.equalsIgnoreCase("none")) {
@@ -215,7 +226,7 @@ public final class UserLeaveJoin
                 if (!channel.isDeleted())
                 {
                     // Gets the message, makes sure it isn't null, then sends
-                    String msg = DatabaseHandler.handle.getString(e.getGuild(), "leave_message");
+                    String msg = DatabaseManager.handle.getString(e.getGuild(), "leave_message");
                     if (msg != null)
                     {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());

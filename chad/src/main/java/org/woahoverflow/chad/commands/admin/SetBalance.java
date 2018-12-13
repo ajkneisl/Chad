@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.admin;
 
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -16,7 +16,7 @@ public class SetBalance implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Checks if the arguments is empty
             if (args.isEmpty())
@@ -37,7 +37,7 @@ public class SetBalance implements Command.Class {
                 }
 
                 // Sets the balance
-                DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", Long.parseLong(args.get(0)));
+                DatabaseManager.USER_DATA.setObject(e.getAuthor().getLongID(), "balance", Long.parseLong(args.get(0)));
 
                 // Sends the message
                 messageHandler.send("Set your balance to `"+args.get(0)+"`.", "Balance");
@@ -58,13 +58,12 @@ public class SetBalance implements Command.Class {
                 try {
                     Long.parseLong(args.get(0));
                 } catch (NumberFormatException e1) {
-                    new MessageHandler(e.getChannel()).sendError("Invalid Integer!");
+                    new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Integer!");
                     return;
                 }
 
                 // Sets the balance of the mentioned user
-                DatabaseHandler.handle
-                    .set(e.getGuild(), e.getMessage().getMentions().get(0).getStringID() + "_balance", Long.parseLong(args.get(0)));
+                DatabaseManager.USER_DATA.setObject(e.getAuthor().getLongID(), "balance", Long.parseLong(args.get(0)));
 
                 // Sends the message
                 messageHandler.send("Set `" + e.getMessage().getMentions().get(0).getName() + "`'s balance to `"+args.get(0)+"`.", "Balance");

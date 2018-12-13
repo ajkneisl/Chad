@@ -3,8 +3,8 @@ package org.woahoverflow.chad.commands.function;
 import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -18,7 +18,7 @@ public class Swearing implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // if there's no arguments, give statistics
             if (args.isEmpty())
@@ -40,7 +40,7 @@ public class Swearing implements Command.Class {
                 // good looking value
                 String toggleString = toggle ? "enabled" : "disabled";
                 // sets in database
-                DatabaseHandler.handle.set(e.getGuild(), "stop_swear", toggle);
+                DatabaseManager.handle.set(e.getGuild(), "stop_swear", toggle);
                 // recaches
                 Chad.getGuild(e.getGuild().getLongID()).cache();
                 // sends message

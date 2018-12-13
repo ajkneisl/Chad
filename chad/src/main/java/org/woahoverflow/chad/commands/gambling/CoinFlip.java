@@ -3,9 +3,9 @@ package org.woahoverflow.chad.commands.gambling;
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.Util;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
@@ -26,12 +26,7 @@ public class CoinFlip implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
-            {
-                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + Chad
-                    .getGuild(e.getGuild().getLongID()).getDocument().getString("prefix") + "register` to get one!");
-                return;
-            }
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             if (args.size() == 2 && e.getMessage().getAttachments().isEmpty() && args.get(1).equalsIgnoreCase("tails") || args.get(1).equalsIgnoreCase("heads"))
             {
@@ -39,27 +34,27 @@ public class CoinFlip implements Command.Class{
                 try {
                     bet = Long.parseLong(args.get(0));
                 } catch (NumberFormatException throwaway) {
-                    new MessageHandler(e.getChannel()).sendError("Invalid Bet!");
+                    messageHandler.sendError("Invalid Bet!");
                     return;
                 }
 
                 if (!(bet > 0))
                 {
-                    new MessageHandler(e.getChannel()).sendError("Invalid Number!");
+                    messageHandler.sendError("Invalid Number!");
                     return;
                 }
 
-                long balance = (long) DatabaseHandler.handle
+                long balance = (long) DatabaseManager.handle
                     .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
                 if (bet > balance)
                 {
-                    new MessageHandler(e.getChannel()).sendError("Your bet is too large!");
+                    messageHandler.sendError("Your bet is too large!");
                     return;
                 }
 
                 if (bet+balance < 0)
                 {
-                    new MessageHandler(e.getChannel()).sendError("Your balance is too big!\nPlease report this on https://woahoverflow.org/forums");
+                    messageHandler.sendError("Your balance is too big!\nPlease report this on https://woahoverflow.org/forums");
                     return;
                 }
 
@@ -71,7 +66,7 @@ public class CoinFlip implements Command.Class{
                     user = 1;
                 }
                 else {
-                    new MessageHandler(e.getChannel()).sendError("Please use `heads` or `tails`!");
+                    messageHandler.sendError("Please use `heads` or `tails`!");
                     return;
                 }
 
@@ -79,14 +74,14 @@ public class CoinFlip implements Command.Class{
 
                 if (flip == user)
                 {
-                    DatabaseHandler.handle
+                    DatabaseManager.handle
                         .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance+bet);
-                    new MessageHandler(e.getChannel()).send("You won `"+bet+"`, you now have `" + (balance+bet) + "`.", "Coin Flip");
+                    messageHandler.send("You won `"+bet+"`, you now have `" + (balance+bet) + "`.", "Coin Flip");
                 }
                 else {
-                    DatabaseHandler.handle
+                    DatabaseManager.handle
                         .set(e.getGuild(), e.getAuthor().getStringID() + "_balance", balance-bet);
-                    new MessageHandler(e.getChannel()).send("You lost `"+bet+"`, you now have `" + (balance-bet) + "`.", "Coin Flip");
+                    messageHandler.send("You lost `"+bet+"`, you now have `" + (balance-bet) + "`.", "Coin Flip");
                 }
             }
             else // assuming that the conditions are met for this
@@ -115,7 +110,7 @@ public class CoinFlip implements Command.Class{
                     // Checks if the loop actually found a user
                     if (opponentUser == null)
                     {
-                        new MessageHandler(e.getChannel()).sendError("Invalid User!");
+                        messageHandler.sendError("Invalid User!");
                         return;
                     }
                 }
@@ -126,7 +121,7 @@ public class CoinFlip implements Command.Class{
                         opponentUser = e.getMessage().getMentions().get(0);
                     }
                     else {
-                        new MessageHandler(e.getChannel()).sendError("Invalid User!");
+                        messageHandler.sendError("Invalid User!");
                         return;
                     }
                 }
@@ -157,7 +152,7 @@ public class CoinFlip implements Command.Class{
                     // If it's been 10 seconds, exit
                     if (timeout == 10)
                     {
-                        new MessageHandler(e.getChannel()).sendError('`' +user.getName()+"` didn't respond in time!");
+                        messageHandler.sendError('`' +user.getName()+"` didn't respond in time!");
                         return;
                     }
 
@@ -184,7 +179,7 @@ public class CoinFlip implements Command.Class{
                     // Checks if the user reacted with the N
                     if (nReaction.getUserReacted(user))
                     {
-                        new MessageHandler(e.getChannel()).send("User Denied!", "CoinFlip");
+                        messageHandler.send("User Denied!", "CoinFlip");
                         return;
                     }
                 }
@@ -194,49 +189,49 @@ public class CoinFlip implements Command.Class{
                 try {
                     bet = Long.parseLong(arg0);
                 } catch (NumberFormatException throwaway) {
-                    new MessageHandler(e.getChannel()).sendError("Invalid Bet!");
+                    messageHandler.sendError("Invalid Bet!");
                     return;
                 }
 
                 if (!(bet > 0))
                 {
-                    new MessageHandler(e.getChannel()).sendError("Invalid Number!");
+                    messageHandler.sendError("Invalid Number!");
                     return;
                 }
 
                 // Gets the author's balance
-                long balance = (long) DatabaseHandler.handle
+                long balance = (long) DatabaseManager.handle
                     .get(e.getGuild(), e.getAuthor().getStringID() + "_balance");
 
                 // Checks if the user's bet is bigger than the balance.
                 if (bet > balance)
                 {
-                    new MessageHandler(e.getChannel()).sendError("Your bet is too large!");
+                    messageHandler.sendError("Your bet is too large!");
                     return;
                 }
 
                 // Gets the opponent's balance
-                long opponentBalance = (long) DatabaseHandler.handle
+                long opponentBalance = (long) DatabaseManager.handle
                     .get(e.getGuild(), opponentUser.getStringID() + "_balance");
 
                 // Checks if the bet's bigger than the opponent's balance
                 if (bet > opponentBalance)
                 {
-                    new MessageHandler(e.getChannel()).sendError("Your bet is too large for `"+opponentUser.getName()+"`!");
+                    messageHandler.sendError("Your bet is too large for `"+opponentUser.getName()+"`!");
                     return;
                 }
 
                 // Checks if the author's balance is too big
                 if (bet+balance < 0)
                 {
-                    new MessageHandler(e.getChannel()).sendError("Your balance is too big!\nPlease report this on https://woahoverflow.org/forums");
+                    messageHandler.sendError("Your balance is too big!\nPlease report this on https://woahoverflow.org/forums");
                     return;
                 }
 
                 // Checks if the opponent's balance is too big
                 if (bet+opponentBalance < 0)
                 {
-                    new MessageHandler(e.getChannel()).sendError('`' +opponentUser.getName()+"`'s balance is too big!\nPlease report this on https://woahoverflow.org/forums");
+                    messageHandler.sendError('`' +opponentUser.getName()+"`'s balance is too big!\nPlease report this on https://woahoverflow.org/forums");
                     return;
                 }
 
@@ -272,7 +267,7 @@ public class CoinFlip implements Command.Class{
                     // If the user hasn't responded within 10 seconds, it times out.
                     if (timeout == 10)
                     {
-                        new MessageHandler(e.getChannel()).sendError('`' +opponentUser.getName()+"` didn't respond in time!");
+                        messageHandler.sendError('`' +opponentUser.getName()+"` didn't respond in time!");
                         return;
                     }
 
@@ -284,8 +279,6 @@ public class CoinFlip implements Command.Class{
 
                     // O reaction
                     final IReaction o = RequestBuffer.request(() -> pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF4"))).get();
-
-                    // TODO: comment this stuff, I can't be bothered atm
 
                     if (heads == null)
                     {
@@ -351,9 +344,9 @@ public class CoinFlip implements Command.Class{
                 if (Util.coinFlip())
                 {
                     // Sets the user's balances
-                    DatabaseHandler.handle
+                    DatabaseManager.handle
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance+bet);
-                    DatabaseHandler.handle
+                    DatabaseManager.handle
                         .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance-bet);
 
                     // Creates the edit string, then applies.
@@ -364,9 +357,9 @@ public class CoinFlip implements Command.Class{
                 else /* flip is 1, so heads wins this */
                 {
                     // Sets the user's balances
-                    DatabaseHandler.handle
+                    DatabaseManager.handle
                         .set(e.getGuild(), tails.getStringID() + "_balance", tailsBalance-bet);
-                    DatabaseHandler.handle
+                    DatabaseManager.handle
                         .set(e.getGuild(), heads.getStringID()+"_balance", headsBalance+bet);
 
                     // Creates the edit string, then applies.

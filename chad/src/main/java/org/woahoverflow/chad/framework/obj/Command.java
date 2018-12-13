@@ -1,10 +1,11 @@
-package org.woahoverflow.chad.framework;
+package org.woahoverflow.chad.framework.obj;
 
 import java.awt.Color;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -121,13 +122,13 @@ public final class Command
     public static synchronized Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent messageReceivedEvent)
     {
         return () -> {
-            String prefix = DatabaseHandler.handle.getString(messageReceivedEvent.getGuild(), "prefix");
+            String prefix = (String) DatabaseManager.GUILD_DATA.getObject(messageReceivedEvent.getGuild().getLongID(), "prefix");
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.withTitle("Help : " + commandName);
             commands.forEach((key, val) -> embedBuilder.appendField(prefix+key, val, false));
             embedBuilder.withFooterText(Util.getTimeStamp());
             embedBuilder.withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
-            new MessageHandler(messageReceivedEvent.getChannel()).sendEmbed(embedBuilder);
+            new MessageHandler(messageReceivedEvent.getChannel(), messageReceivedEvent.getAuthor()).sendEmbed(embedBuilder);
         };
     }
 }

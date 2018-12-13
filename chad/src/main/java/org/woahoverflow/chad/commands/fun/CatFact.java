@@ -1,8 +1,10 @@
 package org.woahoverflow.chad.commands.fun;
 
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
@@ -21,7 +23,9 @@ public class CatFact implements Command.Class  {
             String fact = JsonHandler.handle.read("https://catfact.ninja/fact").getString("fact");
 
             // Sends the fact
-            new MessageHandler(e.getChannel()).sendEmbed(new EmbedBuilder().withDesc(fact));
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc(
+                PlayerHandler.handle.getPlayer(e.getAuthor().getLongID()).getObject(
+                    DataType.GUILD_DATA).toString()));
 
             // i don't even know how i could comprehend something so complicated like this
         };

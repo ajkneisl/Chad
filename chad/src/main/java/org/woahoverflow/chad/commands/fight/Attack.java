@@ -3,8 +3,8 @@ package org.woahoverflow.chad.commands.fight;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Player;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -25,7 +25,7 @@ public class Attack implements Command.Class
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            messageHandler = new MessageHandler(e.getChannel());
+            messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             if (args.size() < 1)
             {

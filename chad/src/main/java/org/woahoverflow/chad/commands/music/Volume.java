@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.music;
 import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -20,11 +20,11 @@ public class Volume implements Command.Class{
             try {
                 volume = Integer.parseInt(args.get(0));
             } catch (NumberFormatException throwaway) {
-                new MessageHandler(e.getChannel()).sendError("Invalid Volume!");
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Volume!");
                 return;
             }
 
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Make sure the value isn't negative
             if (0 > volume)

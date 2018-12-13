@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,17 +19,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
-import org.bson.Document;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.audio.obj.GuildMusicManager;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.util.RequestBuffer;
 
 /**
  * Main framework for Chad
@@ -40,64 +36,6 @@ import sx.blah.discord.util.RequestBuffer;
  */
 public final class Chad
 {
-
-    /**
-     * A Cached Guild
-     */
-    public static final class CachedGuild
-    {
-        private String lastCached;
-        private final long guildId;
-        private Document document;
-
-        /**
-         * Constructor
-         *
-         * @param guildId The guild to be cached
-         */
-        public CachedGuild(long guildId)
-        {
-            this.guildId = guildId;
-            lastCached = Util.getTimeStamp();
-            cache();
-        }
-
-        /**
-         * ReCaches the guild
-         */
-        public void cache()
-        {
-            Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", Long.toString(guildId))).first();
-
-            if (get == null)
-                return;
-
-            document = get;
-            lastCached = Util.getTimeStamp();
-        }
-
-        /**
-         * @return The guild's ID
-         */
-        public long getGuild() {
-            return guildId;
-        }
-
-        /**
-         * @return The cached document
-         */
-        public Document getDocument() {
-            return document;
-        }
-
-        /**
-         * @return The date it's last cached
-         */
-        public String getLastCached() {
-            return lastCached;
-        }
-    }
-
     /**
      * A Thread Consumer
      */
@@ -149,11 +87,6 @@ public final class Chad
      * The amount of internal threads running
      */
     public static int internalRunningThreads;
-
-    /**
-     * Cached guilds
-     */
-    public static final ConcurrentHashMap<Long, CachedGuild> cachedGuilds = new ConcurrentHashMap<>();
 
     /**
      * The executor service, where every thread runs
@@ -214,13 +147,6 @@ public final class Chad
             }, 0, 1000), getInternalConsumer() // gets internal consumer
         );
 
-        /*
-        Chad's Caching
-         */
-        runThread(() -> {
-            List<IGuild> guilds = RequestBuffer.request(ChadBot.cli::getGuilds).get();
-            guilds.forEach((guild) -> cachedGuilds.put(guild.getLongID(), new CachedGuild(guild.getLongID())));
-        }, getInternalConsumer());
 
         /*
         Chad's UI
@@ -301,32 +227,6 @@ public final class Chad
         return musicManager;
     }
 
-    /**
-     * Gets a cached guild
-     *
-     * @param guildId The guild to get a cached version of
-     * @return The cached guild
-     */
-    public static synchronized CachedGuild getGuild(long guildId)
-    {
-        // If it contains the guild, which it should, return it
-        if (cachedGuilds.keySet().contains(guildId))
-            return cachedGuilds.get(guildId);
-
-        // if the guild wasn't cached, cache it
-        cachedGuilds.put(guildId, new CachedGuild(guildId));
-        return cachedGuilds.get(guildId);
-    }
-
-    /**
-     * UnCaches a guild
-     *
-     * @param guildId The guild to be uncached
-     */
-    public static synchronized void unCacheGuild(long guildId)
-    {
-        cachedGuilds.remove(guildId);
-    }
 
     /**
      * Gets a user's thread consumer
@@ -381,6 +281,8 @@ public final class Chad
             th.add(ranThread);
             threadHash.put(consumer, th);
         }
+
+        ChadBot.getLogger().info("{}", internalRunningThreads);
     }
 
     /**

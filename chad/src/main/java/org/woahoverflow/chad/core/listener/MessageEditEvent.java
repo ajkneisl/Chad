@@ -20,6 +20,8 @@ public final class MessageEditEvent
     /**
      * Discord's Message Edit Event
      *
+     * Mainly used to make sure edited messages don't contain swears
+     *
      * @param event Message Edit Event
      */
     @EventSubscriber
@@ -35,7 +37,7 @@ public final class MessageEditEvent
             msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
             for (String s : argArray) {
                 if (ChadVar.swearWords.contains(s.toLowerCase())) {
-                    new MessageHandler(event.getChannel()).send(msg, "Swearing");
+                    new MessageHandler(event.getChannel(), event.getAuthor()).send(msg, "Swearing");
                     RequestBuffer.request(() -> event.getMessage().delete());
                 }
             }

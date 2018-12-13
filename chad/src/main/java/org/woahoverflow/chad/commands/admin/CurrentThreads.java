@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.admin;
 import com.sun.management.OperatingSystemMXBean;
 import java.lang.management.ManagementFactory;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -51,7 +51,7 @@ public class CurrentThreads implements Command.Class{
             embedBuilder.appendDesc(stringBuilder.toString());
 
             // Sends
-            new MessageHandler(e.getChannel()).sendEmbed(embedBuilder);
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(embedBuilder);
         };
     }
 

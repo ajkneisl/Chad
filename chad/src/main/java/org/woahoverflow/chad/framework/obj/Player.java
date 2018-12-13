@@ -1,10 +1,8 @@
-package org.woahoverflow.chad.framework;
+package org.woahoverflow.chad.framework.obj;
 
-import com.mongodb.client.MongoCollection;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import org.bson.Document;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 
 /**
@@ -30,7 +28,7 @@ public class Player {
         PROFILE_UPVOTE, PROFILE_DOWNVOTE, PROFILE_DESCRIPTION, PROFILE_TITLE,
 
         // Data
-        GUILD_DATA, MARRY_DATA, VOTE_DATA
+        GUILD_DATA, MARRY_DATA, VOTE_DATA, LAST_DAILY_REWARD
     }
 
     /**
@@ -62,6 +60,7 @@ public class Player {
 
         playerData.put(DataType.VOTE_DATA, new ArrayList<>());
         playerData.put(DataType.GUILD_DATA, new ArrayList<>());
+        playerData.put(DataType.LAST_DAILY_REWARD, "none");
     }
 
     /**
@@ -85,14 +84,7 @@ public class Player {
     {
         playerData.put(dataType, value);
 
-        MongoCollection<Document> col = DatabaseHandler.handle.getSeparateCollection("user_data").getCollection();
-
-        Document get = col.find(new Document("id", user)).first();
-
-        if (get == null)
-            return;
-
-        col.updateOne(get, new Document("$set", new Document(dataType.toString().toLowerCase(), value)));
+        DatabaseManager.USER_DATA.setObject(user, dataType.toString(), value);
 
         PlayerHandler.handle.refreshPlayer(user);
     }
@@ -106,5 +98,15 @@ public class Player {
     public Object getObject(DataType dataType)
     {
         return playerData.get(dataType);
+    }
+
+    /**
+     * Gets the user's ID
+     *
+     * @return The user's ID
+     */
+    public long getUserID()
+    {
+        return user;
     }
 }

@@ -4,9 +4,8 @@ import java.awt.Color;
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
 import org.apache.http.util.TextUtils;
-import org.bson.Document;
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
@@ -35,15 +34,38 @@ public class MessageHandler
     public static final String NO_MENTIONS = "You didn't mention anyone!";
     public static final String INTERNAL_EXCEPTION = "Internal exception!";
 
+    /**
+     * The channel to send messages to
+     */
     private final IChannel channel;
 
     /**
+     * The user who requested it
+     */
+    public final IUser user;
+
+    /**
+     * The user's avatar URL
+     */
+    private final String avatar_url;
+
+    /**
+     * The user's name
+     */
+    private final String user_name;
+
+    /**
      * Public Constructor
+     *
      * @param channel The channel to send the messages in
      */
-    public MessageHandler(IChannel channel)
+    public MessageHandler(IChannel channel, IUser user)
     {
+        this.user = user;
         this.channel = channel;
+
+        avatar_url = RequestBuffer.request(user::getAvatarURL).get();
+        user_name = RequestBuffer.request(user::getName).get();
     }
 
     /**
@@ -73,10 +95,14 @@ public class MessageHandler
             return;
 
         // Applies the timestamp to the footer
-        embedBuilder.withFooterText(Util.getTimeStamp());
+        embedBuilder.withTimestamp(System.currentTimeMillis());
 
         // Makes the color random
         embedBuilder.withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
+
+        // Adds the user who requested mark
+        embedBuilder.withFooterText("Requested by "+user_name);
+        embedBuilder.withFooterIcon(avatar_url);
 
         // Requests the message to be sent
         RequestBuffer.request(() -> channel.sendMessage(embedBuilder.build()));
@@ -122,15 +148,12 @@ public class MessageHandler
      */
     public static void sendLog(EmbedBuilder embedBuilder, IGuild guild)
     {
-        // Gets the guild's cached doc
-        Document document = Chad.getGuild(guild.getLongID()).getDocument();
-
         // Checks if logging is enabled
-        if (!document.getBoolean("logging"))
+        if (!(Boolean) GuildHandler.handle.getGuild(guild.getLongID()).getObject(DataType.LOGGING))
             return;
 
         // Gets the logging channel ID
-        String channelID = document.getString("logging_channel");
+        String channelID = (String) GuildHandler.handle.getGuild(guild.getLongID()).getObject(DataType.LOGGING_CHANNEL);
 
         // Checks if the logging channel is somehow null
         if (TextUtils.isEmpty(channelID))

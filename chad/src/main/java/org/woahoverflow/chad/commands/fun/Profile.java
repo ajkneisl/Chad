@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Command.Class;
-import org.woahoverflow.chad.framework.Player;
-import org.woahoverflow.chad.framework.Player.DataType;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Command.Class;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
@@ -31,7 +31,7 @@ public class Profile implements Class{
         return () -> {
             // Default variables
             Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // If there's no arguments, get the author's profile
             if (args.isEmpty())

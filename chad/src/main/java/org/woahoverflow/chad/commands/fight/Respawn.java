@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.fight;
 
 import java.util.HashMap;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Player;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.ui.ChadError;
@@ -21,7 +21,7 @@ public class Respawn implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Sends the invitation message
             IMessage acceptMessage = RequestBuffer

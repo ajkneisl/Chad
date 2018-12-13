@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.framework.audio.obj;
+package org.woahoverflow.chad.framework.obj;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;

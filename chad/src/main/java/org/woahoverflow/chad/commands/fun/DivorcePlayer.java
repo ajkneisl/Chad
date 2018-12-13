@@ -2,9 +2,9 @@ package org.woahoverflow.chad.commands.fun;
 
 import java.util.HashMap;
 import java.util.List;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Player;
-import org.woahoverflow.chad.framework.Player.DataType;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
@@ -19,7 +19,7 @@ public class DivorcePlayer implements Command.Class
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
 
             // Player's marry data, in format `player_id&guild_id`
