@@ -6,6 +6,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -31,8 +32,8 @@ public class Prefix implements Command.Class  {
                 // Sets up embed builder with the prefix in it
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Prefix");
-                //TODO: not sure how to fix this
-                //embedBuilder.withDesc(Chad.getGuild(e.getGuild().getLongID()).getDocument().getString("prefix"));
+                embedBuilder.withDesc((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(
+                    DataType.PREFIX));
 
                 // Sends
                 messageHandler.sendEmbed(embedBuilder);
@@ -56,8 +57,8 @@ public class Prefix implements Command.Class  {
                 MessageHandler.sendConfigLog("Prefix", args.get(1), prefix, e.getAuthor(), e.getGuild());
 
                 // Sets the prefix in the database & recaches the guild
-                //TODO: not sure how to fix this
-                //DatabaseManager.handle.set(e.getGuild(), "prefix", args.get(1));
+                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.PREFIX, prefix);
+
                 GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
 
                 // Sends a the message

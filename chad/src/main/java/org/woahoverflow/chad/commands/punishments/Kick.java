@@ -1,12 +1,11 @@
 package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -86,8 +85,7 @@ public class Kick implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if kick message is enabled
-            //TODO: is this deprecated?
-            if ((boolean) DatabaseManager.GUILD_DATA.getObject(e.getGuild().getLongID(), "kick_msg_on"))
+            if ((boolean) guild.getObject(DataType.KICK_MESSAGE_ON))
             {
                 // Gets the message from the cache
                 String message = (String) guild.getObject(Guild.DataType.KICK_MESSAGE);

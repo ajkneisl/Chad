@@ -132,11 +132,7 @@ public final class GuildJoinLeave
         handle.removeDocument(event.getGuild().getStringID());
 
         // Removed the guild's cached document
-        //TODO: pretty sure this is how this is supposed to work
         GuildHandler.handle.removeGuild(event.getGuild().getLongID());
-
-        // Un Cache the guild
-        //TODO: pretty sure ya only need to do it once :/
 
         // Send a log
         UIHandler.handle.addLog('<' +event.getGuild().getStringID()+"> Left Guild", UIHandler.LogLevel.INFO);

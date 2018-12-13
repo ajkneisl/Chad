@@ -8,6 +8,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -41,13 +42,16 @@ public class Swearing implements Command.Class {
             {
                 // actual boolean value
                 boolean toggle = args.get(0).equalsIgnoreCase("on");
+
                 // good looking value
                 String toggleString = toggle ? "enabled" : "disabled";
+
                 // sets in database
-                //TODO: not sure how to fix this
-                //DatabaseManager.handle.set(e.getGuild(), "stop_swear", toggle);
+                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.SWEAR_FILTER, true);
+
                 // recaches
                 GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
+
                 // sends message
                 messageHandler.send("Swear filtering has been `"+toggleString+ '`', "Swear Filter");
                 return;

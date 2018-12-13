@@ -168,7 +168,7 @@ public final class UserLeaveJoin
 
         ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
 
-        // Add the joined guild
+        // Remove the guild that was left
         guildData.remove(e.getGuild().getLongID());
 
         Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
@@ -176,9 +176,7 @@ public final class UserLeaveJoin
         if (guildData.isEmpty())
         {
             // If it's the last guild that they're in with Chad, remove theirs
-            //TODO: what should the identifier field be?
-            MongoCollection<Document> col = DatabaseManager.handle.getSeparateCollection("user_data", "").collection;
-
+            MongoCollection<Document> col = DatabaseManager.USER_DATA.collection;
             Document document = col.find(new Document("id", e.getUser().getLongID())).first();
 
             if (document != null)
@@ -190,10 +188,6 @@ public final class UserLeaveJoin
                 guildData
             );
         }
-
-        // Sets their balance to 0
-        //TODO: not sure how im supposed to fix this
-        //DatabaseManager.handle.set(e.getGuild(), e.getUser().getStringID()+"_balance", Long.parseLong("0"));
 
         // Log if the user leaves
         IGuild guild = e.getGuild();
