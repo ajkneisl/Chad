@@ -11,6 +11,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -125,5 +126,21 @@ public final class Util
         LocalDateTime dt = LocalDateTime.parse(timeDateStr, dtf);
         Instant instant = dt.toInstant(ZoneOffset.UTC);
         return instant.toEpochMilli();
+    }
+
+    public static long howOld(long searchTimestamp)
+    {
+        return Math.abs(System.currentTimeMillis() - searchTimestamp);
+    }
+
+    public static boolean isSecondsOld(long searchTimestamp, int seconds)
+    {
+        int time = seconds * 60 * 1000;
+        long difference = howOld(searchTimestamp);
+        if (difference < time) {
+            return false;
+        }
+
+        return true;
     }
 }
