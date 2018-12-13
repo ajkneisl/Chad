@@ -238,4 +238,36 @@ public class Guild
 
         return 0;
     }
+
+    /**
+     * Removes a permission to role
+     *
+     * @param role The role to remove from
+     * @param command The command to remove
+     * @return The error/success code
+     */
+    public int removePermissionFromRole(long role, String command)
+    {
+        // Get the role's permissions
+        ArrayList<String> permissionSet = getRolePermissions(role);
+
+        // Make sure the command is an actual command
+        if (!ChadVar.COMMANDS.containsKey(command))
+            return 3;
+
+        // Makes sure the role actually has the command
+        if (!permissionSet.contains(command))
+            return 1;
+
+        // Remove it
+        permissionSet.remove(command);
+
+        // Re-add to hashmap
+        permissionData.put(role, permissionSet);
+
+        // Re-add to database
+        DatabaseManager.GUILD_DATA.setObject(guild, Long.toString(role), permissionSet);
+
+        return 0;
+    }
 }
