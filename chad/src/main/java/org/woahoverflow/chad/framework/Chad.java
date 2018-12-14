@@ -20,7 +20,6 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONObject;
-import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
@@ -156,12 +155,12 @@ public final class Chad
         /*
         Swear Words
          */
-        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/swears.json").forEach((word) -> swearWords.add((String) word)), getInternalConsumer());
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/swears.json").forEach((word) -> swearWords.add((String) word)), getInternalConsumer());
 
         /*
         Developers
          */
-        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json").forEach((v) ->
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) ->
         {
             if (Boolean.parseBoolean(((JSONObject) v).getString("allow")))
             {
@@ -177,7 +176,7 @@ public final class Chad
         /*
         Adds all the presences
          */
-        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v)), getInternalConsumer());
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v)), getInternalConsumer());
 
         /*
         Gets all the words from the CDN
@@ -186,7 +185,7 @@ public final class Chad
         {
             try {
                 // Defines the URL and Connection
-                URL url = new URL("https://cdn.woahoverflow.org/chad/data/words.txt");
+                URL url = new URL("https://cdn.woahoverflow.org/data/chad/words.txt");
                 HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 
                 // Sets the properties of the connection
