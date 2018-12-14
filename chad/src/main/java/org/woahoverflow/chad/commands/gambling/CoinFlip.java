@@ -346,7 +346,7 @@ public class CoinFlip implements Command.Class{
                 {
                     // Sets the user's balances
                     PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
-                    PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
+                    PlayerHandler.handle.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +tails.getName()+"` has won `" + bet + "`!"
@@ -357,7 +357,7 @@ public class CoinFlip implements Command.Class{
                 {
                     // Sets the user's balances
                     PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
-                    PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
+                    PlayerHandler.handle.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +heads.getName()+"` has won `" + bet + "`!"
