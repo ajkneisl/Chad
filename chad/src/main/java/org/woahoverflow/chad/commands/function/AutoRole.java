@@ -31,7 +31,7 @@ public class AutoRole implements Command.Class  {
             // Makes sure the arguments are empty
             if (args.isEmpty())
             {
-                messageHandler.sendError("Invalid Arguments");
+                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                 return;
             }
 

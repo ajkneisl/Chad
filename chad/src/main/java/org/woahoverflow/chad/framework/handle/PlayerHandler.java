@@ -103,6 +103,8 @@ public class PlayerHandler {
         playerDocument.put("guild_data", new ArrayList<>());
         playerDocument.put("vote_data", new ArrayList<>());
 
+        playerDocument.put("last_daily_reward", "none");
+
 
         // Insert the new player=
         DatabaseManager.USER_DATA.collection.insertOne(playerDocument);
@@ -130,6 +132,8 @@ public class PlayerHandler {
         // Sets the data
         for (DataType type : DataType.values())
         {
+            if (playerDataDocument.get(type.toString().toLowerCase()) == null)
+            System.out.println(type.toString().toLowerCase());
             playerData.put(type, playerDataDocument.get(type.toString().toLowerCase()));
         }
 
@@ -174,6 +178,8 @@ public class PlayerHandler {
 
         playerDocument.put("guild_data", new ArrayList<>());
         playerDocument.put("vote_data", new ArrayList<>());
+
+        playerDocument.put("last_daily_reward", "none");
 
         // Insert the new player
         DatabaseManager.USER_DATA.collection.insertOne(playerDocument);
