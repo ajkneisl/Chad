@@ -44,6 +44,7 @@ import org.woahoverflow.chad.commands.info.Chad;
 import org.woahoverflow.chad.commands.info.ChangeLog;
 import org.woahoverflow.chad.commands.info.Contributors;
 import org.woahoverflow.chad.commands.info.GuildInfo;
+import org.woahoverflow.chad.commands.function.GuildSettings;
 import org.woahoverflow.chad.commands.info.Help;
 import org.woahoverflow.chad.commands.info.RedditNew;
 import org.woahoverflow.chad.commands.info.RedditTop;
@@ -187,6 +188,7 @@ public final class ChadVar
         COMMANDS.put("redditnew", new Command.Data(Command.Category.INFO, new RedditNew(), "rnew"));
         COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
         COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
+        COMMANDS.put("guildsettings", new Data(Category.INFO, new GuildSettings(), "gset"));
 
         // PUNISHMENTS!
         COMMANDS.put("kick", new Command.Data(Command.Category.PUNISHMENTS, new Kick()));

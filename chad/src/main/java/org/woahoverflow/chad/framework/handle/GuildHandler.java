@@ -2,7 +2,6 @@ package org.woahoverflow.chad.framework.handle;
 
 import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
-import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Guild;
 
@@ -82,6 +81,10 @@ public class GuildHandler
         guildDocument.put("ban_message_on", true);
         guildDocument.put("kick_message_on", true);
 
+        // Statistics
+        guildDocument.put("messages_sent", 0L);
+        guildDocument.put("commands_sent", 0L);
+
         // Join Role
         guildDocument.put("role_on_join", false);
         guildDocument.put("join_role", "none");
@@ -135,13 +138,11 @@ public class GuildHandler
         // If the guild's in in the hash map, return it
         if (guilds.containsKey(guild))
         {
-            //ChadBot.getLogger().info("{} has an instance within the hash map", guild);
             return guilds.get(guild);
         }
 
         if (DatabaseManager.GUILD_DATA.documentExists(guild))
         {
-            //ChadBot.getLogger().info("{} has an instance within the database", guild);
             Document get = DatabaseManager.GUILD_DATA.collection.find(new Document("id", guild)).first();
 
             if (get == null)
@@ -153,8 +154,6 @@ public class GuildHandler
 
             return parseGuild(get, guild);
         }
-
-        //ChadBot.getLogger().info("{} doesn't have an instance", guild);
 
         // If it doesn't exist, make one
         Guild guildInstance = createPlayer(guild);

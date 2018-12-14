@@ -37,6 +37,9 @@ public class Guild
         // Swearing
         SWEAR_FILTER, SWEAR_FILTER_MESSAGE,
 
+        // Statistics
+        MESSAGES_SENT, COMMANDS_SENT,
+
         // Other
         ALLOW_COMMUNITY_FEATURES
     }
@@ -64,6 +67,10 @@ public class Guild
         // Logging
         guildData.put(DataType.LOGGING, false);
         guildData.put(DataType.LOGGING_CHANNEL, "none");
+
+        // Statistics
+        guildData.put(DataType.MESSAGES_SENT, 0L);
+        guildData.put(DataType.COMMANDS_SENT, 0L);
 
         // Messages
         guildData.put(DataType.JOIN_MESSAGE, "`&user&` has joined the server!");

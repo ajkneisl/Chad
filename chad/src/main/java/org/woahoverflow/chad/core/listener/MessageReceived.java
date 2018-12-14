@@ -9,6 +9,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
@@ -46,6 +47,8 @@ public final class MessageReceived
 
         Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
 
+        guild.setObject(DataType.MESSAGES_SENT, ((long) guild.getObject(DataType.MESSAGES_SENT)) + 1L);
+
         // The guild's prefix
         String prefix = ((String) guild.getObject(Guild.DataType.PREFIX)).toLowerCase();
 
@@ -81,6 +84,9 @@ public final class MessageReceived
         // If the user has 3 threads currently running, deny them
         if (!Chad.consumerRunThread(consumer))
             return;
+
+        // If it's about to run, update statistics
+        guild.setObject(DataType.COMMANDS_SENT, ((long) guild.getObject(DataType.COMMANDS_SENT)) + 1L);
 
         ChadVar.COMMANDS.forEach((key, val) -> {
             if (val.usesAliases())
