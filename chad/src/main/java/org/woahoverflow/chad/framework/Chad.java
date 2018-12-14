@@ -281,8 +281,6 @@ public final class Chad
             th.add(ranThread);
             threadHash.put(consumer, th);
         }
-
-        ChadBot.getLogger().info("{}", internalRunningThreads);
     }
 
     /**

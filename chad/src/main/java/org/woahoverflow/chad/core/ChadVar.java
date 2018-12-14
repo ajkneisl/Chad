@@ -5,12 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.CreatePlayer;
-import org.woahoverflow.chad.commands.admin.CurrentThreads;
-import org.woahoverflow.chad.commands.admin.ModifyPresence;
-import org.woahoverflow.chad.commands.admin.SetBalance;
-import org.woahoverflow.chad.commands.admin.Shutdown;
-import org.woahoverflow.chad.commands.admin.SystemInfo;
+import org.woahoverflow.chad.commands.admin.*;
 //import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fight.Respawn;
@@ -214,6 +209,7 @@ public final class ChadVar
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
         COMMANDS.put("setbal", new Command.Data(Command.Category.DEVELOPER, new SetBalance()));
         COMMANDS.put("createplayer", new Data(Category.DEVELOPER, new CreatePlayer()));
+        COMMANDS.put("testcommands", new Data(Category.DEVELOPER, new TestCommands()));
 
         // GAMBLING!
         //COMMANDS.put("register", new Command.Data(Command.Category.GAMBLING, new Register()));

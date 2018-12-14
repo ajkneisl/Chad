@@ -49,8 +49,6 @@ public final class MessageReceived
         // The guild's prefix
         String prefix = ((String) guild.getObject(Guild.DataType.PREFIX)).toLowerCase();
 
-        System.out.println("Effective Prefix " + prefix);
-
         // The user's threadconsumer
         ThreadConsumer consumer = Chad.getConsumer(event.getAuthor().getLongID());
 
