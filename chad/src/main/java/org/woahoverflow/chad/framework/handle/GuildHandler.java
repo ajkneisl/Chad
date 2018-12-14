@@ -135,13 +135,13 @@ public class GuildHandler
         // If the guild's in in the hash map, return it
         if (guilds.containsKey(guild))
         {
-            ChadBot.getLogger().info("{} has an instance within the hash map", guild);
+            //ChadBot.getLogger().info("{} has an instance within the hash map", guild);
             return guilds.get(guild);
         }
 
         if (DatabaseManager.GUILD_DATA.documentExists(guild))
         {
-            ChadBot.getLogger().info("{} has an instance within the database", guild);
+            //ChadBot.getLogger().info("{} has an instance within the database", guild);
             Document get = DatabaseManager.GUILD_DATA.collection.find(new Document("id", guild)).first();
 
             if (get == null)
@@ -154,7 +154,7 @@ public class GuildHandler
             return parseGuild(get, guild);
         }
 
-        ChadBot.getLogger().info("{} doesn't have an instance", guild);
+        //ChadBot.getLogger().info("{} doesn't have an instance", guild);
 
         // If it doesn't exist, make one
         Guild guildInstance = createPlayer(guild);
