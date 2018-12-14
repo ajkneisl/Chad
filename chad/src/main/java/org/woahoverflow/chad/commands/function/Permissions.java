@@ -1,11 +1,12 @@
 package org.woahoverflow.chad.commands.function;
 
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -89,6 +90,9 @@ public class Permissions implements Class  {
                 // Isolates the next option(s)
                 args.remove(0);
 
+                // The guild's instance
+                Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+
                 switch (option.toLowerCase()) {
                     case "add":
                         // The add can only add 1 command
@@ -99,11 +103,11 @@ public class Permissions implements Class  {
                         }
 
                         // Adds it to the database and gets the result
-                        int add = PermissionHandler.handle.addCommandToRole(role, args.get(0));
+                        int add = guild.addPermissionToRole(role.getLongID(), args.get(0).toLowerCase());
 
-                        // If the result was 6 (good) return the amount, if not return the correct error.
-                        if (add == 6)
-                            messageHandler.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                        // If the result was 0 (good) return the amount, if not return the correct error.
+                        if (add == 0)
+                            messageHandler.send("Added `" + args.get(0).toLowerCase() + "` command to role `" + role.getName() + "`.", "Permissions");
                         else
                             messageHandler.sendError(PermissionHandler.handle.parseErrorCode(add));
                         return;
@@ -116,17 +120,17 @@ public class Permissions implements Class  {
                         }
 
                         // Removes it from the database and gets the result
-                        int rem = PermissionHandler.handle.removeCommandFromRole(role, args.get(0));
+                        int rem = guild.removePermissionFromRole(role.getLongID(), args.get(0).toLowerCase());
 
-                        // If the result was 6 (good) return the amount, if not return the correct error.
-                        if (rem == 6)
+                        // If the result was 0 (good) return the amount, if not return the correct error.
+                        if (rem == 0)
                             messageHandler.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
                         else
                             messageHandler.sendError(PermissionHandler.handle.parseErrorCode(rem));
                         return;
                     case "view":
                         // Gets the permissions to a role
-                        ArrayList<String> ar = (ArrayList<String>) DatabaseManager.GUILD_DATA.getObject(e.getGuild().getLongID(), role.getStringID());
+                        ArrayList<String> ar = guild.getRolePermissions(role.getLongID());
 
                         // Checks if there's no permissions
                         if (ar == null || ar.isEmpty()) {

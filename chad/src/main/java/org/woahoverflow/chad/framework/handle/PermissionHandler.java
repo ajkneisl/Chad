@@ -78,83 +78,6 @@ public class PermissionHandler
     }
 
     /**
-     * Add a command to a role
-     *
-     * @param role The role to add to
-     * @param command The command to add
-     * @return The return code
-     */
-    public int addCommandToRole(IRole role, String command)
-    {
-        if (!parseCommand(command))
-            return 0;
-
-        Object unCastedArray = DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID());
-
-        if (!(unCastedArray instanceof ArrayList))
-        {
-            ArrayList<String> ar = new ArrayList<>();
-            ar.add(command);
-            DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
-            return 6;
-        }
-
-        ArrayList<String> arr = (ArrayList<String>) unCastedArray;
-        if (arr.isEmpty())
-        {
-            ArrayList<String> ar = new ArrayList<>();
-            ar.add(command);
-            DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
-            return 6;
-        }
-        if (arr.contains(command))
-            return 2;
-        ArrayList<String> ar = arr;
-        ar.add(command);
-        DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
-        return 6;
-    }
-
-    /**
-     * Removes a command from a role
-     *
-     * @param role The role to remove from
-     * @param command The command to remove
-     * @return The return code
-     */
-    @SuppressWarnings("unchecked")
-    public int removeCommandFromRole(IRole role, String command)
-    {
-        if (!parseCommand(command))
-            return 0;
-
-        if (DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID()) == null)
-            return 4;
-
-        ArrayList<String> ar = (ArrayList<String>) DatabaseManager.GUILD_DATA.getObject(role.getGuild().getLongID(), role.getStringID());
-
-        if (ar == null)
-            return 1;
-
-        ar.remove(command);
-
-        DatabaseManager.GUILD_DATA.setObject(role.getGuild().getLongID(), role.getStringID(), ar);
-        return 6;
-
-    }
-
-    /**
-     * Checks if a command exists
-     *
-     * @param arg The command
-     * @return If the command exists
-     */
-    private static boolean parseCommand(String arg)
-    {
-        return ChadVar.COMMANDS.containsKey(arg.toLowerCase());
-    }
-
-    /**
      * Turns the error code into a string
      *
      * @param i The error code
@@ -163,13 +86,13 @@ public class PermissionHandler
     public String parseErrorCode(int i)
     {
         if (i == 1)
-            return "An internal error has ocurred";
+            return "This role already has this command!";
         if (i == 2)
-            return "Command is already entered!";
-        if (i == 0)
-            return "Invalid Command!";
+            return "This role doesn't have that command!";
+        if (i == 3)
+            return "That command doesn't exist!";
         if (i == 4)
-            return "There's nothing to remove!";
-        return "An internal error has occurred!";
+            return "This role doesn't have any commands!";
+        return "I don't know how you got here.\nPlease report the used command to our forums at https://woahoverflow.org";
     }
 }

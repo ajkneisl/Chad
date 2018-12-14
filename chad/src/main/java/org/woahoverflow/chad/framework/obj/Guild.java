@@ -255,6 +255,10 @@ public class Guild
         if (!ChadVar.COMMANDS.containsKey(command))
             return 3;
 
+        // If there's no commands at all
+        if (permissionSet.isEmpty())
+            return 4;
+
         // Makes sure the role actually has the command
         if (!permissionSet.contains(command))
             return 1;
