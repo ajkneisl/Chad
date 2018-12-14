@@ -33,6 +33,13 @@ public class DownVote implements Command.Class {
             // Target
             IUser target = e.getMessage().getMentions().get(0);
 
+            // Makes sure they're not downvoting themselves
+            if (target.equals(e.getAuthor()))
+            {
+                messageHandler.sendError("You can't vote on that user!");
+                return;
+            }
+
             // The author's player instance
             Player author = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
 
