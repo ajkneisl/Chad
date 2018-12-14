@@ -49,26 +49,26 @@ public class PermissionHandler
      * @return If the user has permission to perform it
      */
     @SuppressWarnings("unchecked")
-    public boolean userHasPermission(String command, IUser user, IGuild guild)
+    public boolean userNoPermission(String command, IUser user, IGuild guild)
     {
         Class cmd = ChadVar.COMMANDS.get(command).getCommandClass();
 
         if (cmd == null)
-            return false; // return false if the command doesnt exist
+            return true; // return false if the command doesnt exist
 
         Command.Data meta = ChadVar.COMMANDS.get(command);
 
         // developers should always have permission for developer commands
         if (meta.getCommandCategory() == Category.DEVELOPER && userIsDeveloper(user))
-            return true;
+            return false;
 
         // All users should have access to these categories
         if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.GAMBLING, Category.MUSIC, Category.FIGHTING, Category.COMMUNITY).anyMatch(category -> meta.getCommandCategory() == category))
-            return true;
+            return false;
 
         // If the user is Administrator, they should have all guild related permissions
         if (user.getPermissionsForGuild(guild).contains(Permissions.ADMINISTRATOR))
-            return true;
+            return false;
 
         // loop through the users roles, if the role has permission for the command, return true
         // return false if none of the users roles have permission for the command

@@ -22,7 +22,7 @@ public class TestCommands implements Command.Class {
 
                 try {
                     TimeUnit.SECONDS.sleep(3);
-                } catch (Exception ex) { ex.printStackTrace(); }
+                } catch (InterruptedException ex) { ex.printStackTrace(); }
 
                 switch (data.getCommandAliases()[0])
                 {

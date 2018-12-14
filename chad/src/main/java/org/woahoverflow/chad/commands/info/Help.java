@@ -47,7 +47,7 @@ public class Help implements Command.Class {
                         continue;
 
                     // Makes sure the user has permission
-                    if (!PermissionHandler.handle.userHasPermission(stringDataEntry.getKey(), e.getAuthor(), e.getGuild()))
+                    if (PermissionHandler.handle.userNoPermission(stringDataEntry.getKey(), e.getAuthor(), e.getGuild()))
                         continue;
 
                     // Adds the command to the builder

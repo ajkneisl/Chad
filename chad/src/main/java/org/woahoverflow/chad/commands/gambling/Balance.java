@@ -1,13 +1,10 @@
 package org.woahoverflow.chad.commands.gambling;
 
-import java.io.IOException;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
-import org.woahoverflow.chad.framework.ui.UIHandler;
-import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
@@ -16,6 +13,8 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
 /**
+ * Gets a user's balance
+ *
  * @author sho
  * @since 0.6.3 B2
  */

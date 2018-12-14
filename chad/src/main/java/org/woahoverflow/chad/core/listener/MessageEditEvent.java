@@ -30,9 +30,9 @@ public final class MessageEditEvent
     public void messageEditEvent(sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent event)
     {
         Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
-        boolean stop_swear = (boolean) guild.getObject(Guild.DataType.SWEAR_FILTER);
+        boolean stopSwear = (boolean) guild.getObject(Guild.DataType.SWEAR_FILTER);
 
-        if (stop_swear)
+        if (stopSwear)
         {
             String[] argArray = event.getNewMessage().getContent().split(" ");
 

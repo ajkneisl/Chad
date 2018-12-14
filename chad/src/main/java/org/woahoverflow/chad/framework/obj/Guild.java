@@ -164,6 +164,7 @@ public class Guild
      * @param role The role to get permissions for
      * @return The role's permissions
      */
+    @SuppressWarnings("unchecked")
     public ArrayList<String> getRolePermissions(long role)
     {
         // If the data's in the permission hash-map, return that

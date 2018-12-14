@@ -13,6 +13,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.util.EmbedBuilder;
 
 /**
+ * Filters through swears
+ *
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */

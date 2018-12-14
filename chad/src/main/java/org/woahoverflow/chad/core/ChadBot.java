@@ -82,6 +82,9 @@ public final class ChadBot {
 
         // Initializes the framework & a lot of stuff
         Chad.init();
+
+        // Logs out of the client on shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread(cli::logout));
     }
 
 }

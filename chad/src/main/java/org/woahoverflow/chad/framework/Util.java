@@ -111,12 +111,11 @@ public final class Util
         return RequestBuffer.request(cli::getGuilds).get().stream().anyMatch(g -> g.getLongID() == guild);
     }
 
-    public static String getCurrentDateTime()
+    private static String getCurrentDateTime()
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        Date date = new Date();
-        System.out.println(dateFormat.format(date));
-        return dateFormat.format(date);
+        System.out.println(dateFormat.format(new Date()));
+        return dateFormat.format(new Date());
     }
 
     public static long getCurrentEpoch()
@@ -128,7 +127,7 @@ public final class Util
         return instant.toEpochMilli();
     }
 
-    public static long howOld(long searchTimestamp)
+    private static long howOld(long searchTimestamp)
     {
         return Math.abs(System.currentTimeMillis() - searchTimestamp);
     }
@@ -137,10 +136,6 @@ public final class Util
     {
         int time = seconds * 60 * 1000;
         long difference = howOld(searchTimestamp);
-        if (difference < time) {
-            return false;
-        }
-
-        return true;
+        return difference >= time;
     }
 }

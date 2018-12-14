@@ -95,7 +95,7 @@ public final class MessageReceived
                         }
 
                         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-                        if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
+                        if (PermissionHandler.handle.userNoPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                         {
                             new MessageHandler(event.getChannel(), event.getAuthor()).sendError(MessageHandler.USER_NO_PERMISSION);
                             return;
@@ -119,7 +119,7 @@ public final class MessageReceived
                 }
 
                 // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-                if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
+                if (PermissionHandler.handle.userNoPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
                     new MessageHandler(event.getChannel(), event.getAuthor()).sendError(MessageHandler.USER_NO_PERMISSION);
                     return;

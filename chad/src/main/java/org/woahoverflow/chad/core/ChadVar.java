@@ -5,8 +5,13 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.*;
-//import org.woahoverflow.chad.commands.fight.Attack;
+import org.woahoverflow.chad.commands.admin.CreatePlayer;
+import org.woahoverflow.chad.commands.admin.CurrentThreads;
+import org.woahoverflow.chad.commands.admin.ModifyPresence;
+import org.woahoverflow.chad.commands.admin.SetBalance;
+import org.woahoverflow.chad.commands.admin.Shutdown;
+import org.woahoverflow.chad.commands.admin.SystemInfo;
+import org.woahoverflow.chad.commands.admin.TestCommands;
 import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fight.Respawn;
 import org.woahoverflow.chad.commands.fight.ViewPlayer;
@@ -205,9 +210,8 @@ public final class ChadVar
         COMMANDS.put("threads", new Command.Data(Command.Category.DEVELOPER, new CurrentThreads()));
         COMMANDS.put("modpresence", new Command.Data(Command.Category.DEVELOPER, new ModifyPresence()));
         COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo()));
-        //COMMANDS.put("cache", new Command.Data(Command.Category.DEVELOPER, new Cache()));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
-        COMMANDS.put("setbal", new Command.Data(Command.Category.DEVELOPER, new SetBalance()));
+        COMMANDS.put("setbalance", new Command.Data(Command.Category.DEVELOPER, new SetBalance(), "setbal"));
         COMMANDS.put("createplayer", new Data(Category.DEVELOPER, new CreatePlayer()));
         COMMANDS.put("testcommands", new Data(Category.DEVELOPER, new TestCommands()));
 

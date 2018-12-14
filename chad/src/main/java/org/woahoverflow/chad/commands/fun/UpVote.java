@@ -12,9 +12,12 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
 /**
+ * Suppresses a player's profile
+ *
  * @author sho
  * @since 0.7.0
  */
+@SuppressWarnings("unchecked")
 public class UpVote implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -50,16 +53,20 @@ public class UpVote implements Command.Class {
             // The target user's player instance
             Player targetPlayer = PlayerHandler.handle.getPlayer(target.getLongID());
 
+            // The target user's upvote amount
+            long targetPlayerUpvote = (long) targetPlayer.getObject(DataType.PROFILE_UPVOTE);
+
+            // The target user's downvote amount
+            long targetPlayerDownvote = (long) targetPlayer.getObject(DataType.PROFILE_DOWNVOTE);
+
+            // Update values
             targetPlayer.setObject(
-                DataType.PROFILE_UPVOTE,
-                (((Long) targetPlayer.getObject(DataType.PROFILE_UPVOTE)) + 1L)
-            );
+                DataType.PROFILE_UPVOTE, targetPlayerUpvote+1L
+                );
 
             messageHandler.sendEmbed(new EmbedBuilder().withDesc(
                 "You upvoted `" + target.getName() + "`!\n"
-                    + "Their vote is now `" +
-                    targetPlayer.getObject(DataType.PROFILE_DOWNVOTE) + targetPlayer.getObject(DataType.PROFILE_UPVOTE)
-                    + "`!"
+                    + "Their vote is now `"+((targetPlayerUpvote+1L)-targetPlayerDownvote)+ "`!"
             ));
         };
     }

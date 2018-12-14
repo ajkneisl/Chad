@@ -1,7 +1,5 @@
 package org.woahoverflow.chad.commands.gambling;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
@@ -14,6 +12,8 @@ import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 /**
+ * Gets a daily reward of money
+ *
  * @author sho
  * @since 0.6.3 B2
  */
@@ -81,7 +81,7 @@ public class DailyReward implements Class {
 //            }
 
             // Get the user's current balance
-            long currentBalance = (long) DatabaseManager.handle.get(e.getGuild(), e.getAuthor().getStringID()+"_balance");
+            long currentBalance = (long) player.getObject(DataType.BALANCE);
 
             // Adds the money
             player.setObject(DataType.BALANCE, currentBalance+2000);

@@ -34,9 +34,9 @@ public class JsonHandler
     public static final JsonHandler handle = new JsonHandler().forceCheck();
 
     /**
-     * Public Constructor
+     * Private Constructor
      */
-    public JsonHandler()
+    private JsonHandler()
     {
         super();
     }
@@ -67,7 +67,7 @@ public class JsonHandler
                     fileWriter.write(obj.toString());
                     fileWriter.flush();
                 } catch (IOException e) {
-                    ChadError.throwError("There was an throwError creating files during startup!", e);
+                    ChadError.throwError("There was an error creating files during startup!", e);
                 }
             }
             File imgDirectory = new File(System.getenv("appdata") + "\\chad\\imgcache");
@@ -80,7 +80,7 @@ public class JsonHandler
                     .addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
         } catch (IOException e)
         {
-            ChadError.throwError("There was an throwError creating files during startup!", e);
+            ChadError.throwError("There was an error creating files during startup!", e);
         }
         return this;
     }

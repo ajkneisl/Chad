@@ -40,11 +40,6 @@ public class MessageHandler
     private final IChannel channel;
 
     /**
-     * The user who requested it
-     */
-    public final IUser user;
-
-    /**
      * The user's avatar URL
      */
     private final String avatar_url;
@@ -58,10 +53,10 @@ public class MessageHandler
      * Public Constructor
      *
      * @param channel The channel to send the messages in
+     * @param user The user who requested the message handler
      */
     public MessageHandler(IChannel channel, IUser user)
     {
-        this.user = user;
         this.channel = channel;
 
         avatar_url = RequestBuffer.request(user::getAvatarURL).get();

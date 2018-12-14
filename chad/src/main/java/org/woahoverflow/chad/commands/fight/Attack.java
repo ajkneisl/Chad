@@ -20,7 +20,7 @@ import sx.blah.discord.util.RequestBuilder;
  */
 public class Attack implements Command.Class
 {
-    public MessageHandler messageHandler;
+    private MessageHandler messageHandler;
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
