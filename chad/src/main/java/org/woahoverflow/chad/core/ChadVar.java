@@ -53,6 +53,7 @@ import org.woahoverflow.chad.commands.info.UserInfo;
 import org.woahoverflow.chad.commands.music.Leave;
 import org.woahoverflow.chad.commands.music.Pause;
 import org.woahoverflow.chad.commands.music.Play;
+import org.woahoverflow.chad.commands.music.Queue;
 import org.woahoverflow.chad.commands.music.Skip;
 import org.woahoverflow.chad.commands.music.Volume;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
@@ -228,6 +229,7 @@ public final class ChadVar
         COMMANDS.put("pause", new Data(Category.MUSIC, new Pause()));
         COMMANDS.put("leave", new Data(Category.MUSIC, new Leave()));
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
+        COMMANDS.put("queue", new Data(Category.MUSIC, new Queue()));
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume()));
 
         // FIGHTING

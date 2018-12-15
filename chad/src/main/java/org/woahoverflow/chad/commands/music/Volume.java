@@ -11,7 +11,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
  * @author sho
  * @since 0.7.0
  */
-public class Volume implements Command.Class{
+public class Volume implements Command.Class
+{
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

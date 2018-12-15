@@ -37,7 +37,7 @@ public class Leave implements Command.Class {
     @Override
     public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("leave", "Leaves the voice channel");
+        st.put("leave", "Leaves the voice channel and clears the queue.");
         return Command.helpCommand(st, "Leave", e);
     }
 }

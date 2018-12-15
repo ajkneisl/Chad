@@ -33,6 +33,19 @@ public class Skip implements Command.Class
                 return;
             }
 
+            // If they wanted to skip all
+            if (args.get(0).equalsIgnoreCase("all"))
+            {
+                manager.clear();
+
+                messageHandler.sendError("Queue is empty, leaving!");
+                channel.leave();
+
+                // Gets rid of the playing song
+                manager.clear();
+                return;
+            }
+
             // If there's a next track, play that
             if (manager.scheduler.nextTrack())
             {
@@ -52,7 +65,8 @@ public class Skip implements Command.Class
     @Override
     public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("skip", "Skips the current song");
+        st.put("skip", "Skips the current song.");
+        st.put("skip all", "Skips all the current songs.");
         return Command.helpCommand(st, "Skip", e);
     }
 }

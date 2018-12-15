@@ -72,6 +72,30 @@ public class TrackScheduler extends AudioEventAdapter
     }
 
     /**
+     * Gets the next track, but doesn't play
+     *
+     * @return The next track
+     */
+    public AudioTrack getNextTrack()
+    {
+        if (queue.isEmpty())
+            return null;
+
+        return queue.get(0);
+    }
+
+    /**
+     * Gets the local audio queue
+     *
+     * @return The queue
+     */
+    public List<AudioTrack> getFullQueue()
+    {
+        return queue;
+    }
+
+
+    /**
      * The event on track end
      *
      * @param player The audio player

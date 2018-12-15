@@ -51,7 +51,7 @@ public class Pause implements Command.Class
     @Override
     public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("stop", "Stops playing music");
+        st.put("pause", "Pauses the currently playing music.");
         return Command.helpCommand(st, "Stop", e);
     }
 }
