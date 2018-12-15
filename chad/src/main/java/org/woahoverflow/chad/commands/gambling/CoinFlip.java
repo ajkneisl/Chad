@@ -16,6 +16,7 @@ import sx.blah.discord.handle.obj.IUser;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
@@ -326,7 +327,8 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Removes all the reactions
-                RequestBuffer.request(pick::removeAllReactions);
+                if (e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES))
+                    RequestBuffer.request(pick::removeAllReactions);
 
                 // Ties the user's balances to their name
                 long tailsBalance;

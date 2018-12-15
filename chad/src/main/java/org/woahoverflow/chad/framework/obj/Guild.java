@@ -2,10 +2,8 @@ package org.woahoverflow.chad.framework.obj;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import org.bson.Document;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 
 public class Guild
@@ -135,7 +133,7 @@ public class Guild
     }
 
     /**
-     * Gets data from a string
+     * Gets data from a string, directly from the database.
      *
      * @param dataType The data's key
      * @return The retrieved data
@@ -143,16 +141,6 @@ public class Guild
     public Object getObject(String dataType)
     {
         return DatabaseManager.USER_DATA.getObject(guild, dataType);
-    }
-
-    /**
-     * Sets data from a string
-     */
-    public void setObject(String dataType, Object value)
-    {
-        DatabaseManager.GUILD_DATA.setObject(guild, dataType.toLowerCase(), value);
-
-        GuildHandler.handle.refreshGuild(guild);
     }
 
     /**
