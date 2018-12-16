@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import org.woahoverflow.chad.core.ChadBot;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -63,10 +64,10 @@ public final class Util
             int responseCode = con.getResponseCode();
             if (responseCode != 200)
             {
-                System.out.println("\nThere was an error sending a request to url : " + url);
-                System.out.println("Response Code : " + responseCode);
+                ChadBot.getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode);
                 return "";
             }
+            ChadBot.getLogger().info("Sent a request to url {}", url);
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             String response = in.lines().collect(Collectors.joining());

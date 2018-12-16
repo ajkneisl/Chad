@@ -27,6 +27,7 @@ import org.woahoverflow.chad.commands.fun.Profile;
 import org.woahoverflow.chad.commands.fun.Random;
 import org.woahoverflow.chad.commands.fun.RockPaperScissors;
 import org.woahoverflow.chad.commands.fun.RussianRoulette;
+import org.woahoverflow.chad.commands.info.SubscriberCount;
 import org.woahoverflow.chad.commands.fun.UpVote;
 import org.woahoverflow.chad.commands.fun.WordReverse;
 import org.woahoverflow.chad.commands.function.AutoRole;
@@ -60,6 +61,7 @@ import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Data;
@@ -111,6 +113,16 @@ public final class ChadVar
      * The music manager for guilds
      */
     public static final ConcurrentHashMap<Long, GuildMusicManager> musicManagers = new ConcurrentHashMap<>();
+
+    /**
+     * The Youtube API Key in the bot.json file
+     */
+    public static final String YOUTUBE_API_KEY = JsonHandler.handle.get("youtube_api_key");
+
+    /**
+     * The Steam API key in the bot.json file
+     */
+    public static final String STEAM_API_KEY = JsonHandler.handle.get("steam_api_key");
 
     /*
       Registers sources for the player manager
@@ -190,6 +202,7 @@ public final class ChadVar
         COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
         COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
         COMMANDS.put("guildsettings", new Data(Category.INFO, new GuildSettings(), "gset"));
+        COMMANDS.put("subcount", new Data(Category.INFO, new SubscriberCount()));
 
         // PUNISHMENTS!
         COMMANDS.put("kick", new Command.Data(Command.Category.PUNISHMENTS, new Kick()));

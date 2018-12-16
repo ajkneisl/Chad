@@ -60,9 +60,9 @@ public class JsonHandler
                     .addLog("Created Bot Directory : " + bot.createNewFile(), UIHandler.LogLevel.INFO);
                 org.json.JSONObject obj = new org.json.JSONObject();
                 obj.put("token", "");
-                obj.put("steam_api_token", "");
+                obj.put("steam_api_key", "");
                 obj.put("uri_link", "");
-                obj.put("unstable", false);
+                obj.put("youtube_api_key", "");
                 try (FileWriter fileWriter = new FileWriter(bot)) {
                     fileWriter.write(obj.toString());
                     fileWriter.flush();
