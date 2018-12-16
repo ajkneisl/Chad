@@ -10,6 +10,10 @@ import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
+/**
+ * @author sho
+ * @since 0.7.0
+ */
 public class GuildSettings implements Command.Class {
 
     @Override

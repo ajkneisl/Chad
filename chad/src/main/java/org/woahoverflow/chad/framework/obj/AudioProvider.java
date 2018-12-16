@@ -2,7 +2,6 @@ package org.woahoverflow.chad.framework.obj;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-import com.sun.istack.internal.NotNull;
 import sx.blah.discord.handle.audio.AudioEncodingType;
 import sx.blah.discord.handle.audio.IAudioProvider;
 

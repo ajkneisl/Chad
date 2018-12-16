@@ -67,7 +67,7 @@ public final class Util
                 ChadBot.getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode);
                 return "";
             }
-            ChadBot.getLogger().info("Sent a request to url {}", url);
+            ChadBot.getLogger().info("Fulfilled a request at URL : {}", url);
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             String response = in.lines().collect(Collectors.joining());

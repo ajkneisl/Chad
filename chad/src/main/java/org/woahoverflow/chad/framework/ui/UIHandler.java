@@ -75,7 +75,7 @@ public class UIHandler
                 return;
             }
 
-            while (!ChadVar.launchOptions.get("-denyuiupdate"))
+            while (ChadVar.launchOptions.get("-denyuiupdate"))
             {
                 try {
                     TimeUnit.MINUTES.sleep(5);

@@ -17,9 +17,9 @@ public class DatabaseManager
 {
 
     /**
-     * The global handle for the Database
+     * The private handle for the Database
      */
-    public static final DatabaseManager handle = new DatabaseManager();
+    private static final DatabaseManager handle = new DatabaseManager();
 
     /**
      * The Mongo Client
@@ -63,7 +63,7 @@ public class DatabaseManager
      * @param identifier The key to locate the document
      * @return The retrieved collection
      */
-    public final DatabaseHandle getSeparateCollection(String colName, String identifier)
+    private DatabaseHandle getSeparateCollection(String colName, String identifier)
     {
         return new DatabaseHandle(db.getCollection(colName), identifier);
     }

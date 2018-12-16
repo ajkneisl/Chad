@@ -13,9 +13,12 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
+/**
+ * @author sho
+ * @since 0.7.0
+ */
 public class DivorcePlayer implements Command.Class
 {
-
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {

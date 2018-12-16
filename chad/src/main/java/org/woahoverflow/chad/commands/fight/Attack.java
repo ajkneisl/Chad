@@ -76,7 +76,6 @@ public class Attack implements Command.Class
             if ((int)plyAuthor.getObject(Player.DataType.SWORD_HEALTH) < 1)
             {
                 messageHandler.sendMessage("Your sword broke, " + author.mention() + '!');
-                return;
             }
         };
     }

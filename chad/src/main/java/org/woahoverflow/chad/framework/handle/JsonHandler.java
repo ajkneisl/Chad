@@ -46,7 +46,7 @@ public class JsonHandler
      *
      * @return The handle
      */
-    public synchronized JsonHandler forceCheck()
+    private synchronized JsonHandler forceCheck()
     {
         try
         {

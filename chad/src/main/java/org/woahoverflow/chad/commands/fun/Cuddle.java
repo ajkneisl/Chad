@@ -11,6 +11,10 @@ import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 
+/**
+ * @author codebasepw
+ * @since 0.7.0
+ */
 public class Cuddle implements Command.Class {
 
     @Override

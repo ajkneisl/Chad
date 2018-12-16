@@ -1,16 +1,12 @@
 package org.woahoverflow.chad.framework.handle;
 
 import java.util.stream.Stream;
-import org.bson.Document;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Class;
-import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
 import java.util.ArrayList;
