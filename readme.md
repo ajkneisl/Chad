@@ -1,6 +1,6 @@
-# Chad 
-
 [![Discord Server](https://img.shields.io/discord/504413906471485460.svg?logo=discord)](https://discord.gg/Wv4nhSz) [![Build Status](https://img.shields.io/travis/woahoverflow/Chad.svg?logo=travis)](https://travis-ci.org/woahoverflow/Chad) [![Website](https://img.shields.io/badge/visit%20our-website-blue.svg)](https://woahoverflow.org) 
+
+# Chad 
 
 Chad is a Discord bot. Chad can be used to do a lot, such as moderation or playing music. Go [here](https://woahoverflow.org/chad) to view all of Chad's features.
 
