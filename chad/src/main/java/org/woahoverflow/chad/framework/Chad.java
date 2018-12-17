@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,6 +23,7 @@ import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
+import sx.blah.discord.api.internal.DiscordUtils;
 import sx.blah.discord.handle.obj.IGuild;
 
 /**
@@ -88,9 +87,14 @@ public final class Chad
     public static int internalRunningThreads;
 
     /**
-     * The executor service, where every thread runs
+     * Where all internal threads are run
      */
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(30);
+    private static final ExecutorService internalExecutorService = Executors.newFixedThreadPool(30, DiscordUtils.createDaemonThreadFactory("Internal"));
+
+    /**
+     * Where all external (commands etc) threads are run
+     */
+    private static final ExecutorService externalExecutorService = Executors.newCachedThreadPool(DiscordUtils.createDaemonThreadFactory("Command Handler"));
 
     /**
      * The internal thread consumer
@@ -113,38 +117,33 @@ public final class Chad
         /*
         Chad's Thread Counting
          */
-        runThread(
-            () -> new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (!threadHash.isEmpty())
+        runThread(() -> {
+            while (!threadHash.isEmpty())
+            {
+                threadHash.forEach((key, val) -> {
+                    if (!val.isEmpty())
                     {
-                        threadHash.forEach((key, val) -> {
-                            if (!val.isEmpty())
+                        for (int i = 0; val.size() > i; i++)
+                        {
+                            if (val.get(i).isDone())
                             {
-                                for (int i = 0; val.size() > i; i++)
+                                val.remove(val.get(i));
+                                if (key.isDiscordUser())
                                 {
-                                    if (val.get(i).isDone())
-                                    {
-                                        val.remove(val.get(i));
-                                        if (key.isDiscordUser())
-                                        {
-                                            runningThreads--;
-                                        }
-                                        else {
-                                            internalRunningThreads--;
-                                        }
-                                    }
+                                    runningThreads--;
+                                }
+                                else {
+                                    internalRunningThreads--;
                                 }
                             }
-                            else {
-                                threadHash.remove(key);
-                            }
-                        });
+                        }
                     }
-                }
-            }, 0, 1000), getInternalConsumer() // gets internal consumer
-        );
+                    else {
+                        threadHash.remove(key);
+                    }
+                });
+            }
+        },getInternalConsumer());
 
 
         /*
@@ -257,27 +256,33 @@ public final class Chad
      * @param thread The thread to be run
      * @param consumer The consumer to tie it to
      */
-    public static synchronized void runThread(Runnable thread, ThreadConsumer consumer)
+    public static void runThread(Runnable thread, ThreadConsumer consumer)
     {
-        // If they're a discord user, add a running thread to the default
+        Future<?> future;
+
+        // If they're a discord user, add a running thread & submit it
         if (consumer.isDiscordUser())
+        {
             runningThreads++;
-        else
-            internalRunningThreads++; // If not, it's an internal thread
 
-        // Run the thread
-        Future<?> ranThread = executorService.submit(thread);
+            future = externalExecutorService.submit(thread);
+        }
+        else { // If they're not a discord user, apply them to the internal executor
+            internalRunningThreads++;
 
-        // Add it to the hashmap
+            future = internalExecutorService.submit(thread);
+        }
+
+        // Add it to the hash map
         if (threadHash.containsKey(consumer))
         {
             ArrayList<Future<?>> th = threadHash.get(consumer);
-            th.add(ranThread);
+            th.add(future);
             threadHash.put(consumer, th);
         }
         else {
             ArrayList<Future<?>> th = new ArrayList<>();
-            th.add(ranThread);
+            th.add(future);
             threadHash.put(consumer, th);
         }
     }
