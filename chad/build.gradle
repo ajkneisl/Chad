@@ -22,7 +22,7 @@ configurations {
 }
 
 dependencies {
-    extraLibs "com.discord4j:Discord4J:2.10.1"
+    extraLibs 'com.discord4j:Discord4J:2.10.1'
     extraLibs group: 'org.mongodb', name: 'mongo-java-driver', version: '3.9.0'
     extraLibs 'com.google.code.gson:gson:2.8.5'
     extraLibs 'com.google.guava:guava:27.0-jre'
