@@ -43,7 +43,7 @@ public class SteamStatus implements Command.Class {
 
             );
 
-            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(embedBuilder);
+            new MessageHandler(e.getChannel(), e.getAuthor()).credit("steamguag.es").sendEmbed(embedBuilder);
         };
     }
 

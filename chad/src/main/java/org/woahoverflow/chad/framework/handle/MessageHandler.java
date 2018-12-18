@@ -50,6 +50,11 @@ public class MessageHandler
     private final String user_name;
 
     /**
+     * If there's credit within the footer text
+     */
+    private String credit;
+
+    /**
      * Public Constructor
      *
      * @param channel The channel to send the messages in
@@ -61,6 +66,19 @@ public class MessageHandler
 
         avatar_url = RequestBuffer.request(user::getAvatarURL).get();
         user_name = RequestBuffer.request(user::getName).get();
+    }
+
+    /**
+     * Sets credit for messages
+     *
+     * @param credit The credit to be given (ex: website)
+     * @return This
+     */
+    public MessageHandler credit(String credit)
+    {
+        this.credit = credit;
+
+        return this;
     }
 
     /**
@@ -95,8 +113,10 @@ public class MessageHandler
         // Makes the color random
         embedBuilder.withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
 
-        // Adds the user who requested mark
-        embedBuilder.withFooterText("Requested by "+user_name);
+        // Adds the user who requested mark, or add credit
+        String footer = credit == null ? "Requested by "+user_name : "Requested by "+user_name+" | " + credit;
+
+        embedBuilder.withFooterText(footer);
         embedBuilder.withFooterIcon(avatar_url);
 
         // Requests the message to be sent

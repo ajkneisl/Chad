@@ -122,7 +122,7 @@ public final class Chad
             while (!threadHash.isEmpty())
             {
                 try {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(2);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
