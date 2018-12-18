@@ -27,6 +27,7 @@ import org.woahoverflow.chad.commands.fun.Profile;
 import org.woahoverflow.chad.commands.fun.Random;
 import org.woahoverflow.chad.commands.fun.RockPaperScissors;
 import org.woahoverflow.chad.commands.fun.RussianRoulette;
+import org.woahoverflow.chad.commands.info.SteamStatus;
 import org.woahoverflow.chad.commands.info.SubscriberCount;
 import org.woahoverflow.chad.commands.fun.UpVote;
 import org.woahoverflow.chad.commands.fun.WordReverse;
@@ -203,6 +204,7 @@ public final class ChadVar
         COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
         COMMANDS.put("guildsettings", new Data(Category.INFO, new GuildSettings(), "gset"));
         COMMANDS.put("subcount", new Data(Category.INFO, new SubscriberCount()));
+        COMMANDS.put("steamstatus", new Data(Category.INFO, new SteamStatus(), "steamst"));
 
         // PUNISHMENTS!
         COMMANDS.put("kick", new Command.Data(Command.Category.PUNISHMENTS, new Kick()));

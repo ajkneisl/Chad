@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.commands.info;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.YouTubeHandler;
@@ -84,6 +85,9 @@ public class SubscriberCount implements Command.Class
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("subcount <youtuber name>", "Gets a profile of a YouTuber.");
+        st.put("subcount vs <youtuber name> <2nd youtuber name>", "Compares two YouTuber's subscriber counts.");
+        return Command.helpCommand(st, "Subscriber Count", e);
     }
 }
