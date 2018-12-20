@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+
+import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Class;
@@ -36,8 +39,8 @@ public class DailyReward implements Class {
                 // Adds the money
                 player.setObject(DataType.BALANCE, userBalance+2000);
 
-                // Updates the user's ldr
-                player.setObject(DataType.LAST_DAILY_REWARD, "" /* TODO */);
+                // Updates the user's ldr to the current time
+                player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis());
 
                 // Send the message
                 messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");
@@ -55,39 +58,22 @@ public class DailyReward implements Class {
             }
 
             // TODO return in this if the user can't claim it
-//            // Makes sure it's not the same day as they last claimed it
-//            if (DateTimeFormatter.ofPattern("MM&dd&yyyy").format(LocalDateTime.now()).equalsIgnoreCase(lastDailyReward))
-//            {
-//                // Get the day, year and month
-//                String[] dayYearMonth = lastDailyReward.split("&");
-//
-//                // Build the date they'll be able to get it next
-//                String newTime;
-//                try {
-//                    newTime = dayYearMonth[0] + '/';
-//
-//                    int newDay = Integer.parseInt(dayYearMonth[1])+1;
-//
-//                    newTime += !(Integer.parseInt(dayYearMonth[1]) > 9) ? "0" + newDay : newDay;
-//                    newTime += '/' + dayYearMonth[2];
-//                } catch (NumberFormatException throwaway) {
-//                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-//                    return;
-//                }
-//
-//                // Sends the message
-//                messageHandler.sendError("You can't claim your reward until `"+ newTime +"`!");
-//                return;
-//            }
+            long difference = Util.howOld(Long.parseLong(lastDailyReward));
+            int day = 24 * 60 * 60 * 1000;
+            if (difference < day)
+            {
+                messageHandler.sendError("Sorry, you can only claim your reward once a day.");
+                return;
+            }
 
             // Get the user's current balance
-            long currentBalance = (long) DatabaseManager.handle.get(e.getGuild(), e.getAuthor().getStringID()+"_balance");
+            long currentBalance = (long) player.getObject(DataType.BALANCE);
 
             // Adds the money
             player.setObject(DataType.BALANCE, currentBalance+2000);
 
             // Updates the user's ldr
-            player.setObject(DataType.LAST_DAILY_REWARD, "" /* TODO */);
+            player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis());
 
             // Send the message
             messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");
