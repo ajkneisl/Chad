@@ -5,8 +5,13 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.*;
-//import org.woahoverflow.chad.commands.fight.Attack;
+import org.woahoverflow.chad.commands.admin.CreatePlayer;
+import org.woahoverflow.chad.commands.admin.CurrentThreads;
+import org.woahoverflow.chad.commands.admin.ModifyPresence;
+import org.woahoverflow.chad.commands.admin.SetBalance;
+import org.woahoverflow.chad.commands.admin.Shutdown;
+import org.woahoverflow.chad.commands.admin.SystemInfo;
+import org.woahoverflow.chad.commands.admin.TestCommands;
 import org.woahoverflow.chad.commands.fight.Attack;
 import org.woahoverflow.chad.commands.fight.Respawn;
 import org.woahoverflow.chad.commands.fight.ViewPlayer;
@@ -22,6 +27,8 @@ import org.woahoverflow.chad.commands.fun.Profile;
 import org.woahoverflow.chad.commands.fun.Random;
 import org.woahoverflow.chad.commands.fun.RockPaperScissors;
 import org.woahoverflow.chad.commands.fun.RussianRoulette;
+import org.woahoverflow.chad.commands.info.SteamStatus;
+import org.woahoverflow.chad.commands.info.SubscriberCount;
 import org.woahoverflow.chad.commands.fun.UpVote;
 import org.woahoverflow.chad.commands.fun.WordReverse;
 import org.woahoverflow.chad.commands.function.AutoRole;
@@ -39,6 +46,7 @@ import org.woahoverflow.chad.commands.info.Chad;
 import org.woahoverflow.chad.commands.info.ChangeLog;
 import org.woahoverflow.chad.commands.info.Contributors;
 import org.woahoverflow.chad.commands.info.GuildInfo;
+import org.woahoverflow.chad.commands.function.GuildSettings;
 import org.woahoverflow.chad.commands.info.Help;
 import org.woahoverflow.chad.commands.info.RedditNew;
 import org.woahoverflow.chad.commands.info.RedditTop;
@@ -47,12 +55,14 @@ import org.woahoverflow.chad.commands.info.UserInfo;
 import org.woahoverflow.chad.commands.music.Leave;
 import org.woahoverflow.chad.commands.music.Pause;
 import org.woahoverflow.chad.commands.music.Play;
+import org.woahoverflow.chad.commands.music.Queue;
 import org.woahoverflow.chad.commands.music.Skip;
 import org.woahoverflow.chad.commands.music.Volume;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Data;
@@ -104,6 +114,16 @@ public final class ChadVar
      * The music manager for guilds
      */
     public static final ConcurrentHashMap<Long, GuildMusicManager> musicManagers = new ConcurrentHashMap<>();
+
+    /**
+     * The Youtube API Key in the bot.json file
+     */
+    public static final String YOUTUBE_API_KEY = JsonHandler.handle.get("youtube_api_key");
+
+    /**
+     * The Steam API key in the bot.json file
+     */
+    public static final String STEAM_API_KEY = JsonHandler.handle.get("steam_api_key");
 
     /*
       Registers sources for the player manager
@@ -182,6 +202,9 @@ public final class ChadVar
         COMMANDS.put("redditnew", new Command.Data(Command.Category.INFO, new RedditNew(), "rnew"));
         COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
         COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
+        COMMANDS.put("guildsettings", new Data(Category.INFO, new GuildSettings(), "gset"));
+        COMMANDS.put("subcount", new Data(Category.INFO, new SubscriberCount()));
+        COMMANDS.put("steamstatus", new Data(Category.INFO, new SteamStatus(), "steamst"));
 
         // PUNISHMENTS!
         COMMANDS.put("kick", new Command.Data(Command.Category.PUNISHMENTS, new Kick()));
@@ -205,9 +228,8 @@ public final class ChadVar
         COMMANDS.put("threads", new Command.Data(Command.Category.DEVELOPER, new CurrentThreads()));
         COMMANDS.put("modpresence", new Command.Data(Command.Category.DEVELOPER, new ModifyPresence()));
         COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo()));
-        //COMMANDS.put("cache", new Command.Data(Command.Category.DEVELOPER, new Cache()));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
-        COMMANDS.put("setbal", new Command.Data(Command.Category.DEVELOPER, new SetBalance()));
+        COMMANDS.put("setbalance", new Command.Data(Command.Category.DEVELOPER, new SetBalance(), "setbal"));
         COMMANDS.put("createplayer", new Data(Category.DEVELOPER, new CreatePlayer()));
         COMMANDS.put("testcommands", new Data(Category.DEVELOPER, new TestCommands()));
 
@@ -222,6 +244,7 @@ public final class ChadVar
         COMMANDS.put("pause", new Data(Category.MUSIC, new Pause()));
         COMMANDS.put("leave", new Data(Category.MUSIC, new Leave()));
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
+        COMMANDS.put("queue", new Data(Category.MUSIC, new Queue()));
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume()));
 
         // FIGHTING

@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.core.listener;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.Chad.ThreadConsumer;
@@ -9,6 +10,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
@@ -44,24 +46,51 @@ public final class MessageReceived
         if (argArray.length == 0)
             return;
 
+        // The guild's guild instance
         Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
 
-        // The guild's prefix
-        String prefix = ((String) guild.getObject(Guild.DataType.PREFIX)).toLowerCase();
+        // Update their statistics
+        guild.messageSent();
 
-        // The user's threadconsumer
-        ThreadConsumer consumer = Chad.getConsumer(event.getAuthor().getLongID());
+        // The guild's prefix
+        String prefix = ((String) guild.getObject(DataType.PREFIX)).toLowerCase();
 
         // Makes sure the words aren't swears :) (if enabled)
-        if ((boolean) guild.getObject(Guild.DataType.SWEAR_FILTER))
+        if ((boolean) guild.getObject(DataType.SWEAR_FILTER))
         {
-            // Gets the message from the cache :)
-            String msg = (String) guild.getObject(Guild.DataType.SWEAR_FILTER_MESSAGE);
-            msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
-            for (String s : argArray) {
-                if (ChadVar.swearWords.contains(s.toLowerCase())) {
-                    new MessageHandler(event.getChannel(), event.getAuthor()).send(msg, "Swearing");
-                    RequestBuffer.request(() -> event.getMessage().delete());
+            // Builds together the message & removes the special characters
+            String character = String.join("", argArray);
+            Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
+            Matcher match = pt.matcher(character);
+            while (match.find())
+            {
+                character=character.replaceAll("\\" + match.group(), "");
+            }
+
+            // Checks if the word contains a swear word
+            for (String swearWord : ChadVar.swearWords)
+            {
+                // Ass is a special case, due to words like `bass`
+                if (swearWord.equalsIgnoreCase("ass") && character.contains("ass"))
+                {
+                    // Goes through all of the arguments
+                    for (String argument : argArray)
+                    {
+                        // If the argument is just ass
+                        if (argument.equalsIgnoreCase("ass"))
+                        {
+                            // Delete it
+                            RequestBuffer.request(event.getMessage()::delete);
+                            return;
+                        }
+                    }
+                    continue;
+                }
+
+                // If it contains any other swear word, delete it
+                if (character.toLowerCase().contains(swearWord))
+                {
+                    RequestBuffer.request(event.getMessage()::delete);
                     return;
                 }
             }
@@ -78,9 +107,15 @@ public final class MessageReceived
         List<String> args = new ArrayList<>(Arrays.asList(argArray));
         args.remove(0);
 
+        // The user's threadconsumer
+        ThreadConsumer consumer = Chad.getConsumer(event.getAuthor().getLongID());
+
         // If the user has 3 threads currently running, deny them
         if (!Chad.consumerRunThread(consumer))
             return;
+
+        // If it's about to run, update statistics
+        guild.commandSent();
 
         ChadVar.COMMANDS.forEach((key, val) -> {
             if (val.usesAliases())
@@ -95,7 +130,7 @@ public final class MessageReceived
                         }
 
                         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-                        if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
+                        if (PermissionHandler.handle.userNoPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                         {
                             new MessageHandler(event.getChannel(), event.getAuthor()).sendError(MessageHandler.USER_NO_PERMISSION);
                             return;
@@ -119,7 +154,7 @@ public final class MessageReceived
                 }
 
                 // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-                if (!PermissionHandler.handle.userHasPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
+                if (PermissionHandler.handle.userNoPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                 {
                     new MessageHandler(event.getChannel(), event.getAuthor()).sendError(MessageHandler.USER_NO_PERMISSION);
                     return;

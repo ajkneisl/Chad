@@ -137,13 +137,13 @@ public final class UserLeaveJoin
 
             // can the bot assign the user the configured role?
             if (joinRole.getPosition() > botPosition) {
-                new MessageHandler(e.getGuild().getDefaultChannel(), null).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.");
+                new MessageHandler(e.getGuild().getDefaultChannel(), e.getUser()).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.");
                 return;
             }
 
             // is the role @everyone?
             if (joinRole.isEveryoneRole()) {
-                new MessageHandler(e.getGuild().getDefaultChannel(), null).sendError("Auto role assignment failed; Misconfigured role.");
+                new MessageHandler(e.getGuild().getDefaultChannel(), e.getUser()).sendError("Auto role assignment failed; Misconfigured role.");
                 return;
             }
 
@@ -159,7 +159,7 @@ public final class UserLeaveJoin
      *
      * @param e The event
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "unchecked"})
     @EventSubscriber
     public void userLeave(UserLeaveEvent e)
     {

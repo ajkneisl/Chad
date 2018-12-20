@@ -5,7 +5,6 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
-import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -16,6 +15,10 @@ import sx.blah.discord.util.RequestBuilder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author codebasepw
+ * @since 0.7.0
+ */
 public class Respawn implements Command.Class {
 
     @Override
@@ -39,10 +42,9 @@ public class Respawn implements Command.Class {
             }).execute(); // Executes
 
             // Assigns variables
-            boolean reacted = true;
             int timeout = 0;
 
-            while (reacted)
+            while (true)
             {
                 // If it's been 10 seconds, exit
                 if (timeout == 10)
@@ -73,7 +75,6 @@ public class Respawn implements Command.Class {
                     PlayerHandler.handle.createSetPlayer(e.getAuthor().getLongID(), 50, 50, 50, oldBalance);
 
                     messageHandler.sendMessage("Successfully respawned you with half stats. Your balance will remain the same.");
-                    reacted = false;
                     return;
                 }
 
@@ -84,8 +85,6 @@ public class Respawn implements Command.Class {
                     return;
                 }
             }
-
-            ChadError.throwError("Respawn thread died");
         };
     }
 

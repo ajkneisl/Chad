@@ -2,10 +2,8 @@ package org.woahoverflow.chad.framework.obj;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import org.bson.Document;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 
 public class Guild
@@ -37,6 +35,9 @@ public class Guild
         // Swearing
         SWEAR_FILTER, SWEAR_FILTER_MESSAGE,
 
+        // Statistics
+        MESSAGES_SENT, COMMANDS_SENT,
+
         // Other
         ALLOW_COMMUNITY_FEATURES
     }
@@ -52,6 +53,16 @@ public class Guild
     private final ConcurrentHashMap<Long, ArrayList<String>> permissionData = new ConcurrentHashMap<>();
 
     /**
+     * The amount of messages sent within the guild
+     */
+    private long messagesSent;
+
+    /**
+     * The amount of commands sent within the guild
+     */
+    private long commandsSent;
+
+    /**
      * Default Constructor, sets it with default data.
      */
     public Guild(long guild)
@@ -64,6 +75,13 @@ public class Guild
         // Logging
         guildData.put(DataType.LOGGING, false);
         guildData.put(DataType.LOGGING_CHANNEL, "none");
+
+        // Statistics
+        guildData.put(DataType.MESSAGES_SENT, 0L);
+        guildData.put(DataType.COMMANDS_SENT, 0L);
+
+        messagesSent = 0L;
+        commandsSent = 0L;
 
         // Messages
         guildData.put(DataType.JOIN_MESSAGE, "`&user&` has joined the server!");
@@ -101,6 +119,9 @@ public class Guild
     {
         this.guildData = guildData;
         this.guild = guild;
+
+        messagesSent = (long) guildData.get(DataType.MESSAGES_SENT);
+        commandsSent = (long) guildData.get(DataType.COMMANDS_SENT);
     }
 
     /**
@@ -128,7 +149,7 @@ public class Guild
     }
 
     /**
-     * Gets data from a string
+     * Gets data from a string, directly from the database.
      *
      * @param dataType The data's key
      * @return The retrieved data
@@ -136,16 +157,6 @@ public class Guild
     public Object getObject(String dataType)
     {
         return DatabaseManager.USER_DATA.getObject(guild, dataType);
-    }
-
-    /**
-     * Sets data from a string
-     */
-    public void setObject(String dataType, Object value)
-    {
-        DatabaseManager.GUILD_DATA.setObject(guild, dataType.toLowerCase(), value);
-
-        GuildHandler.handle.refreshGuild(guild);
     }
 
     /**
@@ -164,6 +175,7 @@ public class Guild
      * @param role The role to get permissions for
      * @return The role's permissions
      */
+    @SuppressWarnings("unchecked")
     public ArrayList<String> getRolePermissions(long role)
     {
         // If the data's in the permission hash-map, return that
@@ -273,5 +285,42 @@ public class Guild
         DatabaseManager.GUILD_DATA.setObject(guild, Long.toString(role), permissionSet);
 
         return 0;
+    }
+
+    /**
+     * Updates message sent statistics
+     */
+    public void messageSent()
+    {
+        messagesSent++;
+        guildData.put(DataType.MESSAGES_SENT, messagesSent);
+    }
+
+    /**
+     * Updates command sent statistics
+     */
+    public void commandSent()
+    {
+        commandsSent++;
+        guildData.put(DataType.COMMANDS_SENT, commandsSent);
+    }
+
+    /**
+     * Clears the guild's statistics
+     */
+    public void clearStatistics()
+    {
+        messagesSent = 0L;
+        commandsSent = 0L;
+        updateStatistics();
+    }
+
+    /**
+     * Updates the statistics into the database
+     */
+    public void updateStatistics()
+    {
+        setObject(DataType.COMMANDS_SENT, commandsSent);
+        setObject(DataType.MESSAGES_SENT, messagesSent);
     }
 }

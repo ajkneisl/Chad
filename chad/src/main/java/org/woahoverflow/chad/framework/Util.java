@@ -11,7 +11,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -19,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import org.woahoverflow.chad.core.ChadBot;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -63,10 +63,10 @@ public final class Util
             int responseCode = con.getResponseCode();
             if (responseCode != 200)
             {
-                System.out.println("\nThere was an error sending a request to url : " + url);
-                System.out.println("Response Code : " + responseCode);
+                ChadBot.getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode);
                 return "";
             }
+            ChadBot.getLogger().info("Fulfilled a request at URL : {}", url);
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             String response = in.lines().collect(Collectors.joining());
@@ -111,12 +111,11 @@ public final class Util
         return RequestBuffer.request(cli::getGuilds).get().stream().anyMatch(g -> g.getLongID() == guild);
     }
 
-    public static String getCurrentDateTime()
+    private static String getCurrentDateTime()
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        Date date = new Date();
-        System.out.println(dateFormat.format(date));
-        return dateFormat.format(date);
+        System.out.println(dateFormat.format(new Date()));
+        return dateFormat.format(new Date());
     }
 
     public static long getCurrentEpoch()
@@ -128,7 +127,7 @@ public final class Util
         return instant.toEpochMilli();
     }
 
-    public static long howOld(long searchTimestamp)
+    private static long howOld(long searchTimestamp)
     {
         return Math.abs(System.currentTimeMillis() - searchTimestamp);
     }
@@ -137,10 +136,6 @@ public final class Util
     {
         int time = seconds * 60 * 1000;
         long difference = howOld(searchTimestamp);
-        if (difference < time) {
-            return false;
-        }
-
-        return true;
+        return difference >= time;
     }
 }

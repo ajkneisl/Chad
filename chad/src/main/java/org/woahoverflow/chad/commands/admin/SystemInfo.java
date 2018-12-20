@@ -28,8 +28,8 @@ public class SystemInfo implements Command.Class  {
             embedBuilder.withDesc("OS `"+os.getName() + " [" + os.getVersion() + "]`" +
                     "\n Available cores `" + os.getAvailableProcessors() + '`' +
                     "\n CPU Load `" +  os.getSystemCpuLoad() + '`' +
-                    "\n Memory `" + os.getTotalPhysicalMemorySize()/1000/1000 + "mb" +
-                    "\n Shard Response Time `" + e.getAuthor().getShard().getResponseTime() + '`'
+                    "\n Memory `" + os.getTotalPhysicalMemorySize()/1000/1000 + "`mb" +
+                    "\n Shard Response Time `" + e.getAuthor().getShard().getResponseTime() + "`ms"
             );
 
             // Sends the embed builder

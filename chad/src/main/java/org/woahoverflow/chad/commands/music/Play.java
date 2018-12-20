@@ -112,7 +112,7 @@ public class Play implements Command.Class
                     // When a track is loaded (https, not used)
                     @Override
                     public void trackLoaded(AudioTrack track) {
-                        messageHandler.send("Queued " + track.getInfo().title + " by " + track.getInfo().author, "Chad");
+                        messageHandler.sendMessage("Queued `" + track.getInfo().title + "` by `" + track.getInfo().author + "`\n" + track.getInfo().uri);
 
                         if (finalConnect)
                             channel.join();
@@ -123,9 +123,6 @@ public class Play implements Command.Class
                     // When a value is search (thru soundcloud/youtube, used)
                     @Override
                     public void playlistLoaded(AudioPlaylist playlist) {
-                        if (finalConnect)
-                            channel.join();
-
                         AudioTrack track = playlist.getTracks().get(0);
 
                         if (track == null)
@@ -134,14 +131,23 @@ public class Play implements Command.Class
                             return;
                         }
 
-                        manager.scheduler.queue(playlist.getTracks().get(0));
+                        if (track.getInfo().length/1000 > 3600)
+                        {
+                            messageHandler.sendError("Please don't play songs over 1 hour!");
+                            return;
+                        }
+
+                        if (finalConnect)
+                            channel.join();
+
+                        manager.scheduler.queue(track);
                         messageHandler.sendMessage("Queued `" + track.getInfo().title + "` by `" + track.getInfo().author + "`\n" + track.getInfo().uri);
                     }
 
                     // If an option wasn't found
                     @Override
                     public void noMatches() {
-                        messageHandler.sendError("No matches for `"+string+"`!");
+                        messageHandler.sendError("No matches for **"+string+"**!");
                     }
 
                     // If there's an exception

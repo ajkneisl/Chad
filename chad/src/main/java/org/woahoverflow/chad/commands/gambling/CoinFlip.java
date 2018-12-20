@@ -2,15 +2,12 @@ package org.woahoverflow.chad.commands.gambling;
 
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.Util;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -19,10 +16,13 @@ import sx.blah.discord.handle.obj.IUser;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
 /**
+ * Flips a coin with Chad, or with another user
+ *
  * @author sho
  * @since 0.6.3 B2
  */
@@ -31,10 +31,7 @@ public class CoinFlip implements Command.Class{
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-
-            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
             Player author = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
-            Player opponent;
 
             if (args.size() == 2 && e.getMessage().getAttachments().isEmpty() && args.get(1).equalsIgnoreCase("tails") || args.get(1).equalsIgnoreCase("heads"))
             {
@@ -134,7 +131,7 @@ public class CoinFlip implements Command.Class{
                 // only used once, but thanks lamda
                 final IUser user = opponentUser;
 
-                opponent = PlayerHandler.handle.getPlayer(opponentUser.getLongID());
+                Player opponent = PlayerHandler.handle.getPlayer(opponentUser.getLongID());
 
                 // Sends the invitation message
                 IMessage acceptMessage = RequestBuffer.request(() -> e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + user.getName() + "`?")).get();
@@ -217,7 +214,7 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Gets the opponent's balance
-                long opponentBalance = (long) author.getObject(Player.DataType.BALANCE);
+                long opponentBalance = (long) opponent.getObject(Player.DataType.BALANCE);
 
                 // Checks if the bet's bigger than the opponent's balance
                 if (bet > opponentBalance)
@@ -330,7 +327,8 @@ public class CoinFlip implements Command.Class{
                 }
 
                 // Removes all the reactions
-                RequestBuffer.request(pick::removeAllReactions);
+                if (e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES))
+                    RequestBuffer.request(pick::removeAllReactions);
 
                 // Ties the user's balances to their name
                 long tailsBalance;
@@ -349,8 +347,8 @@ public class CoinFlip implements Command.Class{
                 if (Util.coinFlip())
                 {
                     // Sets the user's balances
-                    //TODO: tails = tailsBalance+bet
-                    //TODO: heads = headsBalance-bet
+                    PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
+                    PlayerHandler.handle.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +tails.getName()+"` has won `" + bet + "`!"
@@ -360,8 +358,8 @@ public class CoinFlip implements Command.Class{
                 else /* flip is 1, so heads wins this */
                 {
                     // Sets the user's balances
-                    //TODO: tails = tailsBalance-bet
-                    //TODO: heads = headsBalance+bet
+                    PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
+                    PlayerHandler.handle.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +heads.getName()+"` has won `" + bet + "`!"

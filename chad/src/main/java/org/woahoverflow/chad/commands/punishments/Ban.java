@@ -1,10 +1,8 @@
 package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;

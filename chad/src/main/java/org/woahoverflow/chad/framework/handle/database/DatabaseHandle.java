@@ -27,7 +27,7 @@ public class DatabaseHandle
      * @param collection The collection to create the handle on
      * @param keyObject The key to look for
      */
-    public DatabaseHandle(MongoCollection<Document> collection, String keyObject)
+    DatabaseHandle(MongoCollection<Document> collection, String keyObject)
     {
         this.collection = collection;
         this.keyObject = keyObject;

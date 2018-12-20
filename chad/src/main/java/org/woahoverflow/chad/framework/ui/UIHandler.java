@@ -69,13 +69,13 @@ public class UIHandler
 
         // UI Updater (updates stats)
         Chad.runThread(() -> {
-            if (!ChadVar.launchOptions.get("-denyuiupdate"))
+            if (ChadVar.launchOptions.get("-denyuiupdate"))
             {
                 ChadBot.getLogger().warn("UI Updating has been disabled!");
                 return;
             }
 
-            while (!ChadVar.launchOptions.get("-denyuiupdate"))
+            while (ChadVar.launchOptions.get("-denyuiupdate"))
             {
                 try {
                     TimeUnit.MINUTES.sleep(5);
@@ -275,7 +275,7 @@ public class UIHandler
         mainpanel.shardRespTimeVal.setText(ping + "ms");
 
         // Sets the presence value
-        mainpanel.presenceVal.setText("Loading");
+        mainpanel.presenceVal.setText("Loading...");
 
         // So the main logs can't be edited
         mainpanel.logs.setEditable(false);

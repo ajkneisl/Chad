@@ -1,10 +1,9 @@
 package org.woahoverflow.chad.core.listener;
 
-import static org.woahoverflow.chad.core.listener.MessageReceived.COMPILE;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.util.RequestBuffer;
@@ -30,19 +29,47 @@ public final class MessageEditEvent
     public void messageEditEvent(sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent event)
     {
         Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
-        boolean stop_swear = (boolean) guild.getObject(Guild.DataType.SWEAR_FILTER);
+        boolean stopSwear = (boolean) guild.getObject(Guild.DataType.SWEAR_FILTER);
 
-        if (stop_swear)
+        if (stopSwear)
         {
-            String[] argArray = event.getNewMessage().getContent().split(" ");
+            // The arguments in the message
+            String[] argArray = event.getMessage().getContent().split(" ");
 
-            // Gets the message from the cache :)
-            String msg = (String) guild.getObject(Guild.DataType.SWEAR_FILTER_MESSAGE);
-            msg = msg != null ? COMPILE.matcher(msg).replaceAll(event.getAuthor().getName()) : "No Swearing!";
-            for (String s : argArray) {
-                if (ChadVar.swearWords.contains(s.toLowerCase())) {
-                    new MessageHandler(event.getChannel(), event.getAuthor()).send(msg, "Swearing");
-                    RequestBuffer.request(() -> event.getMessage().delete());
+            // Builds together the message & removes the special characters
+            String character = String.join("", argArray);
+            Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
+            Matcher match = pt.matcher(character);
+            while (match.find())
+            {
+                character=character.replaceAll("\\" + match.group(), "");
+            }
+
+            // Checks if the word contains a swear word
+            for (String swearWord : ChadVar.swearWords)
+            {
+                // Ass is a special case, due to words like `bass`
+                if (swearWord.equalsIgnoreCase("ass") && character.contains("ass"))
+                {
+                    // Goes through all of the arguments
+                    for (String argument : argArray)
+                    {
+                        // If the argument is just ass
+                        if (argument.equalsIgnoreCase("ass"))
+                        {
+                            // Delete it
+                            RequestBuffer.request(event.getMessage()::delete);
+                            return;
+                        }
+                    }
+                    continue;
+                }
+
+                // If it contains any other swear word, delete it
+                if (character.toLowerCase().contains(swearWord))
+                {
+                    RequestBuffer.request(event.getMessage()::delete);
+                    return;
                 }
             }
         }

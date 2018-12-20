@@ -20,7 +20,7 @@ import sx.blah.discord.util.RequestBuilder;
  */
 public class Attack implements Command.Class
 {
-    public MessageHandler messageHandler;
+    private MessageHandler messageHandler;
 
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -76,7 +76,6 @@ public class Attack implements Command.Class
             if ((int)plyAuthor.getObject(Player.DataType.SWORD_HEALTH) < 1)
             {
                 messageHandler.sendMessage("Your sword broke, " + author.mention() + '!');
-                return;
             }
         };
     }

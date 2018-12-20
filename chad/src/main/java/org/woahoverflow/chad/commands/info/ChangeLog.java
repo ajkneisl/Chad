@@ -23,7 +23,10 @@ public class ChangeLog implements Command.Class
 
             String changeLogBuilder =
                 "`adjusted help command` : The help command now only shows what commands you have permission to, and the format has changed!\n\n"
-                    + "`music` : Chad now has music! To try it out, type `j!play yt <song name>`!\n\n";
+                    + "`music` : Chad now has music! To try it out, type `j!play yt <song name>`!\n\n"
+                    + "`player profiles` : Chad now has player profiles! Check this out with `j!profile`!\n\n"
+                    + "`balance` : Your balance is now global though-out all guilds with Chad!"
+                    + "`deepfry` : DeepFry your images with `j!pe deepfry`!";
 
             embedBuilder.withDesc(changeLogBuilder);
 

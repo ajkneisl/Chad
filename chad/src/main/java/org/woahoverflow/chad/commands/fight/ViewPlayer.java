@@ -9,6 +9,10 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import java.util.List;
 
+/**
+ * @author codebasepw
+ * @since 0.7.0
+ */
 public class ViewPlayer implements Command.Class {
 
     @Override

@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author codebasepw
+ * @since 0.7.0
+ */
 public class TestCommands implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -22,7 +26,7 @@ public class TestCommands implements Command.Class {
 
                 try {
                     TimeUnit.SECONDS.sleep(3);
-                } catch (Exception ex) { ex.printStackTrace(); }
+                } catch (InterruptedException ex) { ex.printStackTrace(); }
 
                 switch (data.getCommandAliases()[0])
                 {
