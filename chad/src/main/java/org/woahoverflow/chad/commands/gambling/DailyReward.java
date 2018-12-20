@@ -3,8 +3,8 @@ package org.woahoverflow.chad.commands.gambling;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.concurrent.TimeUnit;
 import org.woahoverflow.chad.framework.Util;
-import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Class;
@@ -47,21 +47,18 @@ public class DailyReward implements Class {
             }
 
             // Gets the date of their last daily reward
-            String lastDailyReward = (String) player.getObject(DataType.LAST_DAILY_REWARD); // TODO
+            long lastDailyReward = (long) player.getObject(DataType.LAST_DAILY_REWARD); // TODO
 
-            // Just so IntelliJ stops yelling at me
-            if (lastDailyReward == null)
-            {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                return;
-            }
 
             // TODO return in this if the user can't claim it
-            long difference = Util.howOld(Long.parseLong(lastDailyReward));
+            long difference = Util.howOld(lastDailyReward);
             int day = 24 * 60 * 60 * 1000;
+
             if (difference < day)
             {
-                messageHandler.sendError("Sorry, you can only claim your reward once a day.");
+                long hours = TimeUnit.MILLISECONDS.toHours(day - difference);
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(day - difference) - (hours * 60);
+                messageHandler.sendError("Sorry, you can only claim your reward once a day.! Time left: " + hours + " hours and " + minutes + " minutes.");
                 return;
             }
 

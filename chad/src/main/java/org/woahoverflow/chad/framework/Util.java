@@ -127,7 +127,7 @@ public final class Util
         return instant.toEpochMilli();
     }
 
-    private static long howOld(long searchTimestamp)
+    public static long howOld(long searchTimestamp)
     {
         return Math.abs(System.currentTimeMillis() - searchTimestamp);
     }

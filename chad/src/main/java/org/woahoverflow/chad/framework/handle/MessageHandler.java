@@ -132,7 +132,7 @@ public class MessageHandler
     {
         // Creates an embed builder and applies the error to the description
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.withDesc("__"+error+"__");
+        embedBuilder.withDesc(error);
 
         // Sends
         sendEmbed(embedBuilder);
