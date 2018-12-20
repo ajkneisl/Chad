@@ -31,8 +31,11 @@ public class Swearing implements Command.Class {
                 // creates an embed builder and applies values
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Swear Filter");
+
                 String status = (boolean) guild.getObject(Guild.DataType.SWEAR_FILTER) ? "enabled" :  "disabled";
+
                 embedBuilder.withDesc("Swearing in this guild is `"+status+"`.");
+
                 // send
                 messageHandler.sendEmbed(embedBuilder);
                 return;
@@ -49,11 +52,13 @@ public class Swearing implements Command.Class {
                 // sets in database
                 GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.SWEAR_FILTER, true);
 
-                // recaches
-                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
+                // the message
+                String message = toggle ? "Swear filtering has been `"+toggleString+"`.\n\n"
+                    + "Keep in mind that the swear filter isn't always accurate.\nSome words may be blocked due to having a swear word in them,\n or some may be unblocked due to "
+                    + "having an odd combination of different letters.\nIf you find a word that shouldn't/should be blocked, please tell us." : "Swear filtering has been `"+toggleString+"`.";
 
                 // sends message
-                messageHandler.send("Swear filtering has been `"+toggleString+ '`', "Swear Filter");
+                messageHandler.send(message, "Swear Filter");
                 return;
             }
 

@@ -19,13 +19,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONObject;
+import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.internal.DiscordUtils;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.util.RequestBuffer;
 
 /**
  * Main framework for Chad
@@ -208,6 +211,23 @@ public final class Chad
                 in.close();
             } catch (@SuppressWarnings("all") IOException e1) {
                 e1.printStackTrace();
+            }
+        }, getInternalConsumer());
+
+        /*
+        Updates all guild's statistics each hour
+         */
+        runThread(() -> {
+            //noinspection InfiniteLoopStatement :)
+            while (true)
+            {
+                try {
+                    TimeUnit.HOURS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                RequestBuffer.request(ChadBot.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
             }
         }, getInternalConsumer());
     }

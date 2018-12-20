@@ -32,8 +32,7 @@ public class GuildSettings implements Command.Class {
             {
                 // Clears the statistics for the guild
                 case "clearstats":
-                    guild.setObject(DataType.MESSAGES_SENT, 0L);
-                    guild.setObject(DataType.COMMANDS_SENT, 0L);
+                    guild.clearStatistics();
 
                     messageHandler.sendEmbed(new EmbedBuilder().withDesc("Cleared guild's statistics!"));
 

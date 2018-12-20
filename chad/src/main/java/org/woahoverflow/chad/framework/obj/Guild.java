@@ -53,6 +53,16 @@ public class Guild
     private final ConcurrentHashMap<Long, ArrayList<String>> permissionData = new ConcurrentHashMap<>();
 
     /**
+     * The amount of messages sent within the guild
+     */
+    private long messagesSent;
+
+    /**
+     * The amount of commands sent within the guild
+     */
+    private long commandsSent;
+
+    /**
      * Default Constructor, sets it with default data.
      */
     public Guild(long guild)
@@ -69,6 +79,9 @@ public class Guild
         // Statistics
         guildData.put(DataType.MESSAGES_SENT, 0L);
         guildData.put(DataType.COMMANDS_SENT, 0L);
+
+        messagesSent = 0L;
+        commandsSent = 0L;
 
         // Messages
         guildData.put(DataType.JOIN_MESSAGE, "`&user&` has joined the server!");
@@ -106,6 +119,9 @@ public class Guild
     {
         this.guildData = guildData;
         this.guild = guild;
+
+        messagesSent = (long) guildData.get(DataType.MESSAGES_SENT);
+        commandsSent = (long) guildData.get(DataType.COMMANDS_SENT);
     }
 
     /**
@@ -269,5 +285,42 @@ public class Guild
         DatabaseManager.GUILD_DATA.setObject(guild, Long.toString(role), permissionSet);
 
         return 0;
+    }
+
+    /**
+     * Updates message sent statistics
+     */
+    public void messageSent()
+    {
+        messagesSent++;
+        guildData.put(DataType.MESSAGES_SENT, messagesSent);
+    }
+
+    /**
+     * Updates command sent statistics
+     */
+    public void commandSent()
+    {
+        commandsSent++;
+        guildData.put(DataType.COMMANDS_SENT, commandsSent);
+    }
+
+    /**
+     * Clears the guild's statistics
+     */
+    public void clearStatistics()
+    {
+        messagesSent = 0L;
+        commandsSent = 0L;
+        updateStatistics();
+    }
+
+    /**
+     * Updates the statistics into the database
+     */
+    public void updateStatistics()
+    {
+        setObject(DataType.COMMANDS_SENT, commandsSent);
+        setObject(DataType.MESSAGES_SENT, messagesSent);
     }
 }

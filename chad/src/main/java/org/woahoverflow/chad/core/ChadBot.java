@@ -10,11 +10,13 @@ import org.woahoverflow.chad.core.listener.MessageReceived;
 import org.woahoverflow.chad.core.listener.OnReady;
 import org.woahoverflow.chad.core.listener.UserLeaveJoin;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.util.RequestBuffer;
 
 /**
  * Main class within Chad
@@ -84,7 +86,13 @@ public final class ChadBot {
         Chad.init();
 
         // Logs out of the client on shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread(cli::logout));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // Saves all of the guild's data
+            RequestBuffer.request(cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+
+            // Logout
+            cli.logout();
+        }));
     }
 
 }
