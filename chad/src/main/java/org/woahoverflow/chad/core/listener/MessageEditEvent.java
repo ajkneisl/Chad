@@ -46,7 +46,7 @@ public final class MessageEditEvent
             Matcher match = pt.matcher(character);
             while (match.find())
             {
-                character=character.replaceAll(match.group(), "");
+                character=character.replaceAll("\\" + match.group(), "");
             }
 
             // Checks if the word contains a swear word
