@@ -11,15 +11,51 @@ import org.woahoverflow.chad.core.ChadVar;
  */
 public final class YouTubeHandler
 {
+
+    /**
+     * An instance of a retrieved channel
+     */
     public static final class Channel
     {
+
+        /**
+         * The channels total view count
+         */
         public long viewCount;
+
+        /**
+         * The amount of videos the channel has
+         */
         public long videoCount;
+
+        /**
+         * The amount of subscribers the channel has
+         */
         public long subscriberCount;
+
+        /**
+         * The channel's username
+         */
         public String username;
+
+        /**
+         * The user's icon url
+         */
         public String userIconUrl;
+
+        /**
+         * The user's url
+         */
         public String userUrl;
 
+        /**
+         * Build's the channel's default
+         *
+         * @param username The channel's username
+         * @param userIconUrl The channel's icon url
+         * @param userUrl The channel's url
+         * @return The same instance
+         */
         Channel buildDefault(String username, String userIconUrl, String userUrl)
         {
             this.username = username;
@@ -29,6 +65,14 @@ public final class YouTubeHandler
             return this;
         }
 
+        /**
+         * Build's the channel's statistics
+         *
+         * @param subscriberCount The channel's subscriber count
+         * @param viewCount The channel's view count
+         * @param videoCount The channel's video count
+         * @return The same instance
+         */
         Channel buildStatistics(long subscriberCount, long viewCount, long videoCount)
         {
             this.videoCount = videoCount;

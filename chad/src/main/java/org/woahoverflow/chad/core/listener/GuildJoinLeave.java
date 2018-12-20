@@ -2,8 +2,6 @@ package org.woahoverflow.chad.core.listener;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bson.Document;
-import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Guild;

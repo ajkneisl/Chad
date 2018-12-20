@@ -1,14 +1,10 @@
 package org.woahoverflow.chad.core.listener;
 
-import static org.woahoverflow.chad.core.listener.MessageReceived.COMPILE;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild;
-import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -70,7 +66,7 @@ public final class MessageEditEvent
                 }
 
                 // If it contains any other swear word, delete it
-                if (character.contains(swearWord))
+                if (character.toLowerCase().contains(swearWord))
                 {
                     RequestBuffer.request(event.getMessage()::delete);
                     return;

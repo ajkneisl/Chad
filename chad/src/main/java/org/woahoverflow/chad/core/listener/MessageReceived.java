@@ -88,7 +88,7 @@ public final class MessageReceived
                 }
 
                 // If it contains any other swear word, delete it
-                if (character.contains(swearWord))
+                if (character.toLowerCase().contains(swearWord))
                 {
                     RequestBuffer.request(event.getMessage()::delete);
                     return;
