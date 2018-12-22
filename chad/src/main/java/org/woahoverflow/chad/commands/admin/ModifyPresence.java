@@ -39,7 +39,7 @@ public class ModifyPresence implements Command.Class {
                     ChadBot.cli.changePresence(ChadVar.statusType, ActivityType.PLAYING, formattedMessage.trim());
 
                     // Updates the message
-                    message = "Changed presence to \"" + formattedMessage.trim() + '"';
+                    message = "Changed presence to `" + formattedMessage.trim() + "`.";
 
                     // Updates the ChadVar variable
                     ChadVar.currentStatus = formattedMessage.trim();
@@ -70,7 +70,7 @@ public class ModifyPresence implements Command.Class {
                     ChadVar.presenceRotation.add(stringBuilder.trim());
 
                     // Updates the message
-                    message = "Added \"" + stringBuilder.trim() + "\" to rotation";
+                    message = "Added `" + stringBuilder.trim() + "` to rotation";
                     break;
                 /*case "time":
                     args.remove(0);
