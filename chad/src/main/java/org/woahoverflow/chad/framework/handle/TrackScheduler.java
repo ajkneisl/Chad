@@ -107,11 +107,12 @@ public class TrackScheduler extends AudioEventAdapter
     {
         IGuild guild = ChadBot.cli.getGuildByID(guildId);
 
-        if (guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel().getConnectedUsers().size() == 1 || queue.isEmpty())
+        if (guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel() != null && guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel().getConnectedUsers().size() == 1 || queue.isEmpty())
         {
             guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel().leave();
             return;
         }
+
         if (endReason.mayStartNext)
         {
             nextTrack();
