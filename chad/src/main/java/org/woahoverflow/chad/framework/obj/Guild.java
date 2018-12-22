@@ -39,7 +39,7 @@ public class Guild
         MESSAGES_SENT, COMMANDS_SENT,
 
         // Other
-        ALLOW_COMMUNITY_FEATURES
+        DISABLED_CATEGORIES
     }
 
     /**
@@ -107,7 +107,7 @@ public class Guild
         guildData.put(DataType.SWEAR_FILTER_MESSAGE, "Stop swearing, `&user&`!");
 
         // Other
-        guildData.put(DataType.ALLOW_COMMUNITY_FEATURES, true);
+        guildData.put(DataType.DISABLED_CATEGORIES, new ArrayList<String>());
     }
 
     /**

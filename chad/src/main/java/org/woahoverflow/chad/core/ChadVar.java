@@ -197,7 +197,6 @@ public final class ChadVar
         COMMANDS.put("redditnew", new Command.Data(Command.Category.INFO, new RedditNew(), "rnew"));
         COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
         COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
-        COMMANDS.put("guildsettings", new Data(Category.INFO, new GuildSettings(), "gset"));
         COMMANDS.put("subcount", new Data(Category.INFO, new SubscriberCount()));
         COMMANDS.put("steamstatus", new Data(Category.INFO, new SteamStatus(), "steamst"));
 
@@ -212,6 +211,7 @@ public final class ChadVar
         COMMANDS.put("instantmessage", new Command.Data(Command.Category.ADMINISTRATOR, new Message(), "im"));
         COMMANDS.put("autorole", new Command.Data(Command.Category.ADMINISTRATOR, new AutoRole(), "ar"));
         COMMANDS.put("permissions", new Command.Data(Command.Category.ADMINISTRATOR, new Permissions(), "perms"));
+        COMMANDS.put("guildsettings", new Data(Category.ADMINISTRATOR, new GuildSettings(), "gset"));
         COMMANDS.put("nsfw", new Command.Data(Command.Category.ADMINISTRATOR, new Nsfw()));
         COMMANDS.put("swearfilter", new Command.Data(Category.ADMINISTRATOR, new Swearing(), "sf"));
 

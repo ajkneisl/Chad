@@ -1,14 +1,17 @@
 package org.woahoverflow.chad.commands.info;
 
+import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Data;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
@@ -34,6 +37,10 @@ public class Help implements Command.Class {
                     continue;
                 // If the category is Admin and the user isn't an Admin, don't show.
                 if (category == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
+                    continue;
+                // If the category is disabled
+                if (((ArrayList<String>) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(
+                    DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase()))
                     continue;
 
                 // The commands builder

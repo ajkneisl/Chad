@@ -129,6 +129,13 @@ public final class MessageReceived
                             return;
                         }
 
+                        // if the category is disabled
+                        if (((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(val.getCommandCategory().toString().toLowerCase()))
+                        {
+                            System.out.println("Attempted to run a disabled category!");
+                            return;
+                        }
+
                         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
                         if (PermissionHandler.handle.userNoPermission(key, event.getAuthor(), event.getGuild()) && !event.getAuthor().getPermissionsForGuild(event.getGuild()).contains(Permissions.ADMINISTRATOR))
                         {
@@ -150,6 +157,13 @@ public final class MessageReceived
                 if (val.getCommandCategory() == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.getAuthor()))
                 {
                     new MessageHandler(event.getChannel(), event.getAuthor()).sendError("This command is Developer only!");
+                    return;
+                }
+
+                // if the category is disabled
+                if (((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(val.getCommandCategory().toString().toLowerCase()))
+                {
+                    System.out.println("Attempted to run a disabled category!");
                     return;
                 }
 
