@@ -2,14 +2,13 @@ package org.woahoverflow.chad.framework.handle;
 
 import java.util.stream.Stream;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Class;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
-import java.util.ArrayList;
 import sx.blah.discord.handle.obj.Permissions;
 
 /**
@@ -42,12 +41,13 @@ public class PermissionHandler
      * @param command The command
      * @param user The user to check
      * @param guild The guild in which it's happening
-     * @return If the user has permission to perform it
+     * @return If the user doesn't have permission to use it
      */
-    @SuppressWarnings("unchecked")
     public boolean userNoPermission(String command, IUser user, IGuild guild)
     {
         Class cmd = ChadVar.COMMANDS.get(command).getCommandClass();
+
+        Guild guildInstance = GuildHandler.handle.getGuild(guild.getLongID());
 
         if (cmd == null)
             return true; // return false if the command doesnt exist
@@ -68,9 +68,8 @@ public class PermissionHandler
 
         // loop through the users roles, if the role has permission for the command, return true
         // return false if none of the users roles have permission for the command
-        return user.getRolesForGuild(guild).stream()
-            .filter(r -> DatabaseManager.GUILD_DATA.getObject(guild.getLongID(), r.getStringID()) != null)
-            .anyMatch(r -> ((ArrayList<String>) DatabaseManager.GUILD_DATA.getObject(guild.getLongID(), r.getStringID()) ).contains(command));
+
+        return user.getRolesForGuild(guild).stream().noneMatch(role -> guildInstance.getRolePermissions(role.getLongID()).contains(command));
     }
 
     /**
