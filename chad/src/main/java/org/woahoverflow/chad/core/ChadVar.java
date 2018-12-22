@@ -11,10 +11,6 @@ import org.woahoverflow.chad.commands.admin.ModifyPresence;
 import org.woahoverflow.chad.commands.admin.SetBalance;
 import org.woahoverflow.chad.commands.admin.Shutdown;
 import org.woahoverflow.chad.commands.admin.SystemInfo;
-import org.woahoverflow.chad.commands.admin.TestCommands;
-import org.woahoverflow.chad.commands.fight.Attack;
-import org.woahoverflow.chad.commands.fight.Respawn;
-import org.woahoverflow.chad.commands.fight.ViewPlayer;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
 import org.woahoverflow.chad.commands.fun.Cuddle;
@@ -231,7 +227,6 @@ public final class ChadVar
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
         COMMANDS.put("setbalance", new Command.Data(Command.Category.DEVELOPER, new SetBalance(), "setbal"));
         COMMANDS.put("createplayer", new Data(Category.DEVELOPER, new CreatePlayer()));
-        COMMANDS.put("testcommands", new Data(Category.DEVELOPER, new TestCommands()));
 
         // GAMBLING!
         //COMMANDS.put("register", new Command.Data(Command.Category.GAMBLING, new Register()));
@@ -246,10 +241,5 @@ public final class ChadVar
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
         COMMANDS.put("queue", new Data(Category.MUSIC, new Queue()));
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume()));
-
-        // FIGHTING
-        COMMANDS.put("attack", new Data(Category.FIGHTING, new Attack()));
-        COMMANDS.put("viewplayer", new Data(Category.FIGHTING, new ViewPlayer(), "vp"));
-        COMMANDS.put("respawn", new Data(Category.FIGHTING, new Respawn()));
     }
 }

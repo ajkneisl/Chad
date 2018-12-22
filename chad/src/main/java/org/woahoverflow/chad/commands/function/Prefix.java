@@ -58,7 +58,7 @@ public class Prefix implements Command.Class  {
                 guild.setObject(DataType.PREFIX, newPrefix);
 
                 // Sends a the message
-                messageHandler.send("Your prefix is now `" + newPrefix + "`.", "Changed Prefix");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your prefix is now `" + newPrefix + "`."));
                 return;
             }
 

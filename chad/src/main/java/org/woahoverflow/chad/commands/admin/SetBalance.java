@@ -9,6 +9,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -48,7 +49,7 @@ public class SetBalance implements Command.Class {
                 System.out.println(args.get(0));
 
                 // Sends the message
-                messageHandler.send("Set your balance to `"+args.get(0)+"`.", "Balance");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set your balance to `"+args.get(0)+"`."));
                 return;
             }
 
@@ -77,7 +78,7 @@ public class SetBalance implements Command.Class {
                 player.setObject(DataType.BALANCE, Long.parseLong(args.get(0)));
 
                 // Sends the message
-                messageHandler.send("Set `" + e.getMessage().getMentions().get(0).getName() + "`'s balance to `"+args.get(0)+"`.", "Balance");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set `" + e.getMessage().getMentions().get(0).getName() + "`'s balance to `"+args.get(0)+"`."));
                 return;
             }
             messageHandler.sendError("Invalid Arguments!");

@@ -139,23 +139,6 @@ public class MessageHandler
     }
 
     /**
-     * Builds an embed
-     *
-     * @param msg The message string of the embed
-     * @param title The title string of the embed
-     */
-    public final void send(String msg, String title)
-    {
-        // Creates an embed builder and applies msg and title
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.withTitle(title);
-        embedBuilder.withDesc(msg);
-
-        // Sends
-        sendEmbed(embedBuilder);
-    }
-
-    /**
      * Sends an embed to the guild's logging channel
      *
      * @param embedBuilder The embed to send

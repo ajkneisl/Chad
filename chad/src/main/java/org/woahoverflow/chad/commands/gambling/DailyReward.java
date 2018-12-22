@@ -12,6 +12,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * Gets a daily reward of money
@@ -25,10 +26,7 @@ public class DailyReward implements Class {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
-
-            /*
-            The format of the Daily Reward database entry is *userid*_ldr = MM.dd.yyyy
-             */
+            
             // If the user hasn't claimed the daily reward ever
             if (player.getObject(DataType.LAST_DAILY_REWARD).equals("none"))
             {
@@ -42,15 +40,13 @@ public class DailyReward implements Class {
                 player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis());
 
                 // Send the message
-                messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("You claimed your daily reward of `2000`!"));
                 return;
             }
 
             // Gets the date of their last daily reward
             long lastDailyReward = (long) player.getObject(DataType.LAST_DAILY_REWARD); // TODO
 
-
-            // TODO return in this if the user can't claim it
             long difference = Util.howOld(lastDailyReward);
             int day = 24 * 60 * 60 * 1000;
 
@@ -72,7 +68,7 @@ public class DailyReward implements Class {
             player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis());
 
             // Send the message
-            messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("You claimed your daily reward of `2000`!"));
         };
     }
 

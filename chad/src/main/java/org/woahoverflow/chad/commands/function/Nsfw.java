@@ -7,6 +7,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import java.util.HashMap;
 import java.util.List;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 /**
@@ -29,11 +30,11 @@ public class Nsfw implements Command.Class  {
             // If the channel is NSFW, revoke, if not, add
             if (RequestBuffer.request(() -> e.getChannel().isNSFW()).get())
             {
-                messageHandler.send("Removed NSFW status from this channel!", "NSFW");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Removed NSFW status from this channel!"));
                 RequestBuffer.request(() -> e.getChannel().changeNSFW(false));
             }
             else {
-                messageHandler.send("Added NSFW status to this channel!", "NSFW");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Added NSFW status from this channel!"));
                 RequestBuffer.request(() -> e.getChannel().changeNSFW(true));
             }
         };

@@ -11,6 +11,7 @@ import sx.blah.discord.handle.obj.IChannel;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -49,7 +50,7 @@ public class Logging implements Command.Class  {
                     MessageHandler.sendConfigLog("Logging", bool, Boolean.toString((boolean) guild.getObject(Guild.DataType.LOGGING)), e.getAuthor(), e.getGuild());
 
                     // Sends the message
-                    messageHandler.send("Changed logging to " + bool, "Changed Logging");
+                    messageHandler.sendEmbed(new EmbedBuilder().withDesc("Logging has been turned `"+bool+"`."));
 
                     // recaches
                     GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
@@ -70,7 +71,7 @@ public class Logging implements Command.Class  {
                 // Makes sure the channel exists
                 if (e.getGuild().getChannelsByName(formattedString.trim()).isEmpty())
                 {
-                    new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Channel");
+                    messageHandler.sendError("Invalid Channel");
                     return;
                 }
 
@@ -98,7 +99,7 @@ public class Logging implements Command.Class  {
                     MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
 
                 // Send Message
-                messageHandler.send("Changed logging channel to " + formattedString.trim(), "Changed Logging Channel");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Logging channel has been changed to `" + channel.getName() + "`."));
 
                 // Sets in the database
                 GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, loggingChannel);

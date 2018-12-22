@@ -13,6 +13,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho, codebasepw
@@ -66,7 +67,7 @@ public class Help implements Command.Class {
             stringBuilder.append("\n\nYou can only see the commands you have permission to!");
 
             // Sends the message
-            new MessageHandler(e.getChannel(), e.getAuthor()).send(stringBuilder.toString(), "Chad's Commands");
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc(stringBuilder.toString()).withTitle("Chad's Commands"));
        };
     }
 

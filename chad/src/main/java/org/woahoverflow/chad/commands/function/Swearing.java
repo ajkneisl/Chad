@@ -50,7 +50,7 @@ public class Swearing implements Command.Class {
                 String toggleString = toggle ? "enabled" : "disabled";
 
                 // sets in database
-                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.SWEAR_FILTER, true);
+                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.SWEAR_FILTER, toggle);
 
                 // the message
                 String message = toggle ? "Swear filtering has been `"+toggleString+"`.\n\n"
@@ -58,7 +58,7 @@ public class Swearing implements Command.Class {
                     + "having an odd combination of different letters.\nIf you find a word that shouldn't/should be blocked, please tell us." : "Swear filtering has been `"+toggleString+"`.";
 
                 // sends message
-                messageHandler.send(message, "Swear Filter");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc(message));
                 return;
             }
 

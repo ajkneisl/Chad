@@ -6,6 +6,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -30,7 +31,7 @@ public class WordReverse implements Command.Class {
 
             // Gets the word & sends
             String word = stringBuilder.toString().trim();
-            new MessageHandler(e.getChannel(), e.getAuthor()).send("Word: `" + word + "`\n\n`" + stringBuilder.reverse().toString().trim() + '`', "Word Reverser");
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("Word: `" + word + "`\n`" + stringBuilder.reverse().toString().trim() + '`'));
         };
     }
 

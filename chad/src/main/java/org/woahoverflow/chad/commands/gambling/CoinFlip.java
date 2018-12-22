@@ -17,6 +17,7 @@ import sx.blah.discord.handle.obj.IUser;
 import java.util.HashMap;
 import java.util.List;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
@@ -79,11 +80,11 @@ public class CoinFlip implements Command.Class{
                 if (flip == user)
                 {
                     author.setObject(Player.DataType.BALANCE, balance+bet);
-                    messageHandler.send("You won `"+bet+"`, you now have `" + (balance+bet) + "`.", "Coin Flip");
+                    messageHandler.sendEmbed(new EmbedBuilder().withDesc("You won `"+bet+"`, you now have `" + (balance+bet) + "`."));
                 }
                 else {
                     author.setObject(Player.DataType.BALANCE, balance-bet);
-                    messageHandler.send("You lost `"+bet+"`, you now have `" + (balance-bet) + "`.", "Coin Flip");
+                    messageHandler.sendEmbed(new EmbedBuilder().withDesc("You lost `"+bet+"`, you now have `" + (balance-bet) + "`."));
                 }
             }
             else // assuming that the conditions are met for this
@@ -183,7 +184,7 @@ public class CoinFlip implements Command.Class{
                     // Checks if the user reacted with the N
                     if (nReaction.getUserReacted(user))
                     {
-                        messageHandler.send("User Denied!", "CoinFlip");
+                        messageHandler.sendError("User Denied!");
                         return;
                     }
                 }

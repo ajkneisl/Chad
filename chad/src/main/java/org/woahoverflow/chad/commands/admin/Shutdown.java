@@ -13,6 +13,7 @@ import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
@@ -81,7 +82,7 @@ public class Shutdown implements Command.Class  {
             RequestBuffer.request(confirm::delete);
 
             // Warns that the bot is shutting down
-            new MessageHandler(e.getChannel(), e.getAuthor()).send("Shutting down in 10 seconds...", "Warning");
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc("Chad is shutting down in 10 seconds..."));
 
             // Warns within the UI
             UIHandler.handle.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);

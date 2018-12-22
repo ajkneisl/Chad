@@ -29,7 +29,7 @@ public class EightBall implements Command.Class  {
             }
 
             // Gets the answers from the cdn
-            JSONArray answers = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/8ball.json");
+            JSONArray answers = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json");
 
             // Sends the answer
             messageHandler.sendEmbed(

@@ -100,7 +100,7 @@ public class RussianRoulette implements Command.Class {
                 // Checks if the user reacted with the N
                 if (nReaction.getUserReacted(user))
                 {
-                    messageHandler.send("User Denied!", "Russian Roulette");
+                    messageHandler.sendError("User Denied!");
                     return;
                 }
             }

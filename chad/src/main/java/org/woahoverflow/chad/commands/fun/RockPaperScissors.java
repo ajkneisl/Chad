@@ -8,6 +8,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -44,7 +45,7 @@ public class RockPaperScissors implements Command.Class
                      i = 2;
 
                 // Sends the result
-                messageHandler.send(calculateWinner(i, i2), "Rock Paper Scissors");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc(calculateWinner(i, i2)));
             }
             else {
                 messageHandler.sendError("Invalid Arguments");

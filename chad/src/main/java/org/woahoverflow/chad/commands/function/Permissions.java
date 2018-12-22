@@ -107,7 +107,10 @@ public class Permissions implements Class  {
 
                         // If the result was 0 (good) return the amount, if not return the correct error.
                         if (add == 0)
-                            messageHandler.send("Added `" + args.get(0).toLowerCase() + "` command to role `" + role.getName() + "`.", "Permissions");
+                            messageHandler.sendEmbed(
+                                new EmbedBuilder()
+                                    .withDesc("Added `" + args.get(0).toLowerCase() + "` command to role `" + role.getName() + "`.")
+                                    .withTitle("Permissions"));
                         else
                             messageHandler.sendError(PermissionHandler.handle.parseErrorCode(add));
                         return;
@@ -124,7 +127,9 @@ public class Permissions implements Class  {
 
                         // If the result was 0 (good) return the amount, if not return the correct error.
                         if (rem == 0)
-                            messageHandler.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                            messageHandler.sendEmbed(new EmbedBuilder()
+                                .withDesc("Removed `" + args.get(0).toLowerCase() + "` command from role `" + role.getName() + "`.")
+                                .withTitle("Permissions"));
                         else
                             messageHandler.sendError(PermissionHandler.handle.parseErrorCode(rem));
                         return;
