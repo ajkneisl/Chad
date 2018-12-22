@@ -32,8 +32,8 @@ public class Shutdown implements Command.Class  {
             IMessage confirm = RequestBuffer.request(() -> e.getChannel().sendMessage("Are you sure you want to do this?")).get();
 
             // The emojis used in the message
-            final ReactionEmoji yes = ReactionEmoji.of("✅");
-            final ReactionEmoji no = ReactionEmoji.of("❌");
+            final ReactionEmoji yes = ReactionEmoji.of("\uD83C\uDDFE");
+            final ReactionEmoji no = ReactionEmoji.of("\uD83C\uDDF3");
 
             // Adds both reactions
             RequestBuilder builder = new RequestBuilder(e.getClient());
