@@ -132,7 +132,6 @@ public final class MessageReceived
                         // if the category is disabled
                         if (((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(val.getCommandCategory().toString().toLowerCase()))
                         {
-                            System.out.println("Attempted to run a disabled category!");
                             return;
                         }
 
@@ -163,7 +162,6 @@ public final class MessageReceived
                 // if the category is disabled
                 if (((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(val.getCommandCategory().toString().toLowerCase()))
                 {
-                    System.out.println("Attempted to run a disabled category!");
                     return;
                 }
 
