@@ -22,7 +22,7 @@ public class Player {
     public enum DataType
     {
         // Other
-        BALANCE, HEALTH, SWORD_HEALTH, SHIELD_HEALTH, LAST_ATTACKED_TIME, LAST_ATTACKER, LAST_ATTACK_TIME, LAST_TARGET, LAST_CUDDLE_TIME,
+        BALANCE,
 
         // Profile
         PROFILE_UPVOTE, PROFILE_DOWNVOTE, PROFILE_DESCRIPTION, PROFILE_TITLE,
@@ -42,18 +42,9 @@ public class Player {
     public Player(long user)
     {
         this.user = user;
-        playerData.put(DataType.SHIELD_HEALTH, 100);
-        playerData.put(DataType.SWORD_HEALTH, 100);
         playerData.put(DataType.BALANCE, 0L);
-        playerData.put(DataType.HEALTH, 100L);
         playerData.put(DataType.MARRY_DATA, "none&none");
         playerData.put(DataType.PROFILE_TITLE, "none");
-
-        playerData.put(DataType.LAST_ATTACKED_TIME, System.currentTimeMillis());
-        playerData.put(DataType.LAST_ATTACKER, "none");
-        playerData.put(DataType.LAST_ATTACK_TIME, System.currentTimeMillis());
-        playerData.put(DataType.LAST_TARGET, "none");
-        playerData.put(DataType.LAST_CUDDLE_TIME, System.currentTimeMillis());
 
         playerData.put(DataType.PROFILE_DOWNVOTE, 0L);
         playerData.put(DataType.PROFILE_UPVOTE, 0L);

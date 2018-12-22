@@ -81,22 +81,10 @@ public class PlayerHandler {
         // The user's balance
         playerDocument.put("balance", 0L);
 
-        // The user's fight data
-        playerDocument.put("sword_health", 100);
-        playerDocument.put("shield_health", 100);
-        playerDocument.put("health", 100);
-
         // Other default user data
         playerDocument.put("marry_data", "none&none");
         playerDocument.put("profile_description", "No description!");
         playerDocument.put("profile_title", "none");
-
-        playerDocument.put("last_attacked_time", System.currentTimeMillis());
-        playerDocument.put("last_attacker", "none");
-        playerDocument.put("last_attack_time", System.currentTimeMillis());
-        playerDocument.put("last_target", "none");
-        playerDocument.put("last_cuddle_time", System.currentTimeMillis());
-
         playerDocument.put("profile_downvote", 0L);
         playerDocument.put("profile_upvote", 0L);
 

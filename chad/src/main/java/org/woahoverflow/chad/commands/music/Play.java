@@ -163,7 +163,9 @@ public class Play implements Command.Class
     @Override
     public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("play <youtube search>", "Play a song");
+        st.put("play yt <youtube search>", "Play a song from YouTube.");
+        st.put("play sc <soundcloud search>", "Play a song from SoundCloud.");
+        st.put("play", "If paused, continues playing.");
         return Command.helpCommand(st, "Play", e);
     }
 }

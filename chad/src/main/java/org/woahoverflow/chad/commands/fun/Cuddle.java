@@ -2,14 +2,12 @@ package org.woahoverflow.chad.commands.fun;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author codebasepw
@@ -22,69 +20,15 @@ public class Cuddle implements Command.Class {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            if (args.size() < 1)
+            if (e.getMessage().getMentions().isEmpty())
             {
-                messageHandler.sendError("You really want to cuddle with yourself? Ok I guess...");
-                messageHandler.sendMessage("You cuddled yourself! (NO HEALTH INCREASE)");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("You cuddled with yourself, how nice."));
                 return;
             }
 
-            if (args.size() == 1)
-            {
-                if (e.getMessage().getMentions().size() == 1)
-                {
-                    try
-                    {
-                        IUser partner = e.getMessage().getMentions().get(0);
+            IUser target = e.getMessage().getMentions().get(0);
 
-                        Player partnerPlayer = PlayerHandler.handle.getPlayer(partner.getLongID());
-                        Player authorPlayer = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
-
-                        long partnerLastCuddleTime = (long)partnerPlayer.getObject(Player.DataType.LAST_CUDDLE_TIME);
-                        long authorLastCuddleTime = (long)authorPlayer.getObject(Player.DataType.LAST_CUDDLE_TIME);
-
-                        // epoch sanity checks
-                        long currentTimestamp = System.currentTimeMillis();
-                        long searchTimestamp = authorLastCuddleTime;
-                        long difference = Math.abs(currentTimestamp - searchTimestamp);
-                        int hour = 60 * 60 * 1000;
-
-                        if (difference < hour) {
-                            messageHandler.sendError(String.format("Sorry, you need to wait an hour between cuddles! Time left: %s minutes.", TimeUnit.MILLISECONDS.toMinutes(hour - difference)));
-                            return;
-                        }
-
-                        searchTimestamp = partnerLastCuddleTime;
-                        difference = Math.abs(currentTimestamp - searchTimestamp);
-
-                        if (difference < hour) {
-                            messageHandler.sendError(String.format("Sorry, %s can't cuddle right now. Try again in %s minutes.", partner.mention(), TimeUnit.MILLISECONDS.toMinutes(hour - difference)));
-                            return;
-                        }
-
-                        partnerPlayer.setObject(Player.DataType.LAST_CUDDLE_TIME, System.currentTimeMillis());
-                        authorPlayer.setObject(Player.DataType.LAST_CUDDLE_TIME, System.currentTimeMillis());
-
-                        String[] marriageData = ((String) authorPlayer.getObject(Player.DataType.MARRY_DATA)).split("&");
-
-                        if (marriageData[0].equals(partner.getStringID()))
-                        {
-                            messageHandler.sendMessage("You cuddled your partner, " + partner.mention() + "! (+2 HEALTH)");
-
-                            partnerPlayer.setObject(Player.DataType.HEALTH, (int)partnerPlayer.getObject(Player.DataType.HEALTH) + 2);
-                            authorPlayer.setObject(Player.DataType.HEALTH, (int)authorPlayer.getObject(Player.DataType.HEALTH) + 2);
-                        } else
-                        {
-                            messageHandler.sendMessage("You cuddled " + partner.mention() + "! (+1 HEALTH)");
-
-                            partnerPlayer.setObject(Player.DataType.HEALTH, (int)partnerPlayer.getObject(Player.DataType.HEALTH) + 1);
-                            authorPlayer.setObject(Player.DataType.HEALTH, (int)authorPlayer.getObject(Player.DataType.HEALTH) + 1);
-                        }
-                    } catch (RuntimeException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("You cuddled with " + target.getName() + ", they most likely didn't consent, how nice."));
         };
     }
 
