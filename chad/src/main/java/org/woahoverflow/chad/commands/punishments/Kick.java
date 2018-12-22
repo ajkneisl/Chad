@@ -1,13 +1,15 @@
 package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.PermissionUtils;
 
@@ -28,7 +30,9 @@ public class Kick implements Command.Class
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // Checks if the bot has permission to kick
             if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK))
@@ -81,10 +85,10 @@ public class Kick implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if kick message is enabled
-            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "kick_msg_on"))
+            if ((boolean) guild.getObject(DataType.KICK_MESSAGE_ON))
             {
                 // Gets the message from the cache
-                String message = Chad.getGuild(e.getGuild()).getDocument().getString("kick_message");
+                String message = (String) guild.getObject(Guild.DataType.KICK_MESSAGE);
 
                 // If the message isn't null, continue
                 if (message != null)
@@ -104,14 +108,14 @@ public class Kick implements Command.Class
             {
                 e.getGuild().kickUser(user);
                 reason.add("None");
-                messageHandler.send("Successfully kicked " + user.getName() + " for no reason.", "Kicked User");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully kicked " + user.getName() + " for no reason."));
                 MessageHandler.sendPunishLog("Kick", user, e.getAuthor(), e.getGuild(), reason);
                 return;
             }
 
             // Kicks the user.
             e.getGuild().kickUser(user);
-            messageHandler.send("Successfully kicked " + user.getName() + " for " + builtReason.toString().trim() + '.', "Kicked User");
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully kicked " + user.getName() + " for " + builtReason.toString().trim() + '.'));
             MessageHandler.sendPunishLog("Kick", user, e.getAuthor(), e.getGuild(), reason);
         };
     }

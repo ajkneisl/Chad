@@ -2,8 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="chad_main" target="1.8" />
-      <module name="chad_test" target="1.8" />
+      <module name="Chad_main" target="1.8" />
+      <module name="Chad_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,12 +1,13 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 /**
@@ -17,7 +18,7 @@ public class Nsfw implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Makes sure they've got permissions
             if (!RequestBuffer.request(() -> e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.MANAGE_CHANNEL)).get())
@@ -29,11 +30,11 @@ public class Nsfw implements Command.Class  {
             // If the channel is NSFW, revoke, if not, add
             if (RequestBuffer.request(() -> e.getChannel().isNSFW()).get())
             {
-                messageHandler.send("Removed NSFW status from this channel!", "Nsfw");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Removed NSFW status from this channel!"));
                 RequestBuffer.request(() -> e.getChannel().changeNSFW(false));
             }
             else {
-                messageHandler.send("Added NSFW status to this channel!", "Nsfw");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Added NSFW status from this channel!"));
                 RequestBuffer.request(() -> e.getChannel().changeNSFW(true));
             }
         };

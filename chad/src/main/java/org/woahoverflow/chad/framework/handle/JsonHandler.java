@@ -6,37 +6,37 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.json.JSONException;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-@SuppressWarnings("all")
 /**
  * Handles all web and local JSON content
  *
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */
-public class JSONHandler
+public class JsonHandler
 {
 
     /**
-     * The global instance of the JSON handler
+     * The global handle of the JSON handler
      */
-    public static final JSONHandler handle = new JSONHandler().forceCheck();
+    public static final JsonHandler handle = new JsonHandler().forceCheck();
 
     /**
      * Private Constructor
      */
-    public JSONHandler()
+    private JsonHandler()
     {
         super();
     }
@@ -44,43 +44,43 @@ public class JSONHandler
     /**
      * Makes sure all of the files exist
      *
-     * @return The instance
+     * @return The handle
      */
-    public JSONHandler forceCheck()
+    private synchronized JsonHandler forceCheck()
     {
         try
         {
             File dir = new File(System.getenv("appdata") + "\\chad");
             if (!dir.exists())
                 UIHandler.handle.addLog("Created Chad Directory : " + dir.mkdirs(), UIHandler.LogLevel.INFO);
-            File bot = new File(dir + "\\bot.json");
             if (!new File(dir + "\\bot.json").exists())
             {
+                File bot = new File(dir + "\\bot.json");
                 UIHandler.handle
                     .addLog("Created Bot Directory : " + bot.createNewFile(), UIHandler.LogLevel.INFO);
                 org.json.JSONObject obj = new org.json.JSONObject();
                 obj.put("token", "");
-                obj.put("steam_api_token", "");
+                obj.put("steam_api_key", "");
                 obj.put("uri_link", "");
-                obj.put("unstable", false);
-                try (FileWriter filew = new FileWriter(bot)) {
-                    filew.write(obj.toString());
-                    filew.flush();
+                obj.put("youtube_api_key", "");
+                try (FileWriter fileWriter = new FileWriter(bot)) {
+                    fileWriter.write(obj.toString());
+                    fileWriter.flush();
                 } catch (IOException e) {
-                    ChadError.throwError("There was an throwError creating files during startup!", e);
+                    ChadError.throwError("There was an error creating files during startup!", e);
                 }
             }
-            File imgdir = new File(System.getenv("appdata") + "\\chad\\imgcache");
-            if (!imgdir.exists())
+            File imgDirectory = new File(System.getenv("appdata") + "\\chad\\imgcache");
+            if (!imgDirectory.exists())
                 UIHandler.handle
-                    .addLog("Created Temp Image Directory : " + imgdir.mkdirs(), UIHandler.LogLevel.INFO);
+                    .addLog("Created Temp Image Directory : " + imgDirectory.mkdirs(), UIHandler.LogLevel.INFO);
             File dir2 = new File(System.getenv("appdata") + "\\chad\\catpictures");
             if (!dir2.exists())
                 UIHandler.handle
                     .addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
         } catch (IOException e)
         {
-            ChadError.throwError("There was an throwError creating files during startup!", e);
+            ChadError.throwError("There was an error creating files during startup!", e);
         }
         return this;
     }
@@ -91,11 +91,12 @@ public class JSONHandler
      * @param entry The object to get
      * @return The retrieved object
      */
-    public String get(String entry)
+    @SuppressWarnings("all")
+    public synchronized String get(String entry)
     {
         JSONParser parser = new JSONParser();
         try {
-            Object obj = parser.parse(new FileReader(System.getenv("appdata") + "\\chad\\bot.json"));
+            Object obj = parser.parse(new InputStreamReader(new FileInputStream(System.getenv("appdata") + "\\chad\\bot.json"), Charsets.UTF_8));
             JSONObject jsonObject  = (JSONObject) obj;
             return (String) jsonObject.get(entry);
         } catch (Exception e) {
@@ -109,18 +110,19 @@ public class JSONHandler
      *
      * @param object The object to set
      * @param input The input to set the object to
-     * @throws IOException
+     * @throws IOException With the Files.toString()
      */
-    public void set(String object, String input) throws IOException
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    public synchronized void set(String object, String input) throws IOException
     {
         File file = new File(System.getenv("appdata") + "\\chad\\bot.json");
         String jsonString = Files.toString(file, Charsets.UTF_8);
-        JsonElement jelement = new JsonParser().parse(jsonString);
-        JsonObject jobject = jelement.getAsJsonObject();
-        jobject.addProperty(object, input);
+        JsonElement jElement = new JsonParser().parse(jsonString);
+        JsonObject jObject = jElement.getAsJsonObject();
+        jObject.addProperty(object, input);
         Gson gson = new Gson();
 
-        String resultingJson = gson.toJson(jelement);
+        String resultingJson = gson.toJson(jElement);
 
         Files.write(resultingJson, file, Charsets.UTF_8);
     }
@@ -130,13 +132,12 @@ public class JSONHandler
      *
      * @param url The URL to read from
      * @return The JSONObject
-     * @throws JSONException
      */
-    public org.json.JSONObject read(String url) throws JSONException {
-        if (url == "" || url == null)
+    public org.json.JSONObject read(String url) {
+        if (url == null || url.isEmpty())
             return null;
         String httpGet = Util.httpGet(url);
-        if (httpGet == "" || httpGet == null)
+        if (httpGet == null || httpGet.isEmpty())
             return null;
         return new org.json.JSONObject(httpGet);
     }
@@ -146,13 +147,12 @@ public class JSONHandler
      *
      * @param url The URL to read from
      * @return The JSONArray
-     * @throws JSONException
      */
-    public org.json.JSONArray readArray(String url) throws JSONException {
-        if (url == "" || url == null)
+    public org.json.JSONArray readArray(String url) {
+        if (url == null || url.isEmpty())
             return null;
         String httpGet = Util.httpGet(url);
-        if (httpGet == "" || httpGet == null)
+        if (httpGet == null || httpGet.isEmpty())
             return null;
         return new org.json.JSONArray(httpGet);
     }
@@ -163,14 +163,15 @@ public class JSONHandler
      * @param file The file to read from
      * @return The JSONObject
      */
-    public org.json.JSONObject readFile(String file)
+    @SuppressWarnings("all")
+    public synchronized org.json.JSONObject readFile(String file)
     {
         JSONParser parser = new JSONParser();
         try {
-            Object obj = parser.parse(new FileReader(System.getenv("appdata") + "\\chad\\" + file));
+            Object obj = parser.parse(new InputStreamReader(new FileInputStream(System.getenv("appdata") + "\\chad\\" + file), Charsets.UTF_8));
             org.json.JSONObject jsonObject  = (org.json.JSONObject) obj;
             return jsonObject;
-        } catch (Exception e) {
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
         UIHandler.handle.addLog("readFile failed, returning null", UIHandler.LogLevel.SEVERE);
@@ -183,20 +184,20 @@ public class JSONHandler
      * @param fileString The file in the Chad directory
      * @param object The object
      * @param input The new value for the object
-     * @throws IOException
+     * @throws IOException The Files.toString
      */
-    public void writeFile(String fileString, String object, String input) throws IOException
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    public synchronized void writeFile(String fileString, String object, String input) throws IOException
     {
         File file = new File(System.getenv("appdata") + "\\chad\\" + fileString);
         String jsonString = Files.toString(file, Charsets.UTF_8);
-        JsonElement jelement = new JsonParser().parse(jsonString);
-        JsonObject jobject = jelement.getAsJsonObject();
-        jobject.addProperty(object, input);
+        JsonElement jElement = new JsonParser().parse(jsonString);
+        JsonObject jObject = jElement.getAsJsonObject();
+        jObject.addProperty(object, input);
         Gson gson = new Gson();
 
-        String resultingJson = gson.toJson(jelement);
+        String resultingJson = gson.toJson(jElement);
 
-        //noinspection deprecation
         Files.write(resultingJson, file, Charsets.UTF_8);
     }
 }

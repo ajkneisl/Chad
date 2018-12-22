@@ -1,6 +1,6 @@
 package org.woahoverflow.chad.commands.info;
 
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
@@ -48,7 +48,7 @@ public class GuildInfo implements Command.Class{
 
             // Adds the guild's image and sends.
             embedBuilder.withImage(e.getGuild().getIconURL());
-            new MessageHandler(e.getChannel()).sendEmbed(embedBuilder);
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(embedBuilder);
         };
     }
 

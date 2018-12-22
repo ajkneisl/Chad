@@ -1,15 +1,17 @@
 package org.woahoverflow.chad.commands.function;
 
 import java.util.stream.Collectors;
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -19,7 +21,9 @@ public class Logging implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // Checks if there are any arguments
             if (args.isEmpty())
@@ -40,17 +44,16 @@ public class Logging implements Command.Class  {
                     boolean actualBoolean = bool.equalsIgnoreCase("off");
 
                     // Sets in the database
-                    DatabaseHandler.handle.set(e.getGuild(), "logging", actualBoolean);
+                    GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, actualBoolean);
 
                     // Sends a log
-                    MessageHandler.sendConfigLog("Logging", bool, Boolean.toString(DatabaseHandler.handle
-                        .getBoolean(e.getGuild(), "logging")), e.getAuthor(), e.getGuild());
+                    MessageHandler.sendConfigLog("Logging", bool, Boolean.toString((boolean) guild.getObject(Guild.DataType.LOGGING)), e.getAuthor(), e.getGuild());
 
                     // Sends the message
-                    messageHandler.send("Changed logging to " + bool, "Changed Logging");
+                    messageHandler.sendEmbed(new EmbedBuilder().withDesc("Logging has been turned `"+bool+"`."));
 
                     // recaches
-                    Chad.getGuild(e.getGuild()).cache();
+                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
                 messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
@@ -68,7 +71,7 @@ public class Logging implements Command.Class  {
                 // Makes sure the channel exists
                 if (e.getGuild().getChannelsByName(formattedString.trim()).isEmpty())
                 {
-                    new MessageHandler(e.getChannel()).sendError("Invalid Channel");
+                    messageHandler.sendError("Invalid Channel");
                     return;
                 }
 
@@ -82,7 +85,7 @@ public class Logging implements Command.Class  {
                 }
 
                 // Gets the current logging channel and makes sure it isn't null
-                String loggingChannel = Chad.getGuild(e.getGuild()).getDocument().getString("logging_channel");
+                String loggingChannel = (String) guild.getObject(Guild.DataType.LOGGING_CHANNEL);
                 if (loggingChannel == null)
                 {
                     messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
@@ -96,10 +99,13 @@ public class Logging implements Command.Class  {
                     MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
 
                 // Send Message
-                messageHandler.send("Changed logging channel to " + formattedString.trim(), "Changed Logging Channel");
-                DatabaseHandler.handle.set(e.getGuild(), "logging_channel", channel.getStringID());
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Logging channel has been changed to `" + channel.getName() + "`."));
+
+                // Sets in the database
+                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, loggingChannel);
+
                 // Recaches
-                Chad.getGuild(e.getGuild()).cache();
+                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                 return;
             }
 

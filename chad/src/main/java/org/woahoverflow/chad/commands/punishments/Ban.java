@@ -1,13 +1,15 @@
 package org.woahoverflow.chad.commands.punishments;
 
 import java.util.regex.Pattern;
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.PermissionUtils;
 
@@ -29,7 +31,9 @@ public class Ban implements Command.Class
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // Checks if the bot has permission to ban
             if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.BAN))
@@ -82,10 +86,10 @@ public class Ban implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if ban message is enabled
-            if (DatabaseHandler.handle.getBoolean(e.getGuild(), "ban_msg_on"))
+            if ((boolean) guild.getObject(DataType.BAN_MESSAGE_ON))
             {
                 // Gets the message from the cache
-                String message = Chad.getGuild(e.getGuild()).getDocument().getString("ban_message");
+                String message = (String) guild.getObject(Guild.DataType.BAN_MESSAGE);
 
                 // If the message isn't null, continue
                 if (message != null)
@@ -105,14 +109,14 @@ public class Ban implements Command.Class
             {
                 e.getGuild().banUser(user);
                 reason.add("None");
-                messageHandler.send("Successfully banned " + user.getName() + " for no reason.", "Banned User");
+                messageHandler.sendEmbed(new EmbedBuilder().appendDesc("Successfully banned " + user.getName() + " for no reason."));
                 MessageHandler.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
                 return;
             }
 
             // Bans the user.
             e.getGuild().banUser(user);
-            messageHandler.send("Successfully banned " + user.getName() + " for " + builtReason.toString().trim() + '.', "Banned User");
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully banned " + user.getName() + " for " + builtReason.toString().trim() + '.'));
             MessageHandler.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
         };
     }

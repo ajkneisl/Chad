@@ -1,12 +1,13 @@
 package org.woahoverflow.chad.commands.fun;
 
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -17,10 +18,10 @@ public class CatFact implements Command.Class  {
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             // Gets the fact
-            String fact = JSONHandler.handle.read("https://catfact.ninja/fact").getString("fact");
+            String fact = JsonHandler.handle.read("https://catfact.ninja/fact").getString("fact");
 
             // Sends the fact
-            new MessageHandler(e.getChannel()).send(fact, "Cat Fact");
+            new MessageHandler(e.getChannel(), e.getAuthor()).credit("catfact.ninja").sendEmbed(new EmbedBuilder().withDesc(fact));
 
             // i don't even know how i could comprehend something so complicated like this
         };

@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.info;
 
 import java.util.stream.Collectors;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
@@ -21,7 +21,7 @@ public class UserInfo implements Command.Class {
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             IUser u;
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Gets the user from the mentions
             if (!e.getMessage().getMentions().isEmpty() && args.size() == 1)

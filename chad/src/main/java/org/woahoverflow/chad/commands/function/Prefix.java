@@ -1,9 +1,10 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -19,18 +20,18 @@ public class Prefix implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
+            // The guild's database instance
+            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // If there's no arguments, show the prefix
             if (args.isEmpty())
             {
-                // Sets up embed builder with the prefix in it
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.withTitle("Prefix");
-                embedBuilder.withDesc(Chad.getGuild(e.getGuild()).getDocument().getString("prefix"));
-
                 // Sends
-                messageHandler.sendEmbed(embedBuilder);
+                messageHandler.sendEmbed(new EmbedBuilder()
+                    .withDesc((String) guild.getObject(DataType.PREFIX))
+                );
                 return;
             }
 
@@ -38,24 +39,26 @@ public class Prefix implements Command.Class  {
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("set"))
             {
                 // Gets the current prefix
-                String prefix = Chad.getGuild(e.getGuild()).getDocument().getString("prefix");
+                String prefix = (String) guild.getObject(Guild.DataType.PREFIX);
+
+                // The new prefix
+                final String newPrefix = args.get(1);
 
                 // Makes sure the prefix isn't over 6 characters long
-                if (args.get(1).length() > 6)
+                if (newPrefix.length() > 6)
                 {
                     messageHandler.sendError("Prefix can't be over 6 characters long!");
                     return;
                 }
 
                 // Sends the log
-                MessageHandler.sendConfigLog("Prefix", args.get(1), prefix, e.getAuthor(), e.getGuild());
+                MessageHandler.sendConfigLog("Prefix", newPrefix, prefix, e.getAuthor(), e.getGuild());
 
-                // Sets the prefix in the database & recaches the guild
-                DatabaseHandler.handle.set(e.getGuild(), "prefix", args.get(1));
-                Chad.getGuild(e.getGuild()).cache();
+                // Sets the prefix in the database
+                guild.setObject(DataType.PREFIX, newPrefix);
 
                 // Sends a the message
-                messageHandler.send("Your prefix is now " + args.get(1), "Changed Prefix");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your prefix is now `" + newPrefix + "`."));
                 return;
             }
 

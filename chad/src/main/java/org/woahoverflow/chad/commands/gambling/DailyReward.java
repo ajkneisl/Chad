@@ -1,17 +1,22 @@
 package org.woahoverflow.chad.commands.gambling;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.Command.Class;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+
+import java.util.concurrent.TimeUnit;
+import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
+ * Gets a daily reward of money
+ *
  * @author sho
  * @since 0.6.3 B2
  */
@@ -19,82 +24,51 @@ public class DailyReward implements Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
-
-            // Makes sure the user has an account.
-            if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
-            {
-                messageHandler.sendError("You don't have an account! \n Use `" + Chad
-                    .getGuild(e.getGuild()).getDocument().getString("prefix") + "register` to get one!");
-                return;
-            }
-
-            /*
-            The format of the Daily Reward database entry is *userid*_ldr = MM.dd.yyyy
-             */
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+            
             // If the user hasn't claimed the daily reward ever
-            if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_ldr"))
+            if (player.getObject(DataType.LAST_DAILY_REWARD).equals("none"))
             {
                 // Get the user's current balance
-                long userBalance = (long) DatabaseHandler.handle.get(e.getGuild(), e.getAuthor().getStringID()+"_balance");
+                long userBalance = (long) player.getObject(DataType.BALANCE);
 
                 // Adds the money
-                DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID()+"_balance", userBalance + 2000);
+                player.setObject(DataType.BALANCE, userBalance+2000);
 
-                // Updates the user's ldr
-                DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID()+"_ldr", DateTimeFormatter.ofPattern("MM&dd&yyyy").format(LocalDateTime.now()));
+                // Updates the user's ldr to the current time
+                player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis());
 
                 // Send the message
-                messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("You claimed your daily reward of `2000`!"));
                 return;
             }
 
             // Gets the date of their last daily reward
-            String lastDailyReward = DatabaseHandler.handle.getString(e.getGuild(), e.getAuthor().getStringID()+"_ldr");
+            long lastDailyReward = (long) player.getObject(DataType.LAST_DAILY_REWARD); // TODO
 
-            // Just so IntelliJ stops yelling at me
-            if (lastDailyReward == null)
+            long difference = Util.howOld(lastDailyReward);
+            int day = 24 * 60 * 60 * 1000;
+
+            if (difference < day)
             {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                return;
-            }
-
-            // Makes sure it's not the same day as they last claimed it
-            if (DateTimeFormatter.ofPattern("MM&dd&yyyy").format(LocalDateTime.now()).equalsIgnoreCase(lastDailyReward))
-            {
-                // Get the day, year and month
-                String[] dayYearMonth = lastDailyReward.split("&");
-
-                // Build the date they'll be able to get it next
-                String newTime;
-                try {
-                    newTime = dayYearMonth[0] + '/';
-
-                    int newDay = Integer.parseInt(dayYearMonth[1])+1;
-
-                    newTime += !(Integer.parseInt(dayYearMonth[1]) > 9) ? "0" + newDay : newDay;
-                    newTime += '/' + dayYearMonth[2];
-                } catch (NumberFormatException throwaway) {
-                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
-                    return;
-                }
-
-                // Sends the message
-                messageHandler.sendError("You can't claim your reward until `"+ newTime +"`!");
+                long hours = TimeUnit.MILLISECONDS.toHours(day - difference);
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(day - difference) - (hours * 60);
+                messageHandler.sendError("Sorry, you can only claim your reward once a day.! Time left: " + hours + " hours and " + minutes + " minutes.");
                 return;
             }
 
             // Get the user's current balance
-            long currentBalance = (long) DatabaseHandler.handle.get(e.getGuild(), e.getAuthor().getStringID()+"_balance");
-
-            // Updates the user's ldr
-            DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID()+"_ldr", DateTimeFormatter.ofPattern("MM&dd&yyyy").format(LocalDateTime.now()));
+            long currentBalance = (long) player.getObject(DataType.BALANCE);
 
             // Adds the money
-            DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID()+"_balance", currentBalance + 2000);
+            player.setObject(DataType.BALANCE, currentBalance+2000);
+
+            // Updates the user's ldr
+            player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis());
 
             // Send the message
-            messageHandler.send("You claimed your daily reward of `2000`!", "Daily Reward");
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("You claimed your daily reward of `2000`!"));
         };
     }
 

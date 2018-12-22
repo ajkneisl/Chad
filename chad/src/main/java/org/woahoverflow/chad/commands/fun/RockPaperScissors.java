@@ -3,11 +3,12 @@ package org.woahoverflow.chad.commands.fun;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.stream.Stream;
-import org.woahoverflow.chad.framework.Command;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -19,12 +20,12 @@ public class RockPaperScissors implements Command.Class
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () ->
         {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Checks if there's arguments
             if (args.isEmpty())
             {
-                new MessageHandler(e.getChannel()).sendError("Invalid Arguments");
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Arguments");
                 return;
             }
 
@@ -44,7 +45,7 @@ public class RockPaperScissors implements Command.Class
                      i = 2;
 
                 // Sends the result
-                messageHandler.send(calculateWinner(i, i2), "Rock Paper Scissors");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc(calculateWinner(i, i2)));
             }
             else {
                 messageHandler.sendError("Invalid Arguments");

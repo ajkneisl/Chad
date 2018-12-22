@@ -1,26 +1,33 @@
 package org.woahoverflow.chad.framework;
 
+import static org.woahoverflow.chad.core.ChadVar.musicManagers;
+import static org.woahoverflow.chad.core.ChadVar.playerManager;
 import static org.woahoverflow.chad.core.ChadVar.swearWords;
 
+import com.google.common.net.HttpHeaders;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import org.bson.Document;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
-import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.GuildMusicManager;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
+import sx.blah.discord.api.internal.DiscordUtils;
 import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RequestBuffer;
 
 /**
@@ -31,71 +38,13 @@ import sx.blah.discord.util.RequestBuffer;
  */
 public final class Chad
 {
-
-    /**
-     * A Cached Guild
-     */
-    public static final class CachedGuild
-    {
-        private String lastCached;
-        private final IGuild guild;
-        private Document document;
-
-        /**
-         * Constructor
-         *
-         * @param guild The guild to be cached
-         */
-        public CachedGuild(IGuild guild)
-        {
-            this.guild = guild;
-            lastCached = Util.getTimeStamp();
-            cache();
-        }
-
-        /**
-         * ReCaches the guild
-         */
-        public void cache()
-        {
-            Document get = DatabaseHandler.handle.getCollection().find(new Document("guildid", guild.getStringID())).first();
-
-            if (get == null)
-                return;
-
-            document = get;
-            lastCached = Util.getTimeStamp();
-        }
-
-        /**
-         * @return The guild
-         */
-        public IGuild getGuild() {
-            return guild;
-        }
-
-        /**
-         * @return The cached document
-         */
-        public Document getDocument() {
-            return document;
-        }
-
-        /**
-         * @return The date it's last cached
-         */
-        public String getLastCached() {
-            return lastCached;
-        }
-    }
-
     /**
      * A Thread Consumer
      */
     public static final class ThreadConsumer
     {
         private final boolean discordUser;
-        private IUser user;
+        private long userId;
 
         /**
          * Local Constructor for non IUsers
@@ -108,11 +57,11 @@ public final class Chad
         /**
          * Local Constructor for IUsers
          *
-         * @param user The user to create it for
+         * @param userId The user to create it for
          */
-        ThreadConsumer(IUser user)
+        ThreadConsumer(long userId)
         {
-            this.user = user;
+            this.userId = userId;
             discordUser = true;
         }
 
@@ -126,16 +75,39 @@ public final class Chad
         /**
          * @return The user
          */
-        public IUser getUser() {
-            return user;
+        public long getUserId() {
+            return userId;
         }
     }
 
+    /**
+     * The amount of user running threads
+     */
     public static int runningThreads;
+
+    /**
+     * The amount of internal threads running
+     */
     public static int internalRunningThreads;
-    public static final ConcurrentHashMap<IGuild, CachedGuild> cachedGuilds = new ConcurrentHashMap<>();
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(30);
+
+    /**
+     * Where all internal threads are run
+     */
+    private static final ExecutorService internalExecutorService = Executors.newFixedThreadPool(30, DiscordUtils.createDaemonThreadFactory("Internal"));
+
+    /**
+     * Where all external (commands etc) threads are run
+     */
+    private static final ExecutorService externalExecutorService = Executors.newCachedThreadPool(DiscordUtils.createDaemonThreadFactory("Command Handler"));
+
+    /**
+     * The internal thread consumer
+     */
     private static final ThreadConsumer internalThreadConsumer = new ThreadConsumer();
+
+    /**
+     * User's thread consumer
+     */
     public static final ConcurrentHashMap<ThreadConsumer, ArrayList<Future<?>>> threadHash = new ConcurrentHashMap<>();
 
     /**
@@ -149,66 +121,60 @@ public final class Chad
         /*
         Chad's Thread Counting
          */
-        runThread(
-            () -> new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (!threadHash.isEmpty())
+        runThread(() -> {
+            while (!threadHash.isEmpty())
+            {
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                threadHash.forEach((key, val) -> {
+                    if (!val.isEmpty())
                     {
-                        threadHash.forEach((key, val) -> {
-                            if (!val.isEmpty())
+                        for (int i = 0; val.size() > i; i++)
+                        {
+                            if (val.get(i).isDone())
                             {
-                                for (int i = 0; val.size() > i; i++)
+                                val.remove(val.get(i));
+                                if (key.isDiscordUser())
                                 {
-                                    if (val.get(i).isDone())
-                                    {
-                                        val.remove(val.get(i));
-                                        if (key.isDiscordUser())
-                                        {
-                                            runningThreads--;
-                                        }
-                                        else {
-                                            internalRunningThreads--;
-                                        }
-                                    }
+                                    runningThreads--;
+                                }
+                                else {
+                                    internalRunningThreads--;
                                 }
                             }
-                            else {
-                                threadHash.remove(key);
-                            }
-                        });
+                        }
                     }
-                }
-            }, 0, 1000), getInternalConsumer() // gets internal consumer
-        );
+                    else {
+                        threadHash.remove(key);
+                    }
+                });
+            }
+        },getInternalConsumer());
 
-        /*
-        Chad's Caching
-         */
-        runThread(() -> {
-            List<IGuild> guilds = RequestBuffer.request(ChadBot.cli::getGuilds).get();
-            guilds.forEach((guild) -> cachedGuilds.put(guild, new CachedGuild(guild)));
-        }, getInternalConsumer());
 
         /*
         Chad's UI
          */
-        UIHandler.handle = new UIHandler(ChadBot.cli);
+        UIHandler.handle = new UIHandler();
 
         /*
         Swear Words
          */
-        runThread(() -> JSONHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/swears.json").forEach((word) -> swearWords.add((String) word)), getInternalConsumer());
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/swears.json").forEach((word) -> swearWords.add((String) word)), getInternalConsumer());
 
         /*
         Developers
          */
-        runThread(() -> JSONHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json").forEach((v) ->
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) ->
         {
             if (Boolean.parseBoolean(((JSONObject) v).getString("allow")))
             {
-                UIHandler.handle.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", LogLevel.INFO);
-                ChadVar.GLOBAL_PERMISSIONS.put(((JSONObject) v).getString("id"), PermissionHandler.Levels.SYSTEM_ADMINISTRATOR);
+                UIHandler.handle
+                    .addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", LogLevel.INFO);
+                ChadVar.DEVELOPERS.add(((JSONObject) v).getLong("id"));
             }
             else {
                 UIHandler.handle.addLog("Avoided adding user " + ((JSONObject) v).getString("display_name"), LogLevel.INFO);
@@ -218,48 +184,86 @@ public final class Chad
         /*
         Adds all the presences
          */
-        runThread(() -> JSONHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v)), getInternalConsumer());
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v)), getInternalConsumer());
+
+        /*
+        Gets all the words from the CDN
+         */
+        runThread(() ->
+        {
+            try {
+                // Defines the URL and Connection
+                URL url = new URL("https://cdn.woahoverflow.org/data/chad/words.txt");
+                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+                // Sets the properties of the connection
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT);
+
+                @SuppressWarnings("all")
+                // Creates a buffered reader at the word url
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+
+                // Adds the words to the list
+                ChadVar.wordsList = in.lines().collect(Collectors.toList());
+
+                // Closes the reader
+                in.close();
+            } catch (@SuppressWarnings("all") IOException e1) {
+                e1.printStackTrace();
+            }
+        }, getInternalConsumer());
+
+        /*
+        Updates all guild's statistics each hour
+         */
+        runThread(() -> {
+            //noinspection InfiniteLoopStatement :)
+            while (true)
+            {
+                try {
+                    TimeUnit.HOURS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                RequestBuffer.request(ChadBot.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+            }
+        }, getInternalConsumer());
     }
 
     /**
-     * Gets a cached guild
-     *
-     * @param guild The guild to get a cached version of
-     * @return The cached guild
+     * Gets a guild's audio player
      */
-    public static CachedGuild getGuild(IGuild guild)
+    public static synchronized GuildMusicManager getMusicManager(IGuild guild)
     {
-        // If it contains the guild, which it should, return it
-        if (cachedGuilds.keySet().contains(guild))
-            return cachedGuilds.get(guild);
+        long guildId = guild.getLongID();
+        GuildMusicManager musicManager = musicManagers.get(guildId);
 
-        // if the guild wasn't cached, cache it
-        cachedGuilds.put(guild, new CachedGuild(guild));
-        return cachedGuilds.get(guild);
+        if (musicManager == null)
+        {
+            musicManager = new GuildMusicManager(playerManager, guildId);
+            musicManagers.put(guildId, musicManager);
+        }
+
+        guild.getAudioManager().setAudioProvider(musicManager.getAudioProvider());
+
+        return musicManager;
     }
 
-    /**
-     * UnCaches a guild
-     *
-     * @param guild The guild to be uncached
-     */
-    public static void unCacheGuild(IGuild guild)
-    {
-        cachedGuilds.remove(guild);
-    }
 
     /**
      * Gets a user's thread consumer
      *
-     * @param user The user
+     * @param userId The user's ID
      * @return The user's thread consumer
      */
-    public static ThreadConsumer getConsumer(IUser user)
+    public static ThreadConsumer getConsumer(long userId)
     {
         for (ThreadConsumer cons : threadHash.keySet())
-            if (cons.isDiscordUser() && cons.getUser().equals(user))
+            if (cons.isDiscordUser() && cons.getUserId() == (userId))
                 return cons;
-        return new ThreadConsumer(user);
+        return new ThreadConsumer(userId);
     }
 
     /**
@@ -267,7 +271,7 @@ public final class Chad
      *
      * @return The local internal consumer
      */
-    public static ThreadConsumer getInternalConsumer()
+    public static synchronized ThreadConsumer getInternalConsumer()
     {
         return internalThreadConsumer;
     }
@@ -280,25 +284,31 @@ public final class Chad
      */
     public static void runThread(Runnable thread, ThreadConsumer consumer)
     {
-        // If they're a discord user, add a running thread to the default
+        Future<?> future;
+
+        // If they're a discord user, add a running thread & submit it
         if (consumer.isDiscordUser())
+        {
             runningThreads++;
-        else
-            internalRunningThreads++; // If not, it's an internal thread
 
-        // Run the thread
-        Future<?> ranThread = executorService.submit(thread);
+            future = externalExecutorService.submit(thread);
+        }
+        else { // If they're not a discord user, apply them to the internal executor
+            internalRunningThreads++;
 
-        // Add it to the hashmap
+            future = internalExecutorService.submit(thread);
+        }
+
+        // Add it to the hash map
         if (threadHash.containsKey(consumer))
         {
             ArrayList<Future<?>> th = threadHash.get(consumer);
-            th.add(ranThread);
+            th.add(future);
             threadHash.put(consumer, th);
         }
         else {
             ArrayList<Future<?>> th = new ArrayList<>();
-            th.add(ranThread);
+            th.add(future);
             threadHash.put(consumer, th);
         }
     }
@@ -309,7 +319,7 @@ public final class Chad
      * @param consumer The thread consumer
      * @return If it can run it
      */
-    public static boolean consumerRunThread(ThreadConsumer consumer)
+    public static synchronized boolean consumerRunThread(ThreadConsumer consumer)
     {
         return threadHash.get(consumer) == null || threadHash.get(consumer).size() < 3;
     }

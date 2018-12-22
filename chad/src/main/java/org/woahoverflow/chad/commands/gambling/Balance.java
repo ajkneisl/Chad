@@ -1,15 +1,20 @@
 package org.woahoverflow.chad.commands.gambling;
 
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
+ * Gets a user's balance
+ *
  * @author sho
  * @since 0.6.3 B2
  */
@@ -17,15 +22,24 @@ public class Balance implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            if (!DatabaseHandler.handle.contains(e.getGuild(), e.getAuthor().getStringID() + "_balance"))
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
+            if (args.isEmpty())
             {
-                new MessageHandler(e.getChannel()).sendError("You don't have an account! \n Use `" + Chad
-                    .getGuild(e.getGuild()).getDocument().getString("prefix") + "register` to get one!");
+                Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your balance is `"+player.getObject(DataType.BALANCE)+"`!"));
                 return;
             }
 
-            new MessageHandler(e.getChannel()).send("Your balance is `"+DatabaseHandler.handle
-                .get(e.getGuild(), e.getAuthor().getStringID()+"_balance")+"`.", "Balance");
+            if (e.getMessage().getMentions().size() == 1)
+            {
+                IUser targetIUser = e.getMessage().getMentions().get(0);
+                Player player = PlayerHandler.handle.getPlayer(targetIUser.getLongID());
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc('`' +targetIUser.getName()+"`'s balance is `"+player.getObject(DataType.BALANCE)+"`!"));
+                return;
+            }
+
+            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
         };
     }
 
@@ -33,6 +47,7 @@ public class Balance implements Command.Class {
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("balance", "See your balance.");
+        st.put("balance <@user>", "See another user's balance.");
         return Command.helpCommand(st, "Balance", e);
     }
 }

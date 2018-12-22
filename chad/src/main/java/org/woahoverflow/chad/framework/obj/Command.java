@@ -1,11 +1,10 @@
-package org.woahoverflow.chad.framework;
+package org.woahoverflow.chad.framework.obj;
 
-import java.awt.Color;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -23,7 +22,7 @@ public final class Command
      */
     public enum Category
     {
-        ADMIN, MONEY, PUNISHMENTS, INFO, FUNCTION, FUN, NSFW
+        DEVELOPER, GAMBLING, PUNISHMENTS, INFO, ADMINISTRATOR, FUN, NSFW, MUSIC, COMMUNITY
     }
 
     /**
@@ -45,9 +44,26 @@ public final class Command
         // The command's category
         private final Category commandCategory;
         private final Command.Class commandClass;
+        private String[] commandAliases = {};
+        private final boolean usesAliases;
 
         /**
-         * The constructor for data
+         * The constructor for data with aliases
+         *
+         * @param category The command's category
+         * @param commandClass The command's class
+         * @param commandAliases The command's aliases
+         */
+        public Data(Category category, Command.Class commandClass, String... commandAliases)
+        {
+            this.commandAliases = commandAliases;
+            commandCategory = category;
+            this.commandClass = commandClass;
+            usesAliases = true;
+        }
+
+        /**
+         * The constructor for data without aliases
          *
          * @param category The command's category
          * @param commandClass The command's class
@@ -56,6 +72,7 @@ public final class Command
         {
             commandCategory = category;
             this.commandClass = commandClass;
+            usesAliases = false;
         }
 
         /**
@@ -71,6 +88,25 @@ public final class Command
         public Command.Class getCommandClass() {
             return commandClass;
         }
+
+        /**
+         * @return The command's aliases
+         */
+        public String[] getCommandAliases()
+        {
+            if (!usesAliases())
+                return null;
+
+            return commandAliases;
+        }
+
+        /**
+         * @return If it uses aliases
+         */
+        public boolean usesAliases()
+        {
+            return usesAliases;
+        }
     }
 
     /**
@@ -81,16 +117,21 @@ public final class Command
      * @param messageReceivedEvent The messagerecievedevent
      * @return The help runnable
      */
-    public static Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent messageReceivedEvent)
+    public static synchronized Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent messageReceivedEvent)
     {
         return () -> {
-            String prefix = DatabaseHandler.handle.getString(messageReceivedEvent.getGuild(), "prefix");
+
+            // The guild's prefix
+            String prefix = (String) GuildHandler.handle.getGuild(messageReceivedEvent.getGuild().getLongID()).getObject(
+                DataType.PREFIX);
+
+            // The embed builder
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.withTitle("Help : " + commandName);
             commands.forEach((key, val) -> embedBuilder.appendField(prefix+key, val, false));
-            embedBuilder.withFooterText(Util.getTimeStamp());
-            embedBuilder.withColor(new Color(new SecureRandom().nextFloat(), new SecureRandom().nextFloat(), new SecureRandom().nextFloat()));
-            new MessageHandler(messageReceivedEvent.getChannel()).sendEmbed(embedBuilder);
+
+            // Sends it
+            new MessageHandler(messageReceivedEvent.getChannel(), messageReceivedEvent.getAuthor()).sendEmbed(embedBuilder);
         };
     }
 }

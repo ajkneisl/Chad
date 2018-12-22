@@ -1,12 +1,15 @@
 package org.woahoverflow.chad.commands.admin;
 
-import org.woahoverflow.chad.framework.Command;
-import org.woahoverflow.chad.framework.handle.DatabaseHandler;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
+import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * @author sho
@@ -16,7 +19,8 @@ public class SetBalance implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+
 
             // Checks if the arguments is empty
             if (args.isEmpty())
@@ -36,11 +40,16 @@ public class SetBalance implements Command.Class {
                     return;
                 }
 
+                // The author's player instance
+                Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+
                 // Sets the balance
-                DatabaseHandler.handle.set(e.getGuild(), e.getAuthor().getStringID() + "_balance", Long.parseLong(args.get(0)));
+                player.setObject(DataType.BALANCE, Long.parseLong(args.get(0)));
+
+                System.out.println(args.get(0));
 
                 // Sends the message
-                messageHandler.send("Set your balance to `"+args.get(0)+"`.", "Balance");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set your balance to `"+args.get(0)+"`."));
                 return;
             }
 
@@ -58,16 +67,18 @@ public class SetBalance implements Command.Class {
                 try {
                     Long.parseLong(args.get(0));
                 } catch (NumberFormatException e1) {
-                    new MessageHandler(e.getChannel()).sendError("Invalid Integer!");
+                    new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Integer!");
                     return;
                 }
 
+                // The mentioned user's player instance
+                Player player = PlayerHandler.handle.getPlayer(e.getMessage().getMentions().get(0).getLongID());
+
                 // Sets the balance of the mentioned user
-                DatabaseHandler.handle
-                    .set(e.getGuild(), e.getMessage().getMentions().get(0).getStringID() + "_balance", Long.parseLong(args.get(0)));
+                player.setObject(DataType.BALANCE, Long.parseLong(args.get(0)));
 
                 // Sends the message
-                messageHandler.send("Set `" + e.getMessage().getMentions().get(0).getName() + "`'s balance to `"+args.get(0)+"`.", "Balance");
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set `" + e.getMessage().getMentions().get(0).getName() + "`'s balance to `"+args.get(0)+"`."));
                 return;
             }
             messageHandler.sendError("Invalid Arguments!");

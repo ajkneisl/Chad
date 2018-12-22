@@ -1,6 +1,8 @@
 package org.woahoverflow.chad.core.listener;
 
 import java.security.SecureRandom;
+import java.util.concurrent.TimeUnit;
+import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.ui.UIHandler;
@@ -30,7 +32,10 @@ public final class OnReady
     {
         // Presence Rotations
         Chad.runThread(() -> {
-            // The first randomized presence
+
+            // If the presence rotation is disabled, return
+            if (!ChadVar.rotatePresence)
+                return;
 
             // Rotation Values
             Object[] ar = ChadVar.presenceRotation.toArray();
@@ -46,12 +51,12 @@ public final class OnReady
 
             while (true)
             {
-                // Adds a second
-                time++;
+                // Adds 10 seconds
+                time += 10;
 
-                // Waits a second
+                // Waits 10 seconds
                 try {
-                    Thread.sleep(1000);
+                    TimeUnit.SECONDS.sleep(10);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
@@ -76,7 +81,13 @@ public final class OnReady
         }, Chad.getInternalConsumer());
 
         // UI Begin
-        UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
-        UIHandler.handle.update();
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
+        }
+        else {
+            UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
+            UIHandler.handle.update();
+        }
     }
 }

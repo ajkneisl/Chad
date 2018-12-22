@@ -5,12 +5,12 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.ui.panels.GuildPanel;
 import org.woahoverflow.chad.framework.ui.panels.MainPanel;
 import org.woahoverflow.chad.framework.ui.panels.PopUpPanel;
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -27,24 +27,37 @@ import java.util.List;
  */
 public class UIHandler
 {
-    private static boolean activeUpdate;
+    /**
+     * The handle of this class
+     */
     public static UIHandler handle;
 
-    // panels
+    /**
+     * Local Integer, used in some Lambda expressions
+     */
     private int i;
+
+    /**
+     * The Main Frame of the UI
+     */
     private final JFrame mainFrame = new JFrame("Chad");
+
+    /**
+     * The Main Panel of the UI
+     */
     private final MainPanel mainpanel = new MainPanel();
-    private final IDiscordClient cli;
+
 
     /**
      * Main Constructor for the UI
-     * @param cli the IDiscordClient
      */
-    public UIHandler(IDiscordClient cli)
+    public UIHandler()
     {
-        activeUpdate = true;
-
-        this.cli = cli;
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().warn("UI has been disabled!");
+            return;
+        }
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // makes it look better :)
         } catch (@SuppressWarnings("all") Exception e) { // it needs to shut the fuck up
@@ -56,7 +69,13 @@ public class UIHandler
 
         // UI Updater (updates stats)
         Chad.runThread(() -> {
-            while (activeUpdate)
+            if (ChadVar.launchOptions.get("-denyuiupdate"))
+            {
+                ChadBot.getLogger().warn("UI Updating has been disabled!");
+                return;
+            }
+
+            while (ChadVar.launchOptions.get("-denyuiupdate"))
             {
                 try {
                     TimeUnit.MINUTES.sleep(5);
@@ -76,6 +95,28 @@ public class UIHandler
      */
     public final void addLog(String log, LogLevel level)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            if (level.equals(LogLevel.EXCEPTION))
+            {
+                ChadBot.getLogger().error(log);
+                return;
+            }
+            if (level.equals(LogLevel.INFO))
+            {
+                ChadBot.getLogger().info(log);
+                return;
+            }
+            if (level.equals(LogLevel.WARNING))
+            {
+                ChadBot.getLogger().warn(log);
+                return;
+            }
+
+            ChadBot.getLogger().info(log);
+            return;
+        }
+
         mainpanel.logs.append('\n' +"["+ level +"] "+ log);
     }
 
@@ -86,6 +127,11 @@ public class UIHandler
      */
     static void newError(String error)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().error(error);
+            return;
+        }
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : Chad");
         panel.errorContent.setEditable(false);
@@ -107,6 +153,11 @@ public class UIHandler
      */
     static void newError(String error, IGuild guild)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().error("Error in Guild {}: {}", guild.getStringID(), error);
+            return;
+        }
         PopUpPanel panel = new PopUpPanel();
         JFrame frame = new JFrame("Error : " + guild.getStringID());
         frame.getContentPane().add(panel);
@@ -125,6 +176,11 @@ public class UIHandler
      */
     public static void displayGuild(IGuild guild)
     {
+        if (ChadVar.launchOptions.get("-denyui"))
+        {
+            ChadBot.getLogger().error("UI is denied, cannot display guild!");
+            return;
+        }
         JFrame frame = new JFrame("Guild : " + guild.getStringID());
         GuildPanel panel = new GuildPanel();
         frame.setVisible(true);
@@ -148,7 +204,7 @@ public class UIHandler
                 : "No Permission for Invite!";
             panel.inviteLinkVal.setText(invite);
         }
-        panel.reCacheButton.addActionListener((ev) -> Chad.getGuild(guild).cache());
+        panel.reCacheButton.addActionListener((ev) -> GuildHandler.handle.refreshGuild(guild.getLongID()));
     }
 
     /**
@@ -156,6 +212,13 @@ public class UIHandler
      */
     private void beginMainFrame()
     {
+        // Frame's default values
+        mainFrame.getContentPane().add(mainpanel);
+        mainFrame.setVisible(true);
+        mainFrame.setResizable(false);
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setSize(1157, 842);
+
         // The echo guilds command
         mainpanel.getAllGuilds.addActionListener((ev) -> {
           i = 0;
@@ -174,7 +237,7 @@ public class UIHandler
         mainpanel.refreshButton.addActionListener((ev) -> update());
 
         // Caches all the guilds
-        mainpanel.refreshButton2.addActionListener((ev) -> RequestBuffer.request(() -> ChadBot.cli.getGuilds().forEach((guild) -> Chad.getGuild(guild).cache())));
+        mainpanel.refreshButton2.addActionListener((ev) -> RequestBuffer.request(() -> ChadBot.cli.getGuilds().forEach((guild) -> GuildHandler.handle.refreshGuild(guild.getLongID()))));
 
         // Gets the OperatingSystemMXBean
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
@@ -212,28 +275,24 @@ public class UIHandler
         mainpanel.shardRespTimeVal.setText(ping + "ms");
 
         // Sets the presence value
-        mainpanel.presenceVal.setText("Loading");
+        mainpanel.presenceVal.setText("Loading...");
 
         // So the main logs can't be edited
         mainpanel.logs.setEditable(false);
 
         // The startup message
         mainpanel.logs.setText("UI has started.");
-
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainFrame.setSize(1157, 842);
     }
 
     /**
      * Gets the statistics for the main UI
      *
-     * @param cli The IDiscordClient
      * @return A hashmap full of statistics
      */
-    private static HashMap<String, String> getStats(IDiscordClient cli)
+    private static HashMap<String, String> getStats()
     {
 
-        List<IGuild> guilds = RequestBuffer.request(cli::getGuilds).get();
+        List<IGuild> guilds = RequestBuffer.request(ChadBot.cli::getGuilds).get();
 
         int bots = 0;
         int users = 0;
@@ -267,22 +326,30 @@ public class UIHandler
      */
     public final void update()
     {
-        com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
-                java.lang.management.ManagementFactory.getOperatingSystemMXBean();
-        String memory = os.getTotalPhysicalMemorySize()/1000/1000+"mb";
-        int availableProcessors = os.getAvailableProcessors();
-        IShard shard = ChadBot.cli.getShards().get(0);
-        long ping = shard.getResponseTime();
-        mainpanel.allGuildsValue.setText(getStats(cli).get("guildAmount"));
-        mainpanel.biggestGuildValue.setText(getStats(cli).get("biggestGuild"));
-        mainpanel.botToUserVal.setText(getStats(cli).get("botToPlayer"));
+        // Gets the statistics
+        HashMap<String, String> stats = getStats();
+
+        // Updates the UI with the given statistics
+        mainpanel.allGuildsValue.setText(stats.get("guildAmount"));
+        mainpanel.biggestGuildValue.setText(stats.get("biggestGuild"));
+        mainpanel.botToUserVal.setText(stats.get("botToPlayer"));
+
+        // The Thread hashmap's size
         mainpanel.threadVal.setText(String.valueOf(Chad.threadHash.size()));
+
+        // If the bot is ready and the presence text is present, update the value
         if (ChadBot.cli.isReady() && ChadBot.cli.getOurUser().getPresence().getText().isPresent()) {
             mainpanel.presenceVal.setText(ChadBot.cli.getOurUser().getPresence().getText().get());
         }
-        mainpanel.shardRespTimeVal.setText(ping + "ms");
-        mainpanel.coresVal.setText(Integer.toString(availableProcessors));
-        mainpanel.memoryVal.setText(memory);
+
+        // Gets the OperatingSystemMXBean
+        com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
+            java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+
+        // Update values given fromt he OperatingSystemMXBean
+        mainpanel.shardRespTimeVal.setText(ChadBot.cli.getShards().get(0).getResponseTime() + "ms");
+        mainpanel.coresVal.setText(Integer.toString(os.getAvailableProcessors()));
+        mainpanel.memoryVal.setText(os.getTotalPhysicalMemorySize()/1000/1000+"mb");
     }
 
     /**
@@ -290,7 +357,7 @@ public class UIHandler
      */
     public enum LogLevel
     {
-        INFO, WARNING, SEVERE, EXCEPTION, CACHING
+        INFO, WARNING, SEVERE, EXCEPTION
     }
 
     /**

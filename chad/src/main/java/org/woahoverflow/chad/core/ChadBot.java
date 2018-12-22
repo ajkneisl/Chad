@@ -1,16 +1,22 @@
 package org.woahoverflow.chad.core;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.woahoverflow.chad.core.listener.GuildJoinLeave;
 import org.woahoverflow.chad.core.listener.MessageEditEvent;
-import org.woahoverflow.chad.core.listener.MessageRecieved;
+import org.woahoverflow.chad.core.listener.MessageReceived;
 import org.woahoverflow.chad.core.listener.OnReady;
 import org.woahoverflow.chad.core.listener.UserLeaveJoin;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.handle.JSONHandler;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.util.RequestBuffer;
 
 /**
  * Main class within Chad
@@ -20,15 +26,21 @@ import sx.blah.discord.api.IDiscordClient;
  */
 public final class ChadBot {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChadBot.class);
+
+    public static Logger getLogger()
+    {
+        return logger;
+    }
+
     /*
-    Makes sure bot.json is fulled
+    Makes sure bot.json is filled
      */
     static
     {
-        JSONHandler h = new JSONHandler().forceCheck();
-        if (h.get("token").isEmpty() || h.get("uri_link").isEmpty())
+        if (JsonHandler.handle.get("token").isEmpty() || JsonHandler.handle.get("uri_link").isEmpty())
         {
-            UIHandler handle = new UIHandler(null);
+            UIHandler handle = new UIHandler();
             handle.addLog("bot.json is empty!", LogLevel.SEVERE);
             // Exits
             System.exit(1);
@@ -38,7 +50,7 @@ public final class ChadBot {
     /**
      * Main Client Instance
      */
-    public static final IDiscordClient cli = new ClientBuilder().withToken(new JSONHandler().forceCheck().get("token")).withRecommendedShardCount().build();
+    public static final IDiscordClient cli = new ClientBuilder().withToken(JsonHandler.handle.get("token")).withRecommendedShardCount().build();
 
     /**
      * Main Method
@@ -47,12 +59,40 @@ public final class ChadBot {
      */
     public static void main(String[] args)
     {
+        // Disables MongoDB's logging, as it's just clutter and not really needed
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger rootLogger = loggerContext.getLogger("org.mongodb.driver");
+        rootLogger.setLevel(Level.OFF);
+
+        // Calculates the launch options
+        if (args.length >= 1)
+        {
+            for (int i = 0; args.length > i; i++)
+            {
+                final int i2 = i;
+                ChadVar.launchOptions.forEach((st, bol) -> {
+                    // If the launch option is valid, enter it
+                    if (args[i2].equalsIgnoreCase(st))
+                        ChadVar.launchOptions.put(st, true);
+                });
+            }
+        }
+
         // Logs in and registers the listeners
         cli.login();
-        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageRecieved(), new OnReady(), new UserLeaveJoin(), new MessageEditEvent());
+        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageReceived(), new OnReady(), new UserLeaveJoin(), new MessageEditEvent());
 
         // Initializes the framework & a lot of stuff
         Chad.init();
+
+        // Logs out of the client on shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // Saves all of the guild's data
+            RequestBuffer.request(cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+
+            // Logout
+            cli.logout();
+        }));
     }
 
 }

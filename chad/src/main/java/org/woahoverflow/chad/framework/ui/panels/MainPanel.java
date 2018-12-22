@@ -19,6 +19,7 @@ public class MainPanel extends JPanel {
     }
 
     private void initComponents() {
+        JLabel versionText = new JLabel();
         JLabel chadText = new JLabel();
         JLabel allGuildsText = new JLabel();
         allGuildsValue = new JLabel();
@@ -56,6 +57,10 @@ public class MainPanel extends JPanel {
         chadText.setFont(new Font("Open Sans", Font.PLAIN, 48));
         add(chadText);
         chadText.setBounds(50, 45, chadText.getPreferredSize().width, chadText.getPreferredSize().height);
+        versionText.setText("v0.7.0");
+        versionText.setFont(new Font("Open Sans", Font.PLAIN, 32));
+        add(versionText);
+        versionText.setBounds(62, 95, versionText.getPreferredSize().width, versionText.getPreferredSize().height);
         allGuildsText.setText("Guilds :");
         allGuildsText.setEnabled(false);
         allGuildsText.setFont(new Font("Open Sans", Font.PLAIN, 22));
@@ -63,9 +68,9 @@ public class MainPanel extends JPanel {
         allGuildsText.setBounds(15, 190, allGuildsText.getPreferredSize().width, allGuildsText.getPreferredSize().height);
         allGuildsValue.setText("0");
         allGuildsValue.setEnabled(false);
-        allGuildsValue.setFont(new Font("Open Sans", Font.PLAIN, 22));
+        allGuildsValue.setFont(new Font("Open Sans", Font.BOLD, 22));
         add(allGuildsValue);
-        allGuildsValue.setBounds(95, 190, 70, 25);
+        allGuildsValue.setBounds(100, 193, 70, 25);
         biggestGuildText.setText("Biggest Guild :");
         biggestGuildText.setEnabled(false);
         biggestGuildText.setFont(new Font("Open Sans", Font.PLAIN, 22));
@@ -78,14 +83,14 @@ public class MainPanel extends JPanel {
         botToUserText.setBounds(15, 250, botToUserText.getPreferredSize().width, botToUserText.getPreferredSize().height);
         biggestGuildValue.setText("0");
         biggestGuildValue.setEnabled(false);
-        biggestGuildValue.setFont(new Font("Open Sans", Font.PLAIN, 22));
+        biggestGuildValue.setFont(new Font("Open Sans", Font.BOLD, 22));
         add(biggestGuildValue);
-        biggestGuildValue.setBounds(165, 220, 100, biggestGuildValue.getPreferredSize().height);
+        biggestGuildValue.setBounds(170, 220, 100, biggestGuildValue.getPreferredSize().height);
         botToUserVal.setText("0");
         botToUserVal.setEnabled(false);
-        botToUserVal.setFont(new Font("Open Sans", Font.PLAIN, 22));
+        botToUserVal.setFont(new Font("Open Sans", Font.BOLD, 22));
         add(botToUserVal);
-        botToUserVal.setBounds(150, 250, 70, 25);
+        botToUserVal.setBounds(150, 253, 70, 25);
         logsText.setText("Logs");
         logsText.setEnabled(false);
         logsText.setFont(new Font("Open Sans", Font.PLAIN, 30));
@@ -108,7 +113,7 @@ public class MainPanel extends JPanel {
         exitButton.setFont(exitButton.getFont().deriveFont(exitButton.getFont().getSize() + 14f));
         add(exitButton);
         exitButton.setBounds(10, 745, 113, 48);
-        adv.setText("https://bot.shoganeko.me");
+        adv.setText("https://woahoverflow.org");
         adv.setFont(new Font("Open Sans", Font.PLAIN, 20));
         add(adv);
         adv.setBounds(new Rectangle(new Point(895, 5), adv.getPreferredSize()));

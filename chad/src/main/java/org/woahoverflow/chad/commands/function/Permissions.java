@@ -1,9 +1,12 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.Command;
+import java.util.regex.Pattern;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.util.EmbedBuilder;
@@ -17,11 +20,14 @@ import java.util.List;
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */
-public class Permissions implements Command.Class  {
+public class Permissions implements Class  {
+
+    private static final Pattern COMMA = Pattern.compile(",");
+
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler m = new MessageHandler(e.getChannel());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Accesses the permissions to a specific role
             if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role"))
@@ -30,7 +36,7 @@ public class Permissions implements Command.Class  {
                 args.remove(0);
 
                 // Assign variables
-                StringBuilder stringBuiler = new StringBuilder();
+                StringBuilder stringBuilder = new StringBuilder();
                 IRole role = null;
                 int i = 0;
 
@@ -41,7 +47,7 @@ public class Permissions implements Command.Class  {
                     i++;
 
                     // Appends the string
-                    stringBuiler.append(s).append(' ');
+                    stringBuilder.append(s).append(' ');
 
                     // Requests the roles from the guild
                     List<IRole> rolesList = RequestBuffer.request(() -> e.getGuild().getRoles())
@@ -49,7 +55,7 @@ public class Permissions implements Command.Class  {
 
                     // Checks if any of the roles equal
                     for (IRole rol : rolesList)
-                        if (rol.getName().equalsIgnoreCase(stringBuiler.toString().trim()))
+                        if (rol.getName().equalsIgnoreCase(stringBuilder.toString().trim()))
                             role = rol; // If a role was found, assign it to the variable
 
                     // If the role was assigned, break out of the loop
@@ -59,7 +65,14 @@ public class Permissions implements Command.Class  {
                 // Make sure there's enough arguments for the rest
                 if (args.size() == i)
                 {
-                    m.sendError("Invalid Role!");
+                    messageHandler.sendError("Invalid Role!");
+                    return;
+                }
+
+                // Makes sure role isn't null
+                if (role == null)
+                {
+                    messageHandler.sendError("Invalid Role!");
                     return;
                 }
 
@@ -77,48 +90,56 @@ public class Permissions implements Command.Class  {
                 // Isolates the next option(s)
                 args.remove(0);
 
+                // The guild's instance
+                Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+
                 switch (option.toLowerCase()) {
                     case "add":
                         // The add can only add 1 command
                         if (args.size() != 1)
                         {
-                            m.sendError(MessageHandler.INVALID_ARGUMENTS);
+                            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                             return;
                         }
 
                         // Adds it to the database and gets the result
-                        int add = PermissionHandler.handle.addCommandToRole(role, args.get(0));
+                        int add = guild.addPermissionToRole(role.getLongID(), args.get(0).toLowerCase());
 
-                        // If the result was 6 (good) return the amount, if not return the correct error.
-                        if (add == 6)
-                            m.send("Added `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                        // If the result was 0 (good) return the amount, if not return the correct error.
+                        if (add == 0)
+                            messageHandler.sendEmbed(
+                                new EmbedBuilder()
+                                    .withDesc("Added `" + args.get(0).toLowerCase() + "` command to role `" + role.getName() + "`.")
+                                    .withTitle("Permissions"));
                         else
-                            m.sendError(PermissionHandler.handle.parseErrorCode(add));
+                            messageHandler.sendError(PermissionHandler.handle.parseErrorCode(add));
                         return;
                     case "remove":
                         // The remove can only remove 1 command
                         if (args.size() != 1)
                         {
-                            m.sendError(MessageHandler.INVALID_ARGUMENTS);
+                            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                             return;
                         }
 
                         // Removes it from the database and gets the result
-                        int rem = PermissionHandler.handle.removeCommandFromRole(role, args.get(0));
+                        int rem = guild.removePermissionFromRole(role.getLongID(), args.get(0).toLowerCase());
 
-                        // If the result was 6 (good) return the amount, if not return the correct error.
-                        if (rem == 6)
-                            m.send("Removed `" + args.get(0) + "` command to role `" + role.getName() + "`.", "Permissions");
+                        // If the result was 0 (good) return the amount, if not return the correct error.
+                        if (rem == 0)
+                            messageHandler.sendEmbed(new EmbedBuilder()
+                                .withDesc("Removed `" + args.get(0).toLowerCase() + "` command from role `" + role.getName() + "`.")
+                                .withTitle("Permissions"));
                         else
-                            m.sendError(PermissionHandler.handle.parseErrorCode(rem));
+                            messageHandler.sendError(PermissionHandler.handle.parseErrorCode(rem));
                         return;
                     case "view":
                         // Gets the permissions to a role
-                        ArrayList<String> ar = (ArrayList<String>) Chad.getGuild(e.getGuild()).getDocument().get(role.getStringID());
+                        ArrayList<String> ar = guild.getRolePermissions(role.getLongID());
 
                         // Checks if there's no permissions
                         if (ar == null || ar.isEmpty()) {
-                            m.sendError("There's no permissions in this role!");
+                            messageHandler.sendError("There's no permissions in this role!");
                             return;
                         }
 
@@ -127,19 +148,20 @@ public class Permissions implements Command.Class  {
                         embedBuilder.withTitle("Viewing Permissions for `" + role.getName()+ '`');
 
                         // Builds all the permissions
-                        StringBuilder stringBuilder = new StringBuilder();
-                        ar.forEach((v) -> stringBuilder.append(", ").append(v));
+                        StringBuilder stringBuilder2 = new StringBuilder();
+                        ar.forEach((v) -> stringBuilder2.append(", ").append(v));
 
                         // Replaces the first ',' and sends.
-                        embedBuilder.withDesc(stringBuilder.toString().trim().replaceFirst(",", ""));
-                        m.sendEmbed(embedBuilder);
+                        embedBuilder.withDesc(
+                            COMMA.matcher(stringBuilder2.toString().trim()).replaceFirst(""));
+                        messageHandler.sendEmbed(embedBuilder);
                         return;
                     default:
-                        m.sendError(MessageHandler.INVALID_ARGUMENTS);
+                        messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
                         return;
                 }
             }
-            m.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
         };
     }
 
