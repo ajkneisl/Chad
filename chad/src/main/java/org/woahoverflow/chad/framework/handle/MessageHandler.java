@@ -2,6 +2,7 @@ package org.woahoverflow.chad.framework.handle;
 
 import java.awt.Color;
 import java.security.SecureRandom;
+import java.util.Random;
 import java.util.stream.Collectors;
 import org.apache.http.util.TextUtils;
 import org.woahoverflow.chad.framework.Util;
@@ -30,7 +31,7 @@ public class MessageHandler
     public static final String BOT_NO_PERMISSION = "Chad doesn't have permission for this!";
     public static final String USER_NO_PERMISSION = "You don't have permission for this command!";
     public static final String CHANNEL_NOT_NSFW = "This channel isn't NSFW!";
-    public static final String INVALID_ARGUMENTS = "Invalid arguments!";
+    public static final String INVALID_ARGUMENTS = "Invalid arguments!\nHave you seen the help menu? For any command, just type `help` after it!";
     public static final String NO_MENTIONS = "You didn't mention anyone!";
     public static final String INTERNAL_EXCEPTION = "Internal exception!";
 

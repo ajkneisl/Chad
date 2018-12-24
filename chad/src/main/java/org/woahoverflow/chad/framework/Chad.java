@@ -1,9 +1,5 @@
 package org.woahoverflow.chad.framework;
 
-import static org.woahoverflow.chad.core.ChadVar.musicManagers;
-import static org.woahoverflow.chad.core.ChadVar.playerManager;
-import static org.woahoverflow.chad.core.ChadVar.swearWords;
-
 import com.google.common.net.HttpHeaders;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,6 +25,8 @@ import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.internal.DiscordUtils;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.util.RequestBuffer;
+
+import static org.woahoverflow.chad.core.ChadVar.*;
 
 /**
  * Main framework for Chad
@@ -164,6 +162,11 @@ public final class Chad
         Swear Words
          */
         runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/swears.json").forEach((word) -> swearWords.add((String) word)), getInternalConsumer());
+
+        /*
+        8ball results
+         */
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json").forEach((word) -> eightBallResults.add((String) word)), getInternalConsumer());
 
         /*
         Developers
