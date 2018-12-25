@@ -26,6 +26,7 @@ import org.woahoverflow.chad.commands.fun.Profile;
 import org.woahoverflow.chad.commands.fun.Random;
 import org.woahoverflow.chad.commands.fun.RockPaperScissors;
 import org.woahoverflow.chad.commands.fun.RussianRoulette;
+import org.woahoverflow.chad.commands.info.Aliases;
 import org.woahoverflow.chad.commands.info.SteamStatus;
 import org.woahoverflow.chad.commands.info.SubscriberCount;
 import org.woahoverflow.chad.commands.fun.UpVote;
@@ -202,15 +203,16 @@ public final class ChadVar
         // INFO!
         COMMANDS.put("help", new Command.Data(Command.Category.INFO, new Help()));
         COMMANDS.put("userinfo", new Command.Data(Command.Category.INFO, new UserInfo(), "uinfo"));
-        COMMANDS.put("steam", new Command.Data(Command.Category.INFO, new Steam()));
+        COMMANDS.put("steam", new Command.Data(Command.Category.INFO, new Steam(), "st"));
         COMMANDS.put("chad", new Command.Data(Command.Category.INFO, new Chad()));
         COMMANDS.put("guildinfo", new Command.Data(Command.Category.INFO, new GuildInfo(), "ginfo"));
         COMMANDS.put("reddittop", new Command.Data(Command.Category.INFO, new RedditTop(), "rtop"));
         COMMANDS.put("redditnew", new Command.Data(Command.Category.INFO, new RedditNew(), "rnew"));
-        COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors()));
-        COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog()));
-        COMMANDS.put("subcount", new Data(Category.INFO, new SubscriberCount()));
+        COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors(), "contr"));
+        COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog(), "chlog"));
+        COMMANDS.put("subscribercount", new Data(Category.INFO, new SubscriberCount(), "subcount", "subc"));
         COMMANDS.put("steamstatus", new Data(Category.INFO, new SteamStatus(), "steamst"));
+        COMMANDS.put("aliases", new Data(Category.INFO, new Aliases(), "alias"));
 
         // PUNISHMENTS!
         COMMANDS.put("kick", new Command.Data(Command.Category.PUNISHMENTS, new Kick()));
@@ -232,9 +234,9 @@ public final class ChadVar
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko(), "neko"));
 
         // DEVELOPER!
-        COMMANDS.put("threads", new Command.Data(Command.Category.DEVELOPER, new CurrentThreads()));
-        COMMANDS.put("modpresence", new Command.Data(Command.Category.DEVELOPER, new ModifyPresence()));
-        COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo()));
+        COMMANDS.put("threads", new Command.Data(Command.Category.DEVELOPER, new CurrentThreads(), "cth"));
+        COMMANDS.put("modpresence", new Command.Data(Command.Category.DEVELOPER, new ModifyPresence(), "modp"));
+        COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo(), "sinf"));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
         COMMANDS.put("setbalance", new Command.Data(Command.Category.DEVELOPER, new SetBalance(), "setbal"));
         COMMANDS.put("devcfg", new Command.Data(Category.DEVELOPER, new DeveloperSettings(), "cfg"));
@@ -245,11 +247,11 @@ public final class ChadVar
         COMMANDS.put("dailyreward", new Data(Category.GAMBLING, new DailyReward(), "drw"));
 
         // MUSIC
-        COMMANDS.put("play", new Data(Category.MUSIC, new Play()));
-        COMMANDS.put("pause", new Data(Category.MUSIC, new Pause()));
-        COMMANDS.put("leave", new Data(Category.MUSIC, new Leave()));
-        COMMANDS.put("skip", new Data(Category.MUSIC, new Skip()));
-        COMMANDS.put("queue", new Data(Category.MUSIC, new Queue()));
-        COMMANDS.put("volume", new Data(Category.MUSIC, new Volume()));
+        COMMANDS.put("play", new Data(Category.MUSIC, new Play(), "p"));
+        COMMANDS.put("pause", new Data(Category.MUSIC, new Pause(), "pp"));
+        COMMANDS.put("leave", new Data(Category.MUSIC, new Leave(), "ll"));
+        COMMANDS.put("skip", new Data(Category.MUSIC, new Skip(), "ss"));
+        COMMANDS.put("queue", new Data(Category.MUSIC, new Queue(), "qq"));
+        COMMANDS.put("volume", new Data(Category.MUSIC, new Volume(), "vol"));
     }
 }

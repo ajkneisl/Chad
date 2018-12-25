@@ -19,7 +19,7 @@ public class ChangeLog implements Command.Class
             EmbedBuilder embedBuilder = new EmbedBuilder();
 
             // Builds it
-            embedBuilder.withTitle("**Change Log** : 0.7.0");
+            embedBuilder.withTitle("**Change Log** : 0.7.0 B2");
 
             String changeLogBuilder =
                 "`adjusted help command` : The help command now only shows what commands you have permission to, and the format has changed!\n\n"
@@ -27,6 +27,8 @@ public class ChangeLog implements Command.Class
                     + "`player profiles` : Chad now has player profiles! Check this out with `j!profile`!\n\n"
                     + "`balance` : Your balance is now global though-out all guilds with Chad!\n\n"
                     + "`deepfry` : DeepFry your images with `j!pe deepfry`!\n\n"
+                    + "`aliases` : Gives all aliases for a command!\n\n"
+                    + "`dog stuff` : There's now dogfact & doggallery!\n\n"
                     + "Find an issue? Please report it to us at https://woahoverflow.org";
 
             embedBuilder.withDesc(changeLogBuilder);
