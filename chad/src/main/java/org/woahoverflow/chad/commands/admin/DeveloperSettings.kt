@@ -32,15 +32,13 @@ class DeveloperSettings : Command.Class {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
 
-            if (args.isEmpty())
-            {
+            if (args.isEmpty()) {
                 messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
                 return@Runnable
             }
 
             // If they're trying to view all available options
-            if (args.size == 1 && args[0].toLowerCase() == "view")
-            {
+            if (args.size == 1 && args[0].toLowerCase() == "view") {
                 messageHandler.sendEmbed(EmbedBuilder().withDesc("__Valid Developer Settings__" +
                         "\n\n**cache <reset> [arguments]** Adjust caching options" +
                         "\n\n**devs <add/remove/view> [id]** Adjust the people with developer role" +
@@ -48,24 +46,20 @@ class DeveloperSettings : Command.Class {
                 return@Runnable
             }
 
-            when (args[0].toLowerCase())
-            {
+            when (args[0].toLowerCase()) {
                 // If they're adjusting a guild/user's data
                 "adj" -> {
-                    if (args.size == 1)
-                    {
+                    if (args.size == 1) {
                         messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
                         return@Runnable
                     }
 
                     // If they're adjusting the values of a guild
-                    if (args[1].equals("guild", true))
-                    {
+                    if (args[1].equals("guild", true)) {
                         // Makes sure the ID is a proper long
                         try {
                             args[2].toLong()
-                        } catch (e: NumberFormatException)
-                        {
+                        } catch (e: NumberFormatException) {
                             messageHandler.sendError("Invalid ID!")
                             return@Runnable
                         }
@@ -74,15 +68,13 @@ class DeveloperSettings : Command.Class {
                         val id = args[2].toLong()
 
                         // Just to try to remove the possibility of inputting an invalid guild
-                        if (id.toString().length != 18)
-                        {
+                        if (id.toString().length != 18) {
                             messageHandler.sendError("Invalid ID!")
                             return@Runnable
                         }
 
                         // If the guild doesn't already exist, don't do it
-                        if (!GuildHandler.handle.guildExists(id))
-                        {
+                        if (!GuildHandler.handle.guildExists(id)) {
                             messageHandler.sendError("Invalid ID!")
                             return@Runnable
                         }
@@ -93,18 +85,15 @@ class DeveloperSettings : Command.Class {
                         var success = false
 
                         // Parse through the datatypes to see if it's valid
-                        for (type in Guild.DataType.values())
-                        {
-                            if (args[3].equals(type.toString(), true))
-                            {
+                        for (type in Guild.DataType.values()) {
+                            if (args[3].equals(type.toString(), true)) {
                                 datatype = type
                                 success = true
                             }
                         }
 
                         // If it's invalid
-                        if (!success)
-                        {
+                        if (!success) {
                             messageHandler.sendError("Invalid Type")
                             return@Runnable
                         }
@@ -117,19 +106,16 @@ class DeveloperSettings : Command.Class {
                         args.removeAt(0) // id
                         args.removeAt(0) // datatype
 
-                        for (st in args)
-                        {
+                        for (st in args) {
                             stringBuilder.append("$st ")
                         }
 
                         val string = stringBuilder.toString().trim()
 
-                        if (string.endsWith("!long"))
-                        {
+                        if (string.endsWith("!long")) {
                             try {
                                 string.removeSuffix("!long").toLong()
-                            } catch (e: Exception)
-                            {
+                            } catch (e: Exception) {
                                 messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid Long!"))
                                 return@Runnable
                             }
@@ -138,12 +124,10 @@ class DeveloperSettings : Command.Class {
                             return@Runnable
                         }
 
-                        if (string.endsWith("!int"))
-                        {
+                        if (string.endsWith("!int")) {
                             try {
                                 string.removeSuffix("!int").toInt()
-                            } catch (e: Exception)
-                            {
+                            } catch (e: Exception) {
                                 messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid Integer!"))
                                 return@Runnable
                             }
@@ -153,15 +137,13 @@ class DeveloperSettings : Command.Class {
                         }
 
                         // If it's true, set as true
-                        if (string.equals("true", true))
-                        {
+                        if (string.equals("true", true)) {
                             guild.setObject(datatype, true)
                             messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed ${datatype.toString().toLowerCase()} to `true`!"))
                         }
 
                         // If it's false, set as false
-                        if (string.equals("false", true))
-                        {
+                        if (string.equals("false", true)) {
                             guild.setObject(datatype, false)
                             messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `false`!"))
                             return@Runnable
@@ -173,12 +155,10 @@ class DeveloperSettings : Command.Class {
                     }
 
                     // -- previously commented with the guild --
-                    if (args[1].equals("user", true))
-                    {
+                    if (args[1].equals("user", true)) {
                         try {
                             args[2].toLong()
-                        } catch (e: NumberFormatException)
-                        {
+                        } catch (e: NumberFormatException) {
                             messageHandler.sendError("Invalid ID!")
                             return@Runnable
                         }
@@ -186,15 +166,13 @@ class DeveloperSettings : Command.Class {
                         val id = args[2].toLong()
 
                         // Just to try to remove the possibility of inputting an invalid user
-                        if (id.toString().length != 18)
-                        {
+                        if (id.toString().length != 18) {
                             messageHandler.sendError("Invalid ID!")
                             return@Runnable
                         }
 
                         // If the user doesn't already exist, don't do it
-                        if (!PlayerHandler.handle.playerExists(id))
-                        {
+                        if (!PlayerHandler.handle.playerExists(id)) {
                             messageHandler.sendError("Invalid ID!")
                             return@Runnable
                         }
@@ -204,17 +182,14 @@ class DeveloperSettings : Command.Class {
                         var datatype = Player.DataType.values()[0]
                         var success = false
 
-                        for (type in Player.DataType.values())
-                        {
-                            if (args[3].equals(type.toString(), true))
-                            {
+                        for (type in Player.DataType.values()) {
+                            if (args[3].equals(type.toString(), true)) {
                                 datatype = type
                                 success = true
                             }
                         }
 
-                        if (!success)
-                        {
+                        if (!success) {
                             messageHandler.sendError("Invalid Type")
                             return@Runnable
                         }
@@ -226,19 +201,16 @@ class DeveloperSettings : Command.Class {
                         args.removeAt(0) // id
                         args.removeAt(0) // datatype
 
-                        for (st in args)
-                        {
+                        for (st in args) {
                             stringBuilder.append("$st ")
                         }
 
                         val string = stringBuilder.toString().trim()
 
-                        if (string.endsWith("!long"))
-                        {
+                        if (string.endsWith("!long")) {
                             try {
                                 string.removeSuffix("!long").toLong()
-                            } catch (e: Exception)
-                            {
+                            } catch (e: Exception) {
                                 messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid Long!"))
                                 return@Runnable
                             }
@@ -247,12 +219,10 @@ class DeveloperSettings : Command.Class {
                             return@Runnable
                         }
 
-                        if (string.endsWith("!int"))
-                        {
+                        if (string.endsWith("!int")) {
                             try {
                                 string.removeSuffix("!int").toInt()
-                            } catch (e: Exception)
-                            {
+                            } catch (e: Exception) {
                                 messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid Integer!"))
                                 return@Runnable
                             }
@@ -262,16 +232,14 @@ class DeveloperSettings : Command.Class {
                         }
 
                         // If it's true, set as true
-                        if (string.equals("true", true))
-                        {
+                        if (string.equals("true", true)) {
                             player.setObject(datatype, true)
                             messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed ${datatype.toString().toLowerCase()} to `true`!"))
                             return@Runnable
                         }
 
                         // If it's false, set as false
-                        if (string.equals("false", true))
-                        {
+                        if (string.equals("false", true)) {
                             player.setObject(datatype, false)
                             messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `false`!"))
                             return@Runnable
@@ -286,8 +254,7 @@ class DeveloperSettings : Command.Class {
                 // If they're updating cache values
                 "cache" -> {
                     // If there's only one argument, assume they're trying to get the possible options
-                    if (args.size == 1)
-                    {
+                    if (args.size == 1) {
                         messageHandler.sendEmbed(EmbedBuilder().withDesc("Caching Options" +
                                 "\n\n**reset <type>** Resets a cached area.\nValid: __eightball__, __swearwords__, __guilds__, __users__, __developers__"))
 
@@ -295,10 +262,8 @@ class DeveloperSettings : Command.Class {
                     }
 
                     // Resetting something
-                    if (args[1].equals("reset", ignoreCase = true))
-                    {
-                        when (args[2])
-                        {
+                    if (args[1].equals("reset", ignoreCase = true)) {
+                        when (args[2]) {
                             "eightball" -> {
                                 // Clear the existing cached swear words
                                 ChadVar.eightBallResults.clear()
@@ -346,15 +311,11 @@ class DeveloperSettings : Command.Class {
 
                                 messageHandler.sendEmbed(EmbedBuilder().withDesc("Re-Caching all Chad users... (this may take a while)"))
 
-                                for (guild in guilds)
-                                {
-                                    val players = guild.users
-
-                                    for (user in players)
-                                    {
-                                        PlayerHandler.handle.refreshPlayer(user.longID)
-                                    }
-                                }
+                                guilds
+                                        .asSequence()
+                                        .map { it.users }
+                                        .flatMap { it.asSequence() }
+                                        .forEach { PlayerHandler.handle.refreshPlayer(it.longID) }
 
                                 messageHandler.sendEmbed(EmbedBuilder().withDesc("Competed re-caching all Chad users!"))
                                 return@Runnable
@@ -371,20 +332,17 @@ class DeveloperSettings : Command.Class {
 
                 "devs" -> {
 
-                    if (args.size == 1)
-                    {
+                    if (args.size == 1) {
                         messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
                         return@Runnable
                     }
 
-                    when (args[1].toLowerCase())
-                    {
+                    when (args[1].toLowerCase()) {
                         "view" -> {
                             val stringBuilder = StringBuilder()
 
                             // Build together all of the developer's ids
-                            for (dev in DEVELOPERS)
-                            {
+                            for (dev in DEVELOPERS) {
                                 stringBuilder.append("`$dev`, ")
                             }
 
@@ -394,8 +352,7 @@ class DeveloperSettings : Command.Class {
 
                         "remove" -> {
                             // cfg devs remove id
-                            if (args.size != 3)
-                            {
+                            if (args.size != 3) {
                                 messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
                                 return@Runnable
                             }
@@ -411,14 +368,12 @@ class DeveloperSettings : Command.Class {
                             val user = args[2].toLong()
 
                             // The ID's are 18 characters
-                            if (user.toString().length != 18)
-                            {
+                            if (user.toString().length != 18) {
                                 messageHandler.sendError("Invalid ID!")
                                 return@Runnable
                             }
 
-                            if (!ChadVar.DEVELOPERS.contains(user))
-                            {
+                            if (!ChadVar.DEVELOPERS.contains(user)) {
                                 messageHandler.sendError("`$user` isn't a developer!")
                                 return@Runnable
                             }
@@ -432,8 +387,7 @@ class DeveloperSettings : Command.Class {
 
                         "add" -> {
                             // cfg devs add id
-                            if (args.size != 3)
-                            {
+                            if (args.size != 3) {
                                 messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
                                 return@Runnable
                             }
@@ -449,14 +403,12 @@ class DeveloperSettings : Command.Class {
                             val user = args[2].toLong()
 
                             // The ID's are 18 characters
-                            if (user.toString().length != 18)
-                            {
+                            if (user.toString().length != 18) {
                                 messageHandler.sendError("Invalid ID!")
                                 return@Runnable
                             }
 
-                            if (ChadVar.DEVELOPERS.contains(user))
-                            {
+                            if (ChadVar.DEVELOPERS.contains(user)) {
                                 messageHandler.sendError("`$user` is already a developer!")
                                 return@Runnable
                             }
