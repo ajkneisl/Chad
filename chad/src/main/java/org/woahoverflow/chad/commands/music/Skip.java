@@ -34,7 +34,7 @@ public class Skip implements Command.Class
             }
 
             // If they wanted to skip all
-            if (args.get(0).equalsIgnoreCase("all"))
+            if (args.size() == 1 && args.get(0).equalsIgnoreCase("all"))
             {
                 manager.clear();
 
