@@ -19,6 +19,17 @@ public class PlayerHandler {
     private final ConcurrentHashMap<Long, Player> players = new ConcurrentHashMap<>();
 
     /**
+     * If a player exists within the hash-map
+     *
+     * @param player The player to check with
+     * @return If it contains it
+     */
+    public boolean playerExists(long player)
+    {
+        return players.containsKey(player);
+    }
+
+    /**
      * Refreshes a player into the hashmap
      *
      * @param user The user to refresh
@@ -202,7 +213,11 @@ public class PlayerHandler {
             if (get == null)
                 return null;
 
-            return parsePlayer(get, user);
+            Player player = parsePlayer(get, user);
+
+            players.put(user, player);
+
+            return player;
         }
 
         Player player = createPlayer(user);

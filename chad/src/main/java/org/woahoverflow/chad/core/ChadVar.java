@@ -5,11 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.CurrentThreads;
-import org.woahoverflow.chad.commands.admin.ModifyPresence;
-import org.woahoverflow.chad.commands.admin.SetBalance;
-import org.woahoverflow.chad.commands.admin.Shutdown;
-import org.woahoverflow.chad.commands.admin.SystemInfo;
+import org.woahoverflow.chad.commands.admin.*;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
 import org.woahoverflow.chad.commands.fun.Cuddle;
@@ -99,6 +95,11 @@ public final class ChadVar
      * All the swear words for the swear filter
      */
     public static final List<String> swearWords = new ArrayList<>();
+
+    /**
+     * All results available for the eight ball command
+     */
+    public static final List<String> eightBallResults = new ArrayList<>();
 
     /**
      * The universal player manager for music playing
@@ -225,9 +226,9 @@ public final class ChadVar
         COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo()));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
         COMMANDS.put("setbalance", new Command.Data(Command.Category.DEVELOPER, new SetBalance(), "setbal"));
+        COMMANDS.put("devcfg", new Command.Data(Category.DEVELOPER, new DeveloperSettings(), "cfg"));
 
         // GAMBLING!
-        //COMMANDS.put("register", new Command.Data(Command.Category.GAMBLING, new Register()));
         COMMANDS.put("coinflip", new Command.Data(Command.Category.GAMBLING, new CoinFlip(), "cf"));
         COMMANDS.put("balance", new Command.Data(Command.Category.GAMBLING, new Balance(), "bal"));
         COMMANDS.put("dailyreward", new Data(Category.GAMBLING, new DailyReward(), "drw"));

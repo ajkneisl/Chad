@@ -52,7 +52,7 @@ public class GuildHandler
      *
      * @param guild The guild's id to register
      */
-    private Guild createPlayer(long guild)
+    private Guild createGuild(long guild)
     {
         Document guildDocument = new Document();
 
@@ -136,7 +136,7 @@ public class GuildHandler
     public Guild getGuild(long guild)
     {
         // If the guild's in in the hash map, return it
-        if (guilds.containsKey(guild))
+        if (guildExists(guild))
         {
             return guilds.get(guild);
         }
@@ -156,10 +156,21 @@ public class GuildHandler
         }
 
         // If it doesn't exist, make one
-        Guild guildInstance = createPlayer(guild);
+        Guild guildInstance = createGuild(guild);
 
         guilds.put(guild, guildInstance);
 
         return guildInstance;
+    }
+
+    /**
+     * If a guild exists within the hash-map
+     *
+     * @param guild The guild to chcek with
+     * @return If it contains it
+     */
+    public boolean guildExists(long guild)
+    {
+        return guilds.containsKey(guild);
     }
 }
