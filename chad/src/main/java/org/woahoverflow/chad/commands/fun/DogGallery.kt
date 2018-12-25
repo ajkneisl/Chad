@@ -17,7 +17,7 @@ class DogGallery : Command.Class {
     override fun help(e: MessageReceivedEvent?): Runnable {
         val st = HashMap<String, String>()
         st["doggallery"] = "Get a picture of a dog."
-        return Command.helpCommand(st, "Divorce", e)
+        return Command.helpCommand(st, "Dog Gallery", e)
     }
 
     override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {

@@ -15,6 +15,7 @@ import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
 import org.woahoverflow.chad.commands.fun.Cuddle;
 import org.woahoverflow.chad.commands.fun.DivorcePlayer;
+import org.woahoverflow.chad.commands.fun.DogFact;
 import org.woahoverflow.chad.commands.fun.DogGallery;
 import org.woahoverflow.chad.commands.fun.DownVote;
 import org.woahoverflow.chad.commands.fun.EightBall;
@@ -188,6 +189,7 @@ public final class ChadVar
         COMMANDS.put("rockpaperscissors", new Command.Data(Command.Category.FUN, new RockPaperScissors(), "rps"));
         COMMANDS.put("meme", new Data(Category.FUN, new Meme()));
         COMMANDS.put("doggallery", new Data(Category.FUN, new DogGallery()));
+        COMMANDS.put("dogfact", new Data(Category.FUN, new DogFact()));
 
         // COMMUNITY!
         COMMANDS.put("divorce", new Data(Category.COMMUNITY, new DivorcePlayer()));
