@@ -39,15 +39,16 @@ public class RedditNew implements Command.Class{
             JSONObject post;
             try {
                 // Gets post
-                post = JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json");
+                JSONObject redditJson = JsonHandler.handle
+                    .read("https://reddit.com/r/" + args.get(0) + "/new.json");
 
-                if (post == null)
+                if (redditJson == null)
                 {
                     messageHandler.sendError("Invalid Subreddit");
                     return;
                 }
 
-                if (JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                if (redditJson
                     .getJSONObject("data")
                     .getJSONArray("children").isEmpty())
                 {
@@ -56,7 +57,7 @@ public class RedditNew implements Command.Class{
                 }
 
                 int index = 0;
-                post = JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json").getJSONObject("data")
+                post = redditJson.getJSONObject("data")
                     .getJSONArray("children")
                     .getJSONObject(index)
                     .getJSONObject("data");
@@ -66,7 +67,7 @@ public class RedditNew implements Command.Class{
                 while (post.getBoolean("stickied"))
                 {
                     index++;
-                    post = JsonHandler.handle.read("https://reddit.com/r/" + args.get(0) + "/new.json")
+                    post = redditJson
                         .getJSONObject("data")
                         .getJSONArray("children")
                         .getJSONObject(index)
