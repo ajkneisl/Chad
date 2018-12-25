@@ -5,7 +5,12 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.*;
+import org.woahoverflow.chad.commands.admin.CurrentThreads;
+import org.woahoverflow.chad.commands.admin.DeveloperSettings;
+import org.woahoverflow.chad.commands.admin.ModifyPresence;
+import org.woahoverflow.chad.commands.admin.SetBalance;
+import org.woahoverflow.chad.commands.admin.Shutdown;
+import org.woahoverflow.chad.commands.admin.SystemInfo;
 import org.woahoverflow.chad.commands.fun.CatFact;
 import org.woahoverflow.chad.commands.fun.CatGallery;
 import org.woahoverflow.chad.commands.fun.Cuddle;
@@ -13,6 +18,7 @@ import org.woahoverflow.chad.commands.fun.DivorcePlayer;
 import org.woahoverflow.chad.commands.fun.DownVote;
 import org.woahoverflow.chad.commands.fun.EightBall;
 import org.woahoverflow.chad.commands.fun.MarryPlayer;
+import org.woahoverflow.chad.commands.fun.Meme;
 import org.woahoverflow.chad.commands.fun.PhotoEditor;
 import org.woahoverflow.chad.commands.fun.Profile;
 import org.woahoverflow.chad.commands.fun.Random;
@@ -179,6 +185,7 @@ public final class ChadVar
         COMMANDS.put("russianroulette", new Command.Data(Command.Category.FUN, new RussianRoulette(), "rrl"));
         COMMANDS.put("wordreverse", new Command.Data(Command.Category.FUN, new WordReverse(), "wr"));
         COMMANDS.put("rockpaperscissors", new Command.Data(Command.Category.FUN, new RockPaperScissors(), "rps"));
+        COMMANDS.put("meme", new Data(Category.FUN, new Meme()));
 
         // COMMUNITY!
         COMMANDS.put("divorce", new Data(Category.COMMUNITY, new DivorcePlayer()));

@@ -249,6 +249,9 @@ class DeveloperSettings : Command.Class {
                         messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `$string`!"))
                         return@Runnable
                     }
+
+                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                    return@Runnable
                 }
 
                 // If they're updating cache values
@@ -328,6 +331,9 @@ class DeveloperSettings : Command.Class {
                             }
                         }
                     }
+
+                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                    return@Runnable
                 }
 
                 "devs" -> {
