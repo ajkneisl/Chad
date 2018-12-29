@@ -81,7 +81,7 @@ public final class Util
         return "";
     }
 
-    public static synchronized String fixEnumString(String input) {
+    public static String fixEnumString(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
@@ -90,7 +90,7 @@ public final class Util
      *
      * @return Returns either true or false, it's randomized
      */
-    public static synchronized boolean coinFlip()
+    public static boolean coinFlip()
     {
         Random random = new Random();
         int flip = -1;
@@ -118,24 +118,9 @@ public final class Util
         return dateFormat.format(new Date());
     }
 
-    public static long getCurrentEpoch()
-    {
-        String timeDateStr = getCurrentDateTime();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-dd-MM HH:mm:ss.SSS");
-        LocalDateTime dt = LocalDateTime.parse(timeDateStr, dtf);
-        Instant instant = dt.toInstant(ZoneOffset.UTC);
-        return instant.toEpochMilli();
-    }
-
     public static long howOld(long searchTimestamp)
     {
         return Math.abs(System.currentTimeMillis() - searchTimestamp);
     }
 
-    public static boolean isSecondsOld(long searchTimestamp, int seconds)
-    {
-        int time = seconds * 60 * 1000;
-        long difference = howOld(searchTimestamp);
-        return difference >= time;
-    }
 }
