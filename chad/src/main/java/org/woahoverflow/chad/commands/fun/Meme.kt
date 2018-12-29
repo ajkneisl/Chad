@@ -20,41 +20,16 @@ import java.util.Random
 class Meme : Command.Class {
     override fun help(e: MessageReceivedEvent): Runnable {
         val st = HashMap<String, String>()
-        st["meme"] = "Get a meme from a varied amount of subreddits."
+        st["meme"] = "Get a meme from random subreddits."
         return Command.helpCommand(st, "Meme", e)
     }
 
     override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
         return Runnable {
-            val subreddit = Random().nextInt(6)
-
-            when (subreddit) {
-                0 -> {
-                    sendHotPost(e, "blackpeopletwitter")
-                }
-
-                1 -> {
-                    sendHotPost(e, "memes")
-                }
-
-                2 -> {
-                    sendHotPost(e, "dankmemes")
-                }
-
-                3 -> {
-                    sendHotPost(e, "me_irl")
-                }
-
-                4 -> {
-                    sendHotPost(e, "wholesomememes")
-                }
-
-                5 -> {
-                    sendHotPost(e, "facepalm")
-                }
-
-                else -> sendHotPost(e, "memes")
-            }
+            // Picks a subreddit out of the list, and sends about it
+            val subreddits = listOf("blackpeopletwitter", "memes", "dankmemes", "me_irl", "2meirl4meirl", "cursedimages", "wholesomememes", "pewdiepiesubmissions", "terriblefacebookmemes", "memeeconomy")
+            val subreddit = Random().nextInt(subreddits.size)
+            sendHotPost(e, subreddits[subreddit])
         }
     }
 
@@ -66,26 +41,42 @@ class Meme : Command.Class {
             // Gets post
             subredditJson = JsonHandler.handle.read("https://reddit.com/r/$subreddit/hot.json")
 
+            // If it's not found
             if (subredditJson == null) {
                 messageHandler.sendError("Invalid Subreddit")
                 return
             }
 
+            // If there's no posts in the subreddit
             if (subredditJson.getJSONObject("data").getJSONArray("children").isEmpty) {
                 messageHandler.sendError("Invalid Subreddit")
                 return
             }
 
+            // Gets a random post in the subreddit
             var index = Random().nextInt(subredditJson.getJSONObject("data").getJSONArray("children").length())
+
+            // The amount of posts parsed through
+            var parsed = 0
+
+            // Gets the subreddit
+            parsed++
             post = subredditJson.getJSONObject("data")
                     .getJSONArray("children")
                     .getJSONObject(index)
                     .getJSONObject("data")
 
 
-            // Makes sure the post isn't stickied
-            while (post!!.getBoolean("stickied")) {
-                index++
+            // Makes sure the post isn't stickied or if the post is NSFW
+            while (post!!.getBoolean("stickied") || (post.getBoolean("over_18") && !e.channel.isNSFW)) {
+
+                if (subredditJson.getJSONObject("data").getJSONArray("children").length() == parsed) {
+                    messageHandler.sendError("Failed to find a post!")
+                    return
+                }
+
+                index = Random().nextInt(subredditJson.getJSONObject("data").getJSONArray("children").length())
+                parsed++
                 post = subredditJson
                         .getJSONObject("data")
                         .getJSONArray("children")

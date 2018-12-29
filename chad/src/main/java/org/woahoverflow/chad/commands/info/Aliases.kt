@@ -46,7 +46,7 @@ class Aliases : Command.Class {
                 stringBuilder.append("`$alias`, ")
             }
 
-            messageHandler.sendEmbed(EmbedBuilder().withDesc("The command `${command.toLowerCase()}` has ${commandData.commandAliases.size} aliases.\n\n${stringBuilder.toString().removeSuffix(", ")}"))
+            messageHandler.sendEmbed(EmbedBuilder().withDesc("The command `${command.toLowerCase()}` has ${commandData.commandAliases.size} alias(s).\n\n${stringBuilder.toString().removeSuffix(", ")}"))
         }
     }
 }

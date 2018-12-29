@@ -2,6 +2,7 @@ package org.woahoverflow.chad.framework.obj;
 
 import java.util.HashMap;
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
@@ -120,15 +121,14 @@ public final class Command
     public static synchronized Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent messageReceivedEvent)
     {
         return () -> {
-
             // The guild's prefix
             String prefix = (String) GuildHandler.handle.getGuild(messageReceivedEvent.getGuild().getLongID()).getObject(
                 DataType.PREFIX);
 
             // The embed builder
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.withTitle("Help : " + commandName);
-            commands.forEach((key, val) -> embedBuilder.appendField(prefix+key, val, false));
+            embedBuilder.withTitle("Help : `" + commandName + '`');
+            commands.forEach((key, val) -> embedBuilder.appendField(String.format("`%s%s`", prefix, key), val, false));
 
             // Sends it
             new MessageHandler(messageReceivedEvent.getChannel(), messageReceivedEvent.getAuthor()).sendEmbed(embedBuilder);

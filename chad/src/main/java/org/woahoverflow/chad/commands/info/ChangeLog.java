@@ -18,8 +18,8 @@ public class ChangeLog implements Command.Class
         return () -> {
             EmbedBuilder embedBuilder = new EmbedBuilder();
 
-            // Builds it
-            embedBuilder.withTitle("**Change Log** : 0.7.0 B2");
+            // Builds it (recent as in the most recent version(s))
+            embedBuilder.withTitle("**Change Log** : Recent");
 
             String changeLogBuilder =
                 "`adjusted help command` : The help command now only shows what commands you have permission to, and the format has changed!\n\n"

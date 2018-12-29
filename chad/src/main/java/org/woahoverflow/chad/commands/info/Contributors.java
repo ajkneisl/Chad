@@ -26,7 +26,7 @@ public class Contributors implements Command.Class {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             // Creates embed builder and gets the JSON array from the cdn
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            JSONArray o = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/chad/data/contributors.json");
+            JSONArray o = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json");
 
             // Checks if the user is trying to see a specific profile
             if (args.size() == 2 && args.get(0).equalsIgnoreCase("view"))
@@ -44,8 +44,8 @@ public class Contributors implements Command.Class {
                 }
 
                 // Builds profile
-                embedBuilder.withUrl("https://github.com/" + object.getString("github_name"));
-                embedBuilder.withTitle("https://github.com/" + object.getString("display_name"));
+                embedBuilder.withUrl("https://github.com/" + object.getString("github_name").toLowerCase());
+                embedBuilder.withTitle("https://github.com/" + object.getString("github_name").toLowerCase());
                 embedBuilder.withImage(object.getString("github_avatar_url"));
                 embedBuilder.withDesc("Discord : " + object.getString("discord"));
                 messageHandler.sendEmbed(embedBuilder);
@@ -57,7 +57,7 @@ public class Contributors implements Command.Class {
             embedBuilder.withTitle("Official Contributors for Chad");
             o.forEach((obj) -> {
                 JSONObject json = (JSONObject) obj;
-                stringBuilder.append(", ").append(json.getString("display_name"));
+                stringBuilder.append(", `").append(json.getString("display_name")).append('`');
             });
 
             // Adds the description (replaces the first ', ' to nothing)

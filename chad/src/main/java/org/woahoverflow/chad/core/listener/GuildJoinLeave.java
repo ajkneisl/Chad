@@ -63,7 +63,9 @@ public final class GuildJoinLeave
             IChannel defaultChannel = RequestBuffer.request(() -> event.getGuild().getDefaultChannel()).get();
 
             // The join message
-            final String joinMessage = "Hello, I'm Chad!\nMy prefix is by default `c!`, to set it you can do `c!prefix set <prefix>`\nFor more information about my commands, go to https://woahoverflow.org/chad";
+            final String joinMessage = "Hello, i'm Chad!\n"
+                + "My prefix is `c!`\n\n"
+                + "Customize Chad at https://woahoverflow.org/chad/dashboard";
 
             // If the bot has permission to, send the join message into the default channel
             if (RequestBuffer.request(() -> defaultChannel.getModifiedPermissions(event.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES)).get())
