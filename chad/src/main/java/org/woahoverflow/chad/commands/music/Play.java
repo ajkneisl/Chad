@@ -61,6 +61,7 @@ public class Play implements Command.Class
             {
                 if (manager.player.isPaused())
                 {
+                    channel.join();
                     manager.player.setPaused(false);
                     messageHandler.sendMessage("Music is now un-paused!");
                     return;

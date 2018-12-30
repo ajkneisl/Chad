@@ -42,15 +42,10 @@ public class Pause implements Command.Class
             // Pauses
             musicManager.player.setPaused(true);
 
-            messageHandler.sendMessage("Music is now paused!");
+            // Leave the channel (this makes sure the bot isn't just sitting in the channel paused)
+            channel.leave();
 
-            // If no one's there, leave
-            if (channel.getConnectedUsers().size() == 1)
-            {
-                channel.leave();
-                messageHandler.sendMessage("It's quite empty in `"+channel.getName()+"`!");
-                musicManager.clear();
-            }
+            messageHandler.sendMessage("Music is now paused!");
         };
     }
 
