@@ -6,18 +6,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+
+import java.io.*;
+
+import org.apache.commons.lang3.SystemUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.woahoverflow.chad.core.ChadBot;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import org.woahoverflow.chad.framework.ui.UIHandler;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Handles all web and local JSON content
@@ -48,16 +47,19 @@ public class JsonHandler
      */
     private synchronized JsonHandler forceCheck()
     {
-        try
-        {
-            File dir = new File(System.getenv("appdata") + "\\chad");
-            if (!dir.exists())
-                UIHandler.handle.addLog("Created Chad Directory : " + dir.mkdirs(), UIHandler.LogLevel.INFO);
-            if (!new File(dir + "\\bot.json").exists())
+        if (SystemUtils.IS_OS_WINDOWS) {
+            ChadBot.getLogger().debug("Checking files as if OS is Windows", UIHandler.LogLevel.INFO);
+            if (!new File(System.getenv("appdata") + "\\chad").exists())
+                ChadBot.getLogger().debug("Created Chad Directory : " + new File(System.getenv("appdata") + "\\chad").mkdirs());
+            if (!new File(new File(System.getenv("appdata") + "\\chad") + "\\bot.json").exists())
             {
-                File bot = new File(dir + "\\bot.json");
-                UIHandler.handle
-                    .addLog("Created Bot Directory : " + bot.createNewFile(), UIHandler.LogLevel.INFO);
+                File bot = new File(new File(System.getenv("appdata") + "\\chad") + "\\bot.json");
+                try {
+                    ChadBot.getLogger().debug("Created Bot JSON : " + bot.createNewFile());
+                } catch (IOException e) {
+                    ChadError.throwError("Error creating bot JSON!", e);
+                }
+
                 org.json.JSONObject obj = new org.json.JSONObject();
                 obj.put("token", "");
                 obj.put("steam_api_key", "");
@@ -70,18 +72,36 @@ public class JsonHandler
                     ChadError.throwError("There was an error creating files during startup!", e);
                 }
             }
-            File imgDirectory = new File(System.getenv("appdata") + "\\chad\\imgcache");
-            if (!imgDirectory.exists())
-                UIHandler.handle
-                    .addLog("Created Temp Image Directory : " + imgDirectory.mkdirs(), UIHandler.LogLevel.INFO);
-            File dir2 = new File(System.getenv("appdata") + "\\chad\\catpictures");
-            if (!dir2.exists())
-                UIHandler.handle
-                    .addLog("Created Cat Pictures Directory : " + dir2.mkdirs(), UIHandler.LogLevel.INFO);
-        } catch (IOException e)
-        {
-            ChadError.throwError("There was an error creating files during startup!", e);
         }
+
+        if (SystemUtils.IS_OS_LINUX) {
+            ChadBot.getLogger().debug("Checking files as if OS is Linux", UIHandler.LogLevel.INFO);
+            File dir = new File("/home/" + System.getProperty("user.name") + "/chad");
+            if (!dir.exists())
+                ChadBot.getLogger().debug("Created Chad Directory : " + dir.mkdirs());
+            if (!new File(dir + "/bot.json").exists())
+            {
+                File bot = new File(dir + "/bot.json");
+                try {
+                    ChadBot.getLogger().debug("Created Bot JSON : " + bot.createNewFile());
+                } catch (IOException e) {
+                    ChadError.throwError("Error creating bot JSON!", e);
+                }
+
+                org.json.JSONObject obj = new org.json.JSONObject();
+                obj.put("token", "");
+                obj.put("steam_api_key", "");
+                obj.put("uri_link", "");
+                obj.put("youtube_api_key", "");
+                try (FileWriter fileWriter = new FileWriter(bot)) {
+                    fileWriter.write(obj.toString());
+                    fileWriter.flush();
+                } catch (IOException e) {
+                    ChadError.throwError("There was an error creating files during startup!", e);
+                }
+            }
+        }
+
         return this;
     }
 
@@ -94,9 +114,20 @@ public class JsonHandler
     @SuppressWarnings("all")
     public synchronized String get(String entry)
     {
+        File file = null;
+
+        if (SystemUtils.IS_OS_WINDOWS)
+            file = new File(System.getenv("appdata") + "\\chad\\bot.json");
+
+        if (SystemUtils.IS_OS_LINUX)
+            file = new File("/home/" + System.getProperty("user.name") + "/chad/bot.json");
+
+        if (file == null)
+            System.exit(1);
+
         JSONParser parser = new JSONParser();
         try {
-            Object obj = parser.parse(new InputStreamReader(new FileInputStream(System.getenv("appdata") + "\\chad\\bot.json"), Charsets.UTF_8));
+            Object obj = parser.parse(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
             JSONObject jsonObject  = (JSONObject) obj;
             return (String) jsonObject.get(entry);
         } catch (Exception e) {
@@ -115,7 +146,17 @@ public class JsonHandler
     @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     public synchronized void set(String object, String input) throws IOException
     {
-        File file = new File(System.getenv("appdata") + "\\chad\\bot.json");
+        File file = null;
+
+        if (SystemUtils.IS_OS_WINDOWS)
+            file = new File(System.getenv("appdata") + "\\chad\\bot.json");
+
+        if (SystemUtils.IS_OS_LINUX)
+            file = new File("/home/" + System.getProperty("user.name") + "/chad/bot.json");
+
+        if (file == null)
+            System.exit(1);
+
         String jsonString = Files.toString(file, Charsets.UTF_8);
         JsonElement jElement = new JsonParser().parse(jsonString);
         JsonObject jObject = jElement.getAsJsonObject();

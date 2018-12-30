@@ -29,7 +29,8 @@ public class SystemInfo implements Command.Class  {
                     "\n Available cores `" + os.getAvailableProcessors() + '`' +
                     "\n CPU Load `" +  os.getSystemCpuLoad() + '`' +
                     "\n Memory `" + os.getTotalPhysicalMemorySize()/1000/1000 + "`mb" +
-                    "\n Shard Response Time `" + e.getAuthor().getShard().getResponseTime() + "`ms"
+                    "\n Shard Response Time `" + e.getAuthor().getShard().getResponseTime() + "`ms" +
+                    "\n Java Version `"+System.getProperty("java.version")+"`"
             );
 
             // Sends the embed builder

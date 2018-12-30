@@ -40,7 +40,7 @@ public class UIHandler
     /**
      * The Main Frame of the UI
      */
-    private final JFrame mainFrame = new JFrame("Chad");
+    private JFrame mainFrame;
 
     /**
      * The Main Panel of the UI
@@ -63,6 +63,8 @@ public class UIHandler
         } catch (@SuppressWarnings("all") Exception e) { // it needs to shut the fuck up
             e.printStackTrace();
         }
+
+        mainFrame = new JFrame("Chad");
 
         // Begins the main frame
         beginMainFrame();

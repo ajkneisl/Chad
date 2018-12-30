@@ -38,10 +38,10 @@ public final class ChadBot {
      */
     static
     {
+        // No UI due to servers and stuff
         if (JsonHandler.handle.get("token").isEmpty() || JsonHandler.handle.get("uri_link").isEmpty())
         {
-            UIHandler handle = new UIHandler();
-            handle.addLog("bot.json is empty!", LogLevel.SEVERE);
+            getLogger().error("Bot.json is empty!");
             // Exits
             System.exit(1);
         }
@@ -72,8 +72,10 @@ public final class ChadBot {
                 final int i2 = i;
                 ChadVar.launchOptions.forEach((st, bol) -> {
                     // If the launch option is valid, enter it
-                    if (args[i2].equalsIgnoreCase(st))
+                    if (args[i2].equalsIgnoreCase(st)) {
                         ChadVar.launchOptions.put(st, true);
+                        getLogger().debug("{} has been enabled", st);
+                    }
                 });
             }
         }
