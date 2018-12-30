@@ -31,6 +31,12 @@ public class Pause implements Command.Class
                 return;
             }
 
+            // Makes sure the user is in the same channel as the bot
+            if (e.getAuthor().getVoiceStateForGuild(e.getGuild()).getChannel() != channel) {
+                messageHandler.sendError("You aren't in my channel!");
+                return;
+            }
+
             GuildMusicManager musicManager = Chad.getMusicManager(e.getGuild());
 
             // Pauses

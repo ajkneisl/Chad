@@ -27,6 +27,18 @@ public class Volume implements Command.Class
 
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
+            // If the guild isn't in a channel
+            if (e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel() == null) {
+                messageHandler.sendError("I'm not connected!");
+                return;
+            }
+
+            // If the author isn't in the same channel as the bot
+            if (e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel() != e.getAuthor().getVoiceStateForGuild(e.getGuild()).getChannel()) {
+                messageHandler.sendError("You aren't in my channel!");
+                return;
+            }
+
             // Make sure the value isn't negative
             if (0 > volume)
             {

@@ -33,6 +33,12 @@ public class Skip implements Command.Class
                 return;
             }
 
+            // Makes sure the author is in the same channel as the bot
+            if (channel != e.getAuthor().getVoiceStateForGuild(e.getGuild()).getChannel()) {
+                messageHandler.sendError("You aren't in the same channel as me!");
+                return;
+            }
+
             // If they wanted to skip all
             if (args.size() == 1 && args.get(0).equalsIgnoreCase("all"))
             {
