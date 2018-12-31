@@ -151,7 +151,7 @@ public final class Util
 
         if (!(hours >= 24)) {
             response += hours > 1 ? String.format("%s hours ", hours) : String.format("%s hour ", hours);
-            response += hoursMinutes > 1 ? String.format("%s minutes", minutes) : String.format("%s minute", minutes);
+            response += hoursMinutes > 1 ? String.format("%s minutes", hoursMinutes) : String.format("%s minute", hoursMinutes);
             return response;
         }
 
