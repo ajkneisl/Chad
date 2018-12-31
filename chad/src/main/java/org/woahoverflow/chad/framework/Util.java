@@ -123,4 +123,44 @@ public final class Util
         return Math.abs(System.currentTimeMillis() - searchTimestamp);
     }
 
+    /**
+     * Turns ms into a seconds, day and hours format
+     *
+     * @param ms The time
+     * @return The formatted string`
+     */
+    public static String fancyDate(long ms) {
+        String response = "";
+
+        long seconds = ms/1000;
+
+        if (!(seconds > 60)) {
+            // Assuming there's multiple seconds
+            return seconds + " seconds";
+        }
+
+        long minutes = seconds/60;
+
+        if (!(minutes >= 60)) {
+            response = minutes > 1 ? String.format("%s minutes %s seconds", minutes, seconds-(minutes*60)) : String.format("%s minute %s seconds", minutes, seconds-(minutes*60));
+            return response;
+        }
+
+        long hours = minutes/60;
+        long hoursMinutes = minutes-(hours*60);
+
+        if (!(hours >= 24)) {
+            response += hours > 1 ? String.format("%s hours", hours) : String.format("%s hour", hours);
+            response += hoursMinutes > 1 ? String.format("%s minutes", minutes) : String.format("%s minute", minutes);
+            return response;
+        }
+
+        long days = hours/24;
+        long hoursDays = hours - (days*24);
+
+        response += days > 1 ? String.format("%s days ", days) : String.format("%s day ", days);
+        response += hoursDays > 1 ? String.format("%s hours", hoursDays) : String.format("%s hour", hoursDays);
+        return response;
+    }
+
 }

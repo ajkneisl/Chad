@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info
 
+import org.woahoverflow.chad.framework.Util
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
@@ -19,7 +20,7 @@ class Chad : Command.Class {
             val embedBuilder = EmbedBuilder()
 
             val desc = "__**Chad** by woahoverflow__\n\n" +
-                    "**Uptime** ${(ManagementFactory.getRuntimeMXBean().uptime / 60000).toString() + " minutes"}\n" +
+                    "**Uptime** ${Util.fancyDate(ManagementFactory.getRuntimeMXBean().uptime)}\n" +
                     "**Ping** ${e.client.shards[0].responseTime}ms\n" +
                     "**GitHub** https://woahoverflow.org/github\n" +
                     "**Website** http://woahoverflow.org/chad"

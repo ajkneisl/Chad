@@ -34,10 +34,9 @@ public class Queue implements Command.Class
                 return;
             }
 
-            // Builds all of the songs together
-
             // The currently playing song
-            String string = "Currently playing `"+manager.player.getPlayingTrack().getInfo().title+"` by `"+manager.player.getPlayingTrack().getInfo().author+"`\n\n";
+            String string = manager.player.isPaused() ? "Currently paused. `"+manager.player.getPlayingTrack().getInfo().title+"` by `"+manager.player.getPlayingTrack().getInfo().author+"` was playing.\n\n"
+                    : "Currently playing `"+manager.player.getPlayingTrack().getInfo().title+"` by `"+manager.player.getPlayingTrack().getInfo().author+"`\n\n";
 
             // Builds the queue into the string
             if (queue.size() <= 10)

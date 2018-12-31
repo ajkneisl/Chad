@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.woahoverflow.chad.core.ChadBot;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IVoiceChannel;
 
 /**
  * @author sho
@@ -107,10 +108,12 @@ public class TrackScheduler extends AudioEventAdapter
     {
         IGuild guild = ChadBot.cli.getGuildByID(guildId);
 
-        if (guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel() != null && guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel().getConnectedUsers().size() == 1 || queue.isEmpty())
-        {
-            guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel().leave();
-            return;
+        IVoiceChannel channel = guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
+
+        if (channel != null) {
+            if (channel.getConnectedUsers().size() == 1 || queue.size() == 0) {
+                channel.leave();
+            }
         }
 
         if (endReason.mayStartNext)

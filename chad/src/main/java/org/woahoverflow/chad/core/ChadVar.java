@@ -52,12 +52,7 @@ import org.woahoverflow.chad.commands.info.RedditNew;
 import org.woahoverflow.chad.commands.info.RedditTop;
 import org.woahoverflow.chad.commands.info.Steam;
 import org.woahoverflow.chad.commands.info.UserInfo;
-import org.woahoverflow.chad.commands.music.Leave;
-import org.woahoverflow.chad.commands.music.Pause;
-import org.woahoverflow.chad.commands.music.Play;
-import org.woahoverflow.chad.commands.music.Queue;
-import org.woahoverflow.chad.commands.music.Skip;
-import org.woahoverflow.chad.commands.music.Volume;
+import org.woahoverflow.chad.commands.music.*;
 import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
 import org.woahoverflow.chad.commands.punishments.Ban;
@@ -253,5 +248,7 @@ public final class ChadVar
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip(), "ss"));
         COMMANDS.put("queue", new Data(Category.MUSIC, new Queue(), "qq"));
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume(), "vol"));
+        COMMANDS.put("youtube", new Data(Category.MUSIC, new YouTube(), "yt"));
+        COMMANDS.put("soundcloud", new Data(Category.MUSIC, new YouTube(), "sc"));
     }
 }
