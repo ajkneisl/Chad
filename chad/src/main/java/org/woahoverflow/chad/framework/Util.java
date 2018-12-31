@@ -150,7 +150,7 @@ public final class Util
         long hoursMinutes = minutes-(hours*60);
 
         if (!(hours >= 24)) {
-            response += hours > 1 ? String.format("%s hours", hours) : String.format("%s hour", hours);
+            response += hours > 1 ? String.format("%s hours ", hours) : String.format("%s hour ", hours);
             response += hoursMinutes > 1 ? String.format("%s minutes", minutes) : String.format("%s minute", minutes);
             return response;
         }
