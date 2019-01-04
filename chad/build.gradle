@@ -54,7 +54,7 @@ jar {
 jar {
     manifest.attributes(
             "Manifest-Version": 1.0,
-            "Main-Class": "org.woahoverflow.chad.core.ChadBot"
+            "Main-Class": "org.woahoverflow.chad.core.ChadInstance"
     )
 }
 
