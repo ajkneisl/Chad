@@ -1,9 +1,8 @@
 package org.woahoverflow.chad.commands.punishments;
 
-import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -15,8 +14,11 @@ import sx.blah.discord.util.PermissionUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
+ * Moderator tool to kick a user
+ *
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */
@@ -35,9 +37,8 @@ public class Kick implements Command.Class
             Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // Checks if the bot has permission to kick
-            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK))
-            {
-                messageHandler.sendError(MessageHandler.BOT_NO_PERMISSION);
+            if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.KICK)) {
+                messageHandler.sendPresetError(MessageHandler.Messages.BOT_NO_PERMISSION);
                 return;
             }
 
@@ -51,28 +52,26 @@ public class Kick implements Command.Class
                 reason = args;
             }
             else {
-                messageHandler.sendError(MessageHandler.INVALID_USER);
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_USER);
                 return;
             }
 
             // Checks if the user action upon has administrator
-            if (user.getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR))
-            {
-                messageHandler.sendError(MessageHandler.BOT_NO_PERMISSION);
+            if (user.getPermissionsForGuild(e.getGuild()).contains(Permissions.ADMINISTRATOR)) {
+                messageHandler.sendPresetError(MessageHandler.Messages.BOT_NO_PERMISSION);
                 return;
             }
 
             // Checks if bot has hierarchical permissions
-            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), user, Permissions.KICK))
-            {
-                messageHandler.sendError(MessageHandler.BOT_NO_PERMISSION);
+            if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), user, Permissions.KICK)) {
+                messageHandler.sendPresetError(MessageHandler.Messages.BOT_NO_PERMISSION);
                 return;
             }
 
             // Checks if user has hierarchical permissions
             if (!PermissionUtils.hasHierarchicalPermissions(e.getChannel(), e.getClient().getOurUser(), user, Permissions.KICK))
             {
-                messageHandler.sendError(MessageHandler.USER_NO_PERMISSION);
+                messageHandler.sendPresetError(MessageHandler.Messages.BOT_NO_PERMISSION);
                 return;
             }
 
@@ -85,14 +84,12 @@ public class Kick implements Command.Class
                 builtReason.append("no reason");
 
             // Checks if kick message is enabled
-            if ((boolean) guild.getObject(DataType.KICK_MESSAGE_ON))
-            {
+            if ((boolean) guild.getObject(DataType.KICK_MESSAGE_ON)) {
                 // Gets the message from the cache
                 String message = (String) guild.getObject(Guild.DataType.KICK_MESSAGE);
 
                 // If the message isn't null, continue
-                if (message != null)
-                {
+                if (message != null) {
                     String formattedMessage = GUILD_PATTERN.matcher(message).replaceAll(e.getGuild().getName()); // replaces &guild& with guild's name
                     formattedMessage = USER_PATTERN.matcher(formattedMessage).replaceAll(user.getName()); // replaces &user& with user's name
                     formattedMessage = REASON_PATTERN.matcher(formattedMessage).replaceAll(builtReason.toString().trim()); // replaces &reason& with the reason
@@ -104,8 +101,7 @@ public class Kick implements Command.Class
             }
 
             // If there's no reason, continue with "no reason"
-            if (reason.isEmpty())
-            {
+            if (reason.isEmpty()) {
                 e.getGuild().kickUser(user);
                 reason.add("None");
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully kicked " + user.getName() + " for no reason."));
@@ -123,8 +119,8 @@ public class Kick implements Command.Class
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("kick <user>", "Kicks a user with no reason.");
-        st.put("kick <user> <reason>", "Kicks a user with a specified reason.");
+        st.put("kick <@user>", "Kicks a user with no reason.");
+        st.put("kick <@user> <reason>", "Kicks a user with a specified reason.");
         return Command.helpCommand(st, "User Info", e);
     }
 }

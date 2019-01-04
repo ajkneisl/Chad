@@ -1,17 +1,12 @@
 package org.woahoverflow.chad.framework.ui.panels;
 
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.Rectangle;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import java.awt.*;
 
 /**
+ * The main Chad panel
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class MainPanel extends JPanel {
     public MainPanel() {

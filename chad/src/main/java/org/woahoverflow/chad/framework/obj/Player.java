@@ -1,13 +1,15 @@
 package org.woahoverflow.chad.framework.obj;
 
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
+
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
-import org.woahoverflow.chad.framework.handle.PlayerHandler;
 
 /**
+ * Information about a cached user
+ *
  * @author sho, codebasepw
- * @since 0.7.0
  */
 public class Player {
 
@@ -19,8 +21,7 @@ public class Player {
     /**
      * The types of data you can request from a player.
      */
-    public enum DataType
-    {
+    public enum DataType {
         // Other
         BALANCE,
 
@@ -39,8 +40,7 @@ public class Player {
     /**
      * Default Constructor, sets it with default data.
      */
-    public Player(long user)
-    {
+    public Player(long user) {
         this.user = user;
         playerData.put(DataType.BALANCE, 0L);
         playerData.put(DataType.MARRY_DATA, "none&none");
@@ -59,8 +59,7 @@ public class Player {
      *
      * @param playerData The preset values
      */
-    public Player(ConcurrentHashMap<DataType, Object> playerData, long user)
-    {
+    public Player(ConcurrentHashMap<DataType, Object> playerData, long user) {
         this.playerData = playerData;
         this.user = user;
     }
@@ -71,8 +70,7 @@ public class Player {
      * @param dataType The data type to set
      * @param value The value to set it to
      */
-    public void setObject(DataType dataType, Object value)
-    {
+    public void setObject(DataType dataType, Object value) {
         playerData.put(dataType, value);
 
         DatabaseManager.USER_DATA.setObject(user, dataType.toString().toLowerCase(), value);
@@ -86,8 +84,7 @@ public class Player {
      * @param dataType The data type to retrieve
      * @return The retrieved data
      */
-    public Object getObject(DataType dataType)
-    {
+    public Object getObject(DataType dataType) {
         return playerData.get(dataType);
     }
 
@@ -96,8 +93,7 @@ public class Player {
      *
      * @return The user's ID
      */
-    public long getUserID()
-    {
+    public long getUserID() {
         return user;
     }
 }

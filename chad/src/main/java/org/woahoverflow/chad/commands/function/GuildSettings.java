@@ -1,8 +1,5 @@
 package org.woahoverflow.chad.commands.function;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -12,9 +9,14 @@ import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
+ * Modify the guild's settings
+ *
  * @author sho
- * @since 0.7.0
  */
 public class GuildSettings implements Command.Class {
 
@@ -23,15 +25,14 @@ public class GuildSettings implements Command.Class {
         return () -> {
             Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = ((String) guild.getObject(DataType.PREFIX));
 
-            if (args.isEmpty())
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            if (args.isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings **category/clearstats/stats**");
                 return;
             }
 
-            switch (args.get(0).toLowerCase())
-            {
+            switch (args.get(0).toLowerCase()) {
                 // Clears the statistics for the guild
                 case "clearstats":
                     guild.clearStatistics();
@@ -43,7 +44,7 @@ public class GuildSettings implements Command.Class {
                     // Arguments : cmd category <category> <off/on>
                     if (args.size() != 3)
                     {
-                        messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings category **category name** **on/off**");
                         return;
                     }
 
@@ -57,10 +58,8 @@ public class GuildSettings implements Command.Class {
                     Category category = null;
 
                     // Makes sure the category suggested is an actual category
-                    for (Command.Category ct : Command.Category.values())
-                    {
-                        if (args.get(1).equalsIgnoreCase(ct.toString()))
-                        {
+                    for (Command.Category ct : Command.Category.values()) {
+                        if (args.get(1).equalsIgnoreCase(ct.toString())) {
                             category = ct;
                         }
                     }
@@ -75,20 +74,17 @@ public class GuildSettings implements Command.Class {
                     // Turns the on/off to a boolean
                     boolean bool = !args.get(2).equalsIgnoreCase("off");
 
-                    if (bool && !((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase()))
-                    {
+                    if (bool && !((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase())) {
                         messageHandler.sendError("That category isn't disabled!");
                         return;
                     }
 
-                    if (!bool && ((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase()))
-                    {
+                    if (!bool && ((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase())) {
                         messageHandler.sendError("That category is already disabled!");
                         return;
                     }
 
-                    if (bool && ((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase()))
-                    {
+                    if (bool && ((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase())) {
                         ArrayList<String> disabled = (ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES);
 
                         disabled.remove(category.toString().toLowerCase());
@@ -99,8 +95,7 @@ public class GuildSettings implements Command.Class {
                         return;
                     }
 
-                    if (!bool && !((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase()))
-                    {
+                    if (!bool && !((ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase())) {
                         ArrayList<String> disabled = (ArrayList<String>) guild.getObject(DataType.DISABLED_CATEGORIES);
 
                         disabled.add(category.toString().toLowerCase());
@@ -117,7 +112,7 @@ public class GuildSettings implements Command.Class {
                     return;
 
                 default:
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings **category/clearstats/stats**");
             }
         };
     }
@@ -128,6 +123,6 @@ public class GuildSettings implements Command.Class {
         st.put("guildsettings clearstats", "Clears your guild's statistics.");
         st.put("guildsettings stats", "Gets your guild's statistics.");
         st.put("guildsettings category <category name> <on/off>", "Enables or disables a category.");
-        return Command.helpCommand(st, "Help", e);
+        return Command.helpCommand(st, "Guild Settings", e);
     }
 }

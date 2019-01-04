@@ -1,30 +1,27 @@
 package org.woahoverflow.chad.framework;
 
 import com.google.common.net.HttpHeaders;
+import org.json.JSONObject;
+import org.woahoverflow.chad.core.ChadInstance;
+import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.JsonHandler;
+import org.woahoverflow.chad.framework.obj.GuildMusicManager;
+import org.woahoverflow.chad.framework.ui.UIHandler;
+import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
+import sx.blah.discord.api.internal.DiscordUtils;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.util.RequestBuffer;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
-import javax.net.ssl.HttpsURLConnection;
-import org.json.JSONObject;
-import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.GuildMusicManager;
-import org.woahoverflow.chad.framework.handle.JsonHandler;
-import org.woahoverflow.chad.framework.ui.UIHandler;
-import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
-import sx.blah.discord.api.internal.DiscordUtils;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.util.RequestBuffer;
 
 import static org.woahoverflow.chad.core.ChadVar.*;
 
@@ -32,15 +29,13 @@ import static org.woahoverflow.chad.core.ChadVar.*;
  * Main framework for Chad
  *
  * @author sho
- * @since 0.6.3 B2
  */
 public final class Chad
 {
     /**
      * A Thread Consumer
      */
-    public static final class ThreadConsumer
-    {
+    public static final class ThreadConsumer {
         private final boolean discordUser;
         private long userId;
 
@@ -111,8 +106,7 @@ public final class Chad
     /**
      * Global Init Event
      */
-    public static void init()
-    {
+    public static void init() {
         // To account for the main thread :)
         internalRunningThreads++;
         
@@ -120,23 +114,18 @@ public final class Chad
         Chad's Thread Counting
          */
         runThread(() -> {
-            while (!threadHash.isEmpty())
-            {
+            while (!threadHash.isEmpty()) {
                 try {
                     TimeUnit.SECONDS.sleep(2);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 threadHash.forEach((key, val) -> {
-                    if (!val.isEmpty())
-                    {
-                        for (int i = 0; val.size() > i; i++)
-                        {
-                            if (val.get(i).isDone())
-                            {
+                    if (!val.isEmpty()) {
+                        for (int i = 0; val.size() > i; i++) {
+                            if (val.get(i).isDone()) {
                                 val.remove(val.get(i));
-                                if (key.isDiscordUser())
-                                {
+                                if (key.isDiscordUser()) {
                                     runningThreads--;
                                 }
                                 else {
@@ -171,10 +160,8 @@ public final class Chad
         /*
         Developers
          */
-        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) ->
-        {
-            if (Boolean.parseBoolean(((JSONObject) v).getString("allow")))
-            {
+        runThread(() -> JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) -> {
+            if (Boolean.parseBoolean(((JSONObject) v).getString("allow"))) {
                 UIHandler.handle
                     .addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", LogLevel.INFO);
                 ChadVar.DEVELOPERS.add(((JSONObject) v).getLong("id"));
@@ -192,8 +179,7 @@ public final class Chad
         /*
         Gets all the words from the CDN
          */
-        runThread(() ->
-        {
+        runThread(() -> {
             try {
                 // Defines the URL and Connection
                 URL url = new URL("https://cdn.woahoverflow.org/data/chad/words.txt");
@@ -203,9 +189,8 @@ public final class Chad
                 con.setRequestMethod("GET");
                 con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT);
 
-                @SuppressWarnings("all")
                 // Creates a buffered reader at the word url
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
 
                 // Adds the words to the list
                 ChadVar.wordsList = in.lines().collect(Collectors.toList());
@@ -222,15 +207,14 @@ public final class Chad
          */
         runThread(() -> {
             //noinspection InfiniteLoopStatement :)
-            while (true)
-            {
+            while (true) {
                 try {
                     TimeUnit.HOURS.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                RequestBuffer.request(ChadBot.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+                RequestBuffer.request(ChadInstance.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
             }
         }, getInternalConsumer());
     }
@@ -238,13 +222,11 @@ public final class Chad
     /**
      * Gets a guild's audio player
      */
-    public static synchronized GuildMusicManager getMusicManager(IGuild guild)
-    {
+    public static synchronized GuildMusicManager getMusicManager(IGuild guild) {
         long guildId = guild.getLongID();
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
-        if (musicManager == null)
-        {
+        if (musicManager == null) {
             musicManager = new GuildMusicManager(playerManager, guildId);
             musicManagers.put(guildId, musicManager);
         }
@@ -254,15 +236,13 @@ public final class Chad
         return musicManager;
     }
 
-
     /**
      * Gets a user's thread consumer
      *
      * @param userId The user's ID
      * @return The user's thread consumer
      */
-    public static ThreadConsumer getConsumer(long userId)
-    {
+    public static ThreadConsumer getConsumer(long userId) {
         for (ThreadConsumer cons : threadHash.keySet())
             if (cons.isDiscordUser() && cons.getUserId() == (userId))
                 return cons;
@@ -285,13 +265,11 @@ public final class Chad
      * @param thread The thread to be run
      * @param consumer The consumer to tie it to
      */
-    public static void runThread(Runnable thread, ThreadConsumer consumer)
-    {
+    public static void runThread(Runnable thread, ThreadConsumer consumer) {
         Future<?> future;
 
         // If they're a discord user, add a running thread & submit it
-        if (consumer.isDiscordUser())
-        {
+        if (consumer.isDiscordUser()) {
             runningThreads++;
 
             future = externalExecutorService.submit(thread);
@@ -303,8 +281,7 @@ public final class Chad
         }
 
         // Add it to the hash map
-        if (threadHash.containsKey(consumer))
-        {
+        if (threadHash.containsKey(consumer)) {
             ArrayList<Future<?>> th = threadHash.get(consumer);
             th.add(future);
             threadHash.put(consumer, th);
@@ -322,8 +299,7 @@ public final class Chad
      * @param consumer The thread consumer
      * @return If it can run it
      */
-    public static synchronized boolean consumerRunThread(ThreadConsumer consumer)
-    {
+    public static synchronized boolean consumerRunThread(ThreadConsumer consumer) {
         return threadHash.get(consumer) == null || threadHash.get(consumer).size() < 3;
     }
 }

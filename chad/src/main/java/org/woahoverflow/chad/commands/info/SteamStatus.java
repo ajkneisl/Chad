@@ -1,8 +1,5 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
@@ -11,8 +8,16 @@ import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
-public class SteamStatus implements Command.Class {
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * This class is very inefficient due to it making 4 requests
+ *
+ * @author sho
+ */
+public class SteamStatus implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -40,7 +45,6 @@ public class SteamStatus implements Command.Class {
                     "\nPUBG: `"+formatter.format(JsonHandler.handle.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
                     "\nDota 2: `"+formatter.format(JsonHandler.handle.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
                     "\nTF 2: `"+formatter.format(JsonHandler.handle.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=440&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players"
-
             );
 
             new MessageHandler(e.getChannel(), e.getAuthor()).credit("steamguag.es").sendEmbed(embedBuilder);

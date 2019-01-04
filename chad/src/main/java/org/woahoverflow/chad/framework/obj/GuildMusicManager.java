@@ -6,11 +6,8 @@ import org.woahoverflow.chad.framework.handle.TrackScheduler;
 
 /**
  * @author sho
- * @since 0.7.0
  */
-public class GuildMusicManager
-{
-
+public class GuildMusicManager {
     /**
      * The Guild's Audio Player
      */
@@ -27,8 +24,7 @@ public class GuildMusicManager
      * @param manager The manager
      * @param guildId The guild's ID
      */
-    public GuildMusicManager(AudioPlayerManager manager, long guildId)
-    {
+    public GuildMusicManager(AudioPlayerManager manager, long guildId) {
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player, guildId);
 
@@ -46,8 +42,7 @@ public class GuildMusicManager
     /**
      * Clear the current queue and stop the current track
      */
-    public void clear()
-    {
+    public void clear() {
         scheduler.queue.clear();
         player.stopTrack();
     }

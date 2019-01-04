@@ -1,30 +1,35 @@
 package org.woahoverflow.chad.commands.admin;
 
-import java.util.stream.Collectors;
-import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
+ * Modify Chad's discord presence
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class ModifyPresence implements Command.Class {
 
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
+
             // Checks if there's no arguments
-            if (args.isEmpty())
-            {
-                new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Arguments");
+            if (args.isEmpty()) {
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix +
+                        "modpresence **new presence**");
                 return;
             }
 
@@ -36,7 +41,7 @@ public class ModifyPresence implements Command.Class {
                     String formattedMessage = args.stream().map(str -> str + ' ').collect(Collectors.joining());
 
                     // Changes the presence
-                    ChadBot.cli.changePresence(ChadVar.statusType, ActivityType.PLAYING, formattedMessage.trim());
+                    ChadInstance.cli.changePresence(ChadVar.statusType, ActivityType.PLAYING, formattedMessage.trim());
 
                     // Updates the message
                     message = "Changed presence to `" + formattedMessage.trim() + "`.";
@@ -85,8 +90,7 @@ public class ModifyPresence implements Command.Class {
                     // Removes the option argument
                     args.remove(0);
 
-                    if (args.get(0).equalsIgnoreCase("idle"))
-                    {
+                    if (args.get(0).equalsIgnoreCase("idle")) {
                         // Updates the ChadVar to IDLE
                         ChadVar.statusType = StatusType.IDLE;
 
@@ -98,8 +102,7 @@ public class ModifyPresence implements Command.Class {
                         break;
                     }
 
-                    if (args.get(0).equalsIgnoreCase("online"))
-                    {
+                    if (args.get(0).equalsIgnoreCase("online")) {
                         // Updates the ChadVar to Online
                         ChadVar.statusType = StatusType.ONLINE;
 
@@ -111,8 +114,7 @@ public class ModifyPresence implements Command.Class {
                         break;
                     }
 
-                    if (args.get(0).equalsIgnoreCase("offline"))
-                    {
+                    if (args.get(0).equalsIgnoreCase("offline")) {
                         // Updates the ChadVar to Offline
                         ChadVar.statusType = StatusType.OFFLINE;
 
@@ -124,8 +126,7 @@ public class ModifyPresence implements Command.Class {
                         break;
                     }
 
-                    if (args.get(0).equalsIgnoreCase("dnd"))
-                    {
+                    if (args.get(0).equalsIgnoreCase("dnd")) {
                         // Updates the ChadVar to Do Not Disturb
                         ChadVar.statusType = StatusType.DND;
 
@@ -136,7 +137,8 @@ public class ModifyPresence implements Command.Class {
                         message = "Changed status type to `Do Not Disturb`";
                         break;
                     }
-                    message = MessageHandler.INVALID_ARGUMENTS;
+                    new MessageHandler(e.getChannel(), e.getAuthor()).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "modpresence status **dnd/offline/online/idle**");
+                    return;
             }
 
             // Sends the message

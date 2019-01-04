@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.info;
 
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
@@ -12,8 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Gets info about the current guild
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class GuildInfo implements Command.Class{
     @Override
@@ -26,8 +27,7 @@ public class GuildInfo implements Command.Class{
             // Gets the human to bot.
             int human = 0;
             int bot = 0;
-            for (IUser u : e.getGuild().getUsers())
-            {
+            for (IUser u : e.getGuild().getUsers()) {
                 if (!u.isBot())
                     human++;
                 else

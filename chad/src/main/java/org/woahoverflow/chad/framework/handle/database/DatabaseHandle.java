@@ -7,10 +7,8 @@ import org.bson.Document;
  * Used for a single operation, such as managing guilds in the actual guild collection
  *
  * @author sho
- * @since 0.7.0
  */
-public class DatabaseHandle
-{
+public class DatabaseHandle {
     /**
      * The collection to get documents from
      */
@@ -27,8 +25,7 @@ public class DatabaseHandle
      * @param collection The collection to create the handle on
      * @param keyObject The key to look for
      */
-    DatabaseHandle(MongoCollection<Document> collection, String keyObject)
-    {
+    DatabaseHandle(MongoCollection<Document> collection, String keyObject) {
         this.collection = collection;
         this.keyObject = keyObject;
     }
@@ -40,8 +37,7 @@ public class DatabaseHandle
      * @param object The object to get
      * @return The retrieved object
      */
-    public final synchronized Object getObject(Object key, String object)
-    {
+    public final synchronized Object getObject(Object key, String object) {
         Document get = collection.find(new Document(keyObject, key)).first();
 
         if (get == null)
@@ -57,8 +53,7 @@ public class DatabaseHandle
      * @param object The object to set
      * @param value The new value
      */
-    public final synchronized void setObject(Object key, String object, Object value)
-    {
+    public final synchronized void setObject(Object key, String object, Object value) {
         Document get = collection.find(new Document(keyObject, key)).first();
 
         if (get == null)
@@ -73,8 +68,7 @@ public class DatabaseHandle
      * @param key The identifier
      * @return If it exists
      */
-    public final synchronized boolean documentExists(Object key)
-    {
+    public final synchronized boolean documentExists(Object key) {
         return !(collection.find(new Document(keyObject, key)).first() == null);
     }
 
@@ -83,8 +77,7 @@ public class DatabaseHandle
      *
      * @param key The identifier
      */
-    public final synchronized void removeDocument(Object key)
-    {
+    public final synchronized void removeDocument(Object key) {
         Document get = collection.find(new Document(keyObject, key)).first();
 
         if (get == null)

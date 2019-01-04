@@ -1,22 +1,23 @@
 package org.woahoverflow.chad.commands.gambling;
 
-import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.Player;
-import org.woahoverflow.chad.framework.obj.Player.DataType;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
 
 /**
  * Gets a user's balance
  *
  * @author sho
- * @since 0.6.3 B2
  */
 public class Balance implements Command.Class {
     @Override
@@ -24,22 +25,20 @@ public class Balance implements Command.Class {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            if (args.isEmpty())
-            {
+            if (args.isEmpty()) {
                 Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your balance is `"+player.getObject(DataType.BALANCE)+"`!"));
                 return;
             }
 
-            if (e.getMessage().getMentions().size() == 1)
-            {
+            if (e.getMessage().getMentions().size() == 1) {
                 IUser targetIUser = e.getMessage().getMentions().get(0);
                 Player player = PlayerHandler.handle.getPlayer(targetIUser.getLongID());
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc('`' +targetIUser.getName()+"`'s balance is `"+player.getObject(DataType.BALANCE)+"`!"));
                 return;
             }
 
-            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "balance");
         };
     }
 

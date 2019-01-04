@@ -1,17 +1,18 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.util.HashMap;
-import java.util.List;
-
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
+ * Why not?
+ *
  * @author codebasepw
- * @since 0.7.0
  */
 public class Cuddle implements Command.Class {
 
@@ -20,8 +21,7 @@ public class Cuddle implements Command.Class {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            if (e.getMessage().getMentions().isEmpty())
-            {
+            if (e.getMessage().getMentions().isEmpty()) {
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("You cuddled with yourself, how nice."));
                 return;
             }
@@ -36,7 +36,7 @@ public class Cuddle implements Command.Class {
     public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("cuddle <@user>", "Cuddle with another user.");
-        st.put("cuddle", "Cuddle with yourself :)");
+        st.put("cuddle", "Cuddle with yourself. :)");
         return Command.helpCommand(st, "Cuddle", e);
     }
 }

@@ -1,21 +1,24 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.Player;
-import org.woahoverflow.chad.framework.obj.Player.DataType;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
- * Suppresses a player's profile
+ * UpVote a player's profile
  *
  * @author sho
- * @since 0.7.0
  */
 @SuppressWarnings("unchecked")
 public class UpVote implements Command.Class {
@@ -23,10 +26,10 @@ public class UpVote implements Command.Class {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix =(String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
-            if (e.getMessage().getMentions().isEmpty())
-            {
-                messageHandler.sendError(MessageHandler.NO_MENTIONS);
+            if (e.getMessage().getMentions().isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "upvote **@user**");
                 return;
             }
 
@@ -34,8 +37,7 @@ public class UpVote implements Command.Class {
             IUser target = e.getMessage().getMentions().get(0);
 
             // Makes sure they're not upvoting themselves
-            if (target.equals(e.getAuthor()))
-            {
+            if (target.equals(e.getAuthor())) {
                 messageHandler.sendError("You can't vote on that user!");
                 return;
             }
@@ -45,8 +47,7 @@ public class UpVote implements Command.Class {
 
             ArrayList<Long> voteData = (ArrayList<Long>) author.getObject(DataType.VOTE_DATA);
 
-            if (voteData.contains(target.getLongID()))
-            {
+            if (voteData.contains(target.getLongID())) {
                 messageHandler.sendError("You've already voted on this user!");
                 return;
             }
@@ -80,6 +81,8 @@ public class UpVote implements Command.Class {
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap st = new HashMap<String, String>();
+        st.put("upvote <@user>", "Upvotes a user's Chad profile.");
+        return Command.helpCommand(st, "UpVote", e);
     }
 }

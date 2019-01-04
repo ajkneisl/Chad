@@ -1,10 +1,8 @@
 package org.woahoverflow.chad.commands.function;
 
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -13,10 +11,13 @@ import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
+ * Log things such as user joins or user leaves.
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class Message implements Command.Class  {
 
@@ -30,16 +31,16 @@ public class Message implements Command.Class  {
 
             Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
+            String prefix = ((String) guild.getObject(DataType.PREFIX));
+
             // Makes sure there's arguments
-            if (args.isEmpty())
-            {
-                messageHandler.sendError("Invalid Arguments!");
+            if (args.isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help");
                 return;
             }
 
             // Sets the join message for the guild
-            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("join"))
-            {
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("join")) {
                 // Isolates the text
                 args.remove(0);
 
@@ -65,8 +66,7 @@ public class Message implements Command.Class  {
             }
 
             // Sets the leave message for the guild
-            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("leave"))
-            {
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("leave")) {
                 // Isolates the text
                 args.remove(0);
 
@@ -92,8 +92,7 @@ public class Message implements Command.Class  {
             }
 
             // Sets the ban message for the guild
-            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("ban"))
-            {
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("ban")) {
                 // Isolates the text
                 args.remove(0);
 
@@ -119,8 +118,7 @@ public class Message implements Command.Class  {
             }
 
             // Sets the kick message for the guild
-            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("kick"))
-            {
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("kick")) {
                 // Isolates the text
                 args.remove(0);
 
@@ -145,8 +143,7 @@ public class Message implements Command.Class  {
             }
 
             // Disables or enables the different messages
-            if (args.size() == 3 && args.get(0).equalsIgnoreCase("toggle"))
-            {
+            if (args.size() == 3 && args.get(0).equalsIgnoreCase("toggle")) {
                 // Gets a boolean of the on or off
                 boolean set;
                 if (args.get(2).equalsIgnoreCase("on"))
@@ -159,8 +156,7 @@ public class Message implements Command.Class  {
                 }
 
                 // If they're toggling join
-                if (args.get(1).equalsIgnoreCase("join"))
-                {
+                if (args.get(1).equalsIgnoreCase("join")) {
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's join message toggle to `"+set+ '`');
 
@@ -178,8 +174,7 @@ public class Message implements Command.Class  {
                 }
 
                 // If they're toggling ban
-                if (args.get(1).equalsIgnoreCase("ban"))
-                {
+                if (args.get(1).equalsIgnoreCase("ban")) {
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's ban message toggle to `"+set+ '`');
 
@@ -197,8 +192,7 @@ public class Message implements Command.Class  {
                 }
 
                 // If they're toggling kick
-                if (args.get(1).equalsIgnoreCase("kick"))
-                {
+                if (args.get(1).equalsIgnoreCase("kick")) {
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's kick message toggle to `"+set+ '`');
 
@@ -216,8 +210,7 @@ public class Message implements Command.Class  {
                 }
 
                 // If they're toggling leave
-                if (args.get(1).equalsIgnoreCase("leave"))
-                {
+                if (args.get(1).equalsIgnoreCase("leave")) {
                     // Sends the message
                     messageHandler.sendMessage("Set the guild's leave message toggle to `"+set+ '`');
 
@@ -236,17 +229,15 @@ public class Message implements Command.Class  {
                 messageHandler.sendError("Invalid Type!");
             }
 
-            if (args.size() >= 3 && args.get(0).equalsIgnoreCase("setchannel"))
-            {
-                if (args.get(1).equalsIgnoreCase("join"))
-                {
+            if (args.size() >= 3 && args.get(0).equalsIgnoreCase("setchannel")) {
+                if (args.get(1).equalsIgnoreCase("join")) {
                     // Get the channel string
                     String channelString = (String) guild.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL);
 
                     // Makes sure the channel string isn't null
                     if (channelString == null)
                     {
-                        messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                        messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                         return;
                     }
 
@@ -276,8 +267,7 @@ public class Message implements Command.Class  {
                     List<IChannel> channelsWithName = RequestBuffer.request(() -> e.getGuild().getChannelsByName(newValue)).get();
 
                     // Sees if there's any channels with the same name
-                    if (channelsWithName.isEmpty())
-                    {
+                    if (channelsWithName.isEmpty()) {
                         messageHandler.sendError("Invalid Channel!");
                         return;
                     }
@@ -300,15 +290,14 @@ public class Message implements Command.Class  {
                     return;
                 }
 
-                if (args.get(1).equalsIgnoreCase("leave"))
-                {
+                if (args.get(1).equalsIgnoreCase("leave")) {
                     // Get the channel string
                     String channelString = (String) guild.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL);
 
                     // Makes sure the channel string isn't null
                     if (channelString == null)
                     {
-                        messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                        messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                         return;
                     }
 
@@ -338,8 +327,7 @@ public class Message implements Command.Class  {
                     List<IChannel> channelsWithName = RequestBuffer.request(() -> e.getGuild().getChannelsByName(newValue)).get();
 
                     // Sees if there's any channels with the same name
-                    if (channelsWithName.isEmpty())
-                    {
+                    if (channelsWithName.isEmpty()) {
                         messageHandler.sendError("Invalid Channel!");
                         return;
                     }
@@ -364,7 +352,7 @@ public class Message implements Command.Class  {
                 messageHandler.sendError("Invalid Type!");
                 return;
             }
-            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help");
         };
     }
 
@@ -378,6 +366,6 @@ public class Message implements Command.Class  {
         st.put("im toggle <join/leave/ban/kick> <true/false>", "Toggles the different message types.");
         st.put("im setchannel <join/leave> <channel name>", "Toggles the join/leave messages.");
         st.put("Variables", "&guild&, &user&, &reason& (punishment)");
-        return Command.helpCommand(st, "Message", e);
+        return Command.helpCommand(st, "Interactive Message", e);
     }
 }

@@ -1,8 +1,10 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.core.ChadInstance;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
@@ -13,8 +15,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Removes a large amount of messages from a channel
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class Purge implements Command.Class  {
 
@@ -23,17 +26,17 @@ public class Purge implements Command.Class  {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
+            String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
+
             // Makes sure the bot has permission to manage messages
-            if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES))
-            {
-                messageHandler.sendError(MessageHandler.USER_NO_PERMISSION);
+            if (!ChadInstance.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES)) {
+                messageHandler.sendPresetError(MessageHandler.Messages.BOT_NO_PERMISSION);
                 return;
             }
 
             // Makes sure they've got the amount of messages they want to delete
-            if (args.size() != 1)
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            if (args.size() != 1) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "purge **amount of messages**");
                 return;
             }
 
@@ -41,16 +44,14 @@ public class Purge implements Command.Class  {
             int requestedAmount;
             try {
                 requestedAmount = Integer.parseInt(args.get(0));
-            } catch (NumberFormatException throwaway)
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            } catch (NumberFormatException throwaway) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "purge **amount of messages**");
                 return;
             }
 
 
             // Makes sure the amount isn't over 100
-            if (requestedAmount > 100)
-            {
+            if (requestedAmount > 100) {
                 messageHandler.sendError("You can only delete 100 messages or less.");
                 return;
             }

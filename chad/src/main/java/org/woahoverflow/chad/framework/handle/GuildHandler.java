@@ -1,13 +1,18 @@
 package org.woahoverflow.chad.framework.handle;
 
-import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Guild;
 
-public class GuildHandler
-{
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Handles all guild instances
+ *
+ * @author sho
+ */
+public class GuildHandler {
     /**
      * Static Instance
      */
@@ -23,8 +28,7 @@ public class GuildHandler
      *
      * @param guild The guild to refresh
      */
-    public void refreshGuild(long guild)
-    {
+    public void refreshGuild(long guild) {
         if (guilds.keySet().contains(guild))
         {
             guilds.remove(guild);
@@ -37,8 +41,7 @@ public class GuildHandler
      *
      * @param guild The user to remove
      */
-    public void removeGuild(long guild)
-    {
+    public void removeGuild(long guild) {
         // Removes it from the hashmap
         guilds.remove(guild);
 
@@ -52,8 +55,7 @@ public class GuildHandler
      *
      * @param guild The guild's id to register
      */
-    private Guild createGuild(long guild)
-    {
+    private Guild createGuild(long guild) {
         Document guildDocument = new Document();
 
         // The guild's ID
@@ -94,7 +96,7 @@ public class GuildHandler
         guildDocument.put("swear_filter_message", "none");
 
         // Other
-        guildDocument.put("allow_community_features", true);
+        guildDocument.put("disabled_categories", new ArrayList<>());
 
         // Insert the new guild
         DatabaseManager.GUILD_DATA.collection.insertOne(guildDocument);
@@ -115,8 +117,7 @@ public class GuildHandler
      * @param guildDataDocument The player to get
      * @return The guild retrieved
      */
-    private Guild parseGuild(Document guildDataDocument, long guild)
-    {
+    private Guild parseGuild(Document guildDataDocument, long guild) {
         final ConcurrentHashMap<Guild.DataType, Object> guildData = new ConcurrentHashMap<>();
 
         // Sets the data
@@ -133,8 +134,7 @@ public class GuildHandler
      *
      * @return The Guild's ID
      */
-    public Guild getGuild(long guild)
-    {
+    public Guild getGuild(long guild) {
         // If the guild's in in the hash map, return it
         if (guildExists(guild))
         {
@@ -169,8 +169,18 @@ public class GuildHandler
      * @param guild The guild to chcek with
      * @return If it contains it
      */
-    public boolean guildExists(long guild)
-    {
+    public boolean guildExists(long guild) {
         return guilds.containsKey(guild);
+    }
+
+    /**
+     * If a guild exists within the database
+     *
+     * @param guild The guild's ID
+     * @return If it exists
+     */
+    public boolean guildDataExists(long guild) {
+        Document get = DatabaseManager.GUILD_DATA.collection.find(new Document("id", guild)).first();
+        return get != null;
     }
 }

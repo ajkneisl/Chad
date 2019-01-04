@@ -1,18 +1,19 @@
 package org.woahoverflow.chad.commands.function;
 
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-
-import java.util.HashMap;
-import java.util.List;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
+ * Toggle NSFW status within a channel
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class Nsfw implements Command.Class  {
     @Override
@@ -21,15 +22,13 @@ public class Nsfw implements Command.Class  {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Makes sure they've got permissions
-            if (!RequestBuffer.request(() -> e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.MANAGE_CHANNEL)).get())
-            {
-                messageHandler.sendError(MessageHandler.BOT_NO_PERMISSION);
+            if (!RequestBuffer.request(() -> e.getChannel().getModifiedPermissions(e.getClient().getOurUser()).contains(Permissions.MANAGE_CHANNEL)).get()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.BOT_NO_PERMISSION);
                 return;
             }
 
             // If the channel is NSFW, revoke, if not, add
-            if (RequestBuffer.request(() -> e.getChannel().isNSFW()).get())
-            {
+            if (RequestBuffer.request(() -> e.getChannel().isNSFW()).get()) {
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("Removed NSFW status from this channel!"));
                 RequestBuffer.request(() -> e.getChannel().changeNSFW(false));
             }
@@ -43,7 +42,7 @@ public class Nsfw implements Command.Class  {
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("nsfw", "Toggles NSFW status for the channel");
-        return Command.helpCommand(st, "Nsfw", e);
+        st.put("nsfw", "Toggles NSFW status for the channel.");
+        return Command.helpCommand(st, "NSFW", e);
     }
 }

@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.nsfw;
 
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -10,8 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Sends a NSFW neko picture utilizing Neko Bot's API
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class NBLewdNeko implements Command.Class  {
 
@@ -21,9 +22,8 @@ public class NBLewdNeko implements Command.Class  {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // Checks if the channel is Nsfw
-            if (!e.getChannel().isNSFW())
-            {
-                messageHandler.sendError(MessageHandler.CHANNEL_NOT_NSFW);
+            if (!e.getChannel().isNSFW()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.CHANNEL_NOT_NSFW);
                 return;
             }
 
@@ -38,7 +38,7 @@ public class NBLewdNeko implements Command.Class  {
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("lewdneko", "Gets Nsfw Nekos");
+        st.put("lewdneko", "Gets NSFW Nekos");
         return Command.helpCommand(st, "Lewd Neko", e);
     }
 }

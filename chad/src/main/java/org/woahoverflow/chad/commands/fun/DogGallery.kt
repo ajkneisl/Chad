@@ -5,13 +5,12 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
-import java.util.HashMap
+import java.util.*
 
 /**
  * Sends pictures of dogs :)
  *
  * @author sho
- * @since 0.7.1
  */
 class DogGallery : Command.Class {
     override fun help(e: MessageReceivedEvent?): Runnable {

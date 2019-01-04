@@ -1,18 +1,15 @@
 package org.woahoverflow.chad.core.listener;
 
 import com.mongodb.client.MongoCollection;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.regex.Pattern;
 import org.bson.Document;
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.member.UserJoinEvent;
@@ -25,17 +22,18 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * User joining and Leaving events
  *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
-public final class UserLeaveJoin
-{
+public final class UserLeaveJoin {
 
     private static final Pattern USER_PATTERN = Pattern.compile("&user&");
     private static final Pattern GUILD_PATTERN = Pattern.compile("&guild&");
@@ -47,8 +45,7 @@ public final class UserLeaveJoin
      */
     @SuppressWarnings("unused")
     @EventSubscriber
-    public void userJoin(UserJoinEvent e)
-    {
+    public void userJoin(UserJoinEvent e) {
         // Add it to the user's data set
         Player player = PlayerHandler.handle.getPlayer(e.getUser().getLongID());
 
@@ -79,8 +76,7 @@ public final class UserLeaveJoin
 
         // If the guild has user join messages on, do that
         Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
-        if ((boolean) g.getObject(Guild.DataType.JOIN_MESSAGE))
-        {
+        if ((boolean) g.getObject(Guild.DataType.JOIN_MESSAGE)) {
             // Gets the join message channel
             String joinMsgCh = (String) g.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL);
 
@@ -99,12 +95,10 @@ public final class UserLeaveJoin
                 IChannel channel = RequestBuffer.request(() -> guild.getChannelByID(id)).get();
 
                 // Makes sure the channel isn't deleted
-                if (!channel.isDeleted())
-                {
+                if (!channel.isDeleted()) {
                     // Gets the message, makes sure it isn't null, then sends
                     String msg = (String) g.getObject(Guild.DataType.JOIN_MESSAGE);
-                    if (msg != null)
-                    {
+                    if (msg != null) {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(msg).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
                         String finalMsg = msg;
                         RequestBuffer.request(() -> channel.sendMessage(finalMsg));
@@ -114,8 +108,7 @@ public final class UserLeaveJoin
         }
 
         // does the bot have MANAGE_ROLES?
-        if (!ChadBot.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES))
-        {
+        if (!ChadInstance.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_ROLES)) {
             new MessageHandler(e.getGuild().getDefaultChannel(), e.getUser()).sendError("Auto role assignment failed; Bot doesn't have permission: MANAGE_ROLES.");
             return;
         }
@@ -123,10 +116,9 @@ public final class UserLeaveJoin
         // you probably shouldn't put code below this comment
 
         String joinRoleStringID = (String) g.getObject(Guild.DataType.JOIN_ROLE);
-        if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none"))
-        {
+        if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none")) {
             Long joinRoleID = Long.parseLong(joinRoleStringID);
-            List<IRole> botRoles = ChadBot.cli.getOurUser().getRolesForGuild(e.getGuild());
+            List<IRole> botRoles = ChadInstance.cli.getOurUser().getRolesForGuild(e.getGuild());
             IRole joinRole = e.getGuild().getRoleByID(joinRoleID);
 
             // get the bots highest role position in the guild
@@ -161,8 +153,7 @@ public final class UserLeaveJoin
      */
     @SuppressWarnings({"unused", "unchecked"})
     @EventSubscriber
-    public void userLeave(UserLeaveEvent e)
-    {
+    public void userLeave(UserLeaveEvent e) {
         // Remove it from the user's data set
         Player player = PlayerHandler.handle.getPlayer(e.getUser().getLongID());
 
@@ -173,16 +164,14 @@ public final class UserLeaveJoin
 
         Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
-        if (guildData.isEmpty())
-        {
+        if (guildData.isEmpty()) {
             // If it's the last guild that they're in with Chad, remove theirs
             MongoCollection<Document> col = DatabaseManager.USER_DATA.collection;
             Document document = col.find(new Document("id", e.getUser().getLongID())).first();
 
             if (document != null)
                 col.deleteOne(document);
-        }
-        else {
+        } else {
             player.setObject(
                 DataType.GUILD_DATA,
                 guildData
@@ -204,8 +193,7 @@ public final class UserLeaveJoin
         MessageHandler.sendLog(embedBuilder, guild);
 
         // If the guild has user leave messages on, do that
-        if ((boolean) g.getObject(Guild.DataType.LEAVE_MESSAGE_ON))
-        {
+        if ((boolean) g.getObject(Guild.DataType.LEAVE_MESSAGE_ON)) {
             // Gets the leave message channel
             String leaveMsgCh = (String) g.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL);
 
@@ -214,8 +202,7 @@ public final class UserLeaveJoin
                 final long id;
                 try {
                     id = Long.parseLong(leaveMsgCh);
-                } catch (NumberFormatException throwaway)
-                {
+                } catch (NumberFormatException throwaway) {
                     // Throws error in the UI
                     ChadError.throwError("Guild " + guild.getName() + " has an invalid leave message channel!");
                     return;
@@ -224,12 +211,10 @@ public final class UserLeaveJoin
                 IChannel channel = RequestBuffer.request(() -> guild.getChannelByID(id)).get();
 
                 // Makes sure the channel isn't deleted
-                if (!channel.isDeleted())
-                {
+                if (!channel.isDeleted()) {
                     // Gets the message, makes sure it isn't null, then sends
                     String msg = (String) g.getObject(Guild.DataType.LEAVE_MESSAGE);
-                    if (msg != null)
-                    {
+                    if (msg != null) {
                         msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
                         String finalMsg = msg;
                         RequestBuffer.request(() -> channel.sendMessage(finalMsg));

@@ -7,17 +7,12 @@ import org.woahoverflow.chad.core.ChadVar;
  * Interaction with YouTube's API
  *
  * @author sho
- * @since 0.7.0
  */
-public final class YouTubeHandler
-{
-
+public final class YouTubeHandler {
     /**
      * An instance of a retrieved channel
      */
-    public static final class Channel
-    {
-
+    public static final class Channel {
         /**
          * The channels total view count
          */
@@ -56,8 +51,7 @@ public final class YouTubeHandler
          * @param userUrl The channel's url
          * @return The same instance
          */
-        Channel buildDefault(String username, String userIconUrl, String userUrl)
-        {
+        Channel buildDefault(String username, String userIconUrl, String userUrl) {
             this.username = username;
             this.userUrl = userUrl;
             this.userIconUrl = userIconUrl;
@@ -73,8 +67,7 @@ public final class YouTubeHandler
          * @param videoCount The channel's video count
          * @return The same instance
          */
-        Channel buildStatistics(long subscriberCount, long viewCount, long videoCount)
-        {
+        Channel buildStatistics(long subscriberCount, long viewCount, long videoCount) {
             this.videoCount = videoCount;
             this.viewCount = viewCount;
             this.subscriberCount = subscriberCount;
@@ -93,8 +86,7 @@ public final class YouTubeHandler
      * @param username The channel to search for
      * @return If a channel was found, return the channel
      */
-    public static Channel getYoutubeChannel(String username)
-    {
+    public static Channel getYoutubeChannel(String username) {
         // The URL to search for the channel
         final String searchUrl = BASE_URL + String.format("search?part=snippet&key=%s&q=%s&type=channel&maxResults=1", ChadVar.YOUTUBE_API_KEY, username);
         JSONObject searchResults = JsonHandler.handle.read(searchUrl);

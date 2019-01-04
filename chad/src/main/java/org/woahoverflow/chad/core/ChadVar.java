@@ -5,56 +5,17 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.CurrentThreads;
-import org.woahoverflow.chad.commands.admin.DeveloperSettings;
-import org.woahoverflow.chad.commands.admin.ModifyPresence;
-import org.woahoverflow.chad.commands.admin.SetBalance;
 import org.woahoverflow.chad.commands.admin.Shutdown;
-import org.woahoverflow.chad.commands.admin.SystemInfo;
-import org.woahoverflow.chad.commands.fun.CatFact;
-import org.woahoverflow.chad.commands.fun.CatGallery;
-import org.woahoverflow.chad.commands.fun.Cuddle;
-import org.woahoverflow.chad.commands.fun.DivorcePlayer;
-import org.woahoverflow.chad.commands.fun.DogFact;
-import org.woahoverflow.chad.commands.fun.DogGallery;
-import org.woahoverflow.chad.commands.fun.DownVote;
-import org.woahoverflow.chad.commands.fun.EightBall;
-import org.woahoverflow.chad.commands.fun.MarryPlayer;
-import org.woahoverflow.chad.commands.fun.Meme;
-import org.woahoverflow.chad.commands.fun.PhotoEditor;
-import org.woahoverflow.chad.commands.fun.Profile;
-import org.woahoverflow.chad.commands.fun.Random;
-import org.woahoverflow.chad.commands.fun.RockPaperScissors;
-import org.woahoverflow.chad.commands.fun.RussianRoulette;
-import org.woahoverflow.chad.commands.info.Aliases;
-import org.woahoverflow.chad.commands.info.SteamStatus;
-import org.woahoverflow.chad.commands.info.SubscriberCount;
-import org.woahoverflow.chad.commands.fun.UpVote;
-import org.woahoverflow.chad.commands.fun.WordReverse;
-import org.woahoverflow.chad.commands.function.AutoRole;
-import org.woahoverflow.chad.commands.function.Logging;
-import org.woahoverflow.chad.commands.function.Message;
-import org.woahoverflow.chad.commands.function.Nsfw;
-import org.woahoverflow.chad.commands.function.Permissions;
-import org.woahoverflow.chad.commands.function.Prefix;
-import org.woahoverflow.chad.commands.function.Purge;
-import org.woahoverflow.chad.commands.function.Swearing;
+import org.woahoverflow.chad.commands.admin.*;
+import org.woahoverflow.chad.commands.fun.*;
+import org.woahoverflow.chad.commands.function.*;
 import org.woahoverflow.chad.commands.gambling.Balance;
 import org.woahoverflow.chad.commands.gambling.CoinFlip;
 import org.woahoverflow.chad.commands.gambling.DailyReward;
-import org.woahoverflow.chad.commands.info.Chad;
-import org.woahoverflow.chad.commands.info.ChangeLog;
-import org.woahoverflow.chad.commands.info.Contributors;
-import org.woahoverflow.chad.commands.info.GuildInfo;
-import org.woahoverflow.chad.commands.function.GuildSettings;
-import org.woahoverflow.chad.commands.info.Help;
-import org.woahoverflow.chad.commands.info.RedditNew;
-import org.woahoverflow.chad.commands.info.RedditTop;
-import org.woahoverflow.chad.commands.info.Steam;
-import org.woahoverflow.chad.commands.info.UserInfo;
+import org.woahoverflow.chad.commands.info.*;
 import org.woahoverflow.chad.commands.music.*;
-import org.woahoverflow.chad.commands.nsfw.NB4K;
 import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
+import org.woahoverflow.chad.commands.nsfw.NBPorn;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
@@ -72,7 +33,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Storing of Static Variables that don't have a home
  *
  * @author sho
- * @since 0.6.3 B2
  */
 public final class ChadVar
 {
@@ -225,7 +185,7 @@ public final class ChadVar
         COMMANDS.put("swearfilter", new Command.Data(Category.ADMINISTRATOR, new Swearing(), "sf"));
 
         // Nsfw !
-        COMMANDS.put("porn", new Command.Data(Command.Category.NSFW, new NB4K(), "4k"));
+        COMMANDS.put("porn", new Command.Data(Command.Category.NSFW, new NBPorn(), "pn"));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko(), "neko"));
 
         // DEVELOPER!

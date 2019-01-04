@@ -1,25 +1,29 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.Command.Class;
-import org.woahoverflow.chad.framework.obj.Player;
-import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.Util;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Command.Class;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 /**
+ * Gets a user's Chad profile
+ *
  * @author sho
- * @since 0.7.0
  */
 public class Profile implements Class{
 
@@ -32,10 +36,10 @@ public class Profile implements Class{
             // Default variables
             Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // If there's no arguments, get the author's profile
-            if (args.isEmpty())
-            {
+            if (args.isEmpty()) {
                 // Setup the embed builder
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withImage(e.getAuthor().getAvatarURL());
@@ -58,8 +62,7 @@ public class Profile implements Class{
                     long downvotes = (long) player.getObject(DataType.PROFILE_DOWNVOTE);
                     long calculatedVotes = upvotes-downvotes;
 
-                    if (calculatedVotes < 0)
-                    {
+                    if (calculatedVotes < 0) {
                         content+= "**Warning** You have a bad reputation! \n";
                     }
 
@@ -75,8 +78,7 @@ public class Profile implements Class{
                     String[] marriageData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
 
                     // If they're not married to anyone, it's set to none
-                    if (marriageData[0].equalsIgnoreCase("none") || marriageData[1].equalsIgnoreCase("none"))
-                    {
+                    if (marriageData[0].equalsIgnoreCase("none") || marriageData[1].equalsIgnoreCase("none")) {
                         content += "**Marriage** : Not married to anyone\n";
                     }
                     else {
@@ -85,14 +87,13 @@ public class Profile implements Class{
                         try {
                             guildId = Long.parseLong(marriageData[1]);
                         } catch (NumberFormatException throwaway) {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                             return;
                         }
 
                         // Make sure the bot still has the guild
-                        if (!Util.guildExists(e.getClient(), guildId))
-                        {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                        if (!Util.guildExists(e.getClient(), guildId)) {
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                             player.setObject(DataType.MARRY_DATA, "none&none");
                             return;
                         }
@@ -102,7 +103,7 @@ public class Profile implements Class{
                         try {
                             userId = Long.parseLong(marriageData[0]);
                         } catch (NumberFormatException throwaway) {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                             return;
                         }
 
@@ -111,9 +112,8 @@ public class Profile implements Class{
                         IUser user = guild.getUserByID(userId);
 
                         // Makes sure the user isn't null
-                        if (user == null)
-                        {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                        if (user == null) {
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                             return;
                         }
 
@@ -155,8 +155,7 @@ public class Profile implements Class{
                     long calculatedVotes = upvotes-downvotes;
 
 
-                    if (calculatedVotes <= 0)
-                    {
+                    if (calculatedVotes <= 0) {
                         content+= "**Warning** User has a bad reputation!\n";
                     }
 
@@ -173,8 +172,7 @@ public class Profile implements Class{
                     String[] marriageData = ((String) targetUserProfile.getObject(DataType.MARRY_DATA)).split("&");
 
                     // If they're not married to anyone, it's set to none
-                    if (marriageData[0].equalsIgnoreCase("none") || marriageData[1].equalsIgnoreCase("none"))
-                    {
+                    if (marriageData[0].equalsIgnoreCase("none") || marriageData[1].equalsIgnoreCase("none")) {
                         content += "**Marriage** : Not married to anyone\n";
                     }
                     else {
@@ -183,14 +181,13 @@ public class Profile implements Class{
                         try {
                             guildId = Long.parseLong(marriageData[1]);
                         } catch (NumberFormatException throwaway) {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                             return;
                         }
 
                         // Make sure the bot still has the guild
-                        if (!Util.guildExists(e.getClient(), guildId))
-                        {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                        if (!Util.guildExists(e.getClient(), guildId)) {
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                             player.setObject(DataType.MARRY_DATA, "none&none");
                             return;
                         }
@@ -200,7 +197,7 @@ public class Profile implements Class{
                         try {
                             userId = Long.parseLong(marriageData[0]);
                         } catch (NumberFormatException throwaway) {
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                             return;
                         }
 
@@ -223,8 +220,7 @@ public class Profile implements Class{
             }
 
             // If they're setting their own description
-            if (args.size() >= 1 && args.get(0).equalsIgnoreCase("desc") && e.getMessage().getMentions().isEmpty())
-            {
+            if (args.size() >= 1 && args.get(0).equalsIgnoreCase("desc") && e.getMessage().getMentions().isEmpty()) {
                 // Remove the `desc`
                 args.remove(0);
 
@@ -236,8 +232,7 @@ public class Profile implements Class{
                     .replaceAll("<scb>");
 
                 // Make sure it's not too long
-                if (builtString.length() > 200)
-                {
+                if (builtString.length() > 200) {
                     messageHandler.sendError("Your description is too long!");
                     return;
                 }
@@ -249,14 +244,12 @@ public class Profile implements Class{
             }
 
             // If they're setting their own description
-            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("desc") && e.getMessage().getMentions().size() == 1 && PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
-            {
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("desc") && e.getMessage().getMentions().size() == 1 && PermissionHandler.handle.userIsDeveloper(e.getAuthor())) {
                 IUser targetUser = e.getMessage().getMentions().get(0);
 
                 // If it's somehow mixed
-                if (!args.get(1).contains(targetUser.getStringID()))
-                {
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                if (!args.get(1).contains(targetUser.getStringID())) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                     return;
                 }
 
@@ -275,8 +268,7 @@ public class Profile implements Class{
                     .replaceAll("<scb>");
 
                 // Make sure it's not too long
-                if (builtString.length() > 200)
-                {
+                if (builtString.length() > 200) {
                     messageHandler.sendError("Your description is too long!");
                     return;
                 }
@@ -291,8 +283,7 @@ public class Profile implements Class{
             }
 
             // Developer only, setting their own title
-            if (args.size() >= 1 && args.get(0).equalsIgnoreCase("title") && PermissionHandler.handle.userIsDeveloper(e.getAuthor()) && e.getMessage().getMentions().isEmpty())
-            {
+            if (args.size() >= 1 && args.get(0).equalsIgnoreCase("title") && PermissionHandler.handle.userIsDeveloper(e.getAuthor()) && e.getMessage().getMentions().isEmpty()) {
                 // Remove the `title`
                 args.remove(0);
 
@@ -304,8 +295,7 @@ public class Profile implements Class{
                     .replaceAll("<scb>");
 
                 // Makes sure the title isn't too long
-                if (builtString.length() > 30)
-                {
+                if (builtString.length() > 30) {
                     messageHandler.sendError("Your title is too long!");
                     return;
                 }
@@ -317,11 +307,9 @@ public class Profile implements Class{
             }
 
             // Developer only, setting someone else's title
-            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("title") && e.getMessage().getMentions().size() == 1 && PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
-            {
-                if (!args.get(1).contains(e.getMessage().getMentions().get(0).getStringID()))
-                {
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("title") && e.getMessage().getMentions().size() == 1 && PermissionHandler.handle.userIsDeveloper(e.getAuthor())) {
+                if (!args.get(1).contains(e.getMessage().getMentions().get(0).getStringID())) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "profile **@user**");
                     return;
                 }
 
@@ -357,7 +345,7 @@ public class Profile implements Class{
                 return;
             }
 
-            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "profile **@user/nothing**");
         };
     }
 

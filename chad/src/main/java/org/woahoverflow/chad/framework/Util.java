@@ -1,32 +1,26 @@
 package org.woahoverflow.chad.framework;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Random;
-import java.util.stream.Collectors;
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadInstance;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.RequestBuffer;
+
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The Utility class for Chad
  *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public final class Util
 {
@@ -41,8 +35,7 @@ public final class Util
      *
      * @return The current timestamp
      */
-    public static synchronized String getTimeStamp()
-    {
+    public static synchronized String getTimeStamp() {
         return new SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().getTime());
     }
 
@@ -63,10 +56,10 @@ public final class Util
             int responseCode = con.getResponseCode();
             if (responseCode != 200)
             {
-                ChadBot.getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode);
+                ChadInstance.getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode);
                 return "";
             }
-            ChadBot.getLogger().info("Fulfilled a request at URL : {}", url);
+            ChadInstance.getLogger().info("Fulfilled a request at URL : {}", url);
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             String response = in.lines().collect(Collectors.joining());
@@ -90,8 +83,7 @@ public final class Util
      *
      * @return Returns either true or false, it's randomized
      */
-    public static boolean coinFlip()
-    {
+    public static boolean coinFlip() {
         Random random = new Random();
         int flip = -1;
         for (int i = 0; i < 100; i++)
@@ -106,13 +98,11 @@ public final class Util
      * @param guild The guild's ID
      * @return If it exists/still exists
      */
-    public static synchronized boolean guildExists(IDiscordClient cli, Long guild)
-    {
+    public static synchronized boolean guildExists(IDiscordClient cli, Long guild) {
         return RequestBuffer.request(cli::getGuilds).get().stream().anyMatch(g -> g.getLongID() == guild);
     }
 
-    private static String getCurrentDateTime()
-    {
+    private static String getCurrentDateTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         System.out.println(dateFormat.format(new Date()));
         return dateFormat.format(new Date());
@@ -161,6 +151,18 @@ public final class Util
         response += days > 1 ? String.format("%s days ", days) : String.format("%s day ", days);
         response += hoursDays > 1 ? String.format("%s hours", hoursDays) : String.format("%s hour", hoursDays);
         return response;
+    }
+
+    public static String buildString(String string, String... strings) {
+        int i = 0;
+        List<String> obj = Arrays.asList(strings);
+
+        while (string.contains("<>")) {
+            string = string.replaceFirst("<>", obj.get(i));
+            i++;
+        }
+
+        return string;
     }
 
 }

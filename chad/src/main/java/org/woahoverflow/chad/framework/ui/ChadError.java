@@ -7,19 +7,15 @@ import java.util.stream.Collectors;
  * Sends an error to the UI
  *
  * @author sho
- * @since 0.6.3 B2
  */
-public final class ChadError
-{
-
+public final class ChadError {
     /**
      * Throws an error
      *
      * @param error The string error
      * @param throwable The throwable
      */
-    public static void throwError(String error, Throwable throwable)
-    {
+    public static void throwError(String error, Throwable throwable) {
         // Forms the stacktrace from the throwable
         String stackTrace = Arrays.stream(throwable.getStackTrace()).map(st -> st + "\n").collect(Collectors.joining());
 
@@ -35,8 +31,7 @@ public final class ChadError
      *
      * @param error The string error
      */
-    public static void throwError(String error)
-    {
+    public static void throwError(String error) {
         // Initiates the error UI with the string error
         UIHandler.newError(error);
 

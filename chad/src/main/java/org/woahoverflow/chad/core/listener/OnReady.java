@@ -1,16 +1,16 @@
 package org.woahoverflow.chad.core.listener;
 
-import java.security.SecureRandom;
-import java.util.concurrent.TimeUnit;
-import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
-
 import sx.blah.discord.util.RequestBuffer;
+
+import java.security.SecureRandom;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The on ready event from Discord
@@ -18,9 +18,7 @@ import sx.blah.discord.util.RequestBuffer;
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */
-public final class OnReady
-{
-
+public final class OnReady {
     /**
      * Discord Ready Event
      *
@@ -28,8 +26,7 @@ public final class OnReady
      */
     @EventSubscriber
     @SuppressWarnings("unused")
-    public void onReadyEvent(ReadyEvent event)
-    {
+    public void onReadyEvent(ReadyEvent event) {
         // Presence Rotations
         Chad.runThread(() -> {
 
@@ -49,8 +46,7 @@ public final class OnReady
             // The time between the while loop
             int time = 0;
 
-            while (true)
-            {
+            while (true) {
                 // Adds 10 seconds
                 time += 10;
 
@@ -62,8 +58,7 @@ public final class OnReady
                 }
 
                 // If it's been the amount of seconds in the rotation time
-                if (time == ChadVar.rotationInteger)
-                {
+                if (time == ChadVar.rotationInteger) {
                     // If presence rotation is disabled
                     if (!ChadVar.rotatePresence)
                         return;
@@ -81,9 +76,8 @@ public final class OnReady
         }, Chad.getInternalConsumer());
 
         // UI Begin
-        if (ChadVar.launchOptions.get("-denyui"))
-        {
-            ChadBot.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
+        if (ChadVar.launchOptions.get("-denyui")) {
+            ChadInstance.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
         }
         else {
             UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);

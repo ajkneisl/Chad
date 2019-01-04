@@ -1,26 +1,27 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.util.ArrayList;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Data;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.Util;
-import org.woahoverflow.chad.framework.handle.PermissionHandler;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-
-import java.util.HashMap;
-import java.util.List;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
+
 /**
+ * All Chad commands
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class Help implements Command.Class {
 
@@ -45,8 +46,7 @@ public class Help implements Command.Class {
 
                 // The commands builder
                 StringBuilder commandsBuilder = new StringBuilder();
-                for (Entry<String, Data> stringDataEntry : ChadVar.COMMANDS.entrySet())
-                {
+                for (Entry<String, Data> stringDataEntry : ChadVar.COMMANDS.entrySet()) {
                     // Gets the command's data
                     Data meta = stringDataEntry.getValue();
 
@@ -64,8 +64,7 @@ public class Help implements Command.Class {
                 }
 
                 // Replaces the end and makes sure there's content
-                if (commandsBuilder.length() != 0)
-                {
+                if (commandsBuilder.length() != 0) {
                     stringBuilder.append("\n\n").append("**").append(Util.fixEnumString(category.toString().toLowerCase())).append("**").append(": \n").append(REGEX.matcher(commandsBuilder.toString()).replaceAll(""));
                 }
             }
@@ -73,8 +72,13 @@ public class Help implements Command.Class {
             // Adds a warning that you can only see the commands you have permission to
             stringBuilder.append("\n\nYou can only see the commands you have permission to!");
 
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+
+            embedBuilder.withDesc("**Support Discord**: https://woahoverflow.org/discord\n**Invite Chad**: https://woahoverflow.org/chad/invite" + stringBuilder.toString());
+            embedBuilder.withTitle("Chad's Commands");
+
             // Sends the message
-            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc(stringBuilder.toString()).withTitle("Chad's Commands"));
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(embedBuilder);
        };
     }
 

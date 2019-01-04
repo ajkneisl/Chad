@@ -1,13 +1,19 @@
 package org.woahoverflow.chad.commands.info
 
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
+import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
-import java.lang.StringBuilder
-import java.util.HashMap
+import java.util.*
 
+/**
+ * Gets the aliases for a command
+ *
+ * @author sho
+ */
 class Aliases : Command.Class {
     override fun help(e: MessageReceivedEvent?): Runnable {
         val st = HashMap<String, String>()
@@ -18,18 +24,17 @@ class Aliases : Command.Class {
     override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
+            val prefix = GuildHandler.handle.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             if (args.isEmpty()) {
-                println(12)
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases **command**")
                 return@Runnable
             }
 
             val command = args[0]
 
             if (!ChadVar.COMMANDS.keys().toList().contains(command)) {
-                println(1)
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases **command**")
                 return@Runnable
             }
 

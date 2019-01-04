@@ -1,8 +1,5 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.YouTubeHandler;
 import org.woahoverflow.chad.framework.handle.YouTubeHandler.Channel;
@@ -10,27 +7,27 @@ import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+
 /**
- * Gets the subscriber count for a YouTuber
+ * Gets the subscriber count for YouTuber(s)
  *
  * @author sho
- * @since 0.7.0
  */
-public class SubscriberCount implements Command.Class
-{
+public class SubscriberCount implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             // Puts two YouTube channels in a VS format
-            if (args.size() == 3 && args.get(0).equalsIgnoreCase("vs"))
-            {
+            if (args.size() == 3 && args.get(0).equalsIgnoreCase("vs")) {
                 // Both channels from arguments 1 & 2
                 Channel channelOne = YouTubeHandler.getYoutubeChannel(args.get(1));
                 Channel channelTwo = YouTubeHandler.getYoutubeChannel(args.get(2));
 
                 // If either couldn't be found
-                if (channelOne == null || channelTwo == null)
-                {
+                if (channelOne == null || channelTwo == null) {
                     new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc("Invalid YouTube Channel(s)!"));
                     return;
                 }
@@ -64,8 +61,7 @@ public class SubscriberCount implements Command.Class
             Channel channel = YouTubeHandler.getYoutubeChannel(args.get(0));
 
             // If the channel doesn't exist
-            if (channel == null)
-            {
+            if (channel == null) {
                 new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc("Invalid YouTube channel!"));
                 return;
             }

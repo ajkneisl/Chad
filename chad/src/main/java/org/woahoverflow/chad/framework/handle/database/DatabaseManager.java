@@ -11,11 +11,8 @@ import org.woahoverflow.chad.framework.handle.JsonHandler;
  * Accesses the database
  *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
-public class DatabaseManager
-{
-
+public class DatabaseManager {
     /**
      * The private handle for the Database
      */
@@ -49,8 +46,7 @@ public class DatabaseManager
     /**
      * Private Constructor
      */
-    private DatabaseManager()
-    {
+    private DatabaseManager() {
         cli = new MongoClient(new MongoClientURI(JsonHandler.handle.get("uri_link")));
         db = cli.getDatabase("Database");
         col = db.getCollection("bot");
@@ -63,24 +59,21 @@ public class DatabaseManager
      * @param identifier The key to locate the document
      * @return The retrieved collection
      */
-    private DatabaseHandle getSeparateCollection(String colName, String identifier)
-    {
+    private DatabaseHandle getSeparateCollection(String colName, String identifier) {
         return new DatabaseHandle(db.getCollection(colName), identifier);
     }
 
     /**
      * @return The mongo client
      */
-    public final MongoClient getClient()
-    {
+    public final MongoClient getClient() {
         return cli;
     }
 
     /**
      * @return The main mongo collection
      */
-    public final MongoCollection<Document> getCollection()
-    {
+    public final MongoCollection<Document> getCollection() {
         return col;
     }
 
@@ -89,8 +82,7 @@ public class DatabaseManager
      *
      * @return The mongo database
      */
-    public final MongoDatabase getDatabase()
-    {
+    public final MongoDatabase getDatabase() {
         return db;
     }
 }

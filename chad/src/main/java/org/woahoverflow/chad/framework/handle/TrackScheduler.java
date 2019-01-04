@@ -4,19 +4,19 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import java.util.ArrayList;
-import java.util.List;
-import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadInstance;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
-/**
- * @author sho
- * @since 0.7.0
- */
-public class TrackScheduler extends AudioEventAdapter
-{
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * The guild's audio manager
+ *
+ * @author sho
+ */
+public class TrackScheduler extends AudioEventAdapter {
     /**
      * The Audio Player for the Guild
      */
@@ -38,8 +38,7 @@ public class TrackScheduler extends AudioEventAdapter
      * @param player The Audio Player
      * @param guildId The Guild's ID
      */
-    public TrackScheduler(AudioPlayer player, long guildId)
-    {
+    public TrackScheduler(AudioPlayer player, long guildId) {
         this.guildId = guildId;
         this.player = player;
         queue = new ArrayList<>();
@@ -50,10 +49,8 @@ public class TrackScheduler extends AudioEventAdapter
      *
      * @param track The track to queue
      */
-    public void queue(AudioTrack track)
-    {
-        if (!player.startTrack(track, true))
-        {
+    public void queue(AudioTrack track) {
+        if (!player.startTrack(track, true)) {
             queue.add(track);
         }
     }
@@ -61,8 +58,7 @@ public class TrackScheduler extends AudioEventAdapter
     /**
      * Skips to the next song
      */
-    public boolean nextTrack()
-    {
+    public boolean nextTrack() {
         if (queue.isEmpty())
             return false;
 
@@ -77,8 +73,7 @@ public class TrackScheduler extends AudioEventAdapter
      *
      * @return The next track
      */
-    public AudioTrack getNextTrack()
-    {
+    public AudioTrack getNextTrack() {
         if (queue.isEmpty())
             return null;
 
@@ -90,8 +85,7 @@ public class TrackScheduler extends AudioEventAdapter
      *
      * @return The queue
      */
-    public List<AudioTrack> getFullQueue()
-    {
+    public List<AudioTrack> getFullQueue() {
         return queue;
     }
 
@@ -106,7 +100,7 @@ public class TrackScheduler extends AudioEventAdapter
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
     {
-        IGuild guild = ChadBot.cli.getGuildByID(guildId);
+        IGuild guild = ChadInstance.cli.getGuildByID(guildId);
 
         IVoiceChannel channel = guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
 

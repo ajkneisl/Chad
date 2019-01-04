@@ -4,9 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -14,19 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Steam statistics utilizing steam's API
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class Steam implements Command.Class  {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor()).credit("Steam API");
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // Checks if the arguments are invalid
-            if (args.isEmpty() || args.size() == 1)
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            if (args.isEmpty() || args.size() == 1) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam profile **steam name**");
                 return;
             }
 
@@ -42,8 +45,7 @@ public class Steam implements Command.Class  {
                     .getJSONObject("response");
                 
                 // Checks to see if the user actually exists
-                if (steamUser.getInt("success") != 1)
-                {
+                if (steamUser.getInt("success") != 1) {
                     messageHandler.sendError("Invalid Steam Profile!");
                     return;
                 }
@@ -60,8 +62,7 @@ public class Steam implements Command.Class  {
                 
 
                 // Builds an embed with the user's steam profile
-                if (intention.equalsIgnoreCase("profile"))
-                {
+                if (intention.equalsIgnoreCase("profile")) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.withTitle("Steam Profile : " + userName);
                     embedBuilder.withImage(steamUserProfile.getString("avatarfull"));
@@ -69,8 +70,7 @@ public class Steam implements Command.Class  {
 
                     messageHandler.sendEmbed(embedBuilder);
                 } 
-                else if (intention.equalsIgnoreCase("csgo")) // Builds an embed with the user's Counter-Strike: Global Offensive stats.
-                {
+                else if (intention.equalsIgnoreCase("csgo")) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.withFooterIcon(steamUserProfile.getString("avatar"));
                     
@@ -80,23 +80,20 @@ public class Steam implements Command.Class  {
                         .getJSONArray("stats");
                     
                     // Makes sure the array isn't null
-                    if (csgoStats == null)
-                    {
-                        messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                    if (csgoStats == null) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                         return;
                     }
                     // Checks to see if the account is private by catching the NullPointerException
                     try {
                         csgoStats.getJSONObject(0);
-                    } catch (@SuppressWarnings("ProhibitedExceptionCaught") NullPointerException ee)
-                    {
+                    } catch (@SuppressWarnings("ProhibitedExceptionCaught") NullPointerException ee) {
                         messageHandler.sendError("Private Steam Profile!");
                         return;
                     }
                     
                     
-                    if (args.size() == 2) // Regular CS:GO stats
-                    {
+                    if (args.size() == 2) /* Regular stats in CSGO */{
                         embedBuilder.withTitle("CS:GO stats for " + userName);
                         embedBuilder.appendField("Total Kills", Integer.toString(csgoStats.getJSONObject(0).getInt("value")), true);
                         embedBuilder.appendField("Total Deaths", Integer.toString(csgoStats.getJSONObject(1).getInt("value")), true);
@@ -108,8 +105,7 @@ public class Steam implements Command.Class  {
                         embedBuilder.appendField("Total Matches Won", Integer.toString(csgoStats.getJSONObject(112).getInt("value")), true);
                         embedBuilder.appendField("Total Matches Played", Integer.toString(csgoStats.getJSONObject(113).getInt("value")), true);
                     }
-                    else if (args.size() == 3 && args.get(2).equalsIgnoreCase("kills")) // User's kill stats in CS:GO
-                    {
+                    else if (args.size() == 3 && args.get(2).equalsIgnoreCase("kills")) /*User's kill stats in CS:GO */ {
                         embedBuilder.withTitle("Map Stats for " + userName);
                         embedBuilder.appendField("Knife", Integer.toString(csgoStats.getJSONObject(9).getInt("value")), true);
                         embedBuilder.appendField("Taser", Integer.toString(csgoStats.getJSONObject(166).getInt("value")), true);
@@ -122,8 +118,7 @@ public class Steam implements Command.Class  {
                         embedBuilder.appendField("AWP", Integer.toString(csgoStats.getJSONObject(19).getInt("value")), true);
                         embedBuilder.appendField("AK-47", Integer.toString(csgoStats.getJSONObject(20).getInt("value")), true);
                         embedBuilder.appendField("M4", Integer.toString(csgoStats.getJSONObject(162).getInt("value")), true);
-                    } else if (args.size() == 3 && args.get(2).equalsIgnoreCase("maps")) // User's map stats in CS:GO
-                    {
+                    } else if (args.size() == 3 && args.get(2).equalsIgnoreCase("maps")) /*User's map stats in CS:GO */ {
                         embedBuilder.withTitle("Map Wins for " + userName);
                         embedBuilder.appendField("Office", Integer.toString(csgoStats.getJSONObject(28).getInt("value")), true);
                         embedBuilder.appendField("Cobble", Integer.toString(csgoStats.getJSONObject(29).getInt("value")), true);
@@ -131,8 +126,7 @@ public class Steam implements Command.Class  {
                         embedBuilder.appendField("Inferno", Integer.toString(csgoStats.getJSONObject(31).getInt("value")), true);
                         embedBuilder.appendField("Train", Integer.toString(csgoStats.getJSONObject(33).getInt("value")), true);
                         embedBuilder.appendField("Nuke", Integer.toString(csgoStats.getJSONObject(32).getInt("value")), true);
-                    } else if (args.size() == 3 && args.get(2).equalsIgnoreCase("lastmatch")) // User's last match in CS:GO
-                    {
+                    } else if (args.size() == 3 && args.get(2).equalsIgnoreCase("lastmatch")) /*User's last match stats in CS:GO */ {
                         embedBuilder.withTitle(userName + "'s last game");
                         embedBuilder.appendField("Round Wins", Integer.toString(csgoStats.getJSONObject(81).getInt("value") + csgoStats.getJSONObject(82).getInt("value")), true);
                         embedBuilder.appendField("Kills", Integer.toString(csgoStats.getJSONObject(85).getInt("value")), true);
@@ -142,7 +136,8 @@ public class Steam implements Command.Class  {
                     }
                     else {
                         // If none of those were selected
-                        messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam csgo **steam name** **nothing" +
+                                "/kills/maps/lastmatch");
                         return;
                     }
 
@@ -150,14 +145,12 @@ public class Steam implements Command.Class  {
                     messageHandler.sendEmbed(embedBuilder);
                 } else {
                     // If neither the profile or CS:GO were accessed
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam profile **steam name**");
                 }
             } catch (JSONException e1) {
                 e1.printStackTrace();
-            } catch (RuntimeException ee)
-            {
-                if (ee.getMessage().contains("429"))
-                {
+            } catch (RuntimeException ee) {
+                if (ee.getMessage().contains("429")) {
                     messageHandler.sendError("Too Many Requests!");
                     return;
                 }

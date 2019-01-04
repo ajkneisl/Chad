@@ -1,8 +1,9 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.util.stream.Collectors;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
@@ -11,10 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
+ * Gets info about a discord user
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class UserInfo implements Command.Class {
     @Override
@@ -28,7 +31,7 @@ public class UserInfo implements Command.Class {
                 u = e.getMessage().getMentions().get(0);
             else {
                 // If user wasn't mentioned, return
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_USER, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "userinfo **@user**");
                 return;
             }
 
@@ -70,7 +73,7 @@ public class UserInfo implements Command.Class {
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("userinfo <user/@user>", "Gives information about the mentioned user.");
+        st.put("userinfo <@user>", "Gives information about the mentioned user.");
         return Command.helpCommand(st, "User Info", e);
     }
 }

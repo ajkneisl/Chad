@@ -1,14 +1,12 @@
 package org.woahoverflow.chad.core.listener;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
-import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
@@ -17,14 +15,15 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RequestBuffer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The Discord guild and join events
+ * The Discord guild join and leave events
  *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
-public final class GuildJoinLeave
-{
+public final class GuildJoinLeave {
     /**
      * Discord's Joining Guild Event
      *
@@ -32,8 +31,7 @@ public final class GuildJoinLeave
      */
     @EventSubscriber
     @SuppressWarnings({"unused", "unchecked"})
-    public void joinGuild(GuildCreateEvent event)
-    {
+    public void joinGuild(GuildCreateEvent event) {
         // Makes sure all users are into the database
         Chad.runThread(() -> event.getGuild().getUsers().forEach(user ->
             Chad.runThread(() -> {
@@ -48,8 +46,7 @@ public final class GuildJoinLeave
                 }
             }, Chad.getInternalConsumer())), Chad.getInternalConsumer());
 
-        if (!DatabaseManager.GUILD_DATA.documentExists(event.getGuild().getLongID()))
-        {
+        if (!GuildHandler.handle.guildDataExists(event.getGuild().getLongID())) {
             // By retrieving the guild's instance, it creates an instance for the guild within the database
             Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
 
@@ -70,18 +67,15 @@ public final class GuildJoinLeave
             // If the bot has permission to, send the join message into the default channel
             if (RequestBuffer.request(() -> defaultChannel.getModifiedPermissions(event.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES)).get())
                 RequestBuffer.request(() -> event.getGuild().getDefaultChannel().sendMessage(joinMessage));
-            else
-            {
+            else {
                 // Parse through all of the guilds, and if the bot has permission send the join message.
                 List<IChannel> guilds = RequestBuffer.request(() -> event.getGuild().getChannels()).get();
                 int channelSize = guilds.size();
 
-                for (int i = 0; channelSize > i; i++)
-                {
+                for (int i = 0; channelSize > i; i++) {
                     IChannel channel = guilds.get(0);
 
-                    if (RequestBuffer.request(() -> channel.getModifiedPermissions(event.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES)).get())
-                    {
+                    if (RequestBuffer.request(() -> channel.getModifiedPermissions(event.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES)).get()) {
                         RequestBuffer.request(() -> channel.sendMessage(joinMessage));
                     }
                 }

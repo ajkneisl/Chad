@@ -1,15 +1,17 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.util.HashMap;
-import java.util.List;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
+ * The recent changes
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class ChangeLog implements Command.Class
 {

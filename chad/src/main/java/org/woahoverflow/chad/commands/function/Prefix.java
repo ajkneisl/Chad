@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -12,8 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Sets the prefix for the guild
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class Prefix implements Command.Class  {
 
@@ -26,8 +27,7 @@ public class Prefix implements Command.Class  {
             Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // If there's no arguments, show the prefix
-            if (args.isEmpty())
-            {
+            if (args.isEmpty()) {
                 // Sends
                 messageHandler.sendEmbed(new EmbedBuilder()
                     .withDesc((String) guild.getObject(DataType.PREFIX))
@@ -36,8 +36,7 @@ public class Prefix implements Command.Class  {
             }
 
             // If the arguments are 2, set the prefix
-            if (args.size() == 2 && args.get(0).equalsIgnoreCase("set"))
-            {
+            if (args.size() == 2 && args.get(0).equalsIgnoreCase("set")) {
                 // Gets the current prefix
                 String prefix = (String) guild.getObject(Guild.DataType.PREFIX);
 
@@ -45,8 +44,7 @@ public class Prefix implements Command.Class  {
                 final String newPrefix = args.get(1);
 
                 // Makes sure the prefix isn't over 6 characters long
-                if (newPrefix.length() > 6)
-                {
+                if (newPrefix.length() > 6) {
                     messageHandler.sendError("Prefix can't be over 6 characters long!");
                     return;
                 }
@@ -62,7 +60,7 @@ public class Prefix implements Command.Class  {
                 return;
             }
 
-            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, guild.getObject(DataType.PREFIX) + "prefix set **new prefix**");
         };
     }
 

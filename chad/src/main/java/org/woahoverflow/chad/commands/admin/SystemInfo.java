@@ -1,18 +1,19 @@
 package org.woahoverflow.chad.commands.admin;
 
 import com.sun.management.OperatingSystemMXBean;
-import java.lang.management.ManagementFactory;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Gives info about the system via discord
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class SystemInfo implements Command.Class  {
 

@@ -7,7 +7,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
-import java.util.HashMap
+import java.util.*
 import java.util.Random
 
 /**
@@ -15,7 +15,6 @@ import java.util.Random
  * (don't get offended by any of the subreddits or their contents, as it's not my material)
  *
  * @author sho
- * @since 0.7.0
  */
 class Meme : Command.Class {
     override fun help(e: MessageReceivedEvent): Runnable {

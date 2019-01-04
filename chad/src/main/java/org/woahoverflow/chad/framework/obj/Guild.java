@@ -1,14 +1,18 @@
 package org.woahoverflow.chad.framework.obj;
 
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 
-public class Guild
-{
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Information about a cached guild
+ *
+ * @author sho
+ */
+public class Guild {
     /**
      * The guild's ID
      */
@@ -17,8 +21,7 @@ public class Guild
     /**
      * The types of data you can request from a guild.
      */
-    public enum DataType
-    {
+    public enum DataType {
         // Main
         PREFIX,
 
@@ -65,8 +68,7 @@ public class Guild
     /**
      * Default Constructor, sets it with default data.
      */
-    public Guild(long guild)
-    {
+    public Guild(long guild) {
         this.guild = guild;
 
         // Main
@@ -115,8 +117,7 @@ public class Guild
      *
      * @param guildData The preset values
      */
-    public Guild(ConcurrentHashMap<DataType, Object> guildData, long guild)
-    {
+    public Guild(ConcurrentHashMap<DataType, Object> guildData, long guild) {
         this.guildData = guildData;
         this.guild = guild;
 
@@ -130,8 +131,7 @@ public class Guild
      * @param dataType The data type to set
      * @param value The value to set it to
      */
-    public void setObject(DataType dataType, Object value)
-    {
+    public void setObject(DataType dataType, Object value) {
         guildData.put(dataType, value);
 
         DatabaseManager.GUILD_DATA.setObject(guild, dataType.toString().toLowerCase(), value);
@@ -143,8 +143,7 @@ public class Guild
      * @param dataType The data type to retrieve
      * @return The retrieved data
      */
-    public Object getObject(DataType dataType)
-    {
+    public Object getObject(DataType dataType) {
         return guildData.get(dataType);
     }
 
@@ -154,8 +153,7 @@ public class Guild
      * @param dataType The data's key
      * @return The retrieved data
      */
-    public Object getObject(String dataType)
-    {
+    public Object getObject(String dataType) {
         return DatabaseManager.USER_DATA.getObject(guild, dataType);
     }
 
@@ -176,8 +174,7 @@ public class Guild
      * @return The role's permissions
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<String> getRolePermissions(long role)
-    {
+    public ArrayList<String> getRolePermissions(long role) {
         // If the data's in the permission hash-map, return that
         if (permissionData.containsKey(role))
             return permissionData.get(role);
@@ -208,7 +205,7 @@ public class Guild
         } catch (ClassCastException castException)
         {
             // If it for some reason doesn't cast properly
-            ChadBot.getLogger().error("Permission set failed to cast to an array-list!", castException);
+            ChadInstance.getLogger().error("Permission set failed to cast to an array-list!", castException);
             return new ArrayList<>();
         }
 
@@ -226,8 +223,7 @@ public class Guild
      * @param command The command to add
      * @return The error/success code
      */
-    public int addPermissionToRole(long role, String command)
-    {
+    public int addPermissionToRole(long role, String command) {
         // Get the role's permissions
         ArrayList<String> permissionSet = getRolePermissions(role);
 
@@ -258,8 +254,7 @@ public class Guild
      * @param command The command to remove
      * @return The error/success code
      */
-    public int removePermissionFromRole(long role, String command)
-    {
+    public int removePermissionFromRole(long role, String command) {
         // Get the role's permissions
         ArrayList<String> permissionSet = getRolePermissions(role);
 
@@ -290,8 +285,7 @@ public class Guild
     /**
      * Updates message sent statistics
      */
-    public void messageSent()
-    {
+    public void messageSent() {
         messagesSent++;
         guildData.put(DataType.MESSAGES_SENT, messagesSent);
     }
@@ -299,8 +293,7 @@ public class Guild
     /**
      * Updates command sent statistics
      */
-    public void commandSent()
-    {
+    public void commandSent() {
         commandsSent++;
         guildData.put(DataType.COMMANDS_SENT, commandsSent);
     }
@@ -308,8 +301,7 @@ public class Guild
     /**
      * Clears the guild's statistics
      */
-    public void clearStatistics()
-    {
+    public void clearStatistics() {
         messagesSent = 0L;
         commandsSent = 0L;
         updateStatistics();
@@ -318,8 +310,7 @@ public class Guild
     /**
      * Updates the statistics into the database
      */
-    public void updateStatistics()
-    {
+    public void updateStatistics() {
         setObject(DataType.COMMANDS_SENT, commandsSent);
         setObject(DataType.MESSAGES_SENT, messagesSent);
     }

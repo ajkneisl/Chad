@@ -1,20 +1,20 @@
 package org.woahoverflow.chad.commands.function;
 
-import java.util.HashMap;
-import java.util.List;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Filters through swears
  *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class Swearing implements Command.Class {
 
@@ -26,8 +26,7 @@ public class Swearing implements Command.Class {
             Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
 
             // if there's no arguments, give statistics
-            if (args.isEmpty())
-            {
+            if (args.isEmpty()) {
                 // creates an embed builder and applies values
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.withTitle("Swear Filter");
@@ -41,8 +40,7 @@ public class Swearing implements Command.Class {
                 return;
             }
 
-            if (args.size() == 1 && args.get(0).equalsIgnoreCase("on") || args.get(0).equalsIgnoreCase("off"))
-            {
+            if (args.size() == 1 && args.get(0).equalsIgnoreCase("on") || args.get(0).equalsIgnoreCase("off")) {
                 // actual boolean value
                 boolean toggle = args.get(0).equalsIgnoreCase("on");
 
@@ -62,7 +60,7 @@ public class Swearing implements Command.Class {
                 return;
             }
 
-            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(DataType.PREFIX) + "swearfilter **on/off**");
         };
     }
 

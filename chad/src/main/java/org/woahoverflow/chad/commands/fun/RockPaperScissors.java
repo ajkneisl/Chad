@@ -1,37 +1,37 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.stream.Stream;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-
-import java.util.List;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Stream;
+
 /**
+ * Play Rock Paper Scissors with Chad
+ *
  * @author sho
- * @since 0.6.3 B2
  */
-public class RockPaperScissors implements Command.Class
-{
+public class RockPaperScissors implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
-        return () ->
-        {
+        return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // Checks if there's arguments
-            if (args.isEmpty())
-            {
+            if (args.isEmpty()) {
                 new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Arguments");
                 return;
             }
 
             // Makes sure the arguments are rock, paper and scissors
-            if (Stream.of("rock", "paper", "scissors").anyMatch(s -> args.get(0).equalsIgnoreCase(s)))
-            {
+            if (Stream.of("rock", "paper", "scissors").anyMatch(s -> args.get(0).equalsIgnoreCase(s))) {
                 // Gets Chad's value
                 int i2 = new SecureRandom().nextInt(3);
 
@@ -48,14 +48,13 @@ public class RockPaperScissors implements Command.Class
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc(calculateWinner(i, i2)));
             }
             else {
-                messageHandler.sendError("Invalid Arguments");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rps **rock/paper/scissors**");
             }
         };
     }
 
     // Builds the string for RPS
-    private static String calculateWinner(int i, int i2)
-    {
+    private static String calculateWinner(int i, int i2) {
         // 'i' is meant for the user's input
         // 'i2' is meant for the bot's input
 
@@ -72,7 +71,7 @@ public class RockPaperScissors implements Command.Class
                 chadValue = "Scissors";
                 break;
             default:
-                return MessageHandler.INTERNAL_EXCEPTION;
+                return "Internal Exception!";
         }
 
         // If they're both equal, tie

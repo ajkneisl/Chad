@@ -6,27 +6,23 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import java.io.*;
-
 import org.apache.commons.lang3.SystemUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.woahoverflow.chad.core.ChadBot;
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import org.woahoverflow.chad.framework.ui.UIHandler;
+
+import java.io.*;
 
 /**
  * Handles all web and local JSON content
  *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
-public class JsonHandler
-{
-
+public class JsonHandler {
     /**
      * The global handle of the JSON handler
      */
@@ -45,17 +41,15 @@ public class JsonHandler
      *
      * @return The handle
      */
-    private synchronized JsonHandler forceCheck()
-    {
+    private synchronized JsonHandler forceCheck() {
         if (SystemUtils.IS_OS_WINDOWS) {
-            ChadBot.getLogger().debug("Checking files as if OS is Windows", UIHandler.LogLevel.INFO);
+            ChadInstance.getLogger().debug("Checking files as if OS is Windows", UIHandler.LogLevel.INFO);
             if (!new File(System.getenv("appdata") + "\\chad").exists())
-                ChadBot.getLogger().debug("Created Chad Directory : " + new File(System.getenv("appdata") + "\\chad").mkdirs());
-            if (!new File(new File(System.getenv("appdata") + "\\chad") + "\\bot.json").exists())
-            {
+                ChadInstance.getLogger().debug("Created Chad Directory : " + new File(System.getenv("appdata") + "\\chad").mkdirs());
+            if (!new File(new File(System.getenv("appdata") + "\\chad") + "\\bot.json").exists()) {
                 File bot = new File(new File(System.getenv("appdata") + "\\chad") + "\\bot.json");
                 try {
-                    ChadBot.getLogger().debug("Created Bot JSON : " + bot.createNewFile());
+                    ChadInstance.getLogger().debug("Created Bot JSON : " + bot.createNewFile());
                 } catch (IOException e) {
                     ChadError.throwError("Error creating bot JSON!", e);
                 }
@@ -75,15 +69,14 @@ public class JsonHandler
         }
 
         if (SystemUtils.IS_OS_LINUX) {
-            ChadBot.getLogger().debug("Checking files as if OS is Linux", UIHandler.LogLevel.INFO);
+            ChadInstance.getLogger().debug("Checking files as if OS is Linux", UIHandler.LogLevel.INFO);
             File dir = new File("/home/" + System.getProperty("user.name") + "/chad");
             if (!dir.exists())
-                ChadBot.getLogger().debug("Created Chad Directory : " + dir.mkdirs());
-            if (!new File(dir + "/bot.json").exists())
-            {
+                ChadInstance.getLogger().debug("Created Chad Directory : " + dir.mkdirs());
+            if (!new File(dir + "/bot.json").exists()) {
                 File bot = new File(dir + "/bot.json");
                 try {
-                    ChadBot.getLogger().debug("Created Bot JSON : " + bot.createNewFile());
+                    ChadInstance.getLogger().debug("Created Bot JSON : " + bot.createNewFile());
                 } catch (IOException e) {
                     ChadError.throwError("Error creating bot JSON!", e);
                 }
@@ -112,8 +105,7 @@ public class JsonHandler
      * @return The retrieved object
      */
     @SuppressWarnings("all")
-    public synchronized String get(String entry)
-    {
+    public synchronized String get(String entry) {
         File file = null;
 
         if (SystemUtils.IS_OS_WINDOWS)
@@ -144,8 +136,7 @@ public class JsonHandler
      * @throws IOException With the Files.toString()
      */
     @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-    public synchronized void set(String object, String input) throws IOException
-    {
+    public synchronized void set(String object, String input) throws IOException {
         File file = null;
 
         if (SystemUtils.IS_OS_WINDOWS)

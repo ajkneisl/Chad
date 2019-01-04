@@ -2,9 +2,11 @@ package org.woahoverflow.chad.commands.info;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
@@ -13,24 +15,24 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Gets a new post from a subreddit
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class RedditNew implements Command.Class{
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // If there's no arguments
-            if (args.isEmpty())
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            if (args.isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rnew **subreddit name**");
                 return;
             }
 
-            if (args.get(0).length() < 3)
-            {
+            if (args.get(0).length() < 3) {
                 messageHandler.sendError("Invalid Subreddit");
                 return;
             }
@@ -42,16 +44,14 @@ public class RedditNew implements Command.Class{
                 JSONObject redditJson = JsonHandler.handle
                     .read("https://reddit.com/r/" + args.get(0) + "/new.json");
 
-                if (redditJson == null)
-                {
+                if (redditJson == null) {
                     messageHandler.sendError("Invalid Subreddit");
                     return;
                 }
 
                 if (redditJson
                     .getJSONObject("data")
-                    .getJSONArray("children").isEmpty())
-                {
+                    .getJSONArray("children").isEmpty()) {
                     messageHandler.sendError("Invalid Subreddit");
                     return;
                 }
@@ -64,8 +64,7 @@ public class RedditNew implements Command.Class{
 
 
                 // Makes sure the post isn't stickied
-                while (post.getBoolean("stickied"))
-                {
+                while (post.getBoolean("stickied")) {
                     index++;
                     post = redditJson
                         .getJSONObject("data")
@@ -83,9 +82,8 @@ public class RedditNew implements Command.Class{
             }
 
             // If the post is over 18 and the channel isn't Nsfw, deny.
-            if (post.getBoolean("over_18") && !e.getChannel().isNSFW())
-            {
-                messageHandler.sendError(MessageHandler.CHANNEL_NOT_NSFW);
+            if (post.getBoolean("over_18") && !e.getChannel().isNSFW()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.CHANNEL_NOT_NSFW);
                 return;
             }
 

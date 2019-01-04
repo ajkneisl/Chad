@@ -1,16 +1,18 @@
 package org.woahoverflow.chad.commands.music;
 
-import java.util.HashMap;
-import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
+ * Leaves and resets queue
+ *
  * @author sho
- * @since 0.7.0
  */
 public class Leave implements Command.Class {
 

@@ -1,21 +1,22 @@
 package org.woahoverflow.chad.commands.function;
 
-import java.util.stream.Collectors;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
-import sx.blah.discord.util.EmbedBuilder;
+import java.util.stream.Collectors;
 
 /**
+ * Add logging for specific triggers
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class Logging implements Command.Class  {
     @Override
@@ -24,19 +25,17 @@ public class Logging implements Command.Class  {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+            String prefix = ((String) guild.getObject(DataType.PREFIX));
 
             // Checks if there are any arguments
-            if (args.isEmpty())
-            {
-                messageHandler.sendError("Invalid Arguments!");
+            if (args.isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging **set** **on/off**");
                 return;
             }
 
             // Disables or Enables logging in the guild
-            if (args.size() == 2 && args.get(0).equalsIgnoreCase("set"))
-            {
-                if (args.get(1).equalsIgnoreCase("off") || args.get(1).equalsIgnoreCase("on"))
-                {
+            if (args.size() == 2 && args.get(0).equalsIgnoreCase("set")) {
+                if (args.get(1).equalsIgnoreCase("off") || args.get(1).equalsIgnoreCase("on")) {
                     // Sets the on or off
                     String bool = args.get(1).equalsIgnoreCase("on") ? "off" : "on";
 
@@ -56,12 +55,11 @@ public class Logging implements Command.Class  {
                     GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging **set** **on/off**");
                 return;
             }
 
-            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("setchannel"))
-            {
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("setchannel")) {
                 // Isolates the channel name
                 args.remove(0);
 
@@ -69,8 +67,7 @@ public class Logging implements Command.Class  {
                 String formattedString = args.stream().map(s -> s + ' ').collect(Collectors.joining());
 
                 // Makes sure the channel exists
-                if (e.getGuild().getChannelsByName(formattedString.trim()).isEmpty())
-                {
+                if (e.getGuild().getChannelsByName(formattedString.trim()).isEmpty()) {
                     messageHandler.sendError("Invalid Channel");
                     return;
                 }
@@ -78,17 +75,15 @@ public class Logging implements Command.Class  {
                 IChannel channel = e.getGuild().getChannelsByName(formattedString.trim()).get(0);
 
                 // Makes sure it's not null
-                if (channel == null)
-                {
+                if (channel == null) {
                     messageHandler.sendError("Invalid Channel");
                     return;
                 }
 
                 // Gets the current logging channel and makes sure it isn't null
                 String loggingChannel = (String) guild.getObject(Guild.DataType.LOGGING_CHANNEL);
-                if (loggingChannel == null)
-                {
-                    messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                if (loggingChannel == null) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                     return;
                 }
 

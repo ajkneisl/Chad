@@ -1,25 +1,26 @@
 package org.woahoverflow.chad.commands.admin;
 
-import java.util.concurrent.TimeUnit;
-import org.woahoverflow.chad.core.ChadBot;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.StatusType;
-
-import java.util.HashMap;
-import java.util.List;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 /**
+ * Shuts down the bot via discord
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class Shutdown implements Command.Class  {
 
@@ -48,8 +49,7 @@ public class Shutdown implements Command.Class  {
 
             boolean userReacted = false;
             int timeout = 0;
-            while (!userReacted)
-            {
+            while (!userReacted) {
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e1) {
@@ -57,8 +57,7 @@ public class Shutdown implements Command.Class  {
                 }
 
                 // If the user's taken more than 10 seconds
-                if (timeout >= 10)
-                {
+                if (timeout >= 10) {
                     messageHandler.sendError("You didn't react fast enough!");
                     return;
                 }
@@ -71,8 +70,7 @@ public class Shutdown implements Command.Class  {
                     userReacted = true;
 
                 // If they've denied
-                if (confirm.getReactionByEmoji(no).getUserReacted(e.getAuthor()))
-                {
+                if (confirm.getReactionByEmoji(no).getUserReacted(e.getAuthor())) {
                     messageHandler.sendError("Cancelled shutdown!");
                     return;
                 }
@@ -88,7 +86,7 @@ public class Shutdown implements Command.Class  {
             UIHandler.handle.addLog("Shutting down in 10 seconds...", UIHandler.LogLevel.SEVERE);
 
             // Updates the presence
-            ChadBot.cli.changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...");
+            ChadInstance.cli.changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...");
 
             // Waits 10 seconds
             try {
@@ -98,7 +96,7 @@ public class Shutdown implements Command.Class  {
             }
 
             // Exits
-            ChadBot.cli.logout();
+            ChadInstance.cli.logout();
             System.exit(0);
         };
     }

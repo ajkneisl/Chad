@@ -6,12 +6,11 @@ import sx.blah.discord.handle.audio.AudioEncodingType;
 import sx.blah.discord.handle.audio.IAudioProvider;
 
 /**
+ * The audio provider for music playing
+ *
  * @author sho
- * @since 0.7.0
  */
-public class AudioProvider implements IAudioProvider
-{
-
+public class AudioProvider implements IAudioProvider {
     /**
      * The Audio Player
      */
@@ -36,8 +35,7 @@ public class AudioProvider implements IAudioProvider
      */
     @Override
     public boolean isReady() {
-        if (lastFrame == null)
-        {
+        if (lastFrame == null) {
             lastFrame = audioPlayer.provide();
         }
 
@@ -72,8 +70,7 @@ public class AudioProvider implements IAudioProvider
      * @return Encoding type Opus
      */
     @Override
-    public AudioEncodingType getAudioEncodingType()
-    {
+    public AudioEncodingType getAudioEncodingType() {
         return AudioEncodingType.OPUS;
     }
 }

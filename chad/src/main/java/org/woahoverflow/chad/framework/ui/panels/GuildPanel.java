@@ -1,16 +1,12 @@
 package org.woahoverflow.chad.framework.ui.panels;
 
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
+ * A guild popup panel
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class GuildPanel extends JPanel {
 

@@ -1,13 +1,12 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.Player;
-import org.woahoverflow.chad.framework.obj.Player.DataType;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -17,20 +16,25 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 /**
+ * Marry a user
+ *
  * @author sho
- * @since 0.7.0
  */
 public class MarryPlayer implements Command.Class{
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // If they didn't mention anyone
-            if (e.getMessage().getMentions().isEmpty())
-            {
-                messageHandler.sendError(MessageHandler.NO_MENTIONS);
+            if (e.getMessage().getMentions().isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "marry **@user**");
                 return;
             }
 
@@ -38,8 +42,7 @@ public class MarryPlayer implements Command.Class{
             IUser otherPerson = e.getMessage().getMentions().get(0);
 
             // Make sure they're not marrying Chad or themselves
-            if (otherPerson.equals(e.getAuthor()) || otherPerson.equals(e.getClient().getOurUser()))
-            {
+            if (otherPerson.equals(e.getAuthor()) || otherPerson.equals(e.getClient().getOurUser())) {
                 messageHandler.sendError("You can't marry that person!");
                 return;
             }
@@ -54,29 +57,25 @@ public class MarryPlayer implements Command.Class{
             String[] otherPlayerMarryData = ((String) PlayerHandler.handle.getPlayer(otherPerson.getLongID()).getObject(DataType.MARRY_DATA)).split("&");
 
             // Makes sure it's just the username and the guild id
-            if (otherPlayerMarryData.length != 2)
-            {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+            if (otherPlayerMarryData.length != 2) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                 return;
             }
 
             // If they're already married
-            if (!(otherPlayerMarryData[0].equalsIgnoreCase("none") && otherPlayerMarryData[1].equalsIgnoreCase("none")))
-            {
+            if (!(otherPlayerMarryData[0].equalsIgnoreCase("none") && otherPlayerMarryData[1].equalsIgnoreCase("none"))) {
                 messageHandler.sendError(otherPerson.getName() + " is already married!");
                 return;
             }
 
             // Makes sure it's just the username and the guild id
-            if (playerMarryData.length != 2)
-            {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+            if (playerMarryData.length != 2) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                 return;
             }
 
             // If they're already married
-            if (!(playerMarryData[0].equalsIgnoreCase("none") && playerMarryData[1].equalsIgnoreCase("none")))
-            {
+            if (!(playerMarryData[0].equalsIgnoreCase("none") && playerMarryData[1].equalsIgnoreCase("none"))) {
                 messageHandler.sendError("You're already married!");
                 return;
             }
@@ -100,11 +99,9 @@ public class MarryPlayer implements Command.Class{
             boolean reacted = true;
             int timeout = 0;
 
-            while (reacted)
-            {
+            while (reacted) {
                 // If it's been 10 seconds, exit
-                if (timeout == 10)
-                {
+                if (timeout == 10) {
                     messageHandler.sendError(otherPerson.getName()+" didn't respond in time!");
                     return;
                 }
@@ -128,8 +125,7 @@ public class MarryPlayer implements Command.Class{
                     reacted = false;
 
                 // Checks if the user reacted with the N
-                if (nReaction.getUserReacted(otherPerson))
-                {
+                if (nReaction.getUserReacted(otherPerson)) {
                     messageHandler.sendError("User denied!");
                     return;
                 }

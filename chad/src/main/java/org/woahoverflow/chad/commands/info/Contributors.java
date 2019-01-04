@@ -1,20 +1,21 @@
 package org.woahoverflow.chad.commands.info;
 
-import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
+ * The contributors to Chad :)
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class Contributors implements Command.Class {
 
@@ -29,16 +30,14 @@ public class Contributors implements Command.Class {
             JSONArray o = JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json");
 
             // Checks if the user is trying to see a specific profile
-            if (args.size() == 2 && args.get(0).equalsIgnoreCase("view"))
-            {
+            if (args.size() == 2 && args.get(0).equalsIgnoreCase("view")) {
                 JSONObject object = null;
                 for (Object obj : o)
                     if (((JSONObject) obj).getString("display_name").equalsIgnoreCase(args.get(1))) // Checks if the user found is the user that was requested
                         object = (JSONObject) obj;
 
                 // Checks to see if it actually found a correct user.
-                if (object == null)
-                {
+                if (object == null) {
                     messageHandler.sendError("Invalid User");
                     return;
                 }

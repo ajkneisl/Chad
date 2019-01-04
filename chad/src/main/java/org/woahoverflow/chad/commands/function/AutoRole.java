@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.commands.function;
 
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
+import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
@@ -15,8 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Automatically adds a role to a user when they join a server
+ *
  * @author codebasepw
- * @since 0.6.3 B2
  */
 public class AutoRole implements Command.Class  {
 
@@ -24,11 +25,11 @@ public class AutoRole implements Command.Class  {
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
 
             // Makes sure the arguments are empty
-            if (args.isEmpty())
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            if (args.isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole **on/off/set**");
                 return;
             }
 
@@ -79,8 +80,7 @@ public class AutoRole implements Command.Class  {
                     }
 
                     // If there's no roles, return
-                    if (roles.isEmpty())
-                    {
+                    if (roles.isEmpty()) {
                         messageHandler.sendError("Invalid Role!");
                         return;
                     }
@@ -100,7 +100,7 @@ public class AutoRole implements Command.Class  {
                     messageHandler.sendEmbed(embedBuilder3);
                     break;
                 default:
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole **on/off/set**");
                     break;
             }
         };

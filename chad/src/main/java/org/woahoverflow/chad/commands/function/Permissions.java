@@ -1,11 +1,10 @@
 package org.woahoverflow.chad.commands.function;
 
-import java.util.regex.Pattern;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
@@ -15,10 +14,12 @@ import sx.blah.discord.util.RequestBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
+ * Give or revoke command permissions
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class Permissions implements Class  {
 
@@ -28,10 +29,10 @@ public class Permissions implements Class  {
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
 
             // Accesses the permissions to a specific role
-            if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role"))
-            {
+            if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role")) {
                 // Removes the base argument, in this case "role", so it can get the role name
                 args.remove(0);
 
@@ -41,8 +42,7 @@ public class Permissions implements Class  {
                 int i = 0;
 
                 // Builds the role name
-                for (String s : args)
-                {
+                for (String s : args) {
                     // Adds the amount of arguments used in the role name so they can be removed later
                     i++;
 
@@ -63,15 +63,13 @@ public class Permissions implements Class  {
                 }
 
                 // Make sure there's enough arguments for the rest
-                if (args.size() == i)
-                {
+                if (args.size() == i) {
                     messageHandler.sendError("Invalid Role!");
                     return;
                 }
 
                 // Makes sure role isn't null
-                if (role == null)
-                {
+                if (role == null) {
                     messageHandler.sendError("Invalid Role!");
                     return;
                 }
@@ -96,9 +94,8 @@ public class Permissions implements Class  {
                 switch (option.toLowerCase()) {
                     case "add":
                         // The add can only add 1 command
-                        if (args.size() != 1)
-                        {
-                            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                        if (args.size() != 1) {
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] add **command name**");
                             return;
                         }
 
@@ -116,9 +113,8 @@ public class Permissions implements Class  {
                         return;
                     case "remove":
                         // The remove can only remove 1 command
-                        if (args.size() != 1)
-                        {
-                            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                        if (args.size() != 1) {
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] remove **command name**");
                             return;
                         }
 
@@ -157,18 +153,18 @@ public class Permissions implements Class  {
                         messageHandler.sendEmbed(embedBuilder);
                         return;
                     default:
-                        messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] **add/remove/view**");
                         return;
                 }
             }
-            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role **role name** **add/remove/view**");
         };
     }
 
     @Override
     public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("perm role <role name> add <command>", "Adds a Chad command to a Discord role.");
+        st.put("perm role <role name> add <command>", "Adds a Chad command to a Discord role..");
         st.put("perm role <role name> remove <command>", "Removes a Chad command to a Discord role.");
         st.put("perm role <role name> view", "Displays all Chad commands tied to that Discord role.");
         return Command.helpCommand(st, "Permissions", e);

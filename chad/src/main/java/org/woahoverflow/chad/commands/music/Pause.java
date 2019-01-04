@@ -1,21 +1,21 @@
 package org.woahoverflow.chad.commands.music;
 
-import java.util.HashMap;
-import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
-/**
- * @author sho
- * @since 0.7.0
- */
-public class Pause implements Command.Class
-{
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * Pauses the guild's player
+ *
+ * @author sho
+ */
+public class Pause implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -25,8 +25,7 @@ public class Pause implements Command.Class
             IVoiceChannel channel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
 
             // If it's connected
-            if (channel == null)
-            {
+            if (channel == null) {
                 messageHandler.sendError("I'm not connected!");
                 return;
             }
@@ -53,6 +52,6 @@ public class Pause implements Command.Class
     public Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("pause", "Pauses the currently playing music.");
-        return Command.helpCommand(st, "Stop", e);
+        return Command.helpCommand(st, "Pause", e);
     }
 }

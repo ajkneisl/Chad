@@ -11,14 +11,12 @@ import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Player
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
-import java.lang.StringBuilder
-import java.util.HashMap
+import java.util.*
 
 /**
  * Developer options, created in Kotlin :)
  *
  * @author sho
- * @since 0.7.1
  */
 class DeveloperSettings : Command.Class {
     override fun help(e: MessageReceivedEvent): Runnable {
@@ -31,9 +29,10 @@ class DeveloperSettings : Command.Class {
     override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
+            val prefix = GuildHandler.handle.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             if (args.isEmpty()) {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}cfg view")
                 return@Runnable
             }
 
@@ -49,8 +48,8 @@ class DeveloperSettings : Command.Class {
             when (args[0].toLowerCase()) {
                 // If they're adjusting a guild/user's data
                 "adj" -> {
-                    if (args.size == 1) {
-                        messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                    if (args.size >= 4) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}cfg adj **guild/user** **id**")
                         return@Runnable
                     }
 
@@ -60,7 +59,7 @@ class DeveloperSettings : Command.Class {
                         try {
                             args[2].toLong()
                         } catch (e: NumberFormatException) {
-                            messageHandler.sendError("Invalid ID!")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[2])
                             return@Runnable
                         }
 
@@ -69,13 +68,13 @@ class DeveloperSettings : Command.Class {
 
                         // Just to try to remove the possibility of inputting an invalid guild
                         if (id.toString().length != 18) {
-                            messageHandler.sendError("Invalid ID!")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[2])
                             return@Runnable
                         }
 
                         // If the guild doesn't already exist, don't do it
                         if (!GuildHandler.handle.guildExists(id)) {
-                            messageHandler.sendError("Invalid ID!")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[2])
                             return@Runnable
                         }
 
@@ -84,7 +83,7 @@ class DeveloperSettings : Command.Class {
                         var datatype = Guild.DataType.values()[0]
                         var success = false
 
-                        // Parse through the datatypes to see if it's valid
+                        // Parse through the data types to see if it's valid
                         for (type in Guild.DataType.values()) {
                             if (args[3].equals(type.toString(), true)) {
                                 datatype = type
@@ -94,7 +93,7 @@ class DeveloperSettings : Command.Class {
 
                         // If it's invalid
                         if (!success) {
-                            messageHandler.sendError("Invalid Type")
+                            messageHandler.sendError("Invalid Data Type!")
                             return@Runnable
                         }
 
@@ -116,11 +115,11 @@ class DeveloperSettings : Command.Class {
                             try {
                                 string.removeSuffix("!long").toLong()
                             } catch (e: Exception) {
-                                messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid Long!"))
+                                messageHandler.sendError("Invalid Long!")
                                 return@Runnable
                             }
                             guild.setObject(datatype, string.removeSuffix("!long").toLong())
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!long").toLong()}`!"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!long").toLong()}` on guild `${args[2]}`!"))
                             return@Runnable
                         }
 
@@ -128,29 +127,29 @@ class DeveloperSettings : Command.Class {
                             try {
                                 string.removeSuffix("!int").toInt()
                             } catch (e: Exception) {
-                                messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid Integer!"))
+                                messageHandler.sendError("Invalid Integer!")
                                 return@Runnable
                             }
                             guild.setObject(datatype, string.removeSuffix("!int").toInt())
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!int").toInt()}"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!int").toInt()} on guild `${args[2]}`!"))
                             return@Runnable
                         }
 
                         // If it's true, set as true
                         if (string.equals("true", true)) {
                             guild.setObject(datatype, true)
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed ${datatype.toString().toLowerCase()} to `true`!"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed ${datatype.toString().toLowerCase()} to `true` on guild `${args[2]}`!"))
                         }
 
                         // If it's false, set as false
                         if (string.equals("false", true)) {
                             guild.setObject(datatype, false)
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `false`!"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `false` on guild `${args[2]}`!"))
                             return@Runnable
                         }
 
                         guild.setObject(datatype, string)
-                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `$string`!"))
+                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `$string` on guild `${args[2]}`!"))
                         return@Runnable
                     }
 
@@ -159,7 +158,7 @@ class DeveloperSettings : Command.Class {
                         try {
                             args[2].toLong()
                         } catch (e: NumberFormatException) {
-                            messageHandler.sendError("Invalid ID!")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[2])
                             return@Runnable
                         }
 
@@ -167,13 +166,13 @@ class DeveloperSettings : Command.Class {
 
                         // Just to try to remove the possibility of inputting an invalid user
                         if (id.toString().length != 18) {
-                            messageHandler.sendError("Invalid ID!")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[2])
                             return@Runnable
                         }
 
                         // If the user doesn't already exist, don't do it
                         if (!PlayerHandler.handle.playerExists(id)) {
-                            messageHandler.sendError("Invalid ID!")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[2])
                             return@Runnable
                         }
 
@@ -190,7 +189,7 @@ class DeveloperSettings : Command.Class {
                         }
 
                         if (!success) {
-                            messageHandler.sendError("Invalid Type")
+                            messageHandler.sendError("Invalid Data Type!")
                             return@Runnable
                         }
 
@@ -211,11 +210,11 @@ class DeveloperSettings : Command.Class {
                             try {
                                 string.removeSuffix("!long").toLong()
                             } catch (e: Exception) {
-                                messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid Long!"))
+                                messageHandler.sendError("Invalid Long!")
                                 return@Runnable
                             }
                             player.setObject(datatype, string.removeSuffix("!long").toLong())
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!long").toLong()}`!"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!long").toLong()}` on user `${args[2]}`!"))
                             return@Runnable
                         }
 
@@ -227,37 +226,34 @@ class DeveloperSettings : Command.Class {
                                 return@Runnable
                             }
                             player.setObject(datatype, string.removeSuffix("!int").toInt())
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!int").toInt()}"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `${string.removeSuffix("!int").toInt()} on user `${args[2]}`!"))
                             return@Runnable
                         }
 
                         // If it's true, set as true
                         if (string.equals("true", true)) {
                             player.setObject(datatype, true)
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed ${datatype.toString().toLowerCase()} to `true`!"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed ${datatype.toString().toLowerCase()} to `true` on user `${args[2]}`!"))
                             return@Runnable
                         }
 
                         // If it's false, set as false
                         if (string.equals("false", true)) {
                             player.setObject(datatype, false)
-                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `false`!"))
+                            messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `false` on user `${args[2]}`!"))
                             return@Runnable
                         }
 
                         player.setObject(datatype, string)
-                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `$string`!"))
+                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Changed `${datatype.toString().toLowerCase()}` to `$string` on user `${args[2]}`!"))
                         return@Runnable
                     }
-
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
-                    return@Runnable
                 }
 
                 // If they're updating cache values
                 "cache" -> {
                     // If there's only one argument, assume they're trying to get the possible options
-                    if (args.size == 1) {
+                    if (args.size != 3) {
                         messageHandler.sendEmbed(EmbedBuilder().withDesc("Caching Options" +
                                 "\n\n**reset <type>** Resets a cached area.\nValid: __eightball__, __swearwords__, __guilds__, __users__, __developers__"))
 
@@ -331,15 +327,12 @@ class DeveloperSettings : Command.Class {
                             }
                         }
                     }
-
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
                     return@Runnable
                 }
 
                 "devs" -> {
-
                     if (args.size == 1) {
-                        messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}cfg devs **view/remove/add**")
                         return@Runnable
                     }
 
@@ -359,7 +352,7 @@ class DeveloperSettings : Command.Class {
                         "remove" -> {
                             // cfg devs remove id
                             if (args.size != 3) {
-                                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}cfg devs remove **id**")
                                 return@Runnable
                             }
 
@@ -394,7 +387,7 @@ class DeveloperSettings : Command.Class {
                         "add" -> {
                             // cfg devs add id
                             if (args.size != 3) {
-                                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}cfg devs add **id**")
                                 return@Runnable
                             }
 
@@ -427,14 +420,14 @@ class DeveloperSettings : Command.Class {
                         }
 
                         else -> {
-                            messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}cfg devs **view/remove/add**")
                             return@Runnable
                         }
                     }
                 }
 
                 else -> {
-                    messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS)
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}cfg view")
                     return@Runnable
                 }
             }

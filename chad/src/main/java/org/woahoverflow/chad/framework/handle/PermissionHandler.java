@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.framework.handle;
 
-import java.util.stream.Stream;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
@@ -8,17 +7,16 @@ import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
-
 import sx.blah.discord.handle.obj.Permissions;
+
+import java.util.stream.Stream;
 
 /**
  * Handles permissions within Chad
  *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
-public class PermissionHandler
-{
+public class PermissionHandler {
     /**
      * The global handle for the Permission Handler
      */
@@ -30,8 +28,7 @@ public class PermissionHandler
      * @param user The user
      * @return If they're a verified developer
      */
-    public boolean userIsDeveloper(IUser user)
-    {
+    public boolean userIsDeveloper(IUser user) {
         return ChadVar.DEVELOPERS.contains(user.getLongID());
     }
 
@@ -43,8 +40,7 @@ public class PermissionHandler
      * @param guild The guild in which it's happening
      * @return If the user doesn't have permission to use it
      */
-    public boolean userNoPermission(String command, IUser user, IGuild guild)
-    {
+    public boolean userNoPermission(String command, IUser user, IGuild guild) {
         Class cmd = ChadVar.COMMANDS.get(command).getCommandClass();
 
         Guild guildInstance = GuildHandler.handle.getGuild(guild.getLongID());
@@ -78,8 +74,7 @@ public class PermissionHandler
      * @param i The error code
      * @return The parsed string
      */
-    public String parseErrorCode(int i)
-    {
+    public String parseErrorCode(int i) {
         if (i == 1)
             return "This role already has this command!";
         if (i == 2)

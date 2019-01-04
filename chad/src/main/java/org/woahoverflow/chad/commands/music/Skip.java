@@ -1,20 +1,21 @@
 package org.woahoverflow.chad.commands.music;
 
-import java.util.HashMap;
-import java.util.List;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
+ * Skips songs within the guild's music player
+ *
  * @author sho
- * @since 0.7.0
  */
-public class Skip implements Command.Class
-{
+public class Skip implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -27,8 +28,7 @@ public class Skip implements Command.Class
             IVoiceChannel channel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
 
             // Makes sure that Chad is playing music
-            if (channel == null || manager.player.isPaused())
-            {
+            if (channel == null || manager.player.isPaused()) {
                 messageHandler.sendMessage("Chad isn't playing music!");
                 return;
             }
@@ -40,8 +40,7 @@ public class Skip implements Command.Class
             }
 
             // If they wanted to skip all
-            if (args.size() == 1 && args.get(0).equalsIgnoreCase("all"))
-            {
+            if (args.size() == 1 && args.get(0).equalsIgnoreCase("all")) {
                 manager.clear();
 
                 messageHandler.sendError("Queue is empty, leaving!");
@@ -53,8 +52,7 @@ public class Skip implements Command.Class
             }
 
             // If there's a next track, play that
-            if (manager.scheduler.nextTrack())
-            {
+            if (manager.scheduler.nextTrack()) {
                 messageHandler.sendMessage("Skipped current song!");
                 return;
             }

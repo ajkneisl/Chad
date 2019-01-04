@@ -5,18 +5,26 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.handle.obj.Permissions;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.woahoverflow.chad.core.ChadVar.playerManager;
 
+/**
+ * Searches SoundCloud for videos/music to play
+ *
+ * @author sho
+ */
 public class SoundCloud implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
@@ -48,10 +56,9 @@ public class SoundCloud implements Command.Class {
             // The guild's music manager
             GuildMusicManager manager = Chad.getMusicManager(e.getGuild());
 
-            // Makes sure there's 1+ arguments [.yt (name)]
-            if (!(args.size() >= 1))
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            // Makes sure there's 1+ arguments [.sc (name)]
+            if (!(args.size() >= 1)) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "sc **name of song**");
                 return;
             }
 
@@ -67,7 +74,6 @@ public class SoundCloud implements Command.Class {
             // Queues the song
             playerManager.loadItemOrdered(manager, "scsearch:"+string,
                     new AudioLoadResultHandler() {
-
                         // When a track is loaded (https, not used)
                         @Override
                         public void trackLoaded(AudioTrack track) {
@@ -120,13 +126,15 @@ public class SoundCloud implements Command.Class {
                         @Override
                         public void loadFailed(FriendlyException exception) {
                             exception.printStackTrace();
-                            messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                            messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                         }
                     });
         };
     }
     @Override
     public Runnable help(MessageReceivedEvent e) {
-        return null;
+        HashMap<String, String> st = new HashMap<>();
+        st.put("sc <song name>", "Searches & Plays a song from SoundCloud.");
+        return Command.helpCommand(st, "SoundCloud", e);
     }
 }

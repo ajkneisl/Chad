@@ -1,24 +1,26 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.util.HashMap;
-import java.util.List;
-import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.Player;
-import org.woahoverflow.chad.framework.obj.Player.DataType;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Player;
+import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
+ * Divorces a player if a player is married
+ *
+ * @see MarryPlayer
  * @author sho
- * @since 0.7.0
  */
-public class DivorcePlayer implements Command.Class
-{
+public class DivorcePlayer implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -29,15 +31,13 @@ public class DivorcePlayer implements Command.Class
             String[] playerMarryData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
 
             // Makes sure it's just the username and the guild id
-            if (playerMarryData.length != 2)
-            {
-                messageHandler.sendError(MessageHandler.INVALID_ARGUMENTS);
+            if (playerMarryData.length != 2) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                 return;
             }
 
             // If either are none, return
-            if (playerMarryData[0].equalsIgnoreCase("none") || playerMarryData[1].equalsIgnoreCase("none"))
-            {
+            if (playerMarryData[0].equalsIgnoreCase("none") || playerMarryData[1].equalsIgnoreCase("none")) {
                 messageHandler.sendError("You aren't married to anyone!");
                 return;
             }
@@ -47,13 +47,12 @@ public class DivorcePlayer implements Command.Class
             try {
                 guild = e.getClient().getGuildByID(Long.parseLong(playerMarryData[1]));
             } catch (NumberFormatException throwaway) {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                 return;
             }
 
             // Makes sure the guild isn't deleted/doesn't exist
-            if (!Util.guildExists(e.getClient(), guild.getLongID()) || guild.isDeleted())
-            {
+            if (!Util.guildExists(e.getClient(), guild.getLongID()) || guild.isDeleted()) {
                 messageHandler.sendError("The user wasn't found, divorcing!");
                 player.setObject(DataType.MARRY_DATA, "none&none");
                 return;
@@ -64,7 +63,7 @@ public class DivorcePlayer implements Command.Class
             try {
                 user = guild.getUserByID(Long.parseLong(playerMarryData[0]));
             } catch (NumberFormatException throwaway) {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                 return;
             }
 

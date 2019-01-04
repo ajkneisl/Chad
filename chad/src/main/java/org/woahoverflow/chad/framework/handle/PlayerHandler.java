@@ -1,21 +1,28 @@
 package org.woahoverflow.chad.framework.handle;
 
 import com.mongodb.client.MongoCollection;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 import org.bson.Document;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
 
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Manages Player instances
+ *
  * @author sho, codebasepw
- * @since 0.7.0
  */
 public class PlayerHandler {
+    /**
+     * The public instance
+     */
     public static final PlayerHandler handle = new PlayerHandler();
 
+    /**
+     * The local cached players
+     */
     private final ConcurrentHashMap<Long, Player> players = new ConcurrentHashMap<>();
 
     /**
@@ -24,8 +31,7 @@ public class PlayerHandler {
      * @param player The player to check with
      * @return If it contains it
      */
-    public boolean playerExists(long player)
-    {
+    public boolean playerExists(long player) {
         return players.containsKey(player);
     }
 
@@ -34,8 +40,7 @@ public class PlayerHandler {
      *
      * @param user The user to refresh
      */
-    public void refreshPlayer(long user)
-    {
+    public void refreshPlayer(long user) {
         if (players.keySet().contains(user))
             players.put(user, getPlayer(user));
     }
@@ -45,8 +50,7 @@ public class PlayerHandler {
      *
      * @param user The user to remove
      */
-    public void removePlayer(long user)
-    {
+    public void removePlayer(long user) {
         // Removes it from the hashmap
         players.remove(user);
 
@@ -58,23 +62,6 @@ public class PlayerHandler {
         if (get == null)
             return;
         col.deleteOne(get);
-
-
-    }
-
-    /**
-     * Attacks a player
-     *
-     * @param user The user to attack
-     * @param damage The amount of damage to remove
-     */
-    public void attackPlayer(long user, int damage)
-    {
-        Player player = getPlayer(user);
-
-        //unregisterPlayer(user);
-
-        //registerPlayer(user, player);
     }
 
     /**
@@ -82,8 +69,7 @@ public class PlayerHandler {
      *
      * @param user The user's ID to register
      */
-    private Player createPlayer(long user)
-    {
+    private Player createPlayer(long user) {
         Document playerDocument = new Document();
 
         // The user's ID
@@ -104,7 +90,6 @@ public class PlayerHandler {
 
         playerDocument.put("last_daily_reward", "none");
 
-
         // Insert the new player=
         DatabaseManager.USER_DATA.collection.insertOne(playerDocument);
 
@@ -124,13 +109,11 @@ public class PlayerHandler {
      * @param playerDataDocument The player to get
      * @return The player retrieved
      */
-    private Player parsePlayer(Document playerDataDocument, long user)
-    {
+    private Player parsePlayer(Document playerDataDocument, long user) {
         final ConcurrentHashMap<DataType, Object> playerData = new ConcurrentHashMap<>();
 
         // Sets the data
-        for (DataType type : DataType.values())
-        {
+        for (DataType type : DataType.values()) {
             if (playerDataDocument.get(type.toString().toLowerCase()) == null)
             System.out.println(type.toString().toLowerCase());
             playerData.put(type, playerDataDocument.get(type.toString().toLowerCase()));
@@ -146,8 +129,7 @@ public class PlayerHandler {
      * @param swordHealth The user's starting swordHealth
      * @param shieldHealth The user's starting shieldHealth
      */
-    public Player createSetPlayer(long user, int playerHealth, int swordHealth, int shieldHealth, long balance)
-    {
+    public Player createSetPlayer(long user, int playerHealth, int swordHealth, int shieldHealth, long balance) {
         Document playerDocument = new Document();
 
         // The user's ID
@@ -198,16 +180,13 @@ public class PlayerHandler {
      *
      * @return The user's Player instance
      */
-    public Player getPlayer(long user)
-    {
+    public Player getPlayer(long user) {
         // If the user's in in the hash map, return it
-        if (players.containsKey(user))
-        {
+        if (players.containsKey(user)) {
             return players.get(user);
         }
 
-        if (userDataExists(user))
-        {
+        if (userDataExists(user)) {
             Document get = DatabaseManager.USER_DATA.collection.find(new Document("id", user)).first();
 
             if (get == null)
@@ -234,8 +213,7 @@ public class PlayerHandler {
      * @param user The user to check
      * @return If it exists
      */
-    private boolean userDataExists(long user)
-    {
+    private boolean userDataExists(long user) {
         Document get = DatabaseManager.USER_DATA.collection.find(new Document("id", user)).first();
         return get != null;
     }

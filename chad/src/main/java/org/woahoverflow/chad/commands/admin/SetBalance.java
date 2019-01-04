@@ -1,37 +1,38 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
-import sx.blah.discord.util.EmbedBuilder;
 
 /**
+ * Sets the balance of a user
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class SetBalance implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // Checks if the arguments is empty
-            if (args.isEmpty())
-            {
-                messageHandler.sendError("Invalid Arguments!");
+            if (args.isEmpty()) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "setbalance **new balance**");
                 return;
             }
 
             // If the arguments size is 0, set the value for the author
-            if (args.size() == 1)
-            {
+            if (args.size() == 1) {
                 // Makes sure the argument is actually a long
                 try {
                     Long.parseLong(args.get(0));
@@ -54,12 +55,10 @@ public class SetBalance implements Command.Class {
             }
 
             // If the arguments size is 2, set the value for another user
-            if (args.size() == 2)
-            {
+            if (args.size() == 2) {
                 // Checks if anyone is mentioned
-                if (e.getMessage().getMentions().isEmpty())
-                {
-                    messageHandler.sendError(MessageHandler.NO_MENTIONS);
+                if (e.getMessage().getMentions().isEmpty()) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS);
                     return;
                 }
 
@@ -88,7 +87,7 @@ public class SetBalance implements Command.Class {
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("setbal <amount> [@user]", "Registers your account with Chad.");
+        st.put("setbal <amount> [@user]", "Sets a user's balance.");
         return Command.helpCommand(st, "Set Balance", e);
     }
 }

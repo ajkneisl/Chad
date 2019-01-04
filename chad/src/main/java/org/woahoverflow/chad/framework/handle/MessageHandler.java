@@ -1,9 +1,5 @@
 package org.woahoverflow.chad.framework.handle;
 
-import java.awt.Color;
-import java.security.SecureRandom;
-import java.util.Random;
-import java.util.stream.Collectors;
 import org.apache.http.util.TextUtils;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
@@ -14,9 +10,13 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
+
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handles almost all messages within Chad
@@ -24,16 +24,43 @@ import java.util.List;
  * @author sho, codebasepw
  * @since 0.6.3 B2
  */
-public class MessageHandler
-{
-    // All the messages that're used in commands.
-    public static final String INVALID_USER = "That user couldn't be found!";
-    public static final String BOT_NO_PERMISSION = "Chad doesn't have permission for this!";
-    public static final String USER_NO_PERMISSION = "You don't have permission for this command!";
-    public static final String CHANNEL_NOT_NSFW = "This channel isn't NSFW!";
-    public static final String INVALID_ARGUMENTS = "Invalid arguments!\nHave you seen the help menu? For any command, just type `help` after it!";
-    public static final String NO_MENTIONS = "You didn't mention anyone!";
-    public static final String INTERNAL_EXCEPTION = "Internal exception!";
+public class MessageHandler {
+    public enum Messages {
+        INVALID_USER("That user couldn't be found!", 0), BOT_NO_PERMISSION("The bot doesn't have permission to perform this!", 0),
+        USER_NO_PERMISSION("You don't have permission to perform this!", 0), CHANNEL_NOT_NSFW("This channel isn't NSFW!", 0),
+        INVALID_ARGUMENTS("Invalid Usage!\nProper Usage: `<>`", 1),
+        NO_MENTIONS("You didn't mention anyone!\nProper Usage: `<>`", 1),
+        INTERNAL_EXCEPTION("Internal exception!", 0), INVALID_ID("Invalid ID!\n\nYou inputted: `<>`\nActual ID: `490728748501434369`", 1);
+
+        /**
+         * The message
+         */
+        private final String message;
+
+        /**
+         * The amount of replaceable areas in the message
+         */
+        private final int replaceable;
+
+        Messages(String message, int replaceable) {
+            this.message = message;
+            this.replaceable = replaceable;
+        }
+    }
+
+    /**
+     * Sends a preset error with build-in parameters
+     *
+     * @param message The preset error
+     * @param strings The arguments that message requires
+     */
+    public void sendPresetError(Messages message, String... strings) {
+        if (strings.length != message.replaceable) {
+            sendPresetError(Messages.INTERNAL_EXCEPTION);
+        }
+
+        sendError(Util.buildString(message.message, strings));
+    }
 
     /**
      * The channel to send messages to
@@ -61,8 +88,7 @@ public class MessageHandler
      * @param channel The channel to send the messages in
      * @param user The user who requested the message handler
      */
-    public MessageHandler(IChannel channel, IUser user)
-    {
+    public MessageHandler(IChannel channel, IUser user) {
         this.channel = channel;
 
         avatar_url = RequestBuffer.request(user::getAvatarURL).get();
@@ -75,8 +101,7 @@ public class MessageHandler
      * @param credit The credit to be given (ex: website)
      * @return This
      */
-    public MessageHandler credit(String credit)
-    {
+    public MessageHandler credit(String credit) {
         this.credit = credit;
 
         return this;
@@ -87,8 +112,7 @@ public class MessageHandler
      *
      * @param message The message to be sent
      */
-    public final void sendMessage(String message)
-    {
+    public final void sendMessage(String message) {
         // Makes sure the bot has permission in the guild
         if (!channel.getClient().getOurUser().getPermissionsForGuild(channel.getGuild()).contains(Permissions.SEND_MESSAGES))
             return;
@@ -102,8 +126,7 @@ public class MessageHandler
      *
      * @param embedBuilder The embed builder to send
      */
-    public final void sendEmbed(EmbedBuilder embedBuilder)
-    {
+    public final void sendEmbed(EmbedBuilder embedBuilder) {
         // Makes sure the bot has permission in the guild
         if (!channel.getClient().getOurUser().getPermissionsForGuild(channel.getGuild()).contains(Permissions.EMBED_LINKS))
             return;
@@ -129,8 +152,7 @@ public class MessageHandler
      *
      * @param error The error string to be sent
      */
-    public final void sendError(String error)
-    {
+    public final void sendError(String error) {
         // Creates an embed builder and applies the error to the description
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.withDesc(error);
@@ -145,8 +167,7 @@ public class MessageHandler
      * @param embedBuilder The embed to send
      * @param guild The guild to send in
      */
-    public static void sendLog(EmbedBuilder embedBuilder, IGuild guild)
-    {
+    public static void sendLog(EmbedBuilder embedBuilder, IGuild guild) {
         // Checks if logging is enabled
         if (!(Boolean) GuildHandler.handle.getGuild(guild.getLongID()).getObject(DataType.LOGGING))
             return;
@@ -166,8 +187,7 @@ public class MessageHandler
         IChannel loggingChannel;
         try {
             loggingChannel = RequestBuffer.request(() -> guild.getChannelByID(Long.parseLong(channelID))).get();
-        } catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             ChadError.throwError("Guild " + guild.getStringID() + "'s logging had an issue!", e);
             return;
         }
@@ -192,8 +212,7 @@ public class MessageHandler
      * @param guild The guild that it was performed in
      * @param reason The reason for the punishment
      */
-    public static void sendPunishLog(String punishment, IUser punished, IUser moderator, IGuild guild, List<String> reason)
-    {
+    public static void sendPunishLog(String punishment, IUser punished, IUser moderator, IGuild guild, List<String> reason) {
         // Creates a string of the reasons
         String sb = reason.stream().map(s -> s + ' ').collect(Collectors.joining());
 
@@ -214,8 +233,7 @@ public class MessageHandler
      * @param moderator The user who changed the value
      * @param guild The guild in which it was changed
      */
-    public static void sendConfigLog(String changedValue, String newValue, String oldValue, IUser moderator, IGuild guild)
-    {
+    public static void sendConfigLog(String changedValue, String newValue, String oldValue, IUser moderator, IGuild guild) {
         EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("Config Change : " + changedValue).appendField("New Value", newValue, true).appendField("Old Value", oldValue, true).appendField("Admin", moderator.getName(), true).withFooterText(Util.getTimeStamp());
         sendLog(embedBuilder, guild);
     }
@@ -225,8 +243,7 @@ public class MessageHandler
      *
      * @param file The file to be sent
      */
-    public final void sendFile(File file)
-    {
+    public final void sendFile(File file) {
         // Makes sure the bot has permission in the guild
         if (!channel.getClient().getOurUser().getPermissionsForGuild(channel.getGuild()).contains(Permissions.ATTACH_FILES))
             return;
@@ -234,8 +251,7 @@ public class MessageHandler
         RequestBuffer.request(() -> {
             try {
                 channel.sendFile(file);
-            } catch (FileNotFoundException e)
-            {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         });

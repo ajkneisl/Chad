@@ -1,8 +1,9 @@
 package org.woahoverflow.chad.commands.fun;
 
-import java.security.SecureRandom;
-import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
@@ -11,18 +12,19 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.RequestBuilder;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Play russian roulette with another user
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 public class RussianRoulette implements Command.Class {
     @Override
-    public final Runnable help(MessageReceivedEvent e)
-    {
+    public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rrl <user/@user>", "Plays russian roulette with a selected user.");
         return Command.helpCommand(st, "Russian Roulette", e);
@@ -32,19 +34,19 @@ public class RussianRoulette implements Command.Class {
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // Assigns the user to the mentioned user
             IUser unFinalUser;
             if (!e.getMessage().getMentions().isEmpty())
                 unFinalUser = e.getMessage().getMentions().get(0);
             else {
-                messageHandler.sendError(MessageHandler.NO_MENTIONS);
+                messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS, prefix + "rrl **@user**");
                 return;
             }
 
             // If the user equals themselves or chad, deny
-            if (unFinalUser.equals(e.getAuthor()) || unFinalUser.equals(e.getClient().getOurUser()))
-            {
+            if (unFinalUser.equals(e.getAuthor()) || unFinalUser.equals(e.getClient().getOurUser())) {
                 messageHandler.sendError("You can't play with that person!");
                 return;
             }
@@ -70,11 +72,9 @@ public class RussianRoulette implements Command.Class {
             boolean reacted = true;
             int timeout = 0;
 
-            while (reacted)
-            {
+            while (reacted) {
                 // If it's been 10 seconds, exit
-                if (timeout == 10)
-                {
+                if (timeout == 10) {
                     messageHandler.sendError('`' +user.getName()+"` didn't respond in time!");
                     return;
                 }
@@ -98,8 +98,7 @@ public class RussianRoulette implements Command.Class {
                     reacted = false;
 
                 // Checks if the user reacted with the N
-                if (nReaction.getUserReacted(user))
-                {
+                if (nReaction.getUserReacted(user)) {
                     messageHandler.sendError("User Denied!");
                     return;
                 }
@@ -120,9 +119,8 @@ public class RussianRoulette implements Command.Class {
             }
 
             // Makes sure the users aren't null
-            if (win == null || loser == null)
-            {
-                messageHandler.sendError(MessageHandler.INTERNAL_EXCEPTION);
+            if (win == null || loser == null) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                 return;
             }
 

@@ -5,8 +5,13 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
-import java.util.HashMap
+import java.util.*
 
+/**
+ * Gets a dog fact from an API
+ *
+ * @author sho
+ */
 class DogFact : Command.Class {
     override fun help(e: MessageReceivedEvent): Runnable {
         val st = HashMap<String, String>()

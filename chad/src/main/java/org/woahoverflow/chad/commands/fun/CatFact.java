@@ -1,17 +1,18 @@
 package org.woahoverflow.chad.commands.fun;
 
-import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
-import sx.blah.discord.util.EmbedBuilder;
 
 /**
+ * Gets a random cat fact from an API
+ *
  * @author sho
- * @since 0.6.3 B2
  */
 public class CatFact implements Command.Class  {
     @Override

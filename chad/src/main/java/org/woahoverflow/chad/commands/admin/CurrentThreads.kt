@@ -1,18 +1,18 @@
 package org.woahoverflow.chad.commands.admin
 
 import com.sun.management.OperatingSystemMXBean
-import java.lang.management.ManagementFactory
 import org.woahoverflow.chad.framework.Chad
-import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.HashMap
+import java.lang.management.ManagementFactory
+import java.util.*
 
 /**
+ * The current running threads within Chad
+ *
  * @author sho, codebasepw
- * @since 0.6.3 B2
  */
 class CurrentThreads : Command.Class {
     override fun run(e: MessageReceivedEvent, args: List<String>): Runnable {
