@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.commands.admin;
+package org.woahoverflow.chad.commands.developer;
 
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.MessageHandler;

@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.commands.fun;
+package org.woahoverflow.chad.commands.community;
 
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Marry a user
  *
+ * @see DivorcePlayer
  * @author sho
  */
 public class MarryPlayer implements Command.Class{

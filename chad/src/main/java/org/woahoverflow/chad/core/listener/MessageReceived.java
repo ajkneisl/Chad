@@ -129,6 +129,7 @@ public final class MessageReceived {
 
                         // add the command thread to the handler
                         Chad.runThread(thread, consumer);
+                        return;
                     }
                 }
             }

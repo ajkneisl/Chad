@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.commands.admin
+package org.woahoverflow.chad.commands.developer
 
 import com.sun.management.OperatingSystemMXBean
 import org.woahoverflow.chad.framework.Chad

@@ -5,10 +5,11 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import org.woahoverflow.chad.commands.admin.Shutdown;
 import org.woahoverflow.chad.commands.admin.*;
+import org.woahoverflow.chad.commands.community.*;
+import org.woahoverflow.chad.commands.developer.Shutdown;
+import org.woahoverflow.chad.commands.developer.*;
 import org.woahoverflow.chad.commands.fun.*;
-import org.woahoverflow.chad.commands.function.*;
 import org.woahoverflow.chad.commands.gambling.Balance;
 import org.woahoverflow.chad.commands.gambling.CoinFlip;
 import org.woahoverflow.chad.commands.gambling.DailyReward;
@@ -78,12 +79,12 @@ public final class ChadVar
     /**
      * The Youtube API Key in the bot.json file
      */
-    public static final String YOUTUBE_API_KEY = JsonHandler.handle.get("youtube_api_key");
+    public static String YOUTUBE_API_KEY = JsonHandler.handle.get("youtube_api_key");
 
     /**
      * The Steam API key in the bot.json file
      */
-    public static final String STEAM_API_KEY = JsonHandler.handle.get("steam_api_key");
+    public static String STEAM_API_KEY = JsonHandler.handle.get("steam_api_key");
 
     /*
       Registers sources for the player manager
@@ -184,7 +185,7 @@ public final class ChadVar
         COMMANDS.put("nsfw", new Command.Data(Command.Category.ADMINISTRATOR, new Nsfw()));
         COMMANDS.put("swearfilter", new Command.Data(Category.ADMINISTRATOR, new Swearing(), "sf"));
 
-        // Nsfw !
+        // NSFW !
         COMMANDS.put("porn", new Command.Data(Command.Category.NSFW, new NBPorn(), "pn"));
         COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko(), "neko"));
 
@@ -193,8 +194,10 @@ public final class ChadVar
         COMMANDS.put("modpresence", new Command.Data(Command.Category.DEVELOPER, new ModifyPresence(), "modp"));
         COMMANDS.put("systeminfo", new Command.Data(Command.Category.DEVELOPER, new SystemInfo(), "sinf"));
         COMMANDS.put("shutdown", new Command.Data(Command.Category.DEVELOPER,new Shutdown()));
-        COMMANDS.put("setbalance", new Command.Data(Command.Category.DEVELOPER, new SetBalance(), "setbal"));
-        COMMANDS.put("devcfg", new Command.Data(Category.DEVELOPER, new DeveloperSettings(), "cfg"));
+        COMMANDS.put("modifybalance", new Command.Data(Command.Category.DEVELOPER, new ModifyBalance(), "modbal"));
+        COMMANDS.put("modifycache", new Data(Category.DEVELOPER, new ModifyCache(), "modcache"));
+        COMMANDS.put("modifydatabase", new Data(Category.DEVELOPER, new ModifyDatabase(), "moddb"));
+        COMMANDS.put("modifydevelopers", new Data(Category.DEVELOPER, new ModifyDevelopers(), "moddev"));
 
         // GAMBLING!
         COMMANDS.put("coinflip", new Command.Data(Command.Category.GAMBLING, new CoinFlip(), "cf"));

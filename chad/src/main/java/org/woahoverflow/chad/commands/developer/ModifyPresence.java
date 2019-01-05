@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.commands.admin;
+package org.woahoverflow.chad.commands.developer;
 
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
@@ -69,23 +69,23 @@ public class ModifyPresence implements Command.Class {
                     args.remove(0);
 
                     // Builds the presence string
-                    String stringBuilder = args.stream().map(str -> str + ' ').collect(Collectors.joining());
+                    String string = args.stream().map(str -> str + ' ').collect(Collectors.joining());
 
                     // Adds the message into the rotation pool.
-                    ChadVar.presenceRotation.add(stringBuilder.trim());
+                    ChadVar.presenceRotation.add(string.trim());
 
                     // Updates the message
-                    message = "Added `" + stringBuilder.trim() + "` to rotation";
+                    message = "Added `" + string.trim() + "` to rotation";
                     break;
-                /*case "time":
-                    args.remove(0);
-                    StringBuilder time_sb = new StringBuilder();
-                    for (String str : args) {
-                        time_sb.append(str).append(" ");
+                case "view":
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    for (String s : ChadVar.presenceRotation) {
+                        stringBuilder.append('`').append(s).append("`, ");
                     }
-                    ChadVar.rotationInteger = Integer.parseInt(time_sb.toString().trim());
-                    message = "Changed rotation period to `" + ChadVar.rotationInteger + "`";
-                    break;*/
+
+                    message = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 2);
+                    break;
                 case "status":
                     // Removes the option argument
                     args.remove(0);

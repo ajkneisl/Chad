@@ -121,59 +121,6 @@ public class PlayerHandler {
 
         return new Player(playerData, user);
     }
-    /**
-     * Creates a player with the specified default health values (admin only, for petty cheating)
-     *
-     * @param user The user's ID to register
-     * @param playerHealth The user's starting playerHealth
-     * @param swordHealth The user's starting swordHealth
-     * @param shieldHealth The user's starting shieldHealth
-     */
-    public Player createSetPlayer(long user, int playerHealth, int swordHealth, int shieldHealth, long balance) {
-        Document playerDocument = new Document();
-
-        // The user's ID
-        playerDocument.put("id", user);
-
-        // The user's balance
-        playerDocument.put("balance", balance);
-
-        // The user's fight data
-        playerDocument.put("sword_health", swordHealth);
-        playerDocument.put("shield_health", shieldHealth);
-        playerDocument.put("health", playerHealth);
-
-        // Other default user data
-        playerDocument.put("marry_data", "none&none");
-        playerDocument.put("profile_description", "No description!");
-        playerDocument.put("profile_title", "none");
-
-        playerDocument.put("last_attacked_time", System.currentTimeMillis());
-        playerDocument.put("last_attacker", "none");
-        playerDocument.put("last_attack_time", System.currentTimeMillis());
-        playerDocument.put("last_target", "none");
-        playerDocument.put("last_cuddle_time", System.currentTimeMillis());
-
-        playerDocument.put("profile_downvote", 0L);
-        playerDocument.put("profile_upvote", 0L);
-
-        playerDocument.put("guild_data", new ArrayList<>());
-        playerDocument.put("vote_data", new ArrayList<>());
-
-        playerDocument.put("last_daily_reward", "none");
-
-        // Insert the new player
-        DatabaseManager.USER_DATA.collection.insertOne(playerDocument);
-
-        // Creates the player
-        Player player = parsePlayer(playerDocument, user);
-
-        // Add it into the hash map
-        players.put(user, player);
-
-        // Return the new player
-        return player;
-    }
 
     /**
      * Gets a player instance

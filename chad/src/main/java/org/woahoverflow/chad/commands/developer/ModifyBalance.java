@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.commands.admin;
+package org.woahoverflow.chad.commands.developer;
 
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author sho
  */
-public class SetBalance implements Command.Class {
+public class ModifyBalance implements Command.Class {
     @Override
     public final Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
@@ -87,7 +87,7 @@ public class SetBalance implements Command.Class {
     @Override
     public final Runnable help(MessageReceivedEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("setbal <amount> [@user]", "Sets a user's balance.");
-        return Command.helpCommand(st, "Set Balance", e);
+        st.put("modbal <amount> [@user]", "Sets a user's balance.");
+        return Command.helpCommand(st, "Modify Balance", e);
     }
 }

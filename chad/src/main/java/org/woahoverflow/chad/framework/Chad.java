@@ -197,7 +197,7 @@ public final class Chad
 
                 // Closes the reader
                 in.close();
-            } catch (@SuppressWarnings("all") IOException e1) {
+            } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }, getInternalConsumer());

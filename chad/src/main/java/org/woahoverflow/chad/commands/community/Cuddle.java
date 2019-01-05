@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.commands.fun;
+package org.woahoverflow.chad.commands.community;
 
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
