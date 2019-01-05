@@ -70,7 +70,7 @@ class ModifyDatabase : Command.Class {
                         val new: Long
 
                         try {
-                            new = args[3].removeSuffix("!int").toLong()
+                            new = args[3].removeSuffix("!long").toLong()
                         } catch (ex: NumberFormatException) {
                             messageHandler.sendError("Invalid Long!")
                             return@Runnable
@@ -146,7 +146,7 @@ class ModifyDatabase : Command.Class {
                         val new: Long
 
                         try {
-                            new = args[3].removeSuffix("!int").toLong()
+                            new = args[3].removeSuffix("!long").toLong()
                         } catch (ex: NumberFormatException) {
                             messageHandler.sendError("Invalid Long!")
                             return@Runnable
