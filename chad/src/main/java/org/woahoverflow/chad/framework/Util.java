@@ -148,8 +148,17 @@ public final class Util
         long days = hours/24;
         long hoursDays = hours - (days*24);
 
-        response += days > 1 ? String.format("%s days ", days) : String.format("%s day ", days);
-        response += hoursDays > 1 ? String.format("%s hours", hoursDays) : String.format("%s hour", hoursDays);
+        if (!(days >= 7)) {
+            response += days > 1 ? String.format("%s days ", days) : String.format("%s day ", days);
+            response += hoursDays > 1 ? String.format("%s hours", hoursDays) : String.format("%s hour", hoursDays);
+            return response;
+        }
+
+        long weeks = days/7;
+        long weekDays = days - (days*7);
+
+        response += weeks > 1 ? String.format("%s weeks ", weeks) : String.format("%s week ", weeks);
+        response += weekDays > 1 ? String.format("%s days", weekDays) : String.format("%s day", weekDays);
         return response;
     }
 

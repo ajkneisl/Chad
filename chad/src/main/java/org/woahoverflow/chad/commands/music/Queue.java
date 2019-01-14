@@ -27,7 +27,7 @@ public class Queue implements Command.Class {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // If there's nothing playing
-            if (manager.player.getPlayingTrack() == null) {
+            if (manager.player.getPlayingTrack() == null && queue.size() == 0) {
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("There's no things currently playing!"));
                 return;
             }

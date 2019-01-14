@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -89,6 +90,11 @@ public class YouTube implements Command.Class {
                         // When a value is search (thru soundcloud/youtube, used)
                         @Override
                         public void playlistLoaded(AudioPlaylist playlist) {
+                            if (playlist.getTracks().isEmpty()) {
+                                messageHandler.sendError("That song couldn't be found!");
+                                return;
+                            }
+
                             AudioTrack track = playlist.getTracks().get(0);
 
                             if (track == null) {
@@ -108,11 +114,11 @@ public class YouTube implements Command.Class {
                             String message;
 
                             if (manager.scheduler.getFullQueue().isEmpty())
-                                message = manager.player.isPaused() ? String.format("**PAUSED** Queued `%s` by `%s` on %s!\n%s", track.getInfo().title, track.getInfo().author, "YouTube", track.getInfo().uri) :
-                                        String.format("Now playing `%s` by `%s` on %s!\n%s", track.getInfo().title, track.getInfo().author, "YouTube", track.getInfo().uri);
+                                message = manager.player.isPaused() ? String.format("**PAUSED** Queued `%s` by `%s` on %s! [%s]\n%s", track.getInfo().title, track.getInfo().author, "YouTube", Util.fancyDate(track.getDuration()), track.getInfo().uri) :
+                                        String.format("Now playing `%s` by `%s` on %s! [%s]\n%s", track.getInfo().title, track.getInfo().author, "YouTube", Util.fancyDate(track.getDuration()), track.getInfo().uri);
                             else
-                                message = manager.player.isPaused() ? String.format("**PAUSED** Queued `%s` by `%s` on %s!\n%s", track.getInfo().title, track.getInfo().author, "YouTube", track.getInfo().uri) :
-                                        String.format("Queued `%s` by `%s` on %s!\n%s", track.getInfo().title, track.getInfo().author, "YouTube", track.getInfo().uri);
+                                message = manager.player.isPaused() ? String.format("**PAUSED** Queued `%s` by `%s` on %s! [%s]\n%s", track.getInfo().title, track.getInfo().author, "YouTube", Util.fancyDate(track.getDuration()), track.getInfo().uri) :
+                                        String.format("Queued `%s` by `%s` on %s! [%s]\n%s", track.getInfo().title, track.getInfo().author, "YouTube", Util.fancyDate(track.getDuration()), track.getInfo().uri);
 
                             messageHandler.sendMessage(message);
                         }
