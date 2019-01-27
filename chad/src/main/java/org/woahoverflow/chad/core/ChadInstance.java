@@ -61,6 +61,8 @@ public final class ChadInstance {
         ch.qos.logback.classic.Logger rootLogger = loggerContext.getLogger("org.mongodb.driver");
         rootLogger.setLevel(Level.OFF);
 
+        getLogger().debug("woahoverflow: chad (v0.8.0)");
+
         // Calculates the launch options
         if (args.length >= 1) {
             for (int i = 0; args.length > i; i++) {

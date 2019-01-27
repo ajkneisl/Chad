@@ -76,7 +76,7 @@ public final class UserLeaveJoin {
 
         // If the guild has user join messages on, do that
         Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
-        if ((boolean) g.getObject(Guild.DataType.JOIN_MESSAGE)) {
+        if ((boolean) g.getObject(Guild.DataType.JOIN_MESSAGE_ON)) {
             // Gets the join message channel
             String joinMsgCh = (String) g.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL);
 

@@ -3,6 +3,7 @@ package org.woahoverflow.chad.core.listener;
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.sync.WebsiteSyncKt;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -83,5 +84,21 @@ public final class OnReady {
             UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
             UIHandler.handle.update();
         }
+
+        // Initial website sync
+        WebsiteSyncKt.sync(event.getClient());
+
+        // Updates the website every 5 minutes
+        Chad.runThread(() -> {
+            while (true) {
+                try {
+                    TimeUnit.MINUTES.sleep(5);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+
+                WebsiteSyncKt.sync(event.getClient());
+            }
+        }, Chad.getInternalConsumer());
     }
 }

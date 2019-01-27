@@ -1,23 +1,26 @@
 package org.woahoverflow.chad.framework.sync
 
+import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.framework.Chad
 import org.woahoverflow.chad.framework.handle.JsonHandler
 import org.woahoverflow.chad.framework.ui.ChadError
-import org.woahoverflow.chad.framework.ui.UIHandler
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.obj.IGuild
 import java.lang.management.ManagementFactory
 import java.sql.Connection
 import java.sql.DriverManager
 
+
 fun sync(client: IDiscordClient) {
     val connection: Connection
+
+    ChadInstance.getLogger().debug("Starting website sync...")
 
     try {
         Class.forName("com.mysql.jdbc.Driver")
         connection = DriverManager.getConnection(JsonHandler.handle.get("jdbc"))
     } catch (ex: Exception) {
-        ChadError.throwError("Couldn't connect to database!")
+        ChadError.throwError("Couldn't connect to database!", ex)
         return
     }
 
@@ -46,5 +49,5 @@ fun sync(client: IDiscordClient) {
 
     prepared.execute()
 
-    UIHandler.handle.addLog("Updated website statistics", UIHandler.LogLevel.INFO)
+    ChadInstance.getLogger().debug("Successfully executed website sync!")
 }
