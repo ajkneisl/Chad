@@ -196,6 +196,7 @@ public final class ChadVar
         COMMANDS.put("modifycache", new Data(Category.DEVELOPER, new ModifyCache(), "modcache"));
         COMMANDS.put("modifydatabase", new Data(Category.DEVELOPER, new ModifyDatabase(), "moddb"));
         COMMANDS.put("modifydevelopers", new Data(Category.DEVELOPER, new ModifyDevelopers(), "moddev"));
+        COMMANDS.put("sync", new Data(Category.DEVELOPER, new Sync()));
 
         // GAMBLING!
         COMMANDS.put("coinflip", new Command.Data(Command.Category.GAMBLING, new CoinFlip(), "cf"));

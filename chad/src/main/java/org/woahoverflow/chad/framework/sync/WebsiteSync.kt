@@ -10,7 +10,9 @@ import java.lang.management.ManagementFactory
 import java.sql.Connection
 import java.sql.DriverManager
 
-
+/**
+ * Syncs Chad's data with the website through MySQL
+ */
 fun sync(client: IDiscordClient) {
     val connection: Connection
 
