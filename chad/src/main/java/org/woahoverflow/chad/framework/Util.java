@@ -146,7 +146,7 @@ public final class Util
         }
 
         long days = hours/24;
-        long hoursDays = hours - (days*24);
+        long hoursDays = hours-(days*24);
 
         if (!(days >= 7)) {
             response += days > 1 ? String.format("%s days ", days) : String.format("%s day ", days);
@@ -155,7 +155,7 @@ public final class Util
         }
 
         long weeks = days/7;
-        long weekDays = days - (days*7);
+        long weekDays = days-(weeks*7);
 
         response += weeks > 1 ? String.format("%s weeks ", weeks) : String.format("%s week ", weeks);
         response += weekDays > 1 ? String.format("%s days", weekDays) : String.format("%s day", weekDays);

@@ -36,8 +36,7 @@ public final class ChadInstance {
     /*
     Makes sure bot.json is filled
      */
-    static
-    {
+    static {
         // No UI due to servers and stuff
         if (JsonHandler.handle.get("token").isEmpty() || JsonHandler.handle.get("uri_link").isEmpty()) {
             getLogger().error("Bot.json is empty!");

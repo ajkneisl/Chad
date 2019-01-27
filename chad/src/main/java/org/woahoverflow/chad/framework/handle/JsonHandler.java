@@ -59,6 +59,7 @@ public class JsonHandler {
                 obj.put("steam_api_key", "");
                 obj.put("uri_link", "");
                 obj.put("youtube_api_key", "");
+                obj.put("jdbc", "");
                 try (FileWriter fileWriter = new FileWriter(bot)) {
                     fileWriter.write(obj.toString());
                     fileWriter.flush();

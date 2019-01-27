@@ -50,8 +50,7 @@ public final class ChadVar
     /*
     Add all of the available launch options
      */
-    static
-    {
+    static {
         launchOptions.put("-denyui", false);
         launchOptions.put("-denyuiupdate", false);
     }
@@ -89,8 +88,7 @@ public final class ChadVar
     /*
       Registers sources for the player manager
      */
-    static
-    {
+    static {
         AudioSourceManagers.registerRemoteSources(playerManager);
         playerManager.registerSourceManager(new YoutubeAudioSourceManager());
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
@@ -211,7 +209,6 @@ public final class ChadVar
         COMMANDS.put("skip", new Data(Category.MUSIC, new Skip(), "ss"));
         COMMANDS.put("queue", new Data(Category.MUSIC, new Queue(), "qq"));
         COMMANDS.put("volume", new Data(Category.MUSIC, new Volume(), "vol"));
-        COMMANDS.put("youtube", new Data(Category.MUSIC, new YouTube(), "yt"));
-        COMMANDS.put("soundcloud", new Data(Category.MUSIC, new SoundCloud(), "sc"));
+        COMMANDS.put("resume", new Data(Category.MUSIC, new Resume(), "res", "rr"));
     }
 }

@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.woahoverflow'
-version '0.7.0'
+version '0.8.0'
 
 sourceCompatibility = 1.8
 
@@ -43,6 +43,8 @@ dependencies {
     extraLibs 'ch.qos.logback:logback-classic:1.2.3'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     extraLibs "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
+    extraLibs group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
 }
 
 jar {

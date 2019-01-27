@@ -98,8 +98,7 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param endReason The reason for the ending
      */
     @Override
-    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
-    {
+    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         IGuild guild = ChadInstance.cli.getGuildByID(guildId);
 
         IVoiceChannel channel = guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
@@ -110,8 +109,7 @@ public class TrackScheduler extends AudioEventAdapter {
             }
         }
 
-        if (endReason.mayStartNext)
-        {
+        if (endReason.mayStartNext) {
             nextTrack();
         }
     }

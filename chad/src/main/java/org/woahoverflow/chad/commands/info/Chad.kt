@@ -22,13 +22,13 @@ class Chad : Command.Class {
             val desc = "**Chad** by woahoverflow\n\n" +
                     "**Uptime** ${Util.fancyDate(ManagementFactory.getRuntimeMXBean().uptime)}\n" +
                     "**Ping** `${e.client.shards[0].responseTime}` ms\n" +
-                    "**GitHub** https://woahoverflow.org/github"
+                    "**GitHub** https://woahoverflow.org/github\n"
 
             embedBuilder.withDesc(desc)
             embedBuilder.withUrl("https://woahoverflow.org/chad")
 
             // Sends
-            MessageHandler(e.channel, e.author).sendEmbed(embedBuilder)
+            MessageHandler(e.channel, e.author).credit("Version 0.8.0").sendEmbed(embedBuilder)
         }
     }
 

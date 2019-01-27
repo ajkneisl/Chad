@@ -7,6 +7,7 @@ import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
+import org.woahoverflow.chad.framework.sync.WebsiteSyncKt;
 import org.woahoverflow.chad.framework.ui.UIHandler;
 import org.woahoverflow.chad.framework.ui.UIHandler.LogLevel;
 import sx.blah.discord.api.internal.DiscordUtils;
@@ -215,6 +216,22 @@ public final class Chad
                 }
 
                 RequestBuffer.request(ChadInstance.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+            }
+        }, getInternalConsumer());
+
+        /*
+        Updates the website
+         */
+        runThread(() -> {
+            //noinspection InfiniteLoopStatement :)
+            while (true) {
+                WebsiteSyncKt.sync(ChadInstance.cli);
+
+                try {
+                    TimeUnit.MINUTES.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }, getInternalConsumer());
     }
