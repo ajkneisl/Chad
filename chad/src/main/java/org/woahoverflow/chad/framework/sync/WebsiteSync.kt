@@ -9,6 +9,7 @@ import sx.blah.discord.handle.obj.IGuild
 import java.lang.management.ManagementFactory
 import java.sql.Connection
 import java.sql.DriverManager
+import java.time.Instant
 
 /**
  * Syncs Chad's data with the website through MySQL
@@ -44,10 +45,11 @@ fun sync(client: IDiscordClient) {
         }
     }
 
-    prepared = connection.prepareStatement("INSERT INTO `chad` (`stats`, `uptime`, `version`) VALUES (?, ?, ?)")
+    prepared = connection.prepareStatement("INSERT INTO `chad` (`stats`, `uptime`, `version`, `time`) VALUES (?, ?, ?, ?)")
     prepared.setString(1, "{\"guilds\":{\"amount\":${client.guilds.size},\"biggest\":{\"name\":\"${biggestGuild!!.name}\",\"size\":$biggestGuildSize}},\"users\":{\"amount\":$users},\"shards\":{\"amount\":${client.shardCount}},\"threads\":{\"local\":${Chad.internalRunningThreads},\"external\":${Chad.runningThreads}}}")
     prepared.setLong(2, ManagementFactory.getRuntimeMXBean().uptime)
     prepared.setString(3, "v0.8.0")
+    prepared.setLong(4, Instant.now().epochSecond)
 
     prepared.execute()
 
