@@ -4,9 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import org.woahoverflow.chad.core.ChadInstance;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +27,12 @@ public class TrackScheduler extends AudioEventAdapter {
     /**
      * The Guild's ID
      */
-    private final long guildId;
+    public final long guildId;
+
+    /**
+     * The channel's ID
+     */
+    public long channelId;
 
     /**
      * Creates a new Track Scheduler
@@ -38,9 +40,10 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param player The Audio Player
      * @param guildId The Guild's ID
      */
-    public TrackScheduler(AudioPlayer player, long guildId) {
+    public TrackScheduler(AudioPlayer player, long guildId, long channelId) {
         this.guildId = guildId;
         this.player = player;
+        this.channelId = channelId;
         queue = new ArrayList<>();
     }
 
@@ -58,14 +61,14 @@ public class TrackScheduler extends AudioEventAdapter {
     /**
      * Skips to the next song
      */
-    public boolean nextTrack() {
-        if (queue.isEmpty())
-            return false;
-
-        AudioTrack track = queue.get(0);
-        player.startTrack(track, false);
-        queue.remove(track);
-        return true;
+    public void nextTrack() {
+        if (queue.isEmpty()) {
+            player.stopTrack();
+        } else {
+            AudioTrack track = queue.get(0);
+            player.startTrack(track, false);
+            queue.remove(track);
+        }
     }
 
     /**
@@ -99,16 +102,6 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        IGuild guild = ChadInstance.cli.getGuildByID(guildId);
-
-        IVoiceChannel channel = guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
-
-        if (channel != null) {
-            if (channel.getConnectedUsers().size() == 1 || queue.size() == 0) {
-                channel.leave();
-            }
-        }
-
         if (endReason.mayStartNext) {
             nextTrack();
         }

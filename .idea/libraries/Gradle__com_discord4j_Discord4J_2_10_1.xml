@@ -6,6 +6,7 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.discord4j/Discord4J/2.10.1/419c4b60740da609c5b7067cb3f71358dcdd2bb6/Discord4J-2.10.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.discord4j/Discord4J/2.10.1/36d545c6bc21af1152139f3cd8e13a5a259fb9fc/Discord4J-2.10.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

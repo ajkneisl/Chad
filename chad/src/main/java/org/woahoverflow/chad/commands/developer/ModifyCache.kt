@@ -10,7 +10,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
-import org.woahoverflow.chad.framework.ui.UIHandler
+import org.woahoverflow.chad.framework.ui.UI
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.util.EmbedBuilder
@@ -117,11 +117,11 @@ class ModifyCache : Command.Class {
                             JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach { v ->
                                 run {
                                     if (java.lang.Boolean.parseBoolean((v as JSONObject).getString("allow"))) {
-                                        UIHandler.handle
-                                                .addLog("Added user " + v.getString("display_name") + " to group System Administrator", UIHandler.LogLevel.INFO)
+                                        UI.handle
+                                                .addLog("Added user " + v.getString("display_name") + " to group System Administrator", UI.LogLevel.INFO)
                                         ChadVar.DEVELOPERS.add(v.getLong("id"))
                                     } else {
-                                        UIHandler.handle.addLog("Avoided adding user " + v.getString("display_name"), UIHandler.LogLevel.INFO)
+                                        UI.handle.addLog("Avoided adding user " + v.getString("display_name"), UI.LogLevel.INFO)
                                     }
                                 }
                             }

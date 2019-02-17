@@ -183,8 +183,7 @@ public class Guild {
         Object permissions = DatabaseManager.GUILD_DATA.getObject(guild, Long.toString(role));
 
         // If it doesn't exist
-        if (permissions == null)
-        {
+        if (permissions == null) {
             ArrayList<String> permissionSet = new ArrayList<>();
 
             // Put it in local storage
@@ -202,8 +201,7 @@ public class Guild {
         // Try to cast it
         try {
             permissionSet = (ArrayList<String>) permissions;
-        } catch (ClassCastException castException)
-        {
+        } catch (ClassCastException castException) {
             // If it for some reason doesn't cast properly
             ChadInstance.getLogger().error("Permission set failed to cast to an array-list!", castException);
             return new ArrayList<>();

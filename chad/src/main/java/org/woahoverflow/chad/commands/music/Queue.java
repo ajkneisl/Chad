@@ -1,17 +1,20 @@
 package org.woahoverflow.chad.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
+import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Gets the music player's queue
@@ -22,9 +25,17 @@ public class Queue implements Command.Class {
     @Override
     public Runnable run(MessageReceivedEvent e, List<String> args) {
         return () -> {
-            GuildMusicManager manager = Chad.getMusicManager(e.getGuild());
-            List<AudioTrack> queue = manager.scheduler.getFullQueue();
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
+            IVoiceChannel chadChannel = RequestBuffer.request(() -> e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel()).get();
+
+            // If Chad's not even joined
+            if (chadChannel == null) {
+                messageHandler.sendEmbed(new EmbedBuilder().withDesc("There's no things currently playing!"));
+                return;
+            }
+
+            GuildMusicManager manager = getMusicManager(e.getGuild(), chadChannel);
+            List<AudioTrack> queue = manager.scheduler.getFullQueue();
 
             // If there's nothing playing
             if (manager.player.getPlayingTrack() == null && queue.size() == 0) {

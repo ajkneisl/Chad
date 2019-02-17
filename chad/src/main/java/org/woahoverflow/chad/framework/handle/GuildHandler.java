@@ -29,8 +29,7 @@ public class GuildHandler {
      * @param guild The guild to refresh
      */
     public void refreshGuild(long guild) {
-        if (guilds.keySet().contains(guild))
-        {
+        if (guilds.keySet().contains(guild)) {
             guilds.remove(guild);
             guilds.put(guild, getGuild(guild));
         }

@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.commands.music;
 
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
@@ -9,6 +8,8 @@ import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Skips songs within the guild's music player
@@ -21,48 +22,26 @@ public class Skip implements Command.Class {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            // The guild's music manager
-            GuildMusicManager manager = Chad.getMusicManager(e.getGuild());
-
             // Chad's voice channel
             IVoiceChannel channel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
 
             // Makes sure that Chad is playing music
-            if (channel == null || manager.player.isPaused()) {
+            if (channel == null) {
                 messageHandler.sendMessage("Chad isn't playing music!");
                 return;
             }
 
             // Makes sure the author is in the same channel as the bot
             if (channel != e.getAuthor().getVoiceStateForGuild(e.getGuild()).getChannel()) {
-                messageHandler.sendError("You aren't in the same channel as me!");
+                messageHandler.sendError("You aren't in the same channel as Chad!");
                 return;
             }
 
-            // If they wanted to skip all
-            if (args.size() == 1 && args.get(0).equalsIgnoreCase("all")) {
-                manager.clear();
+            // The guild's music manager
+            GuildMusicManager manager = getMusicManager(e.getGuild(), channel);
 
-                messageHandler.sendError("Queue is empty, leaving!");
-                channel.leave();
-
-                // Gets rid of the playing song
-                manager.clear();
-                return;
-            }
-
-            // If there's a next track, play that
-            if (manager.scheduler.nextTrack()) {
-                messageHandler.sendMessage("Skipped current song!");
-                return;
-            }
-
-            // If there's not another track, do this
-            messageHandler.sendError("Queue is empty, leaving!");
-            channel.leave();
-
-            // Gets rid of the playing song
-            manager.clear();
+            manager.scheduler.nextTrack();
+            messageHandler.sendMessage("Skipped current song!");
         };
     }
 

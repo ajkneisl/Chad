@@ -1,16 +1,15 @@
 package org.woahoverflow.chad.core.listener
 
 import org.woahoverflow.chad.core.ChadVar
-import org.woahoverflow.chad.framework.Chad
-import org.woahoverflow.chad.framework.handle.GuildHandler
-import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.PermissionHandler
+import org.woahoverflow.chad.framework.handle.*
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.Permissions
+import sx.blah.discord.util.RequestBuffer
 import java.util.*
+import java.util.regex.Pattern
 
 class MessageReceived {
     @EventSubscriber
@@ -28,6 +27,43 @@ class MessageReceived {
         // Updates the guild's statistics
         guild.messageSent()
 
+        // If swear filter is enabled
+        val stopSwear = guild!!.getObject(Guild.DataType.SWEAR_FILTER) as Boolean
+
+        if (stopSwear) {
+            // Builds together the message & removes the special characters
+            var character = argArray.joinToString("")
+            val pt = Pattern.compile("[^a-zA-Z0-9]")
+            val match = pt.matcher(character)
+
+            while (match.find()) {
+                character = character.replace(("\\" + match.group()).toRegex(), "")
+            }
+
+            // Checks if the word contains a swear word
+            for (swearWord in ChadVar.swearWords) {
+                // Ass is a special case, due to words like `bass`
+                if (swearWord.equals("ass", ignoreCase = true) && character.contains("ass")) {
+                    // Goes through all of the arguments
+                    for (argument in argArray) {
+                        // If the argument is just ass
+                        if (argument.equals("ass", ignoreCase = true)) {
+                            // Delete it
+                            RequestBuffer.request { event.message.delete() }
+                            return
+                        }
+                    }
+                    continue
+                }
+
+                // If it contains any other swear word, delete it
+                if (character.toLowerCase().contains(swearWord)) {
+                    RequestBuffer.request { event.message.delete() }
+                    return
+                }
+            }
+        }
+
         // The guild's prefix, if the message starts with this expect it's a command
         val prefix: String = guild.getObject(Guild.DataType.PREFIX) as String
 
@@ -42,11 +78,8 @@ class MessageReceived {
         val args = ArrayList(Arrays.asList<String>(*argArray.toTypedArray()))
         args.removeAt(0)
 
-        // The user's thread consumer
-        val threadConsumer: Chad.ThreadConsumer = Chad.getConsumer(event.author.longID)
-
         // If the user doesn't have 3 threads currently running
-        if (!Chad.consumerRunThread(threadConsumer))
+        if (!canUserRunThread(event.author.longID))
             return
 
         // The found command's data, unless if it isn't found it's null
@@ -97,6 +130,6 @@ class MessageReceived {
         val thread = if (args.size == 1 && args[0].equals("help", ignoreCase = true)) command.commandClass.help(event) else command.commandClass.run(event, args)
 
         // add the command thread to the handler
-        Chad.runThread(thread, threadConsumer)
+        runThread(thread, event.author.longID)
     }
 }

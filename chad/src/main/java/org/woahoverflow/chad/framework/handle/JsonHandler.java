@@ -13,7 +13,7 @@ import org.json.simple.parser.ParseException;
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.ui.ChadError;
-import org.woahoverflow.chad.framework.ui.UIHandler;
+import org.woahoverflow.chad.framework.ui.UI;
 
 import java.io.*;
 
@@ -43,7 +43,7 @@ public class JsonHandler {
      */
     private synchronized JsonHandler forceCheck() {
         if (SystemUtils.IS_OS_WINDOWS) {
-            ChadInstance.getLogger().debug("Checking files as if OS is Windows", UIHandler.LogLevel.INFO);
+            ChadInstance.getLogger().debug("Checking files as if OS is Windows", UI.LogLevel.INFO);
             if (!new File(System.getenv("appdata") + "\\chad").exists())
                 ChadInstance.getLogger().debug("Created Chad Directory : " + new File(System.getenv("appdata") + "\\chad").mkdirs());
             if (!new File(new File(System.getenv("appdata") + "\\chad") + "\\bot.json").exists()) {
@@ -70,7 +70,7 @@ public class JsonHandler {
         }
 
         if (SystemUtils.IS_OS_LINUX) {
-            ChadInstance.getLogger().debug("Checking files as if OS is Linux", UIHandler.LogLevel.INFO);
+            ChadInstance.getLogger().debug("Checking files as if OS is Linux", UI.LogLevel.INFO);
             File dir = new File("/home/" + System.getProperty("user.name") + "/chad");
             if (!dir.exists())
                 ChadInstance.getLogger().debug("Created Chad Directory : " + dir.mkdirs());
@@ -207,7 +207,7 @@ public class JsonHandler {
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
-        UIHandler.handle.addLog("readFile failed, returning null", UIHandler.LogLevel.SEVERE);
+        UI.handle.addLog("readFile failed, returning null", UI.LogLevel.SEVERE);
         return null;
     }
 

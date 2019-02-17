@@ -88,10 +88,8 @@ public class AutoRole implements Command.Class  {
                     // The selected role
                     IRole newRole = roles.get(0);
 
-                    // Sets the role ID into the database and recaches
+                    // Sets the role ID into the database
                     DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "join_role", newRole.getStringID());
-                    Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
-                    //guild.cache();
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder3 = new EmbedBuilder();

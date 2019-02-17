@@ -1,5 +1,7 @@
 package org.woahoverflow.chad.framework.ui.panels;
 
+import org.woahoverflow.chad.core.ChadVar;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,7 +30,6 @@ public class MainPanel extends JPanel {
         refreshButton = new JButton();
         exitButton = new JButton();
         JLabel adv = new JLabel();
-        refreshButton2 = new JButton();
         guildGo = new JButton();
         JLabel guildText = new JLabel();
         JLabel presenceText = new JLabel();
@@ -52,7 +53,7 @@ public class MainPanel extends JPanel {
         chadText.setFont(new Font("Open Sans", Font.PLAIN, 48));
         add(chadText);
         chadText.setBounds(50, 45, chadText.getPreferredSize().width, chadText.getPreferredSize().height);
-        versionText.setText("v0.7.0");
+        versionText.setText(ChadVar.VERSION);
         versionText.setFont(new Font("Open Sans", Font.PLAIN, 32));
         add(versionText);
         versionText.setBounds(62, 95, versionText.getPreferredSize().width, versionText.getPreferredSize().height);
@@ -112,10 +113,6 @@ public class MainPanel extends JPanel {
         adv.setFont(new Font("Open Sans", Font.PLAIN, 20));
         add(adv);
         adv.setBounds(new Rectangle(new Point(895, 5), adv.getPreferredSize()));
-        refreshButton2.setText("ReCache");
-        refreshButton2.setFont(new Font("Open Sans", Font.PLAIN, 13));
-        add(refreshButton2);
-        refreshButton2.setBounds(10, 715, 85, 30);
         guildGo.setText("Go");
         add(guildGo);
         guildGo.setBounds(new Rectangle(new Point(450, 55), guildGo.getPreferredSize()));
@@ -171,7 +168,6 @@ public class MainPanel extends JPanel {
     public JTextArea logs;
     public JButton refreshButton;
     public JButton exitButton;
-    public JButton refreshButton2;
     public JTextArea guildList;
     public JButton guildGo;
     public JLabel presenceVal;

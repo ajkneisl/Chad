@@ -2,9 +2,9 @@ package org.woahoverflow.chad.core.listener;
 
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
 import org.woahoverflow.chad.framework.sync.WebsiteSyncKt;
-import org.woahoverflow.chad.framework.ui.UIHandler;
+import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
@@ -29,8 +29,7 @@ public final class OnReady {
     @SuppressWarnings("unused")
     public void onReadyEvent(ReadyEvent event) {
         // Presence Rotations
-        Chad.runThread(() -> {
-
+        new Thread(() -> {
             // If the presence rotation is disabled, return
             if (!ChadVar.rotatePresence)
                 return;
@@ -74,22 +73,22 @@ public final class OnReady {
                     time = 0;
                 }
             }
-        }, Chad.getInternalConsumer());
+        }).start();
 
         // UI Begin
-        if (ChadVar.launchOptions.get("-denyui")) {
+        if (ArgumentHandlerKt.isToggled("denyui")) {
             ChadInstance.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
         }
         else {
-            UIHandler.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UIHandler.LogLevel.INFO);
-            UIHandler.handle.update();
+            UI.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UI.LogLevel.INFO);
+            UI.handle.update();
         }
 
         // Initial website sync
         WebsiteSyncKt.sync(event.getClient());
 
         // Updates the website every 5 minutes
-        Chad.runThread(() -> {
+        new Thread(() -> {
             while (true) {
                 try {
                     TimeUnit.MINUTES.sleep(5);
@@ -99,6 +98,6 @@ public final class OnReady {
 
                 WebsiteSyncKt.sync(event.getClient());
             }
-        }, Chad.getInternalConsumer());
+        }).start();
     }
 }

@@ -2,6 +2,7 @@ package org.woahoverflow.chad.framework.handle;
 
 import org.json.JSONObject;
 import org.woahoverflow.chad.core.ChadVar;
+import org.woahoverflow.chad.framework.ui.ChadError;
 
 /**
  * Interaction with YouTube's API
@@ -87,6 +88,12 @@ public final class YouTubeHandler {
      * @return If a channel was found, return the channel
      */
     public static Channel getYoutubeChannel(String username) {
+        // If the API key wasn't set, throw something
+        if (ChadVar.YOUTUBE_API_KEY == null) {
+            ChadError.throwError("YouTube API Key wasn't set!");
+            return null;
+        }
+
         // The URL to search for the channel
         final String searchUrl = BASE_URL + String.format("search?part=snippet&key=%s&q=%s&type=channel&maxResults=1", ChadVar.YOUTUBE_API_KEY, username);
         JSONObject searchResults = JsonHandler.handle.read(searchUrl);

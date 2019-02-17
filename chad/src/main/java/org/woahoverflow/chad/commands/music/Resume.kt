@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.music
 
-import org.woahoverflow.chad.framework.Chad
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import java.util.*
@@ -25,19 +25,23 @@ class Resume : Command.Class {
             // The channel the bot is in
             val channel = e.client.ourUser.getVoiceStateForGuild(e.guild).channel
 
-            // The channel that the author is in
-            val authorChannel = e.author.getVoiceStateForGuild(e.guild).channel
-
-            if (channel != null) {
+            if (channel == null) {
                 messageHandler.sendError("Music isn't paused!")
                 return@Runnable
             }
 
-            authorChannel.join()
+            if (e.author.getVoiceStateForGuild(e.guild).channel != channel) {
+                messageHandler.sendError("You're not in the same channel as Chad!")
+                return@Runnable
+            }
 
-            val musicManager = Chad.getMusicManager(e.guild)
+            val musicManager = getMusicManager(e.guild, channel)
 
-            // unpauses
+            if (!musicManager.player.isPaused) {
+                messageHandler.sendError("Music isn't paused!")
+                return@Runnable
+            }
+
             musicManager.player.isPaused = false
 
             messageHandler.sendMessage("Music is now un-paused!")

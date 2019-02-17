@@ -9,6 +9,7 @@ import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
+import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -26,6 +27,12 @@ public class Steam implements Command.Class  {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor()).credit("Steam API");
             String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
+
+            if (ChadVar.STEAM_API_KEY == null) {
+                ChadError.throwError("Steam API Key not set!");
+                messageHandler.sendError("Internal error!");
+                return;
+            }
 
             // Checks if the arguments are invalid
             if (args.isEmpty() || args.size() == 1) {
@@ -78,12 +85,12 @@ public class Steam implements Command.Class  {
                         "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="
                             + ChadVar.STEAM_API_KEY + "&steamid=" + steamId).getJSONObject("playerstats")
                         .getJSONArray("stats");
-                    
-                    // Makes sure the array isn't null
+
                     if (csgoStats == null) {
                         messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                         return;
                     }
+
                     // Checks to see if the account is private by catching the NullPointerException
                     try {
                         csgoStats.getJSONObject(0);
@@ -154,7 +161,7 @@ public class Steam implements Command.Class  {
                     messageHandler.sendError("Too Many Requests!");
                     return;
                 }
-                messageHandler.sendError("There was an throwError with that request!");
+                messageHandler.sendError("There was an error with that request!");
                 ee.printStackTrace();
             }
         };

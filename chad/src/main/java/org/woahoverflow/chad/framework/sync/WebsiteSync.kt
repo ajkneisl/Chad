@@ -1,8 +1,11 @@
 package org.woahoverflow.chad.framework.sync
 
-import org.woahoverflow.chad.core.ChadInstance
-import org.woahoverflow.chad.framework.Chad
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.JsonHandler
+import org.woahoverflow.chad.framework.handle.isToggled
+import org.woahoverflow.chad.framework.handle.runningThreads
 import org.woahoverflow.chad.framework.ui.ChadError
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.obj.IGuild
@@ -11,13 +14,23 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.time.Instant
 
+val syncLogger: Logger = LoggerFactory.getLogger("Sync")
+
 /**
  * Syncs Chad's data with the website through MySQL
+ *
+ * @author sho
  */
 fun sync(client: IDiscordClient) {
+    if (isToggled("DISABLE_EXTERNAL_SYNC")) {
+        syncLogger.debug("Skipping external sync...")
+        return
+    }
+
     val connection: Connection
 
-    ChadInstance.getLogger().debug("Starting website sync...")
+    val start = System.currentTimeMillis()
+    syncLogger.debug("Starting website sync...")
 
     try {
         Class.forName("com.mysql.jdbc.Driver")
@@ -36,6 +49,7 @@ fun sync(client: IDiscordClient) {
     var biggestGuildSize = 0
 
     var users = 0
+
     for (guild in guilds) {
         users += guild.users.size
 
@@ -46,12 +60,12 @@ fun sync(client: IDiscordClient) {
     }
 
     prepared = connection.prepareStatement("INSERT INTO `chad` (`stats`, `uptime`, `version`, `time`) VALUES (?, ?, ?, ?)")
-    prepared.setString(1, "{\"guilds\":{\"amount\":${client.guilds.size},\"biggest\":{\"name\":\"${biggestGuild!!.name}\",\"size\":$biggestGuildSize}},\"users\":{\"amount\":$users},\"shards\":{\"amount\":${client.shardCount}},\"threads\":{\"local\":${Chad.internalRunningThreads},\"external\":${Chad.runningThreads}}}")
+    prepared.setString(1, "{\"guilds\":{\"amount\":${client.guilds.size},\"biggest\":{\"name\":\"${biggestGuild!!.name}\",\"size\":$biggestGuildSize}},\"users\":{\"amount\":$users},\"shards\":{\"amount\":${client.shardCount}},\"threads\":{\"external\":$runningThreads}}")
     prepared.setLong(2, ManagementFactory.getRuntimeMXBean().uptime)
-    prepared.setString(3, "v0.8.0")
+    prepared.setString(3, ChadVar.VERSION)
     prepared.setLong(4, Instant.now().epochSecond)
 
     prepared.execute()
 
-    ChadInstance.getLogger().debug("Successfully executed website sync!")
+    syncLogger.debug("Completed website sync! Took ${System.currentTimeMillis()-start}ms")
 }

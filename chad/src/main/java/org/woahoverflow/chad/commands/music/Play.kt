@@ -4,17 +4,13 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import com.vdurmont.emoji.EmojiManager
 import org.woahoverflow.chad.core.ChadVar.playerManager
-import org.woahoverflow.chad.framework.Chad
 import org.woahoverflow.chad.framework.Util
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import sx.blah.discord.handle.obj.IMessage
-import sx.blah.discord.util.RequestBuilder
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Unpause guild's music
@@ -25,9 +21,6 @@ class Play : Command.Class {
     override fun run(e: MessageReceivedEvent, args: List<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
-
-            // The guild's music manager
-            val manager = Chad.getMusicManager(e.guild)
 
             // If the bot needs to join the music channel
             val userChannel = e.author.getVoiceStateForGuild(e.guild).channel
@@ -46,6 +39,13 @@ class Play : Command.Class {
                 return@Runnable
             }
 
+            if (join)
+                userChannel.join()
+
+
+            // The guild's music manager
+            val manager = getMusicManager(e.guild, userChannel)
+
             // Builds the music name
             var string = ""
 
@@ -54,10 +54,9 @@ class Play : Command.Class {
             }
 
             string = string.trim()
-            println(string)
 
             // If they're using a supported url
-            if (string.startsWith("https://youtube.com") || string.startsWith("https://soundcloud.com")) {
+            if (string.startsWith("https://youtube.com") || string.startsWith("https://soundcloud.com") || string.startsWith("http://youtube.com") || string.startsWith("http://soundcloud.com")) {
                 playerManager.loadItemOrdered(manager, string,
                         object : AudioLoadResultHandler {
                             override fun trackLoaded(track: AudioTrack) {
@@ -130,176 +129,22 @@ class Play : Command.Class {
 
                         // When something is searched
                         override fun playlistLoaded(playlist: AudioPlaylist) {
-                            if (playlist.tracks.size < 5) {
+                            if (playlist.tracks.size == 0) {
                                 messageHandler.sendError("There was no results for `$string`!")
                                 return
                             }
 
-                            val builder = StringBuilder()
-
-                            val it = playlist.tracks.iterator()
-
-                            var location = 1
-
-                            while (it.hasNext() && location <= 5) {
-                                val track = it.next()
-                                builder.append("`$location`. `${track.info.title}` [`${Util.fancyDate(track.info.length)}`]\n")
-
-                                location++
+                            if (join) {
+                                userChannel.join()
                             }
 
-                            // The message to be sent
-                            var message: IMessage? = null
+                            val track = playlist.tracks[0]
 
-                            val requestBuilder = RequestBuilder(e.client)
+                            manager.scheduler.queue(track)
 
-                            requestBuilder.shouldBufferRequests(true)
-
-                            requestBuilder.doAction {
-                                message = e.channel.sendMessage(builder.toString().removeSuffix("\n"))
-                                true
-                            }.andThen {
-                                message!!.addReaction(EmojiManager.getForAlias("one"))
-                                true
-                            }.andThen {
-                                message!!.addReaction(EmojiManager.getForAlias("two"))
-                                true
-                            }.andThen {
-                                message!!.addReaction(EmojiManager.getForAlias("three"))
-                                true
-                            }.andThen {
-                                message!!.addReaction(EmojiManager.getForAlias("four"))
-                                true
-                            }.andThen {
-                                message!!.addReaction(EmojiManager.getForAlias("five"))
-                                true
-                            }.execute()
-
-                            var chose = false
-
-                            var reactionOne = false
-                            var reactionTwo = false
-                            var reactionThree = false
-                            var reactionFour = false
-                            var reactionFive = false
-
-                            var timeout = 0
-
-                            while (!chose) {
-                                if (timeout >= 10) {
-                                    messageHandler.sendError("Timed out!")
-                                    return
-                                }
-
-                                val reactionBuilder = RequestBuilder(e.client)
-
-                                requestBuilder.shouldBufferRequests(true)
-
-                                reactionBuilder.doAction {
-                                    reactionFive = message!!.getReactionByUnicode(EmojiManager.getForAlias("five")).getUserReacted(e.author)
-                                    chose = true
-                                    true
-                                }.andThen {
-                                    reactionFour = message!!.getReactionByUnicode(EmojiManager.getForAlias("four")).getUserReacted(e.author)
-                                    chose = true
-                                    true
-                                }.andThen {
-                                    reactionThree = message!!.getReactionByUnicode(EmojiManager.getForAlias("three")).getUserReacted(e.author)
-                                    chose = true
-                                    true
-                                }.andThen {
-                                    reactionTwo = message!!.getReactionByUnicode(EmojiManager.getForAlias("two")).getUserReacted(e.author)
-                                    chose = true
-                                    true
-                                }.andThen {
-                                    reactionOne = message!!.getReactionByUnicode(EmojiManager.getForAlias("one")).getUserReacted(e.author)
-                                    chose = true
-                                    true
-                                }.execute()
-
-                                TimeUnit.SECONDS.sleep(1)
-                                timeout++
-                            }
-
-                            if (reactionOne) {
-                                if (join) {
-                                    userChannel.join()
-                                }
-
-                                val track = playlist.tracks[0]
-
-                                manager.scheduler.queue(track)
-
-                                messageHandler.sendMessage(
-                                        String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
-                                )
-
-                                return
-                            }
-
-                            if (reactionTwo) {
-                                if (join) {
-                                    userChannel.join()
-                                }
-
-                                val track = playlist.tracks[1]
-
-                                manager.scheduler.queue(track)
-
-                                messageHandler.sendMessage(
-                                        String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
-                                )
-
-                                return
-                            }
-
-                            if (reactionThree) {
-                                if (join) {
-                                    userChannel.join()
-                                }
-
-                                val track = playlist.tracks[2]
-
-                                manager.scheduler.queue(track)
-
-                                messageHandler.sendMessage(
-                                        String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
-                                )
-
-                                return
-                            }
-
-                            if (reactionFour) {
-                                if (join) {
-                                    userChannel.join()
-                                }
-
-                                val track = playlist.tracks[3]
-
-                                manager.scheduler.queue(track)
-
-                                messageHandler.sendMessage(
-                                        String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
-                                )
-
-                                return
-                            }
-
-                            if (reactionFive) {
-                                if (join) {
-                                    userChannel.join()
-                                }
-
-                                val track = playlist.tracks[4]
-
-                                manager.scheduler.queue(track)
-
-                                messageHandler.sendMessage(
-                                        String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
-                                )
-
-                                return
-                            }
+                            messageHandler.sendMessage(
+                                    String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
+                            )
                         }
 
                         override fun noMatches() {
@@ -317,7 +162,7 @@ class Play : Command.Class {
 
     override fun help(e: MessageReceivedEvent): Runnable {
         val st = HashMap<String, String>()
-        st["play"] = "Un-Pause music."
+        st["play"] = "Play music."
         return Command.helpCommand(st, "Play", e)
     }
 }

@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info
 
+import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.Util
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
@@ -22,13 +23,13 @@ class Chad : Command.Class {
             val desc = "**Chad** by woahoverflow\n\n" +
                     "**Uptime** ${Util.fancyDate(ManagementFactory.getRuntimeMXBean().uptime)}\n" +
                     "**Ping** `${e.client.shards[0].responseTime}` ms\n" +
-                    "**GitHub** https://woahoverflow.org/github\n"
+                    "**GitHub** https://woahoverflow.org/github\n\nIf there's an issue, or something needs to be fixed, message shozer#0001 on Discord."
 
             embedBuilder.withDesc(desc)
             embedBuilder.withUrl("https://woahoverflow.org/chad")
 
             // Sends
-            MessageHandler(e.channel, e.author).credit("Version 0.8.0").sendEmbed(embedBuilder)
+            MessageHandler(e.channel, e.author).credit(ChadVar.VERSION).sendEmbed(embedBuilder)
         }
     }
 

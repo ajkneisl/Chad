@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.framework.ui;
 
 import org.woahoverflow.chad.core.ChadInstance;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.Chad;
+import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
+import org.woahoverflow.chad.framework.handle.ThreadHandlerKt;
 import org.woahoverflow.chad.framework.ui.panels.GuildPanel;
 import org.woahoverflow.chad.framework.ui.panels.MainPanel;
 import org.woahoverflow.chad.framework.ui.panels.PopUpPanel;
@@ -22,11 +22,11 @@ import java.util.concurrent.TimeUnit;
  *
  * @author sho
  */
-public class UIHandler {
+public class UI {
     /**
      * The handle of this class
      */
-    public static UIHandler handle;
+    public static UI handle;
 
     /**
      * Local Integer, used in some Lambda expressions
@@ -47,8 +47,8 @@ public class UIHandler {
     /**
      * Main Constructor for the UI
      */
-    public UIHandler() {
-        if (ChadVar.launchOptions.get("-denyui")) {
+    public UI() {
+        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().warn("UI has been disabled!");
             return;
         }
@@ -64,13 +64,13 @@ public class UIHandler {
         beginMainFrame();
 
         // UI Updater (updates stats)
-        Chad.runThread(() -> {
-            if (ChadVar.launchOptions.get("-denyuiupdate")) {
+        new Thread(() -> {
+            if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
                 ChadInstance.getLogger().warn("UI Updating has been disabled!");
                 return;
             }
 
-            while (ChadVar.launchOptions.get("-denyuiupdate")) {
+            while (ArgumentHandlerKt.isToggled("DISABLE_UI_UPDATE")) {
                 try {
                     TimeUnit.MINUTES.sleep(5);
                 } catch (InterruptedException e) {
@@ -78,7 +78,7 @@ public class UIHandler {
                 }
                 update();
             }
-        }, Chad.getInternalConsumer());
+        }).start();
     }
 
     /**
@@ -88,7 +88,7 @@ public class UIHandler {
      * @param level The log level
      */
     public final void addLog(String log, LogLevel level) {
-        if (ChadVar.launchOptions.get("-denyui")) {
+        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
             if (level.equals(LogLevel.EXCEPTION)) {
                 ChadInstance.getLogger().error(log);
                 return;
@@ -117,7 +117,7 @@ public class UIHandler {
      * @param error The error string
      */
     static void newError(String error) {
-        if (ChadVar.launchOptions.get("-denyui")) {
+        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().error(error);
             return;
         }
@@ -141,7 +141,7 @@ public class UIHandler {
      * @param guild The guild where the error occurred
      */
     static void newError(String error, IGuild guild) {
-        if (ChadVar.launchOptions.get("-denyui")) {
+        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().error("Error in Guild {}: {}", guild.getStringID(), error);
             return;
         }
@@ -163,7 +163,7 @@ public class UIHandler {
      * @param guild The guild to be displayed
      */
     public static void displayGuild(IGuild guild) {
-        if (ChadVar.launchOptions.get("-denyui")) {
+        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().error("UI is denied, cannot display guild!");
             return;
         }
@@ -221,9 +221,6 @@ public class UIHandler {
 
         // Sets the refresh button
         mainpanel.refreshButton.addActionListener((ev) -> update());
-
-        // Caches all the guilds
-        mainpanel.refreshButton2.addActionListener((ev) -> RequestBuffer.request(() -> ChadInstance.cli.getGuilds().forEach((guild) -> GuildHandler.handle.refreshGuild(guild.getLongID()))));
 
         // Gets the OperatingSystemMXBean
         com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
@@ -315,7 +312,7 @@ public class UIHandler {
         mainpanel.botToUserVal.setText(stats.get("botToPlayer"));
 
         // The Thread hashmap's size
-        mainpanel.threadVal.setText(String.valueOf(Chad.threadHash.size()));
+        mainpanel.threadVal.setText(String.valueOf(ThreadHandlerKt.getThreadHash().size()));
 
         // If the bot is ready and the presence text is present, update the value
         if (ChadInstance.cli.isReady() && ChadInstance.cli.getOurUser().getPresence().getText().isPresent()) {

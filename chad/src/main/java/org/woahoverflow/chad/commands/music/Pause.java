@@ -1,14 +1,14 @@
 package org.woahoverflow.chad.commands.music;
 
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Pauses the guild's player
@@ -32,18 +32,11 @@ public class Pause implements Command.Class {
 
             // Makes sure the user is in the same channel as the bot
             if (e.getAuthor().getVoiceStateForGuild(e.getGuild()).getChannel() != channel) {
-                messageHandler.sendError("You aren't in my channel!");
+                messageHandler.sendError("You aren't in Chads channel!");
                 return;
             }
 
-            GuildMusicManager musicManager = Chad.getMusicManager(e.getGuild());
-
-            // Pauses
-            musicManager.player.setPaused(true);
-
-            // Leave the channel (this makes sure the bot isn't just sitting in the channel paused)
-            channel.leave();
-
+            getMusicManager(e.getGuild(), channel).player.setPaused(true);
             messageHandler.sendMessage("Music is now paused!");
         };
     }

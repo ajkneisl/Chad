@@ -35,25 +35,13 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author sho
  */
-public final class ChadVar
-{
-    /**
-     * Launch Arguments
-     */
-    public static final ConcurrentHashMap<String, Boolean> launchOptions = new ConcurrentHashMap<>();
+public final class ChadVar {
+    public static final String VERSION = "v0.9.0";
 
     /**
      * Gigantic Words List
      */
     public static List<String> wordsList = new ArrayList<>();
-
-    /*
-    Add all of the available launch options
-     */
-    static {
-        launchOptions.put("-denyui", false);
-        launchOptions.put("-denyuiupdate", false);
-    }
 
     /**
      * All the swear words for the swear filter

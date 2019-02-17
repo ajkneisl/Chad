@@ -1,12 +1,13 @@
 package org.woahoverflow.chad.commands.music;
 
-import org.woahoverflow.chad.framework.Chad;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Changes the volume of the guild's player
@@ -46,14 +47,14 @@ public class Volume implements Command.Class {
                 return;
             }
 
-            // Makes sure the value isn't over 1000
+            // Makes sure the value isn't over 100
             if (100 < volume) {
                 messageHandler.sendError("That's too high!");
                 return;
             }
 
             // Sets the volume
-            Chad.getMusicManager(e.getGuild()).player.setVolume(volume);
+            getMusicManager(e.getGuild(), e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel()).player.setVolume(volume);
 
             messageHandler.sendMessage("Set the volume to `"+volume+"`!");
         };

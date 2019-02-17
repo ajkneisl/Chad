@@ -1,8 +1,9 @@
 package org.woahoverflow.chad.commands.developer
 
 import com.sun.management.OperatingSystemMXBean
-import org.woahoverflow.chad.framework.Chad
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.runningThreads
+import org.woahoverflow.chad.framework.handle.threadHash
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
@@ -23,14 +24,12 @@ class CurrentThreads : Command.Class {
 
             // Adds all threads running threads to the stringbuilder, than to the description.
             val stringBuilder = StringBuilder()
-            Chad.threadHash.forEach { key, `val` ->
-                if (key.isDiscordUser) {
-                    stringBuilder.append('`')
-                            .append(key.userId)
-                            .append("`: ")
-                            .append(`val`.size)
-                            .append('\n')
-                }
+            threadHash.forEach { key, `val` ->
+                stringBuilder.append('`')
+                        .append(key)
+                        .append("`: ")
+                        .append(`val`.size)
+                        .append('\n')
             }
 
             // Gets the used ram by the JVM, and the available ram and adds it to the stringbuilder
@@ -41,9 +40,7 @@ class CurrentThreads : Command.Class {
                     ).append("`mb.")
 
             // Get the internal and user run threads
-            stringBuilder.append("\n\nThere's currently `").append(Chad.internalRunningThreads)
-                    .append("` internal thread(s) running, there's currently `")
-                    .append(Chad.runningThreads).append("` user run threads.")
+            stringBuilder.append("\n\nThere's currently `").append(runningThreads).append("` threads running.")
 
             // Append to builder
             embedBuilder.appendDesc(stringBuilder.toString())
