@@ -4,7 +4,7 @@ import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.security.SecureRandom;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  */
 public class RockPaperScissors implements Command.Class {
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
@@ -75,26 +75,22 @@ public class RockPaperScissors implements Command.Class {
         }
 
         // If they're both equal, tie
-        if (i2 == i)
-        {
+        if (i2 == i) {
             return "Chad had `"+chadValue+"`, tie!";
         }
 
         // If Chad has scissors and author has paper
-        if (i2 == 2 && i == 1)
-        {
+        if (i2 == 2 && i == 1) {
             return "Chad had `"+chadValue+"`, Chad wins!";
         }
 
         // If Chad has rock and the author has scissors
-        if (i2 == 0 && i == 2)
-        {
+        if (i2 == 0 && i == 2) {
             return "Chad had `"+chadValue+"`, Chad wins!";
         }
 
         // If Chad has Paper and the author has rock
-        if (i2 == 1 && i == 0)
-        {
+        if (i2 == 1 && i == 0) {
             return "Chad had `"+chadValue+"`, Chad wins!";
         }
 
@@ -103,7 +99,7 @@ public class RockPaperScissors implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rps <rock/paper/scissors>", "Plays rock paper scissors with Chad.");
         return Command.helpCommand(st, "Rock Paper Scissors", e);

@@ -5,7 +5,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.sync.sync
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
@@ -15,13 +15,13 @@ import java.util.*
  * @author sho
  */
 class Sync : Command.Class {
-    override fun help(e: MessageReceivedEvent): Runnable {
+    override fun help(e: MessageEvent): Runnable {
         val hash = HashMap<String, String>()
         hash["sync"] = "Syncs with other applications."
         return Command.helpCommand(hash, "Sync", e)
     }
 
-    override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
             val prefix = GuildHandler.handle.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX) as String

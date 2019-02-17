@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.developer;
 import com.sun.management.OperatingSystemMXBean;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.lang.management.ManagementFactory;
@@ -16,9 +16,8 @@ import java.util.List;
  * @author sho, codebasepw
  */
 public class SystemInfo implements Command.Class  {
-
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return() -> {
             // Gets the OperatingSystemMXBean
             OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
@@ -40,7 +39,7 @@ public class SystemInfo implements Command.Class  {
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("systeminfo", "Displays system/connectivity information about the bot.");
         return Command.helpCommand(st, "System Information", e);

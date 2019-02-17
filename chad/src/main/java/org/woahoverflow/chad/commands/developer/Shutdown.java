@@ -4,7 +4,7 @@ import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.ui.UI;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.IMessage;
@@ -23,9 +23,8 @@ import java.util.concurrent.TimeUnit;
  * @author sho, codebasepw
  */
 public class Shutdown implements Command.Class  {
-
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
@@ -102,7 +101,7 @@ public class Shutdown implements Command.Class  {
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> hash = new HashMap<>();
         hash.put("shutdown", "Shuts the bot down.");
         return Command.helpCommand(hash, "Shutdown", e);

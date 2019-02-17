@@ -4,7 +4,7 @@ import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
@@ -24,14 +24,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class RussianRoulette implements Command.Class {
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rrl <user/@user>", "Plays russian roulette with a selected user.");
         return Command.helpCommand(st, "Russian Roulette", e);
     }
 
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);

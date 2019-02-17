@@ -4,7 +4,7 @@ import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
@@ -14,13 +14,13 @@ import java.util.*
  * @author sho
  */
 class ModifyDevelopers : Command.Class {
-    override fun help(e: MessageReceivedEvent): Runnable {
+    override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
         st["moddev <add/view/remove> [id]"] = "Modifies users with developer role."
         return Command.helpCommand(st, "Modify Developers", e)
     }
 
-    override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
             val prefix = GuildHandler.handle.getGuild(e.guild.longID)

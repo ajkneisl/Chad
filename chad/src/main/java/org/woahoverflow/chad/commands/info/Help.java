@@ -9,7 +9,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Command.Data;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class Help implements Command.Class {
     private static final Pattern REGEX = Pattern.compile(", $");
 
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             StringBuilder stringBuilder = new StringBuilder();
             // Go through each category and add all it's commands to the help string
@@ -83,7 +83,7 @@ public class Help implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("help", "Displays all commands Chad has to offer.");
         return Command.helpCommand(st, "Help", e);

@@ -2,7 +2,7 @@ package org.woahoverflow.chad.commands.info;
 
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class GuildInfo implements Command.Class{
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             // Creates an embed builder and applies the title
             EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -53,7 +53,7 @@ public class GuildInfo implements Command.Class{
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("guildinfo", "Gets information about the guild.");
         return Command.helpCommand(st, "Guild Info", e);

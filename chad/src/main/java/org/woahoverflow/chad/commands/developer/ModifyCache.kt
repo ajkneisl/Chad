@@ -11,7 +11,7 @@ import org.woahoverflow.chad.framework.handle.PlayerHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.ui.UI
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
@@ -24,13 +24,13 @@ import java.util.concurrent.TimeUnit
  * @author sho
  */
 class ModifyCache : Command.Class {
-    override fun help(e: MessageReceivedEvent): Runnable {
+    override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
         st["modcache <reset/view> [cache name]"] = "Modifies a database entry."
         return Command.helpCommand(st, "Modify Cache", e)
     }
 
-    override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
             val prefix = GuildHandler.handle.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)

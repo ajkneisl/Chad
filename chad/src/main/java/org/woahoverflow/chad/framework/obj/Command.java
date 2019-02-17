@@ -3,7 +3,7 @@ package org.woahoverflow.chad.framework.obj;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
@@ -27,9 +27,10 @@ public final class Command {
      */
     public interface Class {
         // When the command is run
-        Runnable run(MessageReceivedEvent e, List<String> args);
+        Runnable run(MessageEvent e, List<String> args);
+
         // When the command is run with help with the only argument
-        Runnable help(MessageReceivedEvent e);
+        Runnable help(MessageEvent e);
     }
 
     /**
@@ -122,7 +123,7 @@ public final class Command {
      * @param messageReceivedEvent The messagerecievedevent
      * @return The help runnable
      */
-    public static synchronized Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageReceivedEvent messageReceivedEvent) {
+    public static synchronized Runnable helpCommand(HashMap<String, String> commands, String commandName, MessageEvent messageReceivedEvent) {
         return () -> {
             // The guild's prefix
             String prefix = (String) GuildHandler.handle.getGuild(messageReceivedEvent.getGuild().getLongID()).getObject(

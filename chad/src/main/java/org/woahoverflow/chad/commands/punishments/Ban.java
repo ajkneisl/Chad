@@ -5,7 +5,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
@@ -21,8 +21,7 @@ import java.util.regex.Pattern;
  *
  * @author sho, codebasepw
  */
-public class Ban implements Command.Class
-{
+public class Ban implements Command.Class {
 
     // Patterns for the message forming
     private static final Pattern GUILD_PATTERN = Pattern.compile("&guild&");
@@ -30,7 +29,7 @@ public class Ban implements Command.Class
     private static final Pattern REASON_PATTERN = Pattern.compile("&reason&");
 
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
@@ -115,7 +114,7 @@ public class Ban implements Command.Class
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("ban <@user>", "Bans a user with no reason.");
         st.put("ban <@user> <reason>", "Bans a user with a specified reason.");

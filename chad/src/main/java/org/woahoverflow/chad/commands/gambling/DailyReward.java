@@ -7,7 +7,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Class;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DailyReward implements Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
@@ -67,7 +67,7 @@ public class DailyReward implements Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("dailyreward", "Claims your daily reward.");
         return Command.helpCommand(st, "Daily Reward", e);

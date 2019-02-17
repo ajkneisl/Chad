@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -23,7 +23,7 @@ import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicMana
  */
 public class Queue implements Command.Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             IVoiceChannel chadChannel = RequestBuffer.request(() -> e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel()).get();
@@ -70,7 +70,7 @@ public class Queue implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("queue", "Gets the current song(s) in the queue.");
         return Command.helpCommand(st, "Queue", e);

@@ -6,7 +6,7 @@ import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CoinFlip implements Command.Class{
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             Player author = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
@@ -340,7 +340,7 @@ public class CoinFlip implements Command.Class{
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("coinflip <amount to bet> <tails/heads>", "Play CoinFlip with Chad");
         st.put("coinflip <amount to bet> <@user>", "Play CoinFlip with another user");

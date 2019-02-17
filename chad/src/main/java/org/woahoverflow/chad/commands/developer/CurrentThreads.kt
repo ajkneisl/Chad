@@ -5,7 +5,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.runningThreads
 import org.woahoverflow.chad.framework.handle.threadHash
 import org.woahoverflow.chad.framework.obj.Command
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.lang.management.ManagementFactory
 import java.util.*
@@ -16,7 +16,7 @@ import java.util.*
  * @author sho, codebasepw
  */
 class CurrentThreads : Command.Class {
-    override fun run(e: MessageReceivedEvent, args: List<String>): Runnable {
+    override fun run(e: MessageEvent, args: List<String>): Runnable {
         return Runnable {
             // Creates an embed builder and applies a title
             val embedBuilder = EmbedBuilder()
@@ -50,7 +50,7 @@ class CurrentThreads : Command.Class {
         }
     }
 
-    override fun help(e: MessageReceivedEvent): Runnable {
+    override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
         st["threads"] = "Displays all running threads for users."
         return Command.helpCommand(st, "Current Threads", e)

@@ -3,7 +3,7 @@ package org.woahoverflow.chad.commands.`fun`
 import org.woahoverflow.chad.framework.handle.JsonHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
@@ -13,13 +13,13 @@ import java.util.*
  * @author sho
  */
 class DogFact : Command.Class {
-    override fun help(e: MessageReceivedEvent): Runnable {
+    override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
         st["dogfact"] = "Gets a dog fact."
         return Command.helpCommand(st, "Dog Fact", e)
     }
 
-    override fun run(e: MessageReceivedEvent, args: MutableList<String>?): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>?): Runnable {
         return Runnable {
             // Gets the fact
             val fact = JsonHandler.handle.read("https://dog-api.kinduff.com/api/facts")!!.getJSONArray("facts").getString(0)

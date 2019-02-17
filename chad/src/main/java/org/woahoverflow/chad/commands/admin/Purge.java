@@ -5,7 +5,7 @@ import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RequestBuffer;
@@ -20,9 +20,8 @@ import java.util.concurrent.TimeUnit;
  * @author sho, codebasepw
  */
 public class Purge implements Command.Class  {
-
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public Runnable run(MessageEvent e, List<String> args) {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
@@ -76,7 +75,7 @@ public class Purge implements Command.Class  {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("purge <amount of messages>", "Removes a specific amount of messages from the current channel.");
         return Command.helpCommand(st, "Purge", e);

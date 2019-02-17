@@ -5,7 +5,7 @@ import org.json.JSONObject
 import org.woahoverflow.chad.framework.handle.JsonHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 import java.util.Random
@@ -17,13 +17,13 @@ import java.util.Random
  * @author sho
  */
 class Meme : Command.Class {
-    override fun help(e: MessageReceivedEvent): Runnable {
+    override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
         st["meme"] = "Get a meme from random subreddits."
         return Command.helpCommand(st, "Meme", e)
     }
 
-    override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             // Picks a subreddit out of the list, and sends about it
             val subreddits = listOf("blackpeopletwitter", "memes", "dankmemes", "me_irl", "2meirl4meirl", "cursedimages", "wholesomememes", "pewdiepiesubmissions", "terriblefacebookmemes", "memeeconomy")
@@ -32,7 +32,7 @@ class Meme : Command.Class {
         }
     }
 
-    private fun sendHotPost(e: MessageReceivedEvent, subreddit: String) {
+    private fun sendHotPost(e: MessageEvent, subreddit: String) {
         val messageHandler = MessageHandler(e.channel, e.author)
         val subredditJson: JSONObject?
         var post: JSONObject?

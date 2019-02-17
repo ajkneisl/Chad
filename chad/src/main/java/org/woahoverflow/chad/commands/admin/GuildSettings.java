@@ -6,7 +6,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Command.Category;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.ArrayList;
@@ -19,9 +19,8 @@ import java.util.List;
  * @author sho
  */
 public class GuildSettings implements Command.Class {
-
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
@@ -118,7 +117,7 @@ public class GuildSettings implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("guildsettings clearstats", "Clears your guild's statistics.");
         st.put("guildsettings stats", "Gets your guild's statistics.");

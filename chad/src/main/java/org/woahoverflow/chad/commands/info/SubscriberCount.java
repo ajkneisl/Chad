@@ -4,7 +4,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.YouTubeHandler;
 import org.woahoverflow.chad.framework.handle.YouTubeHandler.Channel;
 import org.woahoverflow.chad.framework.obj.Command;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.text.DecimalFormat;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class SubscriberCount implements Command.Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             // Puts two YouTube channels in a VS format
             if (args.size() == 3 && args.get(0).equalsIgnoreCase("vs")) {
@@ -80,7 +80,7 @@ public class SubscriberCount implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("subcount <youtuber name>", "Gets a profile of a YouTuber.");
         st.put("subcount vs <youtuber name> <2nd youtuber name>", "Compares two YouTuber's subscriber counts.");

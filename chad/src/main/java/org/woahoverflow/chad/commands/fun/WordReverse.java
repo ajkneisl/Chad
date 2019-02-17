@@ -4,7 +4,7 @@ import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class WordReverse implements Command.Class {
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             // Makes sure the arguments aren't empty
@@ -38,7 +38,7 @@ public class WordReverse implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> hash = new HashMap<>();
         hash.put("wr <word>", "Reverses a word.");
         return Command.helpCommand(hash, "Word Reverse", e);

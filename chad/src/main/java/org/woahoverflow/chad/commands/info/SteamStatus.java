@@ -5,7 +5,7 @@ import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.text.DecimalFormat;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class SteamStatus implements Command.Class {
     @Override
-    public Runnable run(MessageReceivedEvent e, List<String> args) {
+    public Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             JSONObject status = JsonHandler.handle.read("https://steamgaug.es/api/v2");
             EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -52,7 +52,7 @@ public class SteamStatus implements Command.Class {
     }
 
     @Override
-    public Runnable help(MessageReceivedEvent e) {
+    public Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("steamstatus", "Check if steam is online, and how many players there are in popular games.");
         return Command.helpCommand(st, "Steam Status", e);

@@ -5,7 +5,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Player
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
@@ -16,14 +16,14 @@ import java.util.*
  * @author sho
  */
 class Profile : Command.Class {
-    override fun help(e: MessageReceivedEvent?): Runnable {
+    override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
         st["profile"] = "View your Chad profile."
         st["profile <@user>"] = "View another user's Chad profile."
         return Command.helpCommand(st, "Profile", e)
     }
 
-    override fun run(e: MessageReceivedEvent, args: MutableList<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val user: IUser = if (e.message.mentions.isEmpty()) {
                 e.author

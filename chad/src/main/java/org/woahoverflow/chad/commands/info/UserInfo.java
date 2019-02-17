@@ -4,7 +4,7 @@ import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.Guild;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class UserInfo implements Command.Class {
     @Override
-    public final Runnable run(MessageReceivedEvent e, List<String> args) {
+    public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             IUser u;
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
@@ -71,7 +71,7 @@ public class UserInfo implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageReceivedEvent e) {
+    public final Runnable help(MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("userinfo <@user>", "Gives information about the mentioned user.");
         return Command.helpCommand(st, "User Info", e);
