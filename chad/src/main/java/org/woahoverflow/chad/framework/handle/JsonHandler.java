@@ -11,9 +11,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.woahoverflow.chad.core.ChadInstance;
-import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.ui.ChadError;
 import org.woahoverflow.chad.framework.ui.UI;
+import org.woahoverflow.chad.framework.util.Util;
 
 import java.io.*;
 

@@ -15,8 +15,8 @@ import org.woahoverflow.chad.commands.gambling.CoinFlip;
 import org.woahoverflow.chad.commands.gambling.DailyReward;
 import org.woahoverflow.chad.commands.info.*;
 import org.woahoverflow.chad.commands.music.*;
-import org.woahoverflow.chad.commands.nsfw.NBLewdNeko;
-import org.woahoverflow.chad.commands.nsfw.NBPorn;
+import org.woahoverflow.chad.commands.nsfw.Hentai;
+import org.woahoverflow.chad.commands.nsfw.Porn;
 import org.woahoverflow.chad.commands.punishments.Ban;
 import org.woahoverflow.chad.commands.punishments.Kick;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author sho
  */
 public final class ChadVar {
-    public static final String VERSION = "v0.9.1";
+    public static final String VERSION = "v0.9.3";
 
     /**
      * Gigantic Words List
@@ -172,8 +172,8 @@ public final class ChadVar {
         COMMANDS.put("swearfilter", new Command.Data(Category.ADMINISTRATOR, new Swearing(), "sf"));
 
         // NSFW !
-        COMMANDS.put("porn", new Command.Data(Command.Category.NSFW, new NBPorn(), "pn"));
-        COMMANDS.put("lewdneko", new Command.Data(Command.Category.NSFW, new NBLewdNeko(), "neko"));
+        COMMANDS.put("porn", new Command.Data(Command.Category.NSFW, new Porn(), "pn"));
+        COMMANDS.put("hentai", new Command.Data(Command.Category.NSFW, new Hentai(), "hentie"));
 
         // DEVELOPER!
         COMMANDS.put("threads", new Command.Data(Command.Category.DEVELOPER, new CurrentThreads(), "cth"));

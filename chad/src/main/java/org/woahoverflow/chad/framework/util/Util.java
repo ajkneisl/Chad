@@ -1,4 +1,4 @@
-package org.woahoverflow.chad.framework;
+package org.woahoverflow.chad.framework.util;
 
 import org.woahoverflow.chad.core.ChadInstance;
 import sx.blah.discord.api.IDiscordClient;

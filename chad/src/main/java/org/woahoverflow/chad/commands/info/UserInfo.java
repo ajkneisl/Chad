@@ -31,7 +31,7 @@ public class UserInfo implements Command.Class {
                 u = e.getMessage().getMentions().get(0);
             else {
                 // If user wasn't mentioned, return
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_USER, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "userinfo **@user**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "userinfo **@user**");
                 return;
             }
 
@@ -41,9 +41,7 @@ public class UserInfo implements Command.Class {
                 .map(r -> r.getName() + ", ") // Puts them all together
                 .collect(Collectors.joining()); // Joins
 
-            // Create an embed builder, and begin
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.withTitle("User : " + u.getName());
 
             // If the user has no roles, set to none, if not add the roles.
             String roleString = roleBuilder.isEmpty() ? "none"
@@ -58,10 +56,11 @@ public class UserInfo implements Command.Class {
 
             // Sets the description
             embedBuilder.withDesc(
-                    "Human `"+human+ '`' +
-                            "\nRoles `"+roleString+ '`' +
-                            "\nGuild Join Date `"+format.format(Date.from(e.getGuild().getJoinTimeForUser(u)))+ '`'+
-                            "\nAccount Creation Date `"+format.format(Date.from(u.getCreationDate()))+ '`'
+                    "**Username** : `"+u.getName()+'#'+u.getDiscriminator()+"`" +
+                            "\n**Human** : `"+human+ '`' +
+                            "\n**Roles** : `"+roleString+ '`' +
+                            "\n**Guild Join Date** : `"+format.format(Date.from(e.getGuild().getJoinTimeForUser(u)))+ '`'+
+                            "\n**Account Creation Date** : `"+format.format(Date.from(u.getCreationDate()))+ '`'
             );
 
             // Sends the embed with the user's avatar.

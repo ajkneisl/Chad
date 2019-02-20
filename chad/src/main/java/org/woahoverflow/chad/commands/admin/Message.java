@@ -295,8 +295,7 @@ public class Message implements Command.Class  {
                     String channelString = (String) guild.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL);
 
                     // Makes sure the channel string isn't null
-                    if (channelString == null)
-                    {
+                    if (channelString == null) {
                         messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
                         return;
                     }

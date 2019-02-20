@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.framework.handle;
 
 import org.apache.http.util.TextUtils;
-import org.woahoverflow.chad.framework.Util;
 import org.woahoverflow.chad.framework.obj.Guild.DataType;
 import org.woahoverflow.chad.framework.ui.ChadError;
+import org.woahoverflow.chad.framework.util.Util;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
