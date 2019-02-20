@@ -64,7 +64,7 @@ public final class GuildJoinLeave {
             // The join message
             final String joinMessage = "Hello, i'm Chad!\n"
                 + "My prefix is `c!`\n\n"
-                + "Customize Chad at https://woahoverflow.org/chad/dashboard";
+                + "View my commands with `c!help`";
 
             // If the bot has permission to, send the join message into the default channel
             if (RequestBuffer.request(() -> defaultChannel.getModifiedPermissions(event.getClient().getOurUser()).contains(Permissions.SEND_MESSAGES)).get())
