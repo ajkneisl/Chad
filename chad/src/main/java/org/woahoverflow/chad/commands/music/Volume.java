@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.commands.music;
 
-import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
@@ -49,7 +48,7 @@ public class Volume implements Command.Class {
             }
 
             // Makes sure the value isn't over 100, but also allows developers to get whatever they want
-            if (100 < volume && !ChadVar.DEVELOPERS.contains(e.getAuthor().getLongID())) {
+            if (100 < volume) {
                 messageHandler.sendError("That's too high!");
                 return;
             }
