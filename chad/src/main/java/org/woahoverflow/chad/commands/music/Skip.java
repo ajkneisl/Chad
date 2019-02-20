@@ -37,13 +37,15 @@ public class Skip implements Command.Class {
                 return;
             }
 
-            // Skips all of the songs in the queue
-            if (args.size() == 1 && args.get(0).equalsIgnoreCase("all")) {
-
-            }
-
             // The guild's music manager
             GuildMusicManager manager = getMusicManager(e.getGuild(), channel);
+
+            // Skips all of the songs in the queue
+            if (args.size() == 1 && args.get(0).equalsIgnoreCase("all")) {
+                manager.clear();
+                messageHandler.sendMessage("Skipped all songs in queue!");
+                return;
+            }
 
             manager.scheduler.nextTrack();
             messageHandler.sendMessage("Skipped current song!");
