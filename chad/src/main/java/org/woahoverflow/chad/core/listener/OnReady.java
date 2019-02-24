@@ -3,6 +3,7 @@ package org.woahoverflow.chad.core.listener;
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
+import org.woahoverflow.chad.framework.handle.RedditKt;
 import org.woahoverflow.chad.framework.sync.WebsiteSyncKt;
 import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -11,7 +12,8 @@ import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.security.SecureRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The on ready event from Discord
@@ -28,55 +30,8 @@ public final class OnReady {
     @EventSubscriber
     @SuppressWarnings("unused")
     public void onReadyEvent(ReadyEvent event) {
-        // Presence Rotations
-        new Thread(() -> {
-            // If the presence rotation is disabled, return
-            if (!ChadVar.rotatePresence)
-                return;
-
-            // Rotation Values
-            Object[] ar = ChadVar.presenceRotation.toArray();
-
-            // Sets the new status
-            ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
-
-            // Changes the discord presence
-            RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
-
-            // The time between the while loop
-            int time = 0;
-
-            while (true) {
-                // Adds 10 seconds
-                time += 10;
-
-                // Waits 10 seconds
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-
-                // If it's been the amount of seconds in the rotation time
-                if (time == ChadVar.rotationInteger) {
-                    // If presence rotation is disabled
-                    if (!ChadVar.rotatePresence)
-                        return;
-
-                    // Sets the new status
-                    ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
-
-                    // Changes the discord presence
-                    RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
-
-                    // Resets time to 0
-                    time = 0;
-                }
-            }
-        }).start();
-
         // UI Begin
-        if (ArgumentHandlerKt.isToggled("denyui")) {
+        if (ArgumentHandlerKt.isToggled("disable_ui")) {
             ChadInstance.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
         }
         else {
@@ -87,17 +42,53 @@ public final class OnReady {
         // Initial website sync
         WebsiteSyncKt.sync(event.getClient());
 
-        // Updates the website every 5 minutes
-        new Thread(() -> {
-            while (true) {
-                try {
-                    TimeUnit.MINUTES.sleep(5);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
+        Timer timer = new Timer();
 
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
                 WebsiteSyncKt.sync(event.getClient());
             }
-        }).start();
+        }, 0, 1000 * 60 * 5);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                RedditKt.getSubreddits().clear();
+
+                ChadInstance.getLogger().debug("Reset all cached subreddits!");
+            }
+        }, 0, 86400 * 1000);
+
+        // If the presence rotation is disabled, return
+        if (!ChadVar.rotatePresence)
+            return;
+
+        // Rotation Values
+        Object[] ar = ChadVar.presenceRotation.toArray();
+
+        // Sets the new status
+        ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
+
+        // Changes the discord presence
+        RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
+
+        // The time between the while loop
+        int time = 0;
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // If presence rotation is disabled
+                if (!ChadVar.rotatePresence)
+                    return;
+
+                // Sets the new status
+                ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
+
+                // Changes the discord presence
+                RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
+            }
+        }, 0, 1000 * 60 * 5);
     }
 }

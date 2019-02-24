@@ -2,7 +2,6 @@ package org.woahoverflow.chad.framework.obj;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.TrackScheduler;
 import sx.blah.discord.handle.obj.IChannel;
@@ -52,8 +51,7 @@ public class GuildMusicManager {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                ChadInstance.getLogger().debug("Checking if in channel...");
-                if ((player.isPaused() || player.getPlayingTrack() == null) && RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() != null).get()) {
+                if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
                     amount++;
                 } else {
                     amount = 0;

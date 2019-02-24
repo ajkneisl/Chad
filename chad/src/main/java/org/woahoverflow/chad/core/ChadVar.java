@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author sho
  */
 public final class ChadVar {
-    public static final String VERSION = "v0.9.3";
+    public static final String VERSION = "v0.9.4";
 
     /**
      * Gigantic Words List
@@ -150,8 +150,6 @@ public final class ChadVar {
         COMMANDS.put("guildinfo", new Command.Data(Command.Category.INFO, new GuildInfo(), "ginfo"));
         COMMANDS.put("reddittop", new Command.Data(Command.Category.INFO, new RedditTop(), "rtop"));
         COMMANDS.put("redditnew", new Command.Data(Command.Category.INFO, new RedditNew(), "rnew"));
-        COMMANDS.put("contributors", new Command.Data(Command.Category.INFO, new Contributors(), "contr"));
-        COMMANDS.put("changelog", new Data(Category.INFO, new ChangeLog(), "chlog"));
         COMMANDS.put("subscribercount", new Data(Category.INFO, new SubscriberCount(), "subcount", "subc"));
         COMMANDS.put("steamstatus", new Data(Category.INFO, new SteamStatus(), "steamst"));
         COMMANDS.put("aliases", new Data(Category.INFO, new Aliases(), "alias"));

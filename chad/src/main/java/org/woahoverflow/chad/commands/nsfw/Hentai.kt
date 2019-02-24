@@ -1,9 +1,11 @@
 package org.woahoverflow.chad.commands.nsfw
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.PostType
+import org.woahoverflow.chad.framework.handle.getPost
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.util.Reddit
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
+import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
 /**
@@ -29,18 +31,17 @@ class Hentai : Command.Class {
             }
 
             // Picks a subreddit out of the list, and sends about it
-            val subreddits = listOf(
+            val subreddits = arrayListOf(
                     "hentai",
-                    "animemilfs",
                     "ecchi",
                     "thick_hentai",
                     "rule34",
                     "futanari",
-                    "HENTAI_GIF",
                     "WesternHentai",
                     "pantsu",
                     "hentaibondage",
-                    "MonsterGirl", "yuri",
+                    "MonsterGirl",
+                    "yuri",
                     "Naruto_Hentai",
                     "HQHentai",
                     "yaoi",
@@ -49,8 +50,17 @@ class Hentai : Command.Class {
                     "OppaiLove",
                     "uncensoredhentai"
             )
-            val subreddit = Random().nextInt(subreddits.size)
-            Reddit().sendHotPost(e, subreddits[subreddit])
+
+            val post = getPost(subreddits, PostType.HOT)!!.getJSONObject("data")
+
+            val embedBuilder = EmbedBuilder()
+
+            embedBuilder.withUrl("https://reddit.com" + post.getString("permalink"))
+            embedBuilder.withTitle(post.getString("title"))
+            embedBuilder.withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")
+            embedBuilder.withImage(post.getString("url"))
+
+            messageHandler.credit(post.getString("subreddit_name_prefixed")).sendEmbed(embedBuilder)
         }
     }
 }

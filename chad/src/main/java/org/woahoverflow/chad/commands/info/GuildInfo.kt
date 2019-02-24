@@ -1,7 +1,9 @@
 package org.woahoverflow.chad.commands.info
 
+import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
+import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.text.SimpleDateFormat
@@ -28,6 +30,8 @@ class GuildInfo : Command.Class {
                     bot++
             }
 
+            val guild = GuildHandler.handle.getGuild(e.guild.longID)
+
             // Applies the description
             embedBuilder.withDesc(
                     "**Name** : `${e.guild.name}`" +
@@ -38,7 +42,9 @@ class GuildInfo : Command.Class {
                             "\n**Voice Channels** : `${e.guild.voiceChannels.size}`" +
                             "\n**Text Channels** : `${e.guild.channels.size}`" +
                             "\n**Categories** : `${e.guild.categories.size}`" +
-                            "\n**Creation Date** : `${SimpleDateFormat("MM/dd/yyyy").format(Date.from(e.guild.creationDate))}`"
+                            "\n**Creation Date** : `${SimpleDateFormat("MM/dd/yyyy").format(Date.from(e.guild.creationDate))}`" +
+                            "\n\n**Messages Sent** : `${guild.getObject(Guild.DataType.MESSAGES_SENT)}`" +
+                            "\n\n**Commands Sent** : `${guild.getObject(Guild.DataType.COMMANDS_SENT)}`"
             )
 
             // Adds the guild's image and sends.

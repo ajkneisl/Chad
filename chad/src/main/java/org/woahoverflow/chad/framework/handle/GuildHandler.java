@@ -83,7 +83,7 @@ public class GuildHandler {
         guildDocument.put("kick_message_on", true);
 
         // Statistics
-        guildDocument.put("messages_sent", 0L);
+        guildDocument.put("g", 0L);
         guildDocument.put("commands_sent", 0L);
 
         // Join Role
