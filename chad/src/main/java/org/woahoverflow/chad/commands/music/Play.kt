@@ -10,6 +10,8 @@ import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.util.Util
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
+import sx.blah.discord.handle.obj.Permissions
+import sx.blah.discord.util.RequestBuffer
 import java.util.*
 
 /**
@@ -44,6 +46,15 @@ class Play : Command.Class {
                 return@Runnable
             }
 
+            var ret = false
+            RequestBuffer.request {
+                if (userChannel.getModifiedPermissions(e.author).contains(Permissions.VOICE_CONNECT)) {
+                    messageHandler.sendError("I don't have permission to join `${userChannel.name}`!")
+                    ret = true
+                }
+            }
+
+            if (ret) return@Runnable
             if (join) userChannel.join()
 
             // The guild's music manager
@@ -52,20 +63,16 @@ class Play : Command.Class {
             // Builds the music name
             var string = ""
 
-            for (arg in args) {
-                string += "$arg "
-            }
+            for (arg in args) string += "$arg "
 
             string = string.trim()
 
             // If they're using a supported url
-            if (string.startsWith("https://youtube.com") || string.startsWith("https://soundcloud.com") || string.startsWith("http://youtube.com") || string.startsWith("http://soundcloud.com")) {
+            if (string.startsWith("https://soundcloud.com")|| string.startsWith("http://soundcloud.com")) {
                 playerManager.loadItemOrdered(manager, string,
                         object : AudioLoadResultHandler {
                             override fun trackLoaded(track: AudioTrack) {
-                                if (join) {
-                                    userChannel.join()
-                                }
+                                if (join) userChannel.join()
 
                                 manager.scheduler.queue(track)
 
