@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.woahoverflow.chad.core.ChadVar.eightBallResults;
@@ -89,35 +90,19 @@ public final class ChadInstance {
 
         // Initializes the framework & a lot of stuff
         long start = System.currentTimeMillis();
-        ChadInstance.getLogger().debug("Starting init...");
+        ChadInstance.getLogger().debug("Starting bot...");
 
         ThreadHandlerKt.initThreads();
 
-        /*
-        Chad's UI
-         */
         UI.handle = new UI();
 
-        /*
-        Swear Words
-        8ball results
-        Developers
-        Adds all the presences
-        Gets all the words from the CDN
-        Updates all guild's statistics each hour
-         */
-        new Thread(() -> {
-            long startTime = System.currentTimeMillis();
-            ChadInstance.getLogger().debug("Starting data grab...");
-
+        Thread ex = new Thread(() -> {
             JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/swears.json").forEach((word) -> swearWords.add((String) word));
             JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json").forEach((word) -> eightBallResults.add((String) word));
             JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v));
-
             JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) -> {
                 if (Boolean.parseBoolean(((JSONObject) v).getString("allow"))) {
-                    UI.handle
-                            .addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UI.LogLevel.INFO);
+                    UI.handle.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UI.LogLevel.INFO);
                     ChadVar.DEVELOPERS.add(((JSONObject) v).getLong("id"));
                 } else {
                     UI.handle.addLog("Avoided adding user " + ((JSONObject) v).getString("display_name"), UI.LogLevel.INFO);
@@ -125,49 +110,42 @@ public final class ChadInstance {
             });
 
             try {
-                // Defines the URL and Connection
                 URL url = new URL("https://cdn.woahoverflow.org/data/chad/words.txt");
                 HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-
-                // Sets the properties of the connection
                 con.setRequestMethod("GET");
                 con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT);
-
-                // Creates a buffered reader at the word url
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-
-                // Adds the words to the list
                 ChadVar.wordsList = in.lines().collect(Collectors.toList());
-
-                // Closes the reader
                 in.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+        });
 
-            ChadInstance.getLogger().debug("Completed data grab! Took " + (System.currentTimeMillis()-startTime) + "ms");
-        }).start();
-
-        /*
-        Updates all guild's statistics each hour
-         */
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                RequestBuffer.request(ChadInstance.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
-            }
-        }, 0, 1000*60*60);
-
-        ChadInstance.getLogger().debug("Completed init! Took " + (System.currentTimeMillis() - start) + "ms");
-
-        // Logs out of the client on shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            // Saves all of the guild's data
+        // Sets up timers & other stuff
+        Thread timerTh = new Thread(() -> {
+            // Updates all guild stats
             RequestBuffer.request(cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
 
-            // Logout
-            cli.logout();
-        }));
+            Timer timer = new Timer();
+
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    RequestBuffer.request(ChadInstance.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+                }
+            }, 0, 1000*60*60); // Every hour
+        });
+
+        while (timerTh.isAlive() || ex.isAlive()) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ChadInstance.getLogger().debug("Completed startup! Took " + (System.currentTimeMillis() - start) + "ms");
     }
 
 }

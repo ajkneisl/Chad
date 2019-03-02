@@ -39,18 +39,13 @@ public final class OnReady {
             UI.handle.update();
         }
 
-        // Initial website sync
-        WebsiteSyncKt.sync(event.getClient());
-
         Timer timer = new Timer();
-
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 WebsiteSyncKt.sync(event.getClient());
             }
         }, 0, 1000 * 60 * 5);
-
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -66,15 +61,6 @@ public final class OnReady {
 
         // Rotation Values
         Object[] ar = ChadVar.presenceRotation.toArray();
-
-        // Sets the new status
-        ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
-
-        // Changes the discord presence
-        RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
-
-        // The time between the while loop
-        int time = 0;
 
         timer.schedule(new TimerTask() {
             @Override

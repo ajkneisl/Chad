@@ -4,12 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.TrackScheduler;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RequestBuffer;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,6 +31,11 @@ public class GuildMusicManager {
     public long amount;
 
     /**
+     * Timer :)
+     */
+    private Timer timer = new Timer();
+
+    /**
      * Creates a Guild Music Manager
      *
      * @param manager The manager
@@ -48,7 +49,7 @@ public class GuildMusicManager {
 
         amount = 0;
 
-        new Timer().schedule(new TimerTask() {
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
@@ -57,36 +58,13 @@ public class GuildMusicManager {
                     amount = 0;
                 }
 
+                // Bot doesn't send a message due to it being very iffy, and finding a channel with permissions is difficult
                 if (amount >= 60) {
-                    IGuild guild = RequestBuffer.request(() -> cli.getGuildByID(scheduler.guildId)).get();
+                    RequestBuffer.request(() -> {
+                        RequestBuffer.request(() -> cli.getGuildByID(scheduler.guildId).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.guildId)).getChannel().leave());
+                    });
 
-                    IChannel defaultChannel = RequestBuffer.request(guild::getDefaultChannel).get();
-                    IChannel usingChannel = null;
-
-                    // If Chad doesn't have permissions to send messages in the default channel, go until one's found
-                    if (RequestBuffer.request(() -> defaultChannel.getModifiedPermissions(cli.getOurUser()).contains(Permissions.SEND_MESSAGES)).get()) {
-                        final List<IChannel> channels = RequestBuffer.request(guild::getChannels).get();
-
-                        for (IChannel channel : channels) {
-                            boolean hasPermission = channel.getModifiedPermissions(cli.getOurUser()).contains(Permissions.SEND_MESSAGES);
-
-                            if (hasPermission) {
-                                usingChannel = channel;
-                            }
-                        }
-                    } else {
-                        usingChannel = defaultChannel;
-                    }
-
-                    if (usingChannel != null) {
-                        final IChannel finalChannel = usingChannel;
-                        RequestBuffer.request(() -> finalChannel.sendMessage("No music has been played in the last 5 minutes, leaving!"));
-                    }
-
-                    RequestBuffer.request(() -> guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel().leave());
-
-                    // Removes this manager, so when requested next it's reset
-                    ChadVar.musicManagers.remove(guildId);
+                    bye();
                 }
             }
         }, 0, 1000);
@@ -114,5 +92,15 @@ public class GuildMusicManager {
      */
     public void updateChannel(long channelId) {
         scheduler.channelId = channelId;
+    }
+
+    /**
+     * This gets rid of the music manager, until the next song starts to play.
+     */
+    public void bye() {
+        ChadVar.musicManagers.remove(scheduler.guildId);
+
+        // Makes sure the concurrent check stops
+        timer = null;
     }
 }

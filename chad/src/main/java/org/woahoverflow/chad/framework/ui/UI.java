@@ -54,7 +54,7 @@ public class UI {
         }
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // makes it look better :)
-        } catch (@SuppressWarnings("all") Exception e) { // it needs to shut the fuck up
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

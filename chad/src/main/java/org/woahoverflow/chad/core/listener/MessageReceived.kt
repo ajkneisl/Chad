@@ -43,7 +43,7 @@ class MessageReceived {
             // Checks if the word contains a swear word
             for (swearWord in ChadVar.swearWords) {
                 // Ass is a special case, due to words like `bass`
-                if (swearWord.equals("ass", ignoreCase = true) && character.contains("ass")) {
+                if (swearWord.equals("ass", ignoreCase = true) && character.contains("ass", ignoreCase = true)) {
                     // Goes through all of the arguments
                     for (argument in argArray) {
                         // If the argument is just ass

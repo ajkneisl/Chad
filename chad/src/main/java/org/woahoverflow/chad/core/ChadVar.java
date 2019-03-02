@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author sho
  */
 public final class ChadVar {
-    public static final String VERSION = "v0.9.4";
+    public static final String VERSION = "v0.9.5";
 
     /**
      * Gigantic Words List

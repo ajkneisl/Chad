@@ -22,10 +22,7 @@ val syncLogger: Logger = LoggerFactory.getLogger("Sync")
  * @author sho
  */
 fun sync(client: IDiscordClient) {
-    if (isToggled("DISABLE_EXTERNAL_SYNC")) {
-        syncLogger.debug("Skipping external sync...")
-        return
-    }
+    if (isToggled("DISABLE_EXTERNAL_SYNC")) return
 
     val connection: Connection
 
