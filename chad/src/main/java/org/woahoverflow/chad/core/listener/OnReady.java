@@ -65,12 +65,13 @@ public final class OnReady {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                // If presence rotation is disabled
-                if (!ChadVar.rotatePresence)
-                    return;
+                if (!ChadVar.rotatePresence) return;
 
                 // Sets the new status
-                ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
+                if (ar.length == 0)
+                    ChadVar.currentStatus = "uh oh !";
+                else
+                    ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
 
                 // Changes the discord presence
                 RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));

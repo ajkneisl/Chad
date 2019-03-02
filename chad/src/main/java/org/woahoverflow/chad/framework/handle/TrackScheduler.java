@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +36,22 @@ public class TrackScheduler extends AudioEventAdapter {
     public long channelId;
 
     /**
+     * The parent music manager
+     */
+    private GuildMusicManager musicManager;
+
+    /**
      * Creates a new Track Scheduler
      *
      * @param player The Audio Player
      * @param guildId The Guild's ID
      */
-    public TrackScheduler(AudioPlayer player, long guildId, long channelId) {
+    public TrackScheduler(AudioPlayer player, long guildId, long channelId, GuildMusicManager musicManager) {
         this.guildId = guildId;
         this.player = player;
         this.channelId = channelId;
+        this.musicManager = musicManager;
+
         queue = new ArrayList<>();
     }
 
@@ -53,21 +61,22 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param track The track to queue
      */
     public void queue(AudioTrack track) {
-        if (!player.startTrack(track, true)) {
-            queue.add(track);
-        }
+        if (!player.startTrack(track, true)) queue.add(track);
+
+        musicManager.setActive(true);
     }
 
     /**
      * Skips to the next song
      */
     public void nextTrack() {
-        if (queue.isEmpty()) {
-            player.stopTrack();
-        } else {
+        if (queue.isEmpty()) player.stopTrack();
+        else {
             AudioTrack track = queue.get(0);
             player.startTrack(track, false);
             queue.remove(track);
+
+            musicManager.setActive(true);
         }
     }
 
@@ -77,9 +86,7 @@ public class TrackScheduler extends AudioEventAdapter {
      * @return The next track
      */
     public AudioTrack getNextTrack() {
-        if (queue.isEmpty())
-            return null;
-
+        if (queue.isEmpty()) return null;
         return queue.get(0);
     }
 
@@ -102,8 +109,6 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.mayStartNext) {
-            nextTrack();
-        }
+        if (endReason.mayStartNext) nextTrack();
     }
 }

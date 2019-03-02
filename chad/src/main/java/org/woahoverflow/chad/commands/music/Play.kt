@@ -26,6 +26,11 @@ class Play : Command.Class {
             val userChannel = e.author.getVoiceStateForGuild(e.guild).channel
             val chadChannel = e.client.ourUser.getVoiceStateForGuild(e.guild).channel
 
+            if (args.isEmpty()) {
+                messageHandler.sendError("Invalid arguments!")
+                return@Runnable
+            }
+
             if (userChannel == null) {
                 messageHandler.sendError("You're not in a channel!")
                 return@Runnable
@@ -39,9 +44,7 @@ class Play : Command.Class {
                 return@Runnable
             }
 
-            if (join)
-                userChannel.join()
-
+            if (join) userChannel.join()
 
             // The guild's music manager
             val manager = getMusicManager(e.guild, userChannel)

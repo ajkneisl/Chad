@@ -16,12 +16,11 @@ fun getMusicManager(guild: IGuild, voiceChannel: IVoiceChannel): GuildMusicManag
 
     if (musicManager == null) {
         musicManager = GuildMusicManager(playerManager, guildId, channelId)
+
         musicManagers[guildId] = musicManager
     }
 
     musicManager.scheduler.channelId = voiceChannel.longID
-
     guild.audioManager.audioProvider = musicManager.audioProvider
-
     return musicManager
 }

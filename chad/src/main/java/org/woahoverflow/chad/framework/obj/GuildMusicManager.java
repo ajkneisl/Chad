@@ -2,12 +2,10 @@ package org.woahoverflow.chad.framework.obj;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.TrackScheduler;
 import sx.blah.discord.util.RequestBuffer;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import static org.woahoverflow.chad.core.ChadInstance.cli;
 
@@ -31,9 +29,9 @@ public class GuildMusicManager {
     public long amount;
 
     /**
-     * Timer :)
+     * If the manager is active
      */
-    private Timer timer = new Timer();
+    private boolean active;
 
     /**
      * Creates a Guild Music Manager
@@ -43,31 +41,35 @@ public class GuildMusicManager {
      */
     public GuildMusicManager(AudioPlayerManager manager, long guildId, long channelId) {
         player = manager.createPlayer();
-        scheduler = new TrackScheduler(player, guildId, channelId);
+        scheduler = new TrackScheduler(player, guildId, channelId, this);
+
+        active = true;
 
         player.addListener(scheduler);
 
         amount = 0;
 
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
-                    amount++;
-                } else {
-                    amount = 0;
+        new Thread(() -> {
+            while (active) {
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
-                // Bot doesn't send a message due to it being very iffy, and finding a channel with permissions is difficult
+                if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
+                    amount++;
+                } else amount = 0;
+
                 if (amount >= 60) {
                     RequestBuffer.request(() -> {
                         RequestBuffer.request(() -> cli.getGuildByID(scheduler.guildId).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.guildId)).getChannel().leave());
                     });
 
-                    bye();
+                    active = false;
                 }
             }
-        }, 0, 1000);
+        }).start();
     }
 
     /**
@@ -87,20 +89,11 @@ public class GuildMusicManager {
     }
 
     /**
-     * Updates the voice channel
-     * @param channelId The new channel
+     * If the player is active
+     *
+     * @param active If the player is active
      */
-    public void updateChannel(long channelId) {
-        scheduler.channelId = channelId;
-    }
-
-    /**
-     * This gets rid of the music manager, until the next song starts to play.
-     */
-    public void bye() {
-        ChadVar.musicManagers.remove(scheduler.guildId);
-
-        // Makes sure the concurrent check stops
-        timer = null;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

@@ -26,7 +26,6 @@ class Porn : Command.Class {
 
             // Picks a subreddit out of the list, and sends about it
             val subreddits = arrayListOf(
-                    "CoffeeGoneWild",
                     "beachgirls",
                     "collegensfw",
                     "LegalTeens",
