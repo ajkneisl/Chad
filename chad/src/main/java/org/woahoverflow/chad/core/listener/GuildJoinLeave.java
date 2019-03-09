@@ -35,12 +35,9 @@ public final class GuildJoinLeave {
         // Makes sure all users are into the database
         new Thread(() -> {
             List<IUser> users = RequestBuffer.request(() -> event.getGuild().getUsers()).get();
-
             for (IUser user : users) {
                 Player player = PlayerHandler.handle.getPlayer(user.getLongID());
-
                 ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
-
                 if (!guildData.contains(event.getGuild().getLongID())) {
                     guildData.add(event.getGuild().getLongID());
                     player.setObject(DataType.GUILD_DATA, guildData);

@@ -5,7 +5,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import org.woahoverflow.chad.framework.handle.TrackScheduler;
 import sx.blah.discord.util.RequestBuffer;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.woahoverflow.chad.core.ChadInstance.cli;
 
@@ -49,27 +50,26 @@ public class GuildMusicManager {
 
         amount = 0;
 
-        new Thread(() -> {
-            while (active) {
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        new Timer().schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (active) {
+                            if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
+                                amount++;
+                                System.out.println("Leave");
+                            } else amount = 0;
 
-                if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
-                    amount++;
-                } else amount = 0;
+                            if (amount >= 60) {
+                                RequestBuffer.request(() -> {
+                                    RequestBuffer.request(() -> cli.getGuildByID(scheduler.guildId).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.guildId)).getChannel().leave());
+                                });
 
-                if (amount >= 60) {
-                    RequestBuffer.request(() -> {
-                        RequestBuffer.request(() -> cli.getGuildByID(scheduler.guildId).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.guildId)).getChannel().leave());
-                    });
-
-                    active = false;
-                }
-            }
-        }).start();
+                                active = false;
+                            }
+                        }
+                    }
+                }, 0, 1000);
     }
 
     /**

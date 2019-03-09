@@ -83,7 +83,7 @@ public class GuildHandler {
         guildDocument.put("kick_message_on", true);
 
         // Statistics
-        guildDocument.put("g", 0L);
+        guildDocument.put("messages_sent", 0L);
         guildDocument.put("commands_sent", 0L);
 
         // Join Role
@@ -120,8 +120,7 @@ public class GuildHandler {
         final ConcurrentHashMap<Guild.DataType, Object> guildData = new ConcurrentHashMap<>();
 
         // Sets the data
-        for (Guild.DataType type : Guild.DataType.values())
-        {
+        for (Guild.DataType type : Guild.DataType.values()) {
             guildData.put(type, guildDataDocument.get(type.toString().toLowerCase()));
         }
 
@@ -135,13 +134,11 @@ public class GuildHandler {
      */
     public Guild getGuild(long guild) {
         // If the guild's in in the hash map, return it
-        if (guildExists(guild))
-        {
+        if (guildExists(guild)) {
             return guilds.get(guild);
         }
 
-        if (DatabaseManager.GUILD_DATA.documentExists(guild))
-        {
+        if (DatabaseManager.GUILD_DATA.documentExists(guild)) {
             Document get = DatabaseManager.GUILD_DATA.collection.find(new Document("id", guild)).first();
 
             if (get == null)

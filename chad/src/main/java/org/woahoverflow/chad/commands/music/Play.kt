@@ -46,16 +46,14 @@ class Play : Command.Class {
                 return@Runnable
             }
 
-            var ret = false
-            RequestBuffer.request {
-                if (userChannel.getModifiedPermissions(e.author).contains(Permissions.VOICE_CONNECT)) {
-                    messageHandler.sendError("I don't have permission to join `${userChannel.name}`!")
-                    ret = true
-                }
-            }
+            val hasPermission = RequestBuffer.request<Boolean> {
+                userChannel.getModifiedPermissions(e.client.ourUser).contains(Permissions.VOICE_CONNECT)
+            }.get()
 
-            if (ret) return@Runnable
-            if (join) userChannel.join()
+            if (!hasPermission && join) {
+                messageHandler.sendError("I don't have permission to join ${userChannel.name}!")
+                return@Runnable
+            } else if (join) userChannel.join()
 
             // The guild's music manager
             val manager = getMusicManager(e.guild, userChannel)

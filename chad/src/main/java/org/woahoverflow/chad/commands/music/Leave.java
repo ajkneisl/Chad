@@ -2,6 +2,7 @@ package org.woahoverflow.chad.commands.music;
 
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
@@ -38,7 +39,9 @@ public class Leave implements Command.Class {
             // If Chad's in a channel, leave
             channel.leave();
             new MessageHandler(e.getChannel(), e.getAuthor()).sendMessage("Left the voice channel `"+channel.getName()+"`!");
-            getMusicManager(e.getGuild(), channel).clear();
+            GuildMusicManager manager = getMusicManager(e.getGuild(), channel);
+            manager.clear();
+            manager.setActive(false);
         };
     }
 
