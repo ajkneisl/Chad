@@ -47,7 +47,7 @@ public class DatabaseManager {
      * Private Constructor
      */
     private DatabaseManager() {
-        cli = new MongoClient(new MongoClientURI(JsonHandler.handle.get("uri_link")));
+        cli = new MongoClient(new MongoClientURI(JsonHandler.INSTANCE.get("uri_link")));
         db = cli.getDatabase("Database");
         col = db.getCollection("bot");
     }

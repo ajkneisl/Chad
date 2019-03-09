@@ -36,8 +36,7 @@ public class RedditTop implements Command.Class {
             JSONObject post;
             try {
                 // Gets post
-                JSONObject redditJson = JsonHandler.handle
-                    .read("https://reddit.com/r/" + args.get(0) + "/hot.json");
+                JSONObject redditJson = JsonHandler.INSTANCE.read("https://reddit.com/r/" + args.get(0) + "/hot.json");
 
                 if (redditJson == null) {
                     messageHandler.sendError("Invalid Subreddit");

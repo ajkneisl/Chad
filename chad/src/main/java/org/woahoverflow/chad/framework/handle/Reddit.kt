@@ -68,9 +68,9 @@ fun refreshSubreddit(subreddit: String, postType: PostType): Boolean {
 
     try {
         val json = when (postType) {
-            PostType.HOT -> JsonHandler.handle.read("https://reddit.com/r/$subreddit/hot.json?limit=100")
-            PostType.NEW -> JsonHandler.handle.read("https://reddit.com/r/$subreddit/new.json?limit=100")
-            PostType.TOP -> JsonHandler.handle.read("https://reddit.com/r/$subreddit/top.json?limit=100")
+            PostType.HOT -> JsonHandler.read("https://reddit.com/r/$subreddit/hot.json?limit=100")
+            PostType.NEW -> JsonHandler.read("https://reddit.com/r/$subreddit/new.json?limit=100")
+            PostType.TOP -> JsonHandler.read("https://reddit.com/r/$subreddit/top.json?limit=100")
         } ?: return false
 
         if (json.getJSONObject("data").getJSONArray("children").isEmpty)

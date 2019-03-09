@@ -56,7 +56,7 @@ public class PhotoEditor implements Command.Class {
             // Deepfry
             if (args.get(0).equalsIgnoreCase("deepfry")) {
                 messageHandler.sendEmbed(new EmbedBuilder().withImage(
-                    JsonHandler.handle.read("https://nekobot.xyz/api/imagegen?type=deepfry&image=" + url).getString("message"))
+                        JsonHandler.INSTANCE.read("https://nekobot.xyz/api/imagegen?type=deepfry&image=" + url).getString("message"))
                 );
                 return;
             }

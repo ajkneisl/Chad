@@ -19,7 +19,7 @@ public class CatFact implements Command.Class  {
     public final Runnable run(MessageEvent e, List<String> args) {
         return () -> {
             // Gets the fact
-            String fact = JsonHandler.handle.read("https://catfact.ninja/fact").getString("fact");
+            String fact = JsonHandler.INSTANCE.read("https://catfact.ninja/fact").getString("fact");
 
             // Sends the fact
             new MessageHandler(e.getChannel(), e.getAuthor()).credit("catfact.ninja").sendEmbed(new EmbedBuilder().withDesc(fact));

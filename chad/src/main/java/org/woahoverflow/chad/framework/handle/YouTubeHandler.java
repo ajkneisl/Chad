@@ -96,7 +96,7 @@ public final class YouTubeHandler {
 
         // The URL to search for the channel
         final String searchUrl = BASE_URL + String.format("search?part=snippet&key=%s&q=%s&type=channel&maxResults=1", ChadVar.YOUTUBE_API_KEY, username);
-        JSONObject searchResults = JsonHandler.handle.read(searchUrl);
+        JSONObject searchResults = JsonHandler.INSTANCE.read(searchUrl);
         JSONObject profile = searchResults.getJSONArray("items").getJSONObject(0).getJSONObject("snippet");
 
         // If it didn't find anything
@@ -112,7 +112,7 @@ public final class YouTubeHandler {
 
         // The URL to search for the channel's statistics
         final String subscriberUrl = BASE_URL + String.format("channels?key=%s&part=statistics&id=%s", ChadVar.YOUTUBE_API_KEY, channelUserID);
-        JSONObject statisticResult = JsonHandler.handle.read(subscriberUrl).getJSONArray("items").getJSONObject(0).getJSONObject("statistics");
+        JSONObject statisticResult = JsonHandler.INSTANCE.read(subscriberUrl).getJSONArray("items").getJSONObject(0).getJSONObject("statistics");
 
         // Gets the subscriber count, view count and the video count.
         long channelSubscriberCount = Long.parseLong(statisticResult.getString("subscriberCount"));

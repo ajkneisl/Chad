@@ -98,7 +98,7 @@ class ModifyCache : Command.Class {
                             var message: IMessage? = null
                             val request = RequestBuffer.request { message = e.channel.sendMessage("Re-caching `swearwords`...") }
 
-                            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")!!.forEach { word -> swearWords.add(word as String) }
+                            JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")!!.forEach { word -> swearWords.add(word as String) }
 
                             while (!request.isDone) {
                                 TimeUnit.MICROSECONDS.sleep(100)
@@ -114,7 +114,7 @@ class ModifyCache : Command.Class {
                             var message: IMessage? = null
                             val request = RequestBuffer.request { message = e.channel.sendMessage("Re-caching `contributors`...") }
 
-                            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach { v ->
+                            JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")!!.forEach { v ->
                                 run {
                                     if (java.lang.Boolean.parseBoolean((v as JSONObject).getString("allow"))) {
                                         UI.handle
@@ -140,7 +140,7 @@ class ModifyCache : Command.Class {
                             var message: IMessage? = null
                             val request = RequestBuffer.request { message = e.channel.sendMessage("Re-caching `eightballresults`...") }
 
-                            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")!!.forEach { word -> eightBallResults.add(word as String) }
+                            JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")!!.forEach { word -> eightBallResults.add(word as String) }
 
                             while (!request.isDone) {
                                 TimeUnit.MICROSECONDS.sleep(100)
@@ -156,7 +156,7 @@ class ModifyCache : Command.Class {
                             var message: IMessage? = null
                             val request = RequestBuffer.request { message = e.channel.sendMessage("Re-caching `presences`...") }
 
-                            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")!!.forEach { v -> ChadVar.presenceRotation.add(v as String) }
+                            JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")!!.forEach { v -> ChadVar.presenceRotation.add(v as String) }
 
                             while (!request.isDone) {
                                 TimeUnit.MICROSECONDS.sleep(100)
@@ -172,8 +172,8 @@ class ModifyCache : Command.Class {
                             var message: IMessage? = null
                             val request = RequestBuffer.request { message = e.channel.sendMessage("Re-caching `keys`...") }
 
-                            ChadVar.YOUTUBE_API_KEY = JsonHandler.handle.get("youtube_api_key")
-                            ChadVar.STEAM_API_KEY = JsonHandler.handle.get("steam_api_key")
+                            ChadVar.YOUTUBE_API_KEY = JsonHandler["youtube_api_key"]
+                            ChadVar.STEAM_API_KEY = JsonHandler["steam_api_key"]
 
                             while (!request.isDone) {
                                 TimeUnit.MICROSECONDS.sleep(100)

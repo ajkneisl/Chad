@@ -29,10 +29,10 @@ class DogGallery : Command.Class {
             // The API we use for our dog images :)
             val url = "https://api.thedogapi.com/v1/images/search?size=full"
 
-            val response = JsonHandler.handle.readArray(url)
+            val response = JsonHandler.readArray(url)
 
             embedBuilder.withImage(
-                    response.getJSONObject(0).getString("url")
+                    response!!.getJSONObject(0).getString("url")
             )
 
             if (response.getJSONObject(0).getJSONArray("breeds").length() != 0) {

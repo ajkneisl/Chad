@@ -47,7 +47,7 @@ public class Steam implements Command.Class  {
                 String intention = args.get(0);
                 
                 // Gets the user's steam id by their username
-                JSONObject steamUser = JsonHandler.handle
+                JSONObject steamUser = JsonHandler.INSTANCE
                     .read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + ChadVar.STEAM_API_KEY + "&vanityurl=" + args.get(1))
                     .getJSONObject("response");
                 
@@ -61,7 +61,7 @@ public class Steam implements Command.Class  {
                 String steamId = steamUser.getString("steamid");
                 
                 // Gets the user's profile
-                JSONObject steamUserProfile = JsonHandler.handle
+                JSONObject steamUserProfile = JsonHandler.INSTANCE
                     .read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + ChadVar.STEAM_API_KEY + "&steamids=" + steamId).getJSONObject("response").getJSONArray("players").getJSONObject(0);
                 
                 // The user's name
@@ -81,7 +81,7 @@ public class Steam implements Command.Class  {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.withFooterIcon(steamUserProfile.getString("avatar"));
                     
-                    JSONArray csgoStats = JsonHandler.handle.read(
+                    JSONArray csgoStats = JsonHandler.INSTANCE.read(
                         "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="
                             + ChadVar.STEAM_API_KEY + "&steamid=" + steamId).getJSONObject("playerstats")
                         .getJSONArray("stats");

@@ -22,7 +22,7 @@ class DogFact : Command.Class {
     override fun run(e: MessageEvent, args: MutableList<String>?): Runnable {
         return Runnable {
             // Gets the fact
-            val fact = JsonHandler.handle.read("https://dog-api.kinduff.com/api/facts")!!.getJSONArray("facts").getString(0)
+            val fact = JsonHandler.read("https://dog-api.kinduff.com/api/facts")!!.getJSONArray("facts").getString(0)
 
             // Sends the fact
             MessageHandler(e.channel, e.author).credit("dog-api.kinduff.com").sendEmbed(EmbedBuilder().withDesc(fact))

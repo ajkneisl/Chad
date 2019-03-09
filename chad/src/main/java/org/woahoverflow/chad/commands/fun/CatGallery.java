@@ -27,7 +27,7 @@ public class CatGallery implements Command.Class  {
             String url = "https://api.thecatapi.com/v1/images/search?size=full";
 
             embedBuilder.withImage(
-                JsonHandler.handle.readArray(url).getJSONObject(0).getString("url")
+                JsonHandler.INSTANCE.readArray(url).getJSONObject(0).getString("url")
             );
 
             messageHandler.credit("thecatapi.com").sendEmbed(embedBuilder);

@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author sho
  */
 public final class ChadVar {
-    public static final String VERSION = "v0.9.6";
+    public static final String VERSION = "v0.9.7";
 
     /**
      * Gigantic Words List
@@ -66,12 +66,12 @@ public final class ChadVar {
     /**
      * The Youtube API Key in the bot.json file
      */
-    public static String YOUTUBE_API_KEY = JsonHandler.handle.get("youtube_api_key");
+    public static String YOUTUBE_API_KEY = JsonHandler.INSTANCE.get("youtube_api_key");
 
     /**
      * The Steam API key in the bot.json file
      */
-    public static String STEAM_API_KEY = JsonHandler.handle.get("steam_api_key");
+    public static String STEAM_API_KEY = JsonHandler.INSTANCE.get("steam_api_key");
 
     /*
       Registers sources for the player manager
@@ -183,6 +183,7 @@ public final class ChadVar {
         COMMANDS.put("modifydatabase", new Data(Category.DEVELOPER, new ModifyDatabase(), "moddb"));
         COMMANDS.put("modifydevelopers", new Data(Category.DEVELOPER, new ModifyDevelopers(), "moddev"));
         COMMANDS.put("sync", new Data(Category.DEVELOPER, new Sync()));
+        COMMANDS.put("statistics", new Data(Category.DEVELOPER, new Statistics()));
 
         // GAMBLING!
         COMMANDS.put("coinflip", new Command.Data(Command.Category.GAMBLING, new CoinFlip(), "cf"));

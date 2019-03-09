@@ -31,7 +31,7 @@ fun sync(client: IDiscordClient) {
 
     try {
         Class.forName("com.mysql.jdbc.Driver")
-        connection = DriverManager.getConnection(JsonHandler.handle.get("jdbc"))
+        connection = DriverManager.getConnection(JsonHandler["jdbc"])
     } catch (ex: Exception) {
         ChadError.throwError("Couldn't connect to database!", ex)
         return

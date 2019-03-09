@@ -1,5 +1,8 @@
 package org.woahoverflow.chad.framework.ui;
 
+import org.woahoverflow.chad.core.ChadInstance;
+import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -16,14 +19,19 @@ public final class ChadError {
      * @param throwable The throwable
      */
     public static void throwError(String error, Throwable throwable) {
-        // Forms the stacktrace from the throwable
-        String stackTrace = Arrays.stream(throwable.getStackTrace()).map(st -> st + "\n").collect(Collectors.joining());
+        if (ArgumentHandlerKt.isToggled("disable_ui")) {
+            ChadInstance.getLogger().error(error);
+            throwable.printStackTrace();
+        } else {
+            // Forms the stacktrace from the throwable
+            String stackTrace = Arrays.stream(throwable.getStackTrace()).map(st -> st + "\n").collect(Collectors.joining());
 
-        // Initiates the error UI
-        UI.newError(error + '\n' + stackTrace);
+            // Initiates the error UI
+            UI.newError(error + '\n' + stackTrace);
 
-        // Adds a log to the main UI
-        UI.handle.addLog("Error Occurred!", UI.LogLevel.EXCEPTION);
+            // Adds a log to the main UI
+            UI.handle.addLog("Error Occurred!", UI.LogLevel.EXCEPTION);
+        }
     }
 
     /**
@@ -32,10 +40,14 @@ public final class ChadError {
      * @param error The string error
      */
     public static void throwError(String error) {
-        // Initiates the error UI with the string error
-        UI.newError(error);
+        if (ArgumentHandlerKt.isToggled("disable_ui")) {
+            ChadInstance.getLogger().error(error);
+        } else {
+            // Initiates the error UI with the string error
+            UI.newError(error);
 
-        // Adds a log to the main UI
-        UI.handle.addLog("Error Occurred!", UI.LogLevel.EXCEPTION);
+            // Adds a log to the main UI
+            UI.handle.addLog("Error Occurred!", UI.LogLevel.EXCEPTION);
+        }
     }
 }

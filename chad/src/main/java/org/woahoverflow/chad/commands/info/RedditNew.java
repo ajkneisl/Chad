@@ -41,7 +41,7 @@ public class RedditNew implements Command.Class{
             JSONObject post;
             try {
                 // Gets post
-                JSONObject redditJson = JsonHandler.handle
+                JSONObject redditJson = JsonHandler.INSTANCE
                     .read("https://reddit.com/r/" + args.get(0) + "/new.json");
 
                 if (redditJson == null) {

@@ -21,7 +21,7 @@ public class SteamStatus implements Command.Class {
     @Override
     public Runnable run(MessageEvent e, List<String> args) {
         return () -> {
-            JSONObject status = JsonHandler.handle.read("https://steamgaug.es/api/v2");
+            JSONObject status = JsonHandler.INSTANCE.read("https://steamgaug.es/api/v2");
             EmbedBuilder embedBuilder = new EmbedBuilder();
 
             // All of the statistics from SteamGauge
@@ -41,10 +41,10 @@ public class SteamStatus implements Command.Class {
                 "Steam Community: `"+steamCommunity+"` ("+steamCommunityLatency+ ')' +
                     "\nSteam Store: `"+steamStore+"` ("+steamStoreLatency+ ')' +
                     "\nSteam API: `"+steamApi+"` ("+steamApiLatency+ ')' +
-                    "\n\nCS-GO: `"+formatter.format(JsonHandler.handle.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
-                    "\nPUBG: `"+formatter.format(JsonHandler.handle.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
-                    "\nDota 2: `"+formatter.format(JsonHandler.handle.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
-                    "\nTF 2: `"+formatter.format(JsonHandler.handle.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=440&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players"
+                    "\n\nCS-GO: `"+formatter.format(JsonHandler.INSTANCE.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
+                    "\nPUBG: `"+formatter.format(JsonHandler.INSTANCE.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
+                    "\nDota 2: `"+formatter.format(JsonHandler.INSTANCE.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players" +
+                    "\nTF 2: `"+formatter.format(JsonHandler.INSTANCE.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=440&key=" + ChadVar.STEAM_API_KEY).getJSONObject("response").getInt("player_count"))+"` players"
             );
 
             new MessageHandler(e.getChannel(), e.getAuthor()).credit("steamguag.es").sendEmbed(embedBuilder);

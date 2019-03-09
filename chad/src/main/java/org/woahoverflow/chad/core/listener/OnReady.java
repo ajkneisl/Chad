@@ -69,7 +69,7 @@ public final class OnReady {
 
                 // Sets the new status
                 if (ar.length == 0)
-                    ChadVar.currentStatus = "uh oh !";
+                    ChadVar.currentStatus = "uh oh!";
                 else
                     ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
 

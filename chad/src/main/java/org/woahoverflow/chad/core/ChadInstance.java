@@ -40,7 +40,7 @@ public final class ChadInstance {
     /**
      * The local logger
      */
-    private static final Logger logger = LoggerFactory.getLogger(ChadInstance.class);
+    private static final Logger logger = LoggerFactory.getLogger("Chad");
 
     /**
      * Access the logger
@@ -55,8 +55,10 @@ public final class ChadInstance {
     Makes sure bot.json is filled
      */
     static {
+        JsonHandler.INSTANCE.forceCheck();
+
         // No UI due to servers and stuff
-        if (JsonHandler.handle.get("token").isEmpty() || JsonHandler.handle.get("uri_link").isEmpty()) {
+        if (JsonHandler.INSTANCE.get("token").isEmpty() || JsonHandler.INSTANCE.get("uri_link").isEmpty()) {
             getLogger().error("Bot.json is not filled!");
 
             // Exits
@@ -67,7 +69,7 @@ public final class ChadInstance {
     /**
      * Main Client Instance
      */
-    public static final IDiscordClient cli = new ClientBuilder().withToken(JsonHandler.handle.get("token")).withRecommendedShardCount().build();
+    public static final IDiscordClient cli = new ClientBuilder().withToken(JsonHandler.INSTANCE.get("token")).withRecommendedShardCount().build();
 
     /**
      * Main Method
@@ -97,10 +99,10 @@ public final class ChadInstance {
         UI.handle = new UI();
 
         Thread ex = new Thread(() -> {
-            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/swears.json").forEach((word) -> swearWords.add((String) word));
-            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json").forEach((word) -> eightBallResults.add((String) word));
-            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/chad/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v));
-            JsonHandler.handle.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) -> {
+            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/swears.json").forEach((word) -> swearWords.add((String) word));
+            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json").forEach((word) -> eightBallResults.add((String) word));
+            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v));
+            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) -> {
                 if (Boolean.parseBoolean(((JSONObject) v).getString("allow"))) {
                     UI.handle.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UI.LogLevel.INFO);
                     ChadVar.DEVELOPERS.add(((JSONObject) v).getLong("id"));
@@ -122,6 +124,8 @@ public final class ChadInstance {
             }
         });
 
+        ex.start();
+
         // Sets up timers & other stuff
         Thread timerTh = new Thread(() -> {
             // Updates all guild stats
@@ -136,6 +140,8 @@ public final class ChadInstance {
                 }
             }, 0, 1000*60*60); // Every hour
         });
+
+        timerTh.start();
 
         while (timerTh.isAlive() || ex.isAlive()) {
             try {
