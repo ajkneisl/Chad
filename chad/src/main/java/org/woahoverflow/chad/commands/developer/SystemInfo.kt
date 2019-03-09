@@ -33,7 +33,7 @@ class SystemInfo : Command.Class {
             embedBuilder.withDesc(
                     "OS `" + os.name + " [" + os.version + "]`" +
                             "\n Available cores `" + os.availableProcessors + '`'.toString() +
-                            "\n Home Directory `${JsonHandler.fileLocation.path}" +
+                            "\n Home Directory `${JsonHandler.fileLocation.path}`" +
                             "\n CPU Load `" + os.systemCpuLoad + '`'.toString() +
                             "\n Memory `" + os.totalPhysicalMemorySize / 1000 / 1000 + "`mb" +
                             "\n Shard Response Time `" + e.author.shard.responseTime + "`ms" +
