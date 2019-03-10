@@ -3,7 +3,7 @@ package org.woahoverflow.chad.core.listener;
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
-import org.woahoverflow.chad.framework.handle.RedditKt;
+import org.woahoverflow.chad.framework.handle.Reddit;
 import org.woahoverflow.chad.framework.sync.WebsiteSyncKt;
 import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -49,7 +49,7 @@ public final class OnReady {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                RedditKt.getSubreddits().clear();
+                Reddit.getSubreddits().clear();
 
                 ChadInstance.getLogger().debug("Reset all cached subreddits!");
             }

@@ -1,8 +1,7 @@
 package org.woahoverflow.chad.commands.`fun`
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.PostType
-import org.woahoverflow.chad.framework.handle.getPost
+import org.woahoverflow.chad.framework.handle.Reddit
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
@@ -26,7 +25,7 @@ class Meme : Command.Class {
             // Picks a subreddit out of the list, and sends it
             val subreddits = arrayListOf("blackpeopletwitter", "memes", "dankmemes", "me_irl", "2meirl4meirl", "cursedimages", "wholesomememes", "pewdiepiesubmissions", "terriblefacebookmemes", "memeeconomy")
 
-            val post = getPost(subreddits, PostType.HOT)!!.getJSONObject("data")
+            val post = Reddit.getPost(subreddits, Reddit.PostType.HOT)!!.getJSONObject("data")
 
             val embedBuilder = EmbedBuilder()
 
