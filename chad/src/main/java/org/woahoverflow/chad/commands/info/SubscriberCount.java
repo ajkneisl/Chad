@@ -1,9 +1,11 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
-import org.woahoverflow.chad.framework.handle.YouTubeHandler;
-import org.woahoverflow.chad.framework.handle.YouTubeHandler.Channel;
+import org.woahoverflow.chad.framework.handle.youtube.YouTubeChannel;
+import org.woahoverflow.chad.framework.handle.youtube.YouTubeHandler;
 import org.woahoverflow.chad.framework.obj.Command;
+import org.woahoverflow.chad.framework.obj.Guild;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -20,11 +22,16 @@ public class SubscriberCount implements Command.Class {
     @Override
     public Runnable run(MessageEvent e, List<String> args) {
         return () -> {
+            if (args.isEmpty()) {
+                String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "subcount <channel name>");
+            }
+
             // Puts two YouTube channels in a VS format
             if (args.size() == 3 && args.get(0).equalsIgnoreCase("vs")) {
                 // Both channels from arguments 1 & 2
-                Channel channelOne = YouTubeHandler.getYoutubeChannel(args.get(1));
-                Channel channelTwo = YouTubeHandler.getYoutubeChannel(args.get(2));
+                YouTubeChannel channelOne = YouTubeHandler.getYoutubeChannel(args.get(1));
+                YouTubeChannel channelTwo = YouTubeHandler.getYoutubeChannel(args.get(2));
 
                 // If either couldn't be found
                 if (channelOne == null || channelTwo == null) {
@@ -33,8 +40,8 @@ public class SubscriberCount implements Command.Class {
                 }
 
                 // Both channels subscriber count
-                long channelOneSubscriberCount = channelOne.subscriberCount;
-                long channelTwoSubscriberCount = channelTwo.subscriberCount;
+                long channelOneSubscriberCount = channelOne.getSubscriberCount();
+                long channelTwoSubscriberCount = channelTwo.getSubscriberCount();
 
                 // Makes sure the difference isn't negative, by not putting smaller channel - the larger channel
                 long difference = channelOneSubscriberCount - channelTwoSubscriberCount > 0 ?
@@ -46,19 +53,19 @@ public class SubscriberCount implements Command.Class {
 
                 // The difference string
                 String formattedString = "";
-                formattedString += channelOneSubscriberCount > channelTwoSubscriberCount ? '`' + channelOne.username + "` has `"+formatter.format(difference)+"` more subscribers than `" + channelTwo.username + "`!" :
-                    '`' + channelTwo.username + "` has `"+formatter.format(difference)+"` more subscribers than `" + channelOne.username + "`!";
+                formattedString += channelOneSubscriberCount > channelTwoSubscriberCount ? '`' + channelOne.getUsername() + "` has `"+formatter.format(difference)+"` more subscribers than `" + channelTwo.getUsername() + "`!" :
+                    '`' + channelTwo.getUsername() + "` has `"+formatter.format(difference)+"` more subscribers than `" + channelOne.getUserUrl() + "`!";
 
                 new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc(
-                    "**" + channelOne.username + "** : `" + formatter.format(channelOne.subscriberCount) + "`\n"
-                    +"**" + channelTwo.username + "** : `" + formatter.format(channelTwo.subscriberCount) + "`\n\n" + formattedString
+                    "**" + channelOne.getUsername() + "** : `" + formatter.format(channelOne.getSubscriberCount()) + "`\n"
+                    +"**" + channelTwo.getUsername() + "** : `" + formatter.format(channelTwo.getSubscriberCount()) + "`\n\n" + formattedString
                 ));
 
                 return;
             }
 
             // The selected channel
-            Channel channel = YouTubeHandler.getYoutubeChannel(args.get(0));
+            YouTubeChannel channel = YouTubeHandler.getYoutubeChannel(args.get(0));
 
             // If the channel doesn't exist
             if (channel == null) {
@@ -69,13 +76,13 @@ public class SubscriberCount implements Command.Class {
             // Formats the message & sends
             DecimalFormat formatter = new DecimalFormat("#,###");
             String channelDetails =
-                    "**Name** : " + channel.username +
-                    "\n**Subscriber Count** : " + formatter.format(channel.subscriberCount) +
-                    "\n**View Count** : " + formatter.format(channel.viewCount) +
-                    "\n**Video Count** : " + formatter.format(channel.videoCount) +
-                    "\n**Channel Link** : " + channel.userUrl;
+                    "**Name** : " + channel.getUsername() +
+                    "\n**Subscriber Count** : " + formatter.format(channel.getSubscriberCount()) +
+                    "\n**View Count** : " + formatter.format(channel.getViewCount()) +
+                    "\n**Video Count** : " + formatter.format(channel.getVideoCount()) +
+                    "\n**Channel Link** : " + channel.getUserUrl();
 
-            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc(channelDetails).withImage(channel.userIconUrl));
+            new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc(channelDetails).withImage(channel.getUserIconUrl()));
         };
     }
 
