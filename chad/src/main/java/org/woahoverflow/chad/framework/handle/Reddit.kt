@@ -42,7 +42,9 @@ object Reddit {
      * Gets a post from a single subreddit
      */
     @JvmStatic
-    fun getPost(subreddit: String, postType: PostType): JSONObject? {
+    fun getPost(subr: String, postType: PostType): JSONObject? {
+        val subreddit = subr.toLowerCase()
+
         if (!subreddits.containsKey(subreddit) || !subreddits[subreddit]!!.containsKey(postType))
             refreshSubreddit(subreddit, postType)
 

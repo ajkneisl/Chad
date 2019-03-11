@@ -4,10 +4,7 @@ import org.json.JSONObject
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.core.ChadVar.eightBallResults
 import org.woahoverflow.chad.core.ChadVar.swearWords
-import org.woahoverflow.chad.framework.handle.GuildHandler
-import org.woahoverflow.chad.framework.handle.JsonHandler
-import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.PlayerHandler
+import org.woahoverflow.chad.framework.handle.*
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.ui.UI
@@ -185,6 +182,22 @@ class ModifyCache : Command.Class {
                             return@Runnable
                         }
 
+                        "reddit" -> {
+                            var message: IMessage? = null
+                            val request = RequestBuffer.request { message = e.channel.sendMessage("Resetting `keys`...") }
+
+                            Reddit.subreddits.clear()
+
+                            while (!request.isDone) {
+                                TimeUnit.MICROSECONDS.sleep(100)
+                            }
+
+                            RequestBuffer.request {
+                                message!!.edit("Resetting `reddit`... complete!")
+                            }
+                            return@Runnable
+                        }
+
                         else -> {
                             messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache reset <cache name>")
                         }
@@ -192,7 +205,79 @@ class ModifyCache : Command.Class {
                 }
 
                 "view" -> {
-                    messageHandler.sendEmbed(EmbedBuilder().withDesc("`users`, `guilds`, `keys`, `swearwords` `8ball`, `contributors`, `presences`"))
+                    if (args.size != 2) {
+                        messageHandler.sendEmbed(EmbedBuilder().withDesc("`swearwords`, `8ball`, `contributors`, `presences`, `reddit`"))
+                        return@Runnable
+                    }
+
+                    when (args[1].toLowerCase()) {
+                        "swearwords" -> {
+                            val stringBuilder = StringBuilder()
+                            for (word in swearWords) stringBuilder.append("`$word`, ")
+
+                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            return@Runnable
+                        }
+
+                        "8ball" -> {
+                            val stringBuilder = StringBuilder()
+                            for (word in eightBallResults) stringBuilder.append("`$word`, ")
+
+                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            return@Runnable
+                        }
+
+                        "contributors" -> {
+                            val stringBuilder = StringBuilder()
+                            for (dev in ChadVar.DEVELOPERS) stringBuilder.append("`$dev`, ")
+
+                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            return@Runnable
+                        }
+
+                        "presences" -> {
+                            val stringBuilder = StringBuilder()
+                            for (presence in ChadVar.presenceRotation) stringBuilder.append("`$presence`, ")
+
+                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            return@Runnable
+                        }
+
+                        "reddit" -> {
+                            try {
+                                if (Reddit.subreddits.size == 0) {
+                                    messageHandler.sendError("No cached Subreddits!")
+                                    return@Runnable
+                                }
+
+                                val stringBuilder = StringBuilder()
+                                for (dev in Reddit.subreddits) {
+                                    val hot = dev.value[Reddit.PostType.HOT]
+                                    val new = dev.value[Reddit.PostType.NEW]
+                                    val top = dev.value[Reddit.PostType.TOP]
+
+                                    var built = "`${dev.key}` ["
+
+                                    if (hot != null) built += "HOT: `${dev.value[Reddit.PostType.HOT]!!.size}`, "
+                                    if (new != null) built += "NEW: `${dev.value[Reddit.PostType.NEW]!!.size}`, "
+                                    if (top != null) built += "TOP: `${dev.value[Reddit.PostType.TOP]!!.size}`, "
+
+                                    built = built.removeSuffix(", ") + "], "
+
+                                    stringBuilder.append(built)
+                                }
+
+                                messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                                return@Runnable
+                            } catch (ex: Exception) {
+                                ex.printStackTrace()
+                            }
+                        }
+
+                        else -> {
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache view <cache name>")
+                        }
+                    }
                 }
 
                 else -> {
