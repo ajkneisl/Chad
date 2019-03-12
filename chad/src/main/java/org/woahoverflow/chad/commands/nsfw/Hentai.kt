@@ -21,6 +21,7 @@ class Hentai : Command.Class {
 
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
+            val message = MessageHandler(e.channel, e.author).sendMessage("Loading...")!!
             val messageHandler = MessageHandler(e.channel, e.author)
 
             // Makes sure the channel is NSFW
@@ -59,6 +60,7 @@ class Hentai : Command.Class {
             embedBuilder.withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")
             embedBuilder.withImage(post.getString("url"))
 
+            message.delete()
             messageHandler.credit(post.getString("subreddit_name_prefixed")).sendEmbed(embedBuilder)
         }
     }

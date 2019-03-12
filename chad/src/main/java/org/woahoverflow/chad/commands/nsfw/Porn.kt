@@ -15,6 +15,7 @@ import java.util.*
 class Porn : Command.Class {
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
+            val message = MessageHandler(e.channel, e.author).sendMessage("Loading...")!!
             val messageHandler = MessageHandler(e.channel, e.author)
 
             // Checks if channel is Nsfw
@@ -42,6 +43,7 @@ class Porn : Command.Class {
             embedBuilder.withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")
             embedBuilder.withImage(post.getString("url"))
 
+            message.delete()
             messageHandler.credit(post.getString("subreddit_name_prefixed")).sendEmbed(embedBuilder)
         }
     }

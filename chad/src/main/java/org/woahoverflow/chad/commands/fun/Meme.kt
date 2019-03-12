@@ -5,6 +5,7 @@ import org.woahoverflow.chad.framework.handle.Reddit
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
+import sx.blah.discord.util.RequestBuffer
 import java.util.*
 
 /**
@@ -22,6 +23,8 @@ class Meme : Command.Class {
 
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
+            val message = MessageHandler(e.channel, e.author).sendMessage("Loading...")!!
+
             // Picks a subreddit out of the list, and sends it
             val subreddits = arrayListOf("blackpeopletwitter", "memes", "dankmemes", "me_irl", "2meirl4meirl", "cursedimages", "wholesomememes", "pewdiepiesubmissions", "terriblefacebookmemes", "memeeconomy")
 
@@ -34,6 +37,9 @@ class Meme : Command.Class {
             embedBuilder.withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")
             embedBuilder.withImage(post.getString("url"))
 
+            RequestBuffer.request {
+                message.delete()
+            }
             MessageHandler(e.channel, e.author).credit(post.getString("subreddit_name_prefixed")).sendEmbed(embedBuilder)
         }
     }

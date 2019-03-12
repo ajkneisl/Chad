@@ -18,7 +18,6 @@ import java.security.SecureRandom
  * @author sho, codebasepw
  */
 class MessageHandler(private val channel: IChannel, user: IUser) {
-
     /**
      * The user's avatar URL
      */
@@ -80,13 +79,12 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
      *
      * @param message The message to be sent
      */
-    fun sendMessage(message: String) {
+    fun sendMessage(message: String): IMessage? {
         // Makes sure the bot has permission in the guild
-        if (!channel.client.ourUser.getPermissionsForGuild(channel.guild).contains(Permissions.SEND_MESSAGES))
-            return
+        if (!channel.client.ourUser.getPermissionsForGuild(channel.guild).contains(Permissions.SEND_MESSAGES)) return null
 
         // Requests the message to be sent
-        RequestBuffer.request<IMessage> { channel.sendMessage(message) }
+        return RequestBuffer.request<IMessage> { channel.sendMessage(message) }.get()
     }
 
     /**
@@ -94,10 +92,9 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
      *
      * @param embedBuilder The embed builder to send
      */
-    fun sendEmbed(embedBuilder: EmbedBuilder) {
+    fun sendEmbed(embedBuilder: EmbedBuilder): IMessage? {
         // Makes sure the bot has permission in the guild
-        if (!channel.client.ourUser.getPermissionsForGuild(channel.guild).contains(Permissions.EMBED_LINKS))
-            return
+        if (!channel.client.ourUser.getPermissionsForGuild(channel.guild).contains(Permissions.EMBED_LINKS)) return null
 
         // Applies the timestamp to the footer
         embedBuilder.withTimestamp(System.currentTimeMillis())
@@ -112,7 +109,7 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
         embedBuilder.withFooterIcon(avatarUrl)
 
         // Requests the message to be sent
-        RequestBuffer.request<IMessage> { channel.sendMessage(embedBuilder.build()) }
+        return  RequestBuffer.request<IMessage> { channel.sendMessage(embedBuilder.build()) }.get()
     }
 
     /**
@@ -134,43 +131,40 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
      *
      * @param file The file to be sent
      */
-    fun sendFile(file: File) {
+    fun sendFile(file: File): IMessage? {
         // Makes sure the bot has permission in the guild
-        if (!channel.client.ourUser.getPermissionsForGuild(channel.guild).contains(Permissions.ATTACH_FILES))
-            return
+        if (!channel.client.ourUser.getPermissionsForGuild(channel.guild).contains(Permissions.ATTACH_FILES)) return null
 
-        RequestBuffer.request {
+        return RequestBuffer.request<IMessage> {
             try {
                 channel.sendFile(file)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
+                null
             }
-        }
+        }.get()
     }
 
     companion object {
-
         /**
          * Sends an embed to the guild's logging channel
          *
          * @param embedBuilder The embed to send
          * @param guild The guild to send in
          */
-        fun sendLog(embedBuilder: EmbedBuilder, guild: IGuild) {
+        @JvmStatic
+        fun sendLog(embedBuilder: EmbedBuilder, guild: IGuild): IMessage? {
             // Checks if logging is enabled
-            if (!(GuildHandler.getGuild(guild.longID).getObject(DataType.LOGGING) as Boolean))
-                return
+            if (!(GuildHandler.getGuild(guild.longID).getObject(DataType.LOGGING) as Boolean)) return null
 
             // Gets the logging channel ID
             val channelID = GuildHandler.getGuild(guild.longID).getObject(DataType.LOGGING_CHANNEL) as String
 
             // Checks if the logging channel is somehow null
-            if (TextUtils.isEmpty(channelID))
-                return
+            if (TextUtils.isEmpty(channelID)) return null
 
             // Checks if the id is empty, by default it's set to 'none'
-            if (channelID.equals("none", ignoreCase = true))
-                return
+            if (channelID.equals("none", ignoreCase = true)) return null
 
             // Attempts to get the logging channel, catching if the string isn't actually an ID.
             val loggingChannel: IChannel
@@ -178,18 +172,17 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
                 loggingChannel = RequestBuffer.request<IChannel> { guild.getChannelByID(java.lang.Long.parseLong(channelID)) }.get()
             } catch (e: NumberFormatException) {
                 ChadError.throwError("Guild " + guild.stringID + "'s logging had an issue!", e)
-                return
+                return null
             }
 
             // Checks if the channel is deleted
-            if (RequestBuffer.request<Boolean> { loggingChannel.isDeleted }.get())
-                return
+            if (RequestBuffer.request<Boolean> { loggingChannel.isDeleted }.get()) return null
 
             // Applies the timestamp to the footer & applies color
             embedBuilder.withFooterText(Util.getTimeStamp()).withColor(Color(SecureRandom().nextFloat(), SecureRandom().nextFloat(), SecureRandom().nextFloat()))
 
             // Sends the log on it's way :)
-            RequestBuffer.request<IMessage> { loggingChannel.sendMessage(embedBuilder.build()) }
+            return RequestBuffer.request<IMessage> { loggingChannel.sendMessage(embedBuilder.build()) }.get()
         }
 
         /**
@@ -201,7 +194,8 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
          * @param guild The guild that it was performed in
          * @param reasons The reason for the punishment
          */
-        fun sendPunishLog(punishment: String, punished: IUser, moderator: IUser, guild: IGuild, reasons: List<String>) {
+        @JvmStatic
+        fun sendPunishLog(punishment: String, punished: IUser, moderator: IUser, guild: IGuild, reasons: List<String>): IMessage? {
             // Creates a string of the reasons
             val stringBuilder = StringBuilder()
             for (reason in reasons) stringBuilder.append("$reason ")
@@ -211,7 +205,7 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
                     .trim { it <= ' ' }, false).withImage(punished.avatarURL).withFooterText(Util.getTimeStamp())
 
             // Sends the log
-            sendLog(embedBuilder, guild)
+            return sendLog(embedBuilder, guild)
         }
 
         /**
@@ -223,9 +217,11 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
          * @param moderator The user who changed the value
          * @param guild The guild in which it was changed
          */
-        fun sendConfigLog(changedValue: String, newValue: String, oldValue: String, moderator: IUser, guild: IGuild) {
+        @JvmStatic
+        fun sendConfigLog(changedValue: String, newValue: String, oldValue: String, moderator: IUser, guild: IGuild): IMessage? {
             val embedBuilder = EmbedBuilder().withTitle("Config Change : $changedValue").appendField("New Value", newValue, true).appendField("Old Value", oldValue, true).appendField("Admin", moderator.name, true).withFooterText(Util.getTimeStamp())
-            sendLog(embedBuilder, guild)
+
+            return sendLog(embedBuilder, guild)
         }
     }
 }
