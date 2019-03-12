@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.gambling;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
@@ -21,29 +22,29 @@ import java.util.List;
  */
 public class Balance implements Command.Class {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             if (args.isEmpty()) {
-                Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+                Player player = PlayerHandler.getPlayer(e.getAuthor().getLongID());
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your balance is `"+player.getObject(DataType.BALANCE)+"`!"));
                 return;
             }
 
             if (e.getMessage().getMentions().size() == 1) {
                 IUser targetIUser = e.getMessage().getMentions().get(0);
-                Player player = PlayerHandler.handle.getPlayer(targetIUser.getLongID());
+                Player player = PlayerHandler.getPlayer(targetIUser.getLongID());
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc('`' +targetIUser.getName()+"`'s balance is `"+player.getObject(DataType.BALANCE)+"`!"));
                 return;
             }
 
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "balance");
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "balance");
         };
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("balance", "See your balance.");
         st.put("balance <@user>", "See another user's balance.");

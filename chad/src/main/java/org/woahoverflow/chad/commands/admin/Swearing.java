@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -17,12 +18,13 @@ import java.util.List;
  * @author sho, codebasepw
  */
 public class Swearing implements Command.Class {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+            Guild guild = GuildHandler.getGuild(e.getGuild().getLongID());
 
             // if there's no arguments, give statistics
             if (args.isEmpty()) {
@@ -47,7 +49,7 @@ public class Swearing implements Command.Class {
                 String toggleString = toggle ? "enabled" : "disabled";
 
                 // sets in database
-                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.SWEAR_FILTER, toggle);
+                GuildHandler.getGuild(e.getGuild().getLongID()).setObject(DataType.SWEAR_FILTER, toggle);
 
                 // the message
                 String message = toggle ? "Swear filtering has been `"+toggleString+"`.\n\n"
@@ -59,12 +61,13 @@ public class Swearing implements Command.Class {
                 return;
             }
 
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(DataType.PREFIX) + "swearfilter **on/off**");
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(DataType.PREFIX) + "swearfilter **on/off**");
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("swearfilter <on/off>", "Toggles the swear filter.");
         st.put("swearfilter", "Gets the status of the swear filter.");

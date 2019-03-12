@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -28,19 +29,19 @@ public class Help implements Command.Class {
     private static final Pattern REGEX = Pattern.compile(", $");
 
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             StringBuilder stringBuilder = new StringBuilder();
             // Go through each category and add all it's commands to the help string
-            for (Category category : Category.values()) {
+            for (Category category : Command.Category.values()) {
                 // If the category is Nsfw and the channel isn't Nsfw, don't show.
-                if (category == Category.NSFW && !e.getChannel().isNSFW())
+                if (category == Command.Category.NSFW && !e.getChannel().isNSFW())
                     continue;
                 // If the category is Admin and the user isn't an Admin, don't show.
-                if (category == Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(e.getAuthor()))
+                if (category == Command.Category.DEVELOPER && !PermissionHandler.userIsDeveloper(e.getAuthor()))
                     continue;
                 // If the category is disabled
-                if (((ArrayList<String>) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(
+                if (((ArrayList<String>) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(
                     DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase()))
                     continue;
 
@@ -55,7 +56,7 @@ public class Help implements Command.Class {
                         continue;
 
                     // Makes sure the user has permission
-                    if (PermissionHandler.handle.userNoPermission(stringDataEntry.getKey(), e.getAuthor(), e.getGuild()))
+                    if (PermissionHandler.userNoPermission(stringDataEntry.getKey(), e.getAuthor(), e.getGuild()))
                         continue;
 
                     // Adds the command to the builder
@@ -83,7 +84,7 @@ public class Help implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("help", "Displays all commands Chad has to offer.");
         return Command.helpCommand(st, "Help", e);

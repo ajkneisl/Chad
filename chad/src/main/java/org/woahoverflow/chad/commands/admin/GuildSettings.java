@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -19,10 +20,11 @@ import java.util.List;
  * @author sho
  */
 public class GuildSettings implements Command.Class {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
-            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+            Guild guild = GuildHandler.getGuild(e.getGuild().getLongID());
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             String prefix = ((String) guild.getObject(DataType.PREFIX));
 
@@ -41,15 +43,13 @@ public class GuildSettings implements Command.Class {
                     return;
                 case "category":
                     // Arguments : cmd category <category> <off/on>
-                    if (args.size() != 3)
-                    {
+                    if (args.size() != 3) {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings category **category name** **on/off**");
                         return;
                     }
 
                     // Makes sure the user inputted on or off
-                    if (!(args.get(2).equalsIgnoreCase("off") || args.get(2).equalsIgnoreCase("on")))
-                    {
+                    if (!(args.get(2).equalsIgnoreCase("off") || args.get(2).equalsIgnoreCase("on"))) {
                         messageHandler.sendError("Please use **on** or **off**!");
                         return;
                     }
@@ -64,8 +64,7 @@ public class GuildSettings implements Command.Class {
                     }
 
                     // Makes sure a category was actually found
-                    if (category == null)
-                    {
+                    if (category == null) {
                         messageHandler.sendError("Invalid Category!");
                         return;
                     }
@@ -116,8 +115,9 @@ public class GuildSettings implements Command.Class {
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("guildsettings clearstats", "Clears your guild's statistics.");
         st.put("guildsettings stats", "Gets your guild's statistics.");

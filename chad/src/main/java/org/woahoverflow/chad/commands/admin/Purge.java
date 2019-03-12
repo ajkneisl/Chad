@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -20,12 +21,13 @@ import java.util.concurrent.TimeUnit;
  * @author sho, codebasepw
  */
 public class Purge implements Command.Class  {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
+            String prefix = ((String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
 
             // Makes sure the bot has permission to manage messages
             if (!ChadInstance.cli.getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.MANAGE_MESSAGES)) {
@@ -74,8 +76,9 @@ public class Purge implements Command.Class  {
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("purge <amount of messages>", "Removes a specific amount of messages from the current channel.");
         return Command.helpCommand(st, "Purge", e);

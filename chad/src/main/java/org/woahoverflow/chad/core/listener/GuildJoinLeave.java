@@ -36,7 +36,7 @@ public final class GuildJoinLeave {
         new Thread(() -> {
             List<IUser> users = RequestBuffer.request(() -> event.getGuild().getUsers()).get();
             for (IUser user : users) {
-                Player player = PlayerHandler.handle.getPlayer(user.getLongID());
+                Player player = PlayerHandler.getPlayer(user.getLongID());
                 ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
                 if (!guildData.contains(event.getGuild().getLongID())) {
                     guildData.add(event.getGuild().getLongID());
@@ -45,9 +45,9 @@ public final class GuildJoinLeave {
             }
         });
 
-        if (!GuildHandler.handle.guildDataExists(event.getGuild().getLongID())) {
+        if (!GuildHandler.guildDataExists(event.getGuild().getLongID())) {
             // By retrieving the guild's instance, it creates an instance for the guild within the database
-            Guild guild = GuildHandler.handle.getGuild(event.getGuild().getLongID());
+            Guild guild = GuildHandler.getGuild(event.getGuild().getLongID());
 
             // Display the new guild in the UI
             UI.displayGuild(event.getGuild());
@@ -95,7 +95,7 @@ public final class GuildJoinLeave {
         DatabaseManager.GUILD_DATA.removeDocument(event.getGuild().getStringID());
 
         // Removed the guild's cached document
-        GuildHandler.handle.removeGuild(event.getGuild().getLongID());
+        GuildHandler.removeGuild(event.getGuild().getLongID());
 
         // Send a log
         UI.handle.addLog('<' +event.getGuild().getStringID()+"> Left Guild", UI.LogLevel.INFO);

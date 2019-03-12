@@ -1,7 +1,10 @@
 package org.woahoverflow.chad.core.listener
 
 import org.woahoverflow.chad.core.ChadVar
-import org.woahoverflow.chad.framework.handle.*
+import org.woahoverflow.chad.framework.handle.GuildHandler
+import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.PermissionHandler
+import org.woahoverflow.chad.framework.handle.ThreadHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.api.events.EventSubscriber
@@ -22,13 +25,13 @@ class MessageReceived {
             return
 
         // The guild's instance
-        val guild = GuildHandler.handle.getGuild(event.guild.longID)
+        val guild = GuildHandler.getGuild(event.guild.longID)
 
         // Updates the guild's statistics
         guild.messageSent()
 
         // If swear filter is enabled
-        val stopSwear = guild!!.getObject(Guild.DataType.SWEAR_FILTER) as Boolean
+        val stopSwear = guild.getObject(Guild.DataType.SWEAR_FILTER) as Boolean
 
         if (stopSwear) {
             // Builds together the message & removes the special characters
@@ -79,7 +82,7 @@ class MessageReceived {
         args.removeAt(0)
 
         // If the user doesn't have 3 threads currently running
-        if (!canUserRunThread(event.author.longID))
+        if (!ThreadHandler.canUserRunThread(event.author.longID))
             return
 
         // The found command's data, unless if it isn't found it's null
@@ -97,7 +100,7 @@ class MessageReceived {
             }
 
             if (data.usesAliases()) {
-                for (cmdAlias in data.commandAliases) {
+                for (cmdAlias in data.cmdAliases!!) {
                     if (commandString.equals(cmdAlias, true)) {
                         command = data
                         commandName = cmd
@@ -111,7 +114,7 @@ class MessageReceived {
             return
 
         // if the command is developer only, and the user is NOT a developer, deny them access
-        if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.handle.userIsDeveloper(event.author)) {
+        if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.userIsDeveloper(event.author)) {
             MessageHandler(event.channel, event.author).sendError("This command is Developer only!")
             return
         }
@@ -122,7 +125,7 @@ class MessageReceived {
         }
 
         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-        if (PermissionHandler.handle.userNoPermission(commandName, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
+        if (PermissionHandler.userNoPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NO_PERMISSION)
             return
         }
@@ -130,6 +133,6 @@ class MessageReceived {
         val thread = if (args.size == 1 && args[0].equals("help", ignoreCase = true)) command.commandClass.help(event) else command.commandClass.run(event, args)
 
         // add the command thread to the handler
-        runThread(thread, event.author.longID)
+        ThreadHandler.runThread(thread, event.author.longID)
     }
 }

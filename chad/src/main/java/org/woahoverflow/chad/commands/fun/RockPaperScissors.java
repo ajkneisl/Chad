@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -19,10 +20,10 @@ import java.util.stream.Stream;
  */
 public class RockPaperScissors implements Command.Class {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
+            String prefix = (String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // Checks if there's arguments
             if (args.isEmpty()) {
@@ -99,7 +100,7 @@ public class RockPaperScissors implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("rps <rock/paper/scissors>", "Plays rock paper scissors with Chad.");
         return Command.helpCommand(st, "Rock Paper Scissors", e);

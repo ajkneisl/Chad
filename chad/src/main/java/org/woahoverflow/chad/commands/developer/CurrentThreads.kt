@@ -2,8 +2,7 @@ package org.woahoverflow.chad.commands.developer
 
 import com.sun.management.OperatingSystemMXBean
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.runningThreads
-import org.woahoverflow.chad.framework.handle.threadHash
+import org.woahoverflow.chad.framework.handle.ThreadHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
@@ -16,7 +15,7 @@ import java.util.*
  * @author sho, codebasepw
  */
 class CurrentThreads : Command.Class {
-    override fun run(e: MessageEvent, args: List<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             // Creates an embed builder and applies a title
             val embedBuilder = EmbedBuilder()
@@ -24,7 +23,7 @@ class CurrentThreads : Command.Class {
 
             // Adds all threads running threads to the stringbuilder, than to the description.
             val stringBuilder = StringBuilder()
-            threadHash.forEach { key, `val` ->
+            ThreadHandler.threadHash.forEach { key, `val` ->
                 stringBuilder.append('`')
                         .append(key)
                         .append("`: ")
@@ -40,7 +39,7 @@ class CurrentThreads : Command.Class {
                     ).append("`mb.")
 
             // Get the internal and user run threads
-            stringBuilder.append("\n\nThere's currently `").append(runningThreads).append("` threads running.")
+            stringBuilder.append("\n\nThere's currently `").append(ThreadHandler.runningThreads).append("` threads running.")
 
             // Append to builder
             embedBuilder.appendDesc(stringBuilder.toString())

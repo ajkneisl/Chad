@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.framework.ui;
 
 import org.woahoverflow.chad.core.ChadInstance;
-import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
+import org.woahoverflow.chad.framework.handle.ArgumentHandler;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -19,7 +19,7 @@ public final class ChadError {
      * @param throwable The throwable
      */
     public static void throwError(String error, Throwable throwable) {
-        if (ArgumentHandlerKt.isToggled("disable_ui")) {
+        if (ArgumentHandler.isToggled("disable_ui")) {
             ChadInstance.getLogger().error(error);
             throwable.printStackTrace();
         } else {
@@ -40,7 +40,7 @@ public final class ChadError {
      * @param error The string error
      */
     public static void throwError(String error) {
-        if (ArgumentHandlerKt.isToggled("disable_ui")) {
+        if (ArgumentHandler.isToggled("disable_ui")) {
             ChadInstance.getLogger().error(error);
         } else {
             // Initiates the error UI with the string error

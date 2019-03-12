@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
@@ -22,11 +23,12 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class DownVote implements Command.Class {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX); //
+            String prefix = (String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX); //
 
             if (e.getMessage().getMentions().isEmpty()) {
                 messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS, prefix + "downvote **@user**");
@@ -43,7 +45,7 @@ public class DownVote implements Command.Class {
             }
 
             // The author's player instance
-            Player author = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+            Player author = PlayerHandler.getPlayer(e.getAuthor().getLongID());
 
             ArrayList<Long> voteData = (ArrayList<Long>) author.getObject(DataType.VOTE_DATA);
 
@@ -59,7 +61,7 @@ public class DownVote implements Command.Class {
             author.setObject(DataType.VOTE_DATA, voteData);
 
             // The target user's player instance
-            Player targetPlayer = PlayerHandler.handle.getPlayer(target.getLongID());
+            Player targetPlayer = PlayerHandler.getPlayer(target.getLongID());
 
             // The target user's upvote amount
             long targetPlayerUpvote = (long) targetPlayer.getObject(DataType.PROFILE_UPVOTE);
@@ -79,8 +81,9 @@ public class DownVote implements Command.Class {
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap st = new HashMap<String, String>();
         st.put("downvote <@user>", "Downvotes a user's Chad profile.");
         return Command.helpCommand(st, "DownVote", e);

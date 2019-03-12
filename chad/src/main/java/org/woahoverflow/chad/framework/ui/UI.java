@@ -1,9 +1,9 @@
 package org.woahoverflow.chad.framework.ui;
 
 import org.woahoverflow.chad.core.ChadInstance;
-import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
+import org.woahoverflow.chad.framework.handle.ArgumentHandler;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
-import org.woahoverflow.chad.framework.handle.ThreadHandlerKt;
+import org.woahoverflow.chad.framework.handle.ThreadHandler;
 import org.woahoverflow.chad.framework.ui.panels.GuildPanel;
 import org.woahoverflow.chad.framework.ui.panels.MainPanel;
 import org.woahoverflow.chad.framework.ui.panels.PopUpPanel;
@@ -48,7 +48,7 @@ public class UI {
      * Main Constructor for the UI
      */
     public UI() {
-        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
+        if (ArgumentHandler.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().warn("UI has been disabled!");
             return;
         }
@@ -65,12 +65,12 @@ public class UI {
 
         // UI Updater (updates stats)
         new Thread(() -> {
-            if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
+            if (ArgumentHandler.isToggled("DISABLE_UI")) {
                 ChadInstance.getLogger().warn("UI Updating has been disabled!");
                 return;
             }
 
-            while (ArgumentHandlerKt.isToggled("DISABLE_UI_UPDATE")) {
+            while (ArgumentHandler.isToggled("DISABLE_UI_UPDATE")) {
                 try {
                     TimeUnit.MINUTES.sleep(5);
                 } catch (InterruptedException e) {
@@ -88,7 +88,7 @@ public class UI {
      * @param level The log level
      */
     public final void addLog(String log, LogLevel level) {
-        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
+        if (ArgumentHandler.isToggled("DISABLE_UI")) {
             if (level.equals(LogLevel.EXCEPTION)) {
                 ChadInstance.getLogger().error(log);
                 return;
@@ -117,7 +117,7 @@ public class UI {
      * @param error The error string
      */
     static void newError(String error) {
-        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
+        if (ArgumentHandler.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().error(error);
             return;
         }
@@ -141,7 +141,7 @@ public class UI {
      * @param guild The guild where the error occurred
      */
     static void newError(String error, IGuild guild) {
-        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
+        if (ArgumentHandler.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().error("Error in Guild {}: {}", guild.getStringID(), error);
             return;
         }
@@ -163,7 +163,7 @@ public class UI {
      * @param guild The guild to be displayed
      */
     public static void displayGuild(IGuild guild) {
-        if (ArgumentHandlerKt.isToggled("DISABLE_UI")) {
+        if (ArgumentHandler.isToggled("DISABLE_UI")) {
             ChadInstance.getLogger().error("UI is denied, cannot display guild!");
             return;
         }
@@ -191,7 +191,7 @@ public class UI {
             panel.inviteLinkVal.setText(invite);
         }
 
-        panel.reCacheButton.addActionListener((ev) -> GuildHandler.handle.refreshGuild(guild.getLongID()));
+        panel.reCacheButton.addActionListener((ev) -> GuildHandler.refreshGuild(guild.getLongID()));
     }
 
     /**
@@ -312,7 +312,7 @@ public class UI {
         mainpanel.botToUserVal.setText(stats.get("botToPlayer"));
 
         // The Thread hashmap's size
-        mainpanel.threadVal.setText(String.valueOf(ThreadHandlerKt.getThreadHash().size()));
+        mainpanel.threadVal.setText(String.valueOf(ThreadHandler.getThreadHash().size()));
 
         // If the bot is ready and the presence text is present, update the value
         if (ChadInstance.cli.isReady() && ChadInstance.cli.getOurUser().getPresence().getText().isPresent()) {

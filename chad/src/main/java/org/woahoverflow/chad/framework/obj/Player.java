@@ -75,7 +75,7 @@ public class Player {
 
         DatabaseManager.USER_DATA.setObject(user, dataType.toString().toLowerCase(), value);
 
-        PlayerHandler.handle.refreshPlayer(user);
+        PlayerHandler.refreshPlayer(user);
     }
 
     /**

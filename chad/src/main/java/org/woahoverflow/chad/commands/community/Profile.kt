@@ -32,7 +32,7 @@ class Profile : Command.Class {
             }
 
             // The user's player instance
-            val userPlayer = PlayerHandler.handle.getPlayer(user.longID)
+            val userPlayer = PlayerHandler.getPlayer(user.longID)
 
             // The title and description for the embed builder
             var title: String = user.name + " " + if (userPlayer.getObject(Player.DataType.PROFILE_TITLE) as String == "none") {""} else {userPlayer.getObject(Player.DataType.PROFILE_TITLE) as String}

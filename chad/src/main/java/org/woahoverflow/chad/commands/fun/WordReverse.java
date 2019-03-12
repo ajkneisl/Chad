@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -17,12 +18,12 @@ import java.util.List;
  */
 public class WordReverse implements Command.Class {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             // Makes sure the arguments aren't empty
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX)+ "upvote **@user**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX)+ "upvote **@user**");
                 return;
             }
 
@@ -38,7 +39,7 @@ public class WordReverse implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> hash = new HashMap<>();
         hash.put("wr <word>", "Reverses a word.");
         return Command.helpCommand(hash, "Word Reverse", e);

@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -12,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Use preset options to modify a photo
@@ -20,10 +22,10 @@ import java.util.List;
  */
 public class PhotoEditor implements Command.Class {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
+            String prefix = (String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // Makes sure the user has attached a file
             if (e.getMessage().getAttachments().isEmpty()) {
@@ -56,7 +58,7 @@ public class PhotoEditor implements Command.Class {
             // Deepfry
             if (args.get(0).equalsIgnoreCase("deepfry")) {
                 messageHandler.sendEmbed(new EmbedBuilder().withImage(
-                        JsonHandler.INSTANCE.read("https://nekobot.xyz/api/imagegen?type=deepfry&image=" + url).getString("message"))
+                        Objects.requireNonNull(JsonHandler.INSTANCE.read("https://nekobot.xyz/api/imagegen?type=deepfry&image=" + url)).getString("message"))
                 );
                 return;
             }
@@ -67,7 +69,7 @@ public class PhotoEditor implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("pe deepfry <image>", "Deepfries an image.");
         return Command.helpCommand(st, "Photo Editor", e);

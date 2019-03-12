@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.youtube.YouTubeChannel;
@@ -19,11 +20,12 @@ import java.util.List;
  * @author sho
  */
 public class SubscriberCount implements Command.Class {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             if (args.isEmpty()) {
-                String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
+                String prefix = ((String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
                 new MessageHandler(e.getChannel(), e.getAuthor()).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "subcount <channel name>");
             }
 
@@ -86,8 +88,9 @@ public class SubscriberCount implements Command.Class {
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("subcount <youtuber name>", "Gets a profile of a YouTuber.");
         st.put("subcount vs <youtuber name> <2nd youtuber name>", "Compares two YouTuber's subscriber counts.");

@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.music;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
@@ -16,8 +17,9 @@ import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicMana
  * @author sho
  */
 public class Pause implements Command.Class {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
@@ -41,8 +43,9 @@ public class Pause implements Command.Class {
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("pause", "Pauses the currently playing music.");
         return Command.helpCommand(st, "Pause", e);

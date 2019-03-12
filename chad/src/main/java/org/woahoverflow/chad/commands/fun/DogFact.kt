@@ -19,7 +19,7 @@ class DogFact : Command.Class {
         return Command.helpCommand(st, "Dog Fact", e)
     }
 
-    override fun run(e: MessageEvent, args: MutableList<String>?): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             // Gets the fact
             val fact = JsonHandler.read("https://dog-api.kinduff.com/api/facts")!!.getJSONArray("facts").getString(0)

@@ -2,8 +2,8 @@ package org.woahoverflow.chad.commands.developer
 
 import com.sun.management.OperatingSystemMXBean
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.framework.handle.ArgumentHandler
 import org.woahoverflow.chad.framework.handle.JsonHandler
-import org.woahoverflow.chad.framework.handle.LAUNCH_ARGUMENTS
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -17,7 +17,7 @@ import java.util.*
  * @author sho, codebasepw
  */
 class SystemInfo : Command.Class {
-    override fun run(e: MessageEvent, args: List<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             // Gets the OperatingSystemMXBean
             val os = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
@@ -25,7 +25,7 @@ class SystemInfo : Command.Class {
             // uaaaaaaa
             val stringBuilder = StringBuilder()
 
-            for (arg in LAUNCH_ARGUMENTS) if (arg.value) stringBuilder.append("`").append(arg.key).append("`, ")
+            for (arg in ArgumentHandler.LAUNCH_ARGUMENTS) if (arg.value) stringBuilder.append("`").append(arg.key).append("`, ")
 
             // Creates an EmbedBuilder and applies all the values
             val embedBuilder = EmbedBuilder()

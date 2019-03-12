@@ -20,7 +20,7 @@ import java.util.*
  * @author sho
  */
 class Play : Command.Class {
-    override fun run(e: MessageEvent, args: List<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
 

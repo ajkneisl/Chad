@@ -30,7 +30,7 @@ class ModifyCache : Command.Class {
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
-            val prefix = GuildHandler.handle.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
+            val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             if (args.isEmpty()) {
                 messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache <reset/view> [cache name]")
@@ -54,7 +54,7 @@ class ModifyCache : Command.Class {
                             val request = RequestBuffer.request {
                                 for (guild in e.client.guilds) {
                                     for (user in guild.users) {
-                                        PlayerHandler.handle.refreshPlayer(user.longID)
+                                        PlayerHandler.refreshPlayer(user.longID)
                                     }
                                 }
                             }
@@ -77,7 +77,7 @@ class ModifyCache : Command.Class {
 
                             val request = RequestBuffer.request {
                                 for (guild in e.client.guilds) {
-                                    GuildHandler.handle.refreshGuild(guild.longID)
+                                    GuildHandler.refreshGuild(guild.longID)
                                 }
                             }
 

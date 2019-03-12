@@ -24,7 +24,7 @@ class Aliases : Command.Class {
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
-            val prefix = GuildHandler.handle.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
+            val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             if (args.isEmpty()) {
                 messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases **command**")
@@ -47,11 +47,11 @@ class Aliases : Command.Class {
 
             val stringBuilder = StringBuilder()
 
-            for (alias in commandData.commandAliases) {
+            for (alias in commandData.cmdAliases!!) {
                 stringBuilder.append("`$alias`, ")
             }
 
-            messageHandler.sendEmbed(EmbedBuilder().withDesc("The command `${command.toLowerCase()}` has ${commandData.commandAliases.size} alias(s).\n\n${stringBuilder.toString().removeSuffix(", ")}"))
+            messageHandler.sendEmbed(EmbedBuilder().withDesc("The command `${command.toLowerCase()}` has ${commandData.cmdAliases!!.size} alias(s).\n\n${stringBuilder.toString().removeSuffix(", ")}"))
         }
     }
 }

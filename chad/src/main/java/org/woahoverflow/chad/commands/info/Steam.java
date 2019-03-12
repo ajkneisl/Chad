@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +16,7 @@ import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Steam statistics utilizing steam's API
@@ -23,10 +25,10 @@ import java.util.List;
  */
 public class Steam implements Command.Class  {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor()).credit("Steam API");
-            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
+            String prefix = (String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             if (ChadVar.STEAM_API_KEY == null) {
                 ChadError.throwError("Steam API Key not set!");
@@ -47,8 +49,8 @@ public class Steam implements Command.Class  {
                 String intention = args.get(0);
                 
                 // Gets the user's steam id by their username
-                JSONObject steamUser = JsonHandler.INSTANCE
-                    .read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + ChadVar.STEAM_API_KEY + "&vanityurl=" + args.get(1))
+                JSONObject steamUser = Objects.requireNonNull(JsonHandler.INSTANCE
+                        .read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + ChadVar.STEAM_API_KEY + "&vanityurl=" + args.get(1)))
                     .getJSONObject("response");
                 
                 // Checks to see if the user actually exists
@@ -61,8 +63,8 @@ public class Steam implements Command.Class  {
                 String steamId = steamUser.getString("steamid");
                 
                 // Gets the user's profile
-                JSONObject steamUserProfile = JsonHandler.INSTANCE
-                    .read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + ChadVar.STEAM_API_KEY + "&steamids=" + steamId).getJSONObject("response").getJSONArray("players").getJSONObject(0);
+                JSONObject steamUserProfile = Objects.requireNonNull(JsonHandler.INSTANCE
+                        .read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + ChadVar.STEAM_API_KEY + "&steamids=" + steamId)).getJSONObject("response").getJSONArray("players").getJSONObject(0);
                 
                 // The user's name
                 String userName = steamUserProfile.getString("personaname");
@@ -81,9 +83,9 @@ public class Steam implements Command.Class  {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.withFooterIcon(steamUserProfile.getString("avatar"));
                     
-                    JSONArray csgoStats = JsonHandler.INSTANCE.read(
-                        "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="
-                            + ChadVar.STEAM_API_KEY + "&steamid=" + steamId).getJSONObject("playerstats")
+                    JSONArray csgoStats = Objects.requireNonNull(JsonHandler.INSTANCE.read(
+                            "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="
+                                    + ChadVar.STEAM_API_KEY + "&steamid=" + steamId)).getJSONObject("playerstats")
                         .getJSONArray("stats");
 
                     if (csgoStats == null) {
@@ -168,7 +170,7 @@ public class Steam implements Command.Class  {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("steam profile <steam name>", "Gets a steam user's profile.");
         st.put("steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CS:GO stats.");

@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -18,12 +19,12 @@ import java.util.List;
  */
 public class Prefix implements Command.Class  {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
             // The guild's database instance
-            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+            Guild guild = GuildHandler.getGuild(e.getGuild().getLongID());
 
             // If there's no arguments, show the prefix
             if (args.isEmpty()) {
@@ -49,7 +50,7 @@ public class Prefix implements Command.Class  {
                 }
 
                 // Sends the log
-                MessageHandler.sendConfigLog("Prefix", newPrefix, prefix, e.getAuthor(), e.getGuild());
+                MessageHandler.Companion.sendConfigLog("Prefix", newPrefix, prefix, e.getAuthor(), e.getGuild());
 
                 // Sets the prefix in the database
                 guild.setObject(DataType.PREFIX, newPrefix);
@@ -64,7 +65,7 @@ public class Prefix implements Command.Class  {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("prefix", "Your prefix.");
         st.put("prefix set <string>", "Sets the prefix.");

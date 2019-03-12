@@ -7,10 +7,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.woahoverflow.chad.core.listener.*;
-import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
+import org.woahoverflow.chad.framework.handle.ArgumentHandler;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
-import org.woahoverflow.chad.framework.handle.ThreadHandlerKt;
+import org.woahoverflow.chad.framework.handle.ThreadHandler;
 import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -84,7 +85,7 @@ public final class ChadInstance {
 
         getLogger().debug("woahoverflow: Chad ("+ChadVar.VERSION+")");
 
-        ArgumentHandlerKt.load(args);
+        ArgumentHandler.load(args);
 
         // Logs in and registers the listeners
         cli.login();
@@ -94,15 +95,15 @@ public final class ChadInstance {
         long start = System.currentTimeMillis();
         ChadInstance.getLogger().debug("Starting bot...");
 
-        ThreadHandlerKt.initThreads();
+        ThreadHandler.initThreads();
 
         UI.handle = new UI();
 
         Thread ex = new Thread(() -> {
-            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/swears.json").forEach((word) -> swearWords.add((String) word));
-            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json").forEach((word) -> eightBallResults.add((String) word));
-            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/presence.json").forEach((v) -> ChadVar.presenceRotation.add((String) v));
-            JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/contributors.json").forEach((v) -> {
+            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach((word) -> swearWords.add((String) word));
+            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach((word) -> eightBallResults.add((String) word));
+            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")).forEach((v) -> ChadVar.presenceRotation.add((String) v));
+            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach((v) -> {
                 if (Boolean.parseBoolean(((JSONObject) v).getString("allow"))) {
                     UI.handle.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UI.LogLevel.INFO);
                     ChadVar.DEVELOPERS.add(((JSONObject) v).getLong("id"));
@@ -129,14 +130,14 @@ public final class ChadInstance {
         // Sets up timers & other stuff
         Thread timerTh = new Thread(() -> {
             // Updates all guild stats
-            RequestBuffer.request(cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+            RequestBuffer.request(cli::getGuilds).get().forEach(guild -> GuildHandler.getGuild(guild.getLongID()).updateStatistics());
 
             Timer timer = new Timer();
 
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    RequestBuffer.request(ChadInstance.cli::getGuilds).get().forEach(guild -> GuildHandler.handle.getGuild(guild.getLongID()).updateStatistics());
+                    RequestBuffer.request(ChadInstance.cli::getGuilds).get().forEach(guild -> GuildHandler.getGuild(guild.getLongID()).updateStatistics());
                 }
             }, 0, 1000*60*60); // Every hour
         });

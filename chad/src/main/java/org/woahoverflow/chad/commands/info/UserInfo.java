@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.info;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class UserInfo implements Command.Class {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             IUser u;
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
@@ -31,7 +32,7 @@ public class UserInfo implements Command.Class {
                 u = e.getMessage().getMentions().get(0);
             else {
                 // If user wasn't mentioned, return
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "userinfo **@user**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX) + "userinfo **@user**");
                 return;
             }
 
@@ -70,7 +71,7 @@ public class UserInfo implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("userinfo <@user>", "Gives information about the mentioned user.");
         return Command.helpCommand(st, "User Info", e);

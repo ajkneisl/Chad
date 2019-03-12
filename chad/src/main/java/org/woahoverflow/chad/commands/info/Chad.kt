@@ -15,7 +15,7 @@ import java.util.*
  * @author sho
  */
 class Chad : Command.Class {
-    override fun run(e: MessageEvent, args: List<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             // Creates an embed builder, and adds links etc to it.
             val embedBuilder = EmbedBuilder()

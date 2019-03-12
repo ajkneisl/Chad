@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.community;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
@@ -27,11 +28,12 @@ import java.util.concurrent.TimeUnit;
  * @author sho
  */
 public class MarryPlayer implements Command.Class{
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
+            String prefix = (String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // If they didn't mention anyone
             if (e.getMessage().getMentions().isEmpty()) {
@@ -49,13 +51,13 @@ public class MarryPlayer implements Command.Class{
             }
 
             // The author's player instance
-            Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+            Player player = PlayerHandler.getPlayer(e.getAuthor().getLongID());
 
             // Player's marry data, in format `player_id&guild_id`
             String[] playerMarryData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
 
             // The other person's marry data
-            String[] otherPlayerMarryData = ((String) PlayerHandler.handle.getPlayer(otherPerson.getLongID()).getObject(DataType.MARRY_DATA)).split("&");
+            String[] otherPlayerMarryData = ((String) PlayerHandler.getPlayer(otherPerson.getLongID()).getObject(DataType.MARRY_DATA)).split("&");
 
             // Makes sure it's just the username and the guild id
             if (otherPlayerMarryData.length != 2) {
@@ -134,14 +136,15 @@ public class MarryPlayer implements Command.Class{
 
             // Sets the new marriage data
             player.setObject(DataType.MARRY_DATA, otherPerson.getStringID()+ '&' +e.getGuild().getStringID());
-            PlayerHandler.handle.getPlayer(otherPerson.getLongID()).setObject(DataType.MARRY_DATA, e.getAuthor().getStringID()+ '&' +e.getGuild().getStringID());
+            PlayerHandler.getPlayer(otherPerson.getLongID()).setObject(DataType.MARRY_DATA, e.getAuthor().getStringID()+ '&' +e.getGuild().getStringID());
 
             messageHandler.sendEmbed(new EmbedBuilder().withDesc("Congratulations `"+otherPerson.getName()+"` and `"+e.getAuthor().getName()+"` are now married!"));
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("marry <@user>", "Request to marry a user.");
         return Command.helpCommand(st, "Marry", e);

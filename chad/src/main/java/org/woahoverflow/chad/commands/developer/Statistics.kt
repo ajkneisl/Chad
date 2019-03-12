@@ -14,7 +14,7 @@ import java.util.*
  * @author sho
  */
 class Statistics : Command.Class {
-    override fun run(e: MessageEvent, args: List<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val guilds = RequestBuffer.request<List<IGuild>> {
                 e.client.guilds

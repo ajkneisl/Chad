@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.gambling;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -28,10 +29,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class CoinFlip implements Command.Class{
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            Player author = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+            Player author = PlayerHandler.getPlayer(e.getAuthor().getLongID());
 
             if (args.size() == 2 && e.getMessage().getAttachments().isEmpty() && args.get(1).equalsIgnoreCase("tails") || args.get(1).equalsIgnoreCase("heads")) {
                 long bet;
@@ -120,7 +121,7 @@ public class CoinFlip implements Command.Class{
                 // only used once, but thanks lamda
                 final IUser user = opponentUser;
 
-                Player opponent = PlayerHandler.handle.getPlayer(opponentUser.getLongID());
+                Player opponent = PlayerHandler.getPlayer(opponentUser.getLongID());
 
                 // Sends the invitation message
                 IMessage acceptMessage = RequestBuffer.request(() -> e.getChannel().sendMessage("Do you accept `" + e.getAuthor().getName() + "`'s challenge, `" + user.getName() + "`?")).get();
@@ -317,8 +318,8 @@ public class CoinFlip implements Command.Class{
                 // 0 is tails winning, 1 is heads winning
                 if (Util.coinFlip()) {
                     // Sets the user's balances
-                    PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
-                    PlayerHandler.handle.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
+                    PlayerHandler.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
+                    PlayerHandler.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +tails.getName()+"` has won `" + bet + "`!"
@@ -327,8 +328,8 @@ public class CoinFlip implements Command.Class{
                 }
                 else /* flip is 1, so heads wins this */ {
                     // Sets the user's balances
-                    PlayerHandler.handle.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
-                    PlayerHandler.handle.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
+                    PlayerHandler.getPlayer(tails.getLongID()).setObject(DataType.BALANCE, tailsBalance-bet);
+                    PlayerHandler.getPlayer(heads.getLongID()).setObject(DataType.BALANCE, tailsBalance+bet);
 
                     // Creates the edit string, then applies.
                     final String editString = '`' +heads.getName()+"` has won `" + bet + "`!"
@@ -340,7 +341,7 @@ public class CoinFlip implements Command.Class{
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("coinflip <amount to bet> <tails/heads>", "Play CoinFlip with Chad");
         st.put("coinflip <amount to bet> <@user>", "Play CoinFlip with another user");

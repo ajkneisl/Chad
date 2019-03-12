@@ -2,7 +2,7 @@ package org.woahoverflow.chad.core.listener;
 
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.handle.ArgumentHandlerKt;
+import org.woahoverflow.chad.framework.handle.ArgumentHandler;
 import org.woahoverflow.chad.framework.handle.Reddit;
 import org.woahoverflow.chad.framework.sync.WebsiteSyncKt;
 import org.woahoverflow.chad.framework.ui.UI;
@@ -31,7 +31,7 @@ public final class OnReady {
     @SuppressWarnings("unused")
     public void onReadyEvent(ReadyEvent event) {
         // UI Begin
-        if (ArgumentHandlerKt.isToggled("disable_ui")) {
+        if (ArgumentHandler.isToggled("disable_ui")) {
             ChadInstance.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
         }
         else {

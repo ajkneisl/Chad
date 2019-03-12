@@ -47,7 +47,7 @@ public final class UserLeaveJoin {
     @EventSubscriber
     public void userJoin(UserJoinEvent e) {
         // Add it to the user's data set
-        Player player = PlayerHandler.handle.getPlayer(e.getUser().getLongID());
+        Player player = PlayerHandler.getPlayer(e.getUser().getLongID());
 
         @SuppressWarnings("unchecked")
         ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
@@ -72,16 +72,16 @@ public final class UserLeaveJoin {
                 .appendField("Join Time", format.format(Date.from(e.getGuild().getCreationDate())), true);
 
         // Sends the log
-        MessageHandler.sendLog(embedBuilder, guild);
+        MessageHandler.Companion.sendLog(embedBuilder, guild);
 
         // If the guild has user join messages on, do that
-        Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+        Guild g = GuildHandler.getGuild(e.getGuild().getLongID());
         if ((boolean) g.getObject(Guild.DataType.JOIN_MESSAGE_ON)) {
             // Gets the join message channel
             String joinMsgCh = (String) g.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL);
 
             // Makes sure they actually assigned a channel
-            if (joinMsgCh != null && !joinMsgCh.equalsIgnoreCase("none")) {
+            if (!joinMsgCh.equalsIgnoreCase("none")) {
                 final long id;
                 try {
                     id = Long.parseLong(joinMsgCh);
@@ -98,11 +98,9 @@ public final class UserLeaveJoin {
                 if (!channel.isDeleted()) {
                     // Gets the message, makes sure it isn't null, then sends
                     String msg = (String) g.getObject(Guild.DataType.JOIN_MESSAGE);
-                    if (msg != null) {
-                        msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(msg).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
-                        String finalMsg = msg;
-                        RequestBuffer.request(() -> channel.sendMessage(finalMsg));
-                    }
+                    msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(msg).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
+                    String finalMsg = msg;
+                    RequestBuffer.request(() -> channel.sendMessage(finalMsg));
                 }
             }
         }
@@ -116,7 +114,7 @@ public final class UserLeaveJoin {
         // you probably shouldn't put code below this comment
 
         String joinRoleStringID = (String) g.getObject(Guild.DataType.JOIN_ROLE);
-        if (joinRoleStringID != null && !joinRoleStringID.equalsIgnoreCase("none")) {
+        if (!joinRoleStringID.equalsIgnoreCase("none")) {
             Long joinRoleID = Long.parseLong(joinRoleStringID);
             List<IRole> botRoles = ChadInstance.cli.getOurUser().getRolesForGuild(e.getGuild());
             IRole joinRole = e.getGuild().getRoleByID(joinRoleID);
@@ -155,14 +153,14 @@ public final class UserLeaveJoin {
     @EventSubscriber
     public void userLeave(UserLeaveEvent e) {
         // Remove it from the user's data set
-        Player player = PlayerHandler.handle.getPlayer(e.getUser().getLongID());
+        Player player = PlayerHandler.getPlayer(e.getUser().getLongID());
 
         ArrayList<Long> guildData = (ArrayList<Long>) player.getObject(DataType.GUILD_DATA);
 
         // Remove the guild that was left
         guildData.remove(e.getGuild().getLongID());
 
-        Guild g = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+        Guild g = GuildHandler.getGuild(e.getGuild().getLongID());
 
         if (guildData.isEmpty()) {
             // If it's the last guild that they're in with Chad, remove theirs
@@ -190,7 +188,7 @@ public final class UserLeaveJoin {
             .appendField("User Leave", format.format(Date.from(e.getGuild().getCreationDate())), true);
 
         // Sends the log
-        MessageHandler.sendLog(embedBuilder, guild);
+        MessageHandler.Companion.sendLog(embedBuilder, guild);
 
         // If the guild has user leave messages on, do that
         if ((boolean) g.getObject(Guild.DataType.LEAVE_MESSAGE_ON)) {
@@ -198,7 +196,7 @@ public final class UserLeaveJoin {
             String leaveMsgCh = (String) g.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL);
 
             // Makes sure they actually assigned a channel
-            if (leaveMsgCh != null && !leaveMsgCh.equalsIgnoreCase("none")) {
+            if (!leaveMsgCh.equalsIgnoreCase("none")) {
                 final long id;
                 try {
                     id = Long.parseLong(leaveMsgCh);
@@ -214,11 +212,9 @@ public final class UserLeaveJoin {
                 if (!channel.isDeleted()) {
                     // Gets the message, makes sure it isn't null, then sends
                     String msg = (String) g.getObject(Guild.DataType.LEAVE_MESSAGE);
-                    if (msg != null) {
-                        msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
-                        String finalMsg = msg;
-                        RequestBuffer.request(() -> channel.sendMessage(finalMsg));
-                    }
+                    msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.getUser().getName())).replaceAll(e.getGuild().getName());
+                    String finalMsg = msg;
+                    RequestBuffer.request(() -> channel.sendMessage(finalMsg));
                 }
             }
         }

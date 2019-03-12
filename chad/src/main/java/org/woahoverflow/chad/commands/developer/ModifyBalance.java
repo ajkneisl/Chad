@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.developer;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
@@ -20,10 +21,10 @@ import java.util.List;
  */
 public class ModifyBalance implements Command.Class {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            String prefix = (String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
+            String prefix = (String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             // Checks if the arguments is empty
             if (args.isEmpty()) {
@@ -42,7 +43,7 @@ public class ModifyBalance implements Command.Class {
                 }
 
                 // The author's player instance
-                Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+                Player player = PlayerHandler.getPlayer(e.getAuthor().getLongID());
 
                 // Sets the balance
                 player.setObject(DataType.BALANCE, Long.parseLong(args.get(0)));
@@ -71,7 +72,7 @@ public class ModifyBalance implements Command.Class {
                 }
 
                 // The mentioned user's player instance
-                Player player = PlayerHandler.handle.getPlayer(e.getMessage().getMentions().get(0).getLongID());
+                Player player = PlayerHandler.getPlayer(e.getMessage().getMentions().get(0).getLongID());
 
                 // Sets the balance of the mentioned user
                 player.setObject(DataType.BALANCE, Long.parseLong(args.get(0)));
@@ -85,7 +86,7 @@ public class ModifyBalance implements Command.Class {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("modbal <amount> [@user]", "Sets a user's balance.");
         return Command.helpCommand(st, "Modify Balance", e);

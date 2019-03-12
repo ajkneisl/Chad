@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.community;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -21,11 +22,12 @@ import java.util.List;
  * @author sho
  */
 public class DivorcePlayer implements Command.Class {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+            Player player = PlayerHandler.getPlayer(e.getAuthor().getLongID());
 
             // Player's marry data, in format `player_id&guild_id`
             String[] playerMarryData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
@@ -71,14 +73,15 @@ public class DivorcePlayer implements Command.Class {
             player.setObject(DataType.MARRY_DATA, "none&none");
 
             // Set the divorced player
-            PlayerHandler.handle.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
+            PlayerHandler.getPlayer(user.getLongID()).setObject(DataType.MARRY_DATA, "none&none");
 
             messageHandler.sendEmbed(new EmbedBuilder().withDesc("Divorced player `" + user.getName() + "`."));
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("divorce <@user>", "Request to divorce a user.");
         return Command.helpCommand(st, "Divorce", e);

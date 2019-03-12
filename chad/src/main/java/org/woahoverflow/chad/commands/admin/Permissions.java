@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PermissionHandler;
@@ -24,11 +25,12 @@ import java.util.regex.Pattern;
 public class Permissions implements Class  {
     private static final Pattern COMMA = Pattern.compile(",");
 
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
+            String prefix = ((String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
 
             // Accesses the permissions to a specific role
             if (args.size() >= 3 && args.get(0).equalsIgnoreCase("role")) {
@@ -88,7 +90,7 @@ public class Permissions implements Class  {
                 args.remove(0);
 
                 // The guild's instance
-                Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+                Guild guild = GuildHandler.getGuild(e.getGuild().getLongID());
 
                 switch (option.toLowerCase()) {
                     case "add":
@@ -108,7 +110,7 @@ public class Permissions implements Class  {
                                     .withDesc("Added `" + args.get(0).toLowerCase() + "` command to role `" + role.getName() + "`.")
                                     .withTitle("Permissions"));
                         else
-                            messageHandler.sendError(PermissionHandler.handle.parseErrorCode(add));
+                            messageHandler.sendError(PermissionHandler.parseErrorCode(add));
                         return;
                     case "remove":
                         // The remove can only remove 1 command
@@ -126,14 +128,14 @@ public class Permissions implements Class  {
                                 .withDesc("Removed `" + args.get(0).toLowerCase() + "` command from role `" + role.getName() + "`.")
                                 .withTitle("Permissions"));
                         else
-                            messageHandler.sendError(PermissionHandler.handle.parseErrorCode(rem));
+                            messageHandler.sendError(PermissionHandler.parseErrorCode(rem));
                         return;
                     case "view":
                         // Gets the permissions to a role
                         ArrayList<String> ar = guild.getRolePermissions(role.getLongID());
 
                         // Checks if there's no permissions
-                        if (ar == null || ar.isEmpty()) {
+                        if (ar.isEmpty()) {
                             messageHandler.sendError("There's no permissions in this role!");
                             return;
                         }
@@ -160,8 +162,9 @@ public class Permissions implements Class  {
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("perm role <role name> add <command>", "Adds a Chad command to a Discord role..");
         st.put("perm role <role name> remove <command>", "Removes a Chad command to a Discord role.");

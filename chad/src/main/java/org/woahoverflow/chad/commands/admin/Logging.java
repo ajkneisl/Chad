@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -20,11 +21,11 @@ import java.util.stream.Collectors;
  */
 public class Logging implements Command.Class  {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+            Guild guild = GuildHandler.getGuild(e.getGuild().getLongID());
             String prefix = ((String) guild.getObject(DataType.PREFIX));
 
             // Checks if there are any arguments
@@ -43,16 +44,16 @@ public class Logging implements Command.Class  {
                     boolean actualBoolean = bool.equalsIgnoreCase("off");
 
                     // Sets in the database
-                    GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, actualBoolean);
+                    GuildHandler.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, actualBoolean);
 
                     // Sends a log
-                    MessageHandler.sendConfigLog("Logging", bool, Boolean.toString((boolean) guild.getObject(Guild.DataType.LOGGING)), e.getAuthor(), e.getGuild());
+                    MessageHandler.Companion.sendConfigLog("Logging", bool, Boolean.toString((boolean) guild.getObject(Guild.DataType.LOGGING)), e.getAuthor(), e.getGuild());
 
                     // Sends the message
                     messageHandler.sendEmbed(new EmbedBuilder().withDesc("Logging has been turned `"+bool+"`."));
 
                     // recaches
-                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
+                    GuildHandler.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
                 messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging **set** **on/off**");
@@ -82,25 +83,21 @@ public class Logging implements Command.Class  {
 
                 // Gets the current logging channel and makes sure it isn't null
                 String loggingChannel = (String) guild.getObject(Guild.DataType.LOGGING_CHANNEL);
-                if (loggingChannel == null) {
-                    messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION);
-                    return;
-                }
 
                 // Sends the log
                 if (loggingChannel.equalsIgnoreCase("none"))
-                    MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), "none", e.getAuthor(), e.getGuild());
+                    MessageHandler.Companion.sendConfigLog("Logging Channel", formattedString.trim(), "none", e.getAuthor(), e.getGuild());
                 else
-                    MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
+                    MessageHandler.Companion.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
 
                 // Send Message
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("Logging channel has been changed to `" + channel.getName() + "`."));
 
                 // Sets in the database
-                GuildHandler.handle.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, loggingChannel);
+                GuildHandler.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, loggingChannel);
 
                 // Recaches
-                GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
+                GuildHandler.refreshGuild(e.getGuild().getLongID());
                 return;
             }
 
@@ -109,7 +106,7 @@ public class Logging implements Command.Class  {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("logging set <on/off>", "Toggles the logging functionality.");
         st.put("logging setchannel <channel name>", "Sets the logging channel.");

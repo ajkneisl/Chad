@@ -27,7 +27,7 @@ public class GuildMusicManager {
     /**
      * The amount of seconds that the player's been not playing
      */
-    public long amount;
+    private long amount;
 
     /**
      * If the manager is active
@@ -62,7 +62,7 @@ public class GuildMusicManager {
 
                             if (amount >= 60) {
                                 RequestBuffer.request(() -> {
-                                    RequestBuffer.request(() -> cli.getGuildByID(scheduler.guildId).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.guildId)).getChannel().leave());
+                                    RequestBuffer.request(() -> cli.getGuildByID(scheduler.getGuildId()).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.getGuildId())).getChannel().leave());
                                 });
 
                                 active = false;
@@ -83,7 +83,7 @@ public class GuildMusicManager {
      * Clear the current queue and stop the current track
      */
     public void clear() {
-        scheduler.queue.clear();
+        scheduler.getQueue().clear();
         player.stopTrack();
         amount = 0;
     }

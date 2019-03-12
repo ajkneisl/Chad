@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.punishments;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -29,11 +30,11 @@ public class Ban implements Command.Class {
     private static final Pattern REASON_PATTERN = Pattern.compile("&reason&");
 
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
-            Guild guild = GuildHandler.handle.getGuild(e.getGuild().getLongID());
+            Guild guild = GuildHandler.getGuild(e.getGuild().getLongID());
 
             // Checks if the bot has permission to ban
             if (!e.getClient().getOurUser().getPermissionsForGuild(e.getGuild()).contains(Permissions.BAN)) {
@@ -86,15 +87,13 @@ public class Ban implements Command.Class {
                 String message = (String) guild.getObject(Guild.DataType.BAN_MESSAGE);
 
                 // If the message isn't null, continue
-                if (message != null) {
-                    String formattedMessage = GUILD_PATTERN.matcher(message).replaceAll(e.getGuild().getName()); // replaces &guild& with guild's name
-                    formattedMessage = USER_PATTERN.matcher(formattedMessage).replaceAll(user.getName()); // replaces &user& with user's name
-                    formattedMessage = REASON_PATTERN.matcher(formattedMessage).replaceAll(builtReason.toString().trim()); // replaces &reason& with the reason
+                String formattedMessage = GUILD_PATTERN.matcher(message).replaceAll(e.getGuild().getName()); // replaces &guild& with guild's name
+                formattedMessage = USER_PATTERN.matcher(formattedMessage).replaceAll(user.getName()); // replaces &user& with user's name
+                formattedMessage = REASON_PATTERN.matcher(formattedMessage).replaceAll(builtReason.toString().trim()); // replaces &reason& with the reason
 
-                    // If the user isn't bot, send the message.
-                    if (!user.isBot())
-                        new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(formattedMessage).build();
-                }
+                // If the user isn't bot, send the message.
+                if (!user.isBot())
+                    new MessageBuilder(e.getClient()).withChannel(e.getClient().getOrCreatePMChannel(user)).withContent(formattedMessage).build();
             }
 
             // If there's no reason, continue with "no reason"
@@ -102,19 +101,19 @@ public class Ban implements Command.Class {
                 e.getGuild().banUser(user);
                 reason.add("None");
                 messageHandler.sendEmbed(new EmbedBuilder().appendDesc("Successfully banned " + user.getName() + " for no reason."));
-                MessageHandler.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
+                MessageHandler.Companion.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
                 return;
             }
 
             // Bans the user.
             e.getGuild().banUser(user);
             messageHandler.sendEmbed(new EmbedBuilder().withDesc("Successfully banned " + user.getName() + " for " + builtReason.toString().trim() + '.'));
-            MessageHandler.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
+            MessageHandler.Companion.sendPunishLog("Ban", user, e.getAuthor(), e.getGuild(), reason);
         };
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("ban <@user>", "Bans a user with no reason.");
         st.put("ban <@user> <reason>", "Bans a user with a specified reason.");

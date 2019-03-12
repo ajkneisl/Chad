@@ -25,7 +25,7 @@ class ModifyDatabase : Command.Class {
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
-            val prefix = GuildHandler.handle.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
+            val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             if (args.isEmpty() || args.size < 4) {
                 messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddb **guild/user** **id** **object** **new value**")
@@ -46,12 +46,12 @@ class ModifyDatabase : Command.Class {
                     val id = args[1].toLong()
 
                     // Checks if the guild is cached, if not deny
-                    if (!GuildHandler.handle.guildExists(id)) {
+                    if (!GuildHandler.guildExists(id)) {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[0])
                         return@Runnable
                     }
 
-                    val guild = GuildHandler.handle.getGuild(id)
+                    val guild = GuildHandler.getGuild(id)
 
                     var datatype: Guild.DataType? = null
 
@@ -122,12 +122,12 @@ class ModifyDatabase : Command.Class {
                     val id = args[1].toLong()
 
                     // Checks if the player is cached, if not deny
-                    if (!PlayerHandler.handle.playerExists(id)) {
+                    if (!PlayerHandler.playerExists(id)) {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[0])
                         return@Runnable
                     }
 
-                    val player = PlayerHandler.handle.getPlayer(id)
+                    val player = PlayerHandler.getPlayer(id)
 
                     var datatype: Player.DataType? = null
 

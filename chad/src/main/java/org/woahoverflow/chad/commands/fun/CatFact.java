@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -8,6 +9,7 @@ import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Gets a random cat fact from an API
@@ -16,10 +18,10 @@ import java.util.List;
  */
 public class CatFact implements Command.Class  {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             // Gets the fact
-            String fact = JsonHandler.INSTANCE.read("https://catfact.ninja/fact").getString("fact");
+            String fact = Objects.requireNonNull(JsonHandler.INSTANCE.read("https://catfact.ninja/fact")).getString("fact");
 
             // Sends the fact
             new MessageHandler(e.getChannel(), e.getAuthor()).credit("catfact.ninja").sendEmbed(new EmbedBuilder().withDesc(fact));
@@ -29,7 +31,7 @@ public class CatFact implements Command.Class  {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("catfact", "Gives you a random catfact.");
         return Command.helpCommand(st, "Cat Fact", e);

@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.gambling;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.obj.Command;
@@ -19,11 +20,12 @@ import java.util.List;
  * @author sho
  */
 public class DailyReward implements Class {
+    @NotNull
     @Override
-    public Runnable run(MessageEvent e, List<String> args) {
+    public Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            Player player = PlayerHandler.handle.getPlayer(e.getAuthor().getLongID());
+            Player player = PlayerHandler.getPlayer(e.getAuthor().getLongID());
             
             // If the user hasn't claimed the daily reward ever
             if (player.getObject(DataType.LAST_DAILY_REWARD).equals("none")) {
@@ -66,8 +68,9 @@ public class DailyReward implements Class {
         };
     }
 
+    @NotNull
     @Override
-    public Runnable help(MessageEvent e) {
+    public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("dailyreward", "Claims your daily reward.");
         return Command.helpCommand(st, "Daily Reward", e);

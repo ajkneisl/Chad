@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.fun;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
@@ -10,6 +11,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Shake the 8ball
@@ -18,7 +20,7 @@ import java.util.List;
  */
 public class EightBall implements Command.Class  {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return () -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
@@ -34,14 +36,14 @@ public class EightBall implements Command.Class  {
             // Sends the answer
             messageHandler.sendEmbed(
                 new EmbedBuilder().withDesc(
-                    answers.getString(new SecureRandom().nextInt(answers.length()))
+                    answers.getString(new SecureRandom().nextInt(Objects.requireNonNull(answers).length()))
                 )
             );
         };
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("8ball <question>", "The eight ball always answers your best questions.");
         return Command.helpCommand(st, "Eight Ball", e);

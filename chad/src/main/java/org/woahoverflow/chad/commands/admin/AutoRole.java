@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.admin;
 
+import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
@@ -21,10 +22,10 @@ import java.util.List;
  */
 public class AutoRole implements Command.Class  {
     @Override
-    public final Runnable run(MessageEvent e, List<String> args) {
+    public final Runnable run(@NotNull MessageEvent e, @NotNull List<String> args) {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
-            String prefix = ((String) GuildHandler.handle.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
+            String prefix = ((String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
 
             // Makes sure the arguments are empty
             if (args.isEmpty()) {
@@ -41,7 +42,7 @@ public class AutoRole implements Command.Class  {
                     DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "role_on_join", true);
 
                     // ReCaches the guild
-                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
+                    GuildHandler.refreshGuild(e.getGuild().getLongID());
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -54,7 +55,7 @@ public class AutoRole implements Command.Class  {
                     DatabaseManager.GUILD_DATA.setObject(e.getGuild().getLongID(), "role_on_join", false);
 
                     // ReCaches the guild
-                    GuildHandler.handle.refreshGuild(e.getGuild().getLongID());
+                    GuildHandler.refreshGuild(e.getGuild().getLongID());
 
                     // Builds the embed and sends it
                     EmbedBuilder embedBuilder2 = new EmbedBuilder();
@@ -104,7 +105,7 @@ public class AutoRole implements Command.Class  {
     }
 
     @Override
-    public final Runnable help(MessageEvent e) {
+    public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("autorole <on/off>", "Toggles automatic role assignment features.");
         st.put("autorole set <role name>", "Sets role.");

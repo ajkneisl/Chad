@@ -15,7 +15,7 @@ import java.util.*
  * @author sho
  */
 class GuildInfo : Command.Class {
-    override fun run(e: MessageEvent, args: List<String>): Runnable {
+    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             // Creates an embed builder and applies the title
             val embedBuilder = EmbedBuilder()
@@ -30,7 +30,7 @@ class GuildInfo : Command.Class {
                     bot++
             }
 
-            val guild = GuildHandler.handle.getGuild(e.guild.longID)
+            val guild = GuildHandler.getGuild(e.guild.longID)
 
             // Applies the description
             embedBuilder.withDesc(
