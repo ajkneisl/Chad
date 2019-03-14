@@ -4,7 +4,7 @@ import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.ArgumentHandler;
 import org.woahoverflow.chad.framework.handle.Reddit;
-import org.woahoverflow.chad.framework.sync.WebsiteSyncKt;
+import org.woahoverflow.chad.framework.sync.WebsiteSync;
 import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -43,7 +43,7 @@ public final class OnReady {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                WebsiteSyncKt.sync(event.getClient());
+                WebsiteSync.sync(event.getClient());
             }
         }, 0, 1000 * 60 * 5);
         timer.schedule(new TimerTask() {

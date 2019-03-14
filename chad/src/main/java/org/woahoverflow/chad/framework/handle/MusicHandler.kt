@@ -1,3 +1,5 @@
+@file:JvmName("MusicHandler")
+
 package org.woahoverflow.chad.framework.handle
 
 import org.woahoverflow.chad.core.ChadVar.musicManagers

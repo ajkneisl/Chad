@@ -3,6 +3,7 @@ package org.woahoverflow.chad.commands.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.MusicHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
@@ -14,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Gets the music player's queue
@@ -36,7 +35,7 @@ public class Queue implements Command.Class {
                 return;
             }
 
-            GuildMusicManager manager = getMusicManager(e.getGuild(), chadChannel);
+            GuildMusicManager manager = MusicHandler.getMusicManager(e.getGuild(), chadChannel);
             List<AudioTrack> queue = manager.scheduler.getFullQueue();
 
             // If there's nothing playing

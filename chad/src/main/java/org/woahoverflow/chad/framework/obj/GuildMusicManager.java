@@ -57,7 +57,6 @@ public class GuildMusicManager {
                         if (active) {
                             if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
                                 amount++;
-                                System.out.println("Leave");
                             } else amount = 0;
 
                             if (amount >= 60) {
@@ -65,7 +64,7 @@ public class GuildMusicManager {
                                     RequestBuffer.request(() -> cli.getGuildByID(scheduler.getGuildId()).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.getGuildId())).getChannel().leave());
                                 });
 
-                                active = false;
+                                setActive(false);
                             }
                         }
                     }
@@ -94,6 +93,8 @@ public class GuildMusicManager {
      * @param active If the player is active
      */
     public void setActive(boolean active) {
+        if (!active) amount = 0;
+
         this.active = active;
     }
 }

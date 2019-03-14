@@ -215,7 +215,7 @@ class ModifyCache : Command.Class {
                             val stringBuilder = StringBuilder()
                             for (word in swearWords) stringBuilder.append("`$word`, ")
 
-                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            messageHandler.sendMessage("**Swear Words**: " + stringBuilder.toString().removeSuffix(", "))
                             return@Runnable
                         }
 
@@ -223,7 +223,7 @@ class ModifyCache : Command.Class {
                             val stringBuilder = StringBuilder()
                             for (word in eightBallResults) stringBuilder.append("`$word`, ")
 
-                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            messageHandler.sendMessage("**8Ball**: " + stringBuilder.toString().removeSuffix(", "))
                             return@Runnable
                         }
 
@@ -231,7 +231,7 @@ class ModifyCache : Command.Class {
                             val stringBuilder = StringBuilder()
                             for (dev in ChadVar.DEVELOPERS) stringBuilder.append("`$dev`, ")
 
-                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            messageHandler.sendMessage("**Contributors**: " + stringBuilder.toString().removeSuffix(", "))
                             return@Runnable
                         }
 
@@ -239,7 +239,7 @@ class ModifyCache : Command.Class {
                             val stringBuilder = StringBuilder()
                             for (presence in ChadVar.presenceRotation) stringBuilder.append("`$presence`, ")
 
-                            messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                            messageHandler.sendMessage("**Presences**: " + stringBuilder.toString().removeSuffix(", "))
                             return@Runnable
                         }
 
@@ -267,7 +267,7 @@ class ModifyCache : Command.Class {
                                     stringBuilder.append(built)
                                 }
 
-                                messageHandler.sendMessage(stringBuilder.toString().removeSuffix(", "))
+                                messageHandler.sendMessage("**Reddit**: " + stringBuilder.toString().removeSuffix(", "))
                                 return@Runnable
                             } catch (ex: Exception) {
                                 ex.printStackTrace()

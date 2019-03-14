@@ -1,3 +1,5 @@
+@file:JvmName("WebsiteSync")
+
 package org.woahoverflow.chad.framework.sync
 
 import org.slf4j.Logger

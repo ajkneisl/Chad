@@ -2,6 +2,7 @@ package org.woahoverflow.chad.commands.music;
 
 import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.MusicHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
@@ -9,8 +10,6 @@ import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Leaves and resets queue
@@ -41,7 +40,7 @@ public class Leave implements Command.Class {
             // If Chad's in a channel, leave
             channel.leave();
             new MessageHandler(e.getChannel(), e.getAuthor()).sendMessage("Left the voice channel `"+channel.getName()+"`!");
-            GuildMusicManager manager = getMusicManager(e.getGuild(), channel);
+            GuildMusicManager manager = MusicHandler.getMusicManager(e.getGuild(), channel);
             manager.clear();
             manager.setActive(false);
         };

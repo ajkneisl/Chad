@@ -44,9 +44,9 @@ class TrackScheduler(
      * @param track The track to queue
      */
     fun queue(track: AudioTrack) {
-        if (!player.startTrack(track, true)) queue.add(track)
-
         musicManager.setActive(true)
+
+        if (!player.startTrack(track, true)) queue.add(track)
     }
 
     /**

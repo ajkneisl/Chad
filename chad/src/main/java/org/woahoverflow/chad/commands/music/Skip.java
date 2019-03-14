@@ -2,6 +2,7 @@ package org.woahoverflow.chad.commands.music;
 
 import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.MusicHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
@@ -9,8 +10,6 @@ import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Skips songs within the guild's music player
@@ -40,7 +39,7 @@ public class Skip implements Command.Class {
             }
 
             // The guild's music manager
-            GuildMusicManager manager = getMusicManager(e.getGuild(), channel);
+            GuildMusicManager manager = MusicHandler.getMusicManager(e.getGuild(), channel);
 
             // Skips all of the songs in the queue
             if (args.size() == 1 && args.get(0).equalsIgnoreCase("all")) {

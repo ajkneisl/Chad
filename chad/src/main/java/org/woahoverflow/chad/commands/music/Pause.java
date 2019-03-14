@@ -2,14 +2,13 @@ package org.woahoverflow.chad.commands.music;
 
 import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
+import org.woahoverflow.chad.framework.handle.MusicHandler;
 import org.woahoverflow.chad.framework.obj.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static org.woahoverflow.chad.framework.handle.MusicHandlerKt.getMusicManager;
 
 /**
  * Pauses the guild's player
@@ -38,7 +37,7 @@ public class Pause implements Command.Class {
                 return;
             }
 
-            getMusicManager(e.getGuild(), channel).player.setPaused(true);
+            MusicHandler.getMusicManager(e.getGuild(), channel).player.setPaused(true);
             messageHandler.sendMessage("Music is now paused!");
         };
     }
