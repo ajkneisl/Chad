@@ -31,7 +31,7 @@ public class EightBall implements Command.Class  {
             }
 
             // Gets the answers from the cdn
-            JSONArray answers = JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json");
+            JSONArray answers = Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json"));
 
             // Sends the answer
             messageHandler.sendEmbed(
@@ -45,7 +45,7 @@ public class EightBall implements Command.Class  {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("8ball <question>", "The eight ball always answers your best questions.");
+        st.put("8ball [question]", "The eight ball always answers your best questions.");
         return Command.helpCommand(st, "Eight Ball", e);
     }
 }

@@ -65,7 +65,7 @@ public class Volume implements Command.Class {
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("volume <number>", "Sets the volume of the music.");
+        st.put("volume [number]", "Sets the volume of the music.");
         return Command.helpCommand(st, "Volume", e);
     }
 }

@@ -27,7 +27,7 @@ public class RussianRoulette implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("rrl <user/@user>", "Plays russian roulette with a selected user.");
+        st.put("rrl [user/@user]", "Plays russian roulette with a selected user.");
         return Command.helpCommand(st, "Russian Roulette", e);
     }
 
@@ -42,7 +42,7 @@ public class RussianRoulette implements Command.Class {
             if (!e.getMessage().getMentions().isEmpty())
                 unFinalUser = e.getMessage().getMentions().get(0);
             else {
-                messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS, prefix + "rrl **@user**");
+                messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS, prefix + "rrl [@user]");
                 return;
             }
 

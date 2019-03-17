@@ -29,7 +29,7 @@ public class AutoRole implements Command.Class  {
 
             // Makes sure the arguments are empty
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole **on/off/set**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole [on/off/set]");
                 return;
             }
 
@@ -98,7 +98,7 @@ public class AutoRole implements Command.Class  {
                     messageHandler.sendEmbed(embedBuilder3);
                     break;
                 default:
-                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole **on/off/set**");
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole [on/off/set]");
                     break;
             }
         };

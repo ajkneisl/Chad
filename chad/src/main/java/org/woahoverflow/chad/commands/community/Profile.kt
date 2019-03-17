@@ -19,7 +19,7 @@ class Profile : Command.Class {
     override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
         st["profile"] = "View your Chad profile."
-        st["profile <@user>"] = "View another user's Chad profile."
+        st["profile [@user]"] = "View another user's Chad profile."
         return Command.helpCommand(st, "Profile", e)
     }
 

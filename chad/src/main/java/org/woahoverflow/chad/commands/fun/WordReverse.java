@@ -23,7 +23,7 @@ public class WordReverse implements Command.Class {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
             // Makes sure the arguments aren't empty
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX)+ "upvote **@user**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX)+ "upvote [@user]");
                 return;
             }
 
@@ -41,7 +41,7 @@ public class WordReverse implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> hash = new HashMap<>();
-        hash.put("wr <word>", "Reverses a word.");
+        hash.put("wr [word]", "Reverses a word.");
         return Command.helpCommand(hash, "Word Reverse", e);
     }
 }

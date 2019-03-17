@@ -83,7 +83,7 @@ public class DivorcePlayer implements Command.Class {
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("divorce <@user>", "Request to divorce a user.");
+        st.put("divorce", "Divorce the user you're married to.");
         return Command.helpCommand(st, "Divorce", e);
     }
 }

@@ -61,7 +61,7 @@ public class Swearing implements Command.Class {
                 return;
             }
 
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(DataType.PREFIX) + "swearfilter **on/off**");
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.getGuild().getLongID()).getObject(DataType.PREFIX) + "swearfilter [on/off]");
         };
     }
 
@@ -69,7 +69,7 @@ public class Swearing implements Command.Class {
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("swearfilter <on/off>", "Toggles the swear filter.");
+        st.put("swearfilter [on/off]", "Toggles the swear filter.");
         st.put("swearfilter", "Gets the status of the swear filter.");
         return Command.helpCommand(st, "Swear Filter", e);
     }

@@ -115,8 +115,8 @@ public class Kick implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("kick <@user>", "Kicks a user with no reason.");
-        st.put("kick <@user> <reason>", "Kicks a user with a specified reason.");
-        return Command.helpCommand(st, "User Info", e);
+        st.put("kick [@user]", "Kicks a user with no reason.");
+        st.put("kick [@user] [reason]", "Kicks a user with a specified reason.");
+        return Command.helpCommand(st, "Kick", e);
     }
 }

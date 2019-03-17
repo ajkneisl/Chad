@@ -31,7 +31,7 @@ public class RedditTop implements Command.Class {
             // If there's no arguments
             if (args.isEmpty()) {
                 message.delete();
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rtop **subreddit name**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rtop [subreddit name]");
                 return;
             }
 
@@ -60,7 +60,7 @@ public class RedditTop implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("rtop <subreddit>", "Displays the hottest post from a subreddit.");
+        st.put("rtop [subreddit]", "Displays the hottest post from a subreddit.");
         return Command.helpCommand(st, "Reddit Top", e);
     }
 }

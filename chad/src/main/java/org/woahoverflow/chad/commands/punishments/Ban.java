@@ -115,8 +115,8 @@ public class Ban implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("ban <@user>", "Bans a user with no reason.");
-        st.put("ban <@user> <reason>", "Bans a user with a specified reason.");
-        return Command.helpCommand(st, "User Info", e);
+        st.put("ban [@user]", "Bans a user with no reason.");
+        st.put("ban [@user] [reason]", "Bans a user with a specified reason.");
+        return Command.helpCommand(st, "Ban", e);
     }
 }

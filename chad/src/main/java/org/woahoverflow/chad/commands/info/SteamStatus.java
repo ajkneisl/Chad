@@ -17,6 +17,8 @@ import java.util.Objects;
 /**
  * This class is very inefficient due to it making 4 requests
  *
+ * TODO Make this more efficient with caching
+ *
  * @author sho
  */
 public class SteamStatus implements Command.Class {

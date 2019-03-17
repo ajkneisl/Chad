@@ -2,11 +2,11 @@
 
 # Chad 
 
-Chad is a Discord bot. Chad can be used to do a lot, such as moderation or playing music. Go [here](https://woahoverflow.org/chad) to view all of Chad's features.
+Chad is a discord bot developed and maintained by [woahoverflow](https://woahoverflow.org)
 
-Chad is a bot developed and maintained by [CodeBase](https://github.com/codebasepw) and [sho](https://github.com/shoganeko).
+Chad has a wide variety of features and utilities. They can be useful and fun to your moderators, and to your users.
 
 Invite Chad to your server [here](https://woahoverflow.org/chad/invite), or invite Test Chad [here](https://woahoverflow.org/chad/test-invite).
 
 
-This code isn't meant for 3rd party use. We heavily advise you to **NOT** use the bot by yourself.
+## This is not intended for use outside of woahoverflow. We heavily suggest you to refrain yourself from trying.

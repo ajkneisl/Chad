@@ -27,7 +27,7 @@ public class RockPaperScissors implements Command.Class {
 
             // Checks if there's arguments
             if (args.isEmpty()) {
-                new MessageHandler(e.getChannel(), e.getAuthor()).sendError("Invalid Arguments");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rps [rock/paper/scissors]");
                 return;
             }
 
@@ -49,7 +49,7 @@ public class RockPaperScissors implements Command.Class {
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc(calculateWinner(i, i2)));
             }
             else {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rps **rock/paper/scissors**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rps [rock/paper/scissors]");
             }
         };
     }
@@ -102,7 +102,7 @@ public class RockPaperScissors implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("rps <rock/paper/scissors>", "Plays rock paper scissors with Chad.");
+        st.put("rps [rock/paper/scissors]", "Plays rock paper scissors with Chad.");
         return Command.helpCommand(st, "Rock Paper Scissors", e);
     }
 }

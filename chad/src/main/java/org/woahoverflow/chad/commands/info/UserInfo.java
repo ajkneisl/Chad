@@ -73,7 +73,7 @@ public class UserInfo implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("userinfo <@user>", "Gives information about the mentioned user.");
+        st.put("userinfo [@user]", "Gives information about the mentioned user.");
         return Command.helpCommand(st, "User Info", e);
     }
 }

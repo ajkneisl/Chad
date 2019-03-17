@@ -37,7 +37,7 @@ public class MarryPlayer implements Command.Class{
 
             // If they didn't mention anyone
             if (e.getMessage().getMentions().isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "marry **@user**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "marry [@user]");
                 return;
             }
 
@@ -146,7 +146,7 @@ public class MarryPlayer implements Command.Class{
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("marry <@user>", "Request to marry a user.");
+        st.put("marry [@user]", "Request to marry a user.");
         return Command.helpCommand(st, "Marry", e);
     }
 }

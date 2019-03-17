@@ -30,7 +30,7 @@ public class Logging implements Command.Class  {
 
             // Checks if there are any arguments
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging **set** **on/off**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging [set/setchannel]");
                 return;
             }
 
@@ -39,8 +39,6 @@ public class Logging implements Command.Class  {
                 if (args.get(1).equalsIgnoreCase("off") || args.get(1).equalsIgnoreCase("on")) {
                     // Sets the on or off
                     String bool = args.get(1).equalsIgnoreCase("on") ? "off" : "on";
-
-                    // Sets an actual boolean value
                     boolean actualBoolean = bool.equalsIgnoreCase("off");
 
                     // Sets in the database
@@ -56,7 +54,7 @@ public class Logging implements Command.Class  {
                     GuildHandler.refreshGuild(e.getGuild().getLongID());
                     return;
                 }
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging **set** **on/off**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging set [on/off]");
                 return;
             }
 
@@ -86,22 +84,19 @@ public class Logging implements Command.Class  {
 
                 // Sends the log
                 if (loggingChannel.equalsIgnoreCase("none"))
-                    MessageHandler.Companion.sendConfigLog("Logging Channel", formattedString.trim(), "none", e.getAuthor(), e.getGuild());
+                    MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), "none", e.getAuthor(), e.getGuild());
                 else
-                    MessageHandler.Companion.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
+                    MessageHandler.sendConfigLog("Logging Channel", formattedString.trim(), e.getGuild().getChannelByID(Long.parseLong(loggingChannel)).getName(), e.getAuthor(), e.getGuild());
 
                 // Send Message
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("Logging channel has been changed to `" + channel.getName() + "`."));
 
                 // Sets in the database
                 GuildHandler.getGuild(e.getGuild().getLongID()).setObject(DataType.LOGGING, loggingChannel);
-
-                // Recaches
-                GuildHandler.refreshGuild(e.getGuild().getLongID());
                 return;
             }
 
-            messageHandler.sendError("Invalid Arguments");
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "logging [set/setchannel]");
         };
     }
 

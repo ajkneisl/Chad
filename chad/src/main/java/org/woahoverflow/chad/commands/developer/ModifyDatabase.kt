@@ -18,7 +18,7 @@ import java.util.*
 class ModifyDatabase : Command.Class {
     override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
-        st["moddb <guild/user> <id> <data type> <new value>"] = "Modifies a database entry."
+        st["moddb [guild/user] [id] [data type] [new value]"] = "Modifies a database entry."
         return Command.helpCommand(st, "Modify Database", e)
     }
 
@@ -28,7 +28,7 @@ class ModifyDatabase : Command.Class {
             val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             if (args.isEmpty() || args.size < 4) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddb **guild/user** **id** **object** **new value**")
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddb [guild/user] [id] [data type] [new value]")
                 return@Runnable
             }
 
@@ -186,7 +186,7 @@ class ModifyDatabase : Command.Class {
                 }
 
                 else -> {
-                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddb **guild/user** **id** **object** **new value**")
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddb [guild/user] [id] [data type] [new value]")
                     return@Runnable
                 }
             }

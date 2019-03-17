@@ -35,7 +35,7 @@ public class PhotoEditor implements Command.Class {
 
             // Makes sure they added arguments
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "pe **deepfry**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "pe [deepfry]");
                 return;
             }
 
@@ -71,7 +71,7 @@ public class PhotoEditor implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("pe deepfry <image>", "Deepfries an image.");
+        st.put("pe deepfry [image]", "Deepfries an image.");
         return Command.helpCommand(st, "Photo Editor", e);
     }
 }

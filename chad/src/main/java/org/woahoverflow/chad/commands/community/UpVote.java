@@ -31,7 +31,7 @@ public class UpVote implements Command.Class {
             String prefix =(String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
             if (e.getMessage().getMentions().isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "upvote **@user**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "upvote [@user]");
                 return;
             }
 
@@ -85,7 +85,7 @@ public class UpVote implements Command.Class {
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap st = new HashMap<String, String>();
-        st.put("upvote <@user>", "Upvotes a user's Chad profile.");
+        st.put("upvote [@user]", "Upvotes a user's Chad profile.");
         return Command.helpCommand(st, "UpVote", e);
     }
 }

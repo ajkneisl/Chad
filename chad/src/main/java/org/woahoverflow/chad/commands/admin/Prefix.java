@@ -60,7 +60,7 @@ public class Prefix implements Command.Class  {
                 return;
             }
 
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, guild.getObject(DataType.PREFIX) + "prefix set **new prefix**");
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, guild.getObject(DataType.PREFIX) + "prefix set [new prefix]");
         };
     }
 
@@ -68,7 +68,7 @@ public class Prefix implements Command.Class  {
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("prefix", "Your prefix.");
-        st.put("prefix set <string>", "Sets the prefix.");
+        st.put("prefix set [string]", "Sets the prefix.");
         return Command.helpCommand(st, "Prefix", e);
     }
 }

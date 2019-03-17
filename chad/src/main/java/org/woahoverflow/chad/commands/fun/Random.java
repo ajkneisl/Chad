@@ -68,7 +68,7 @@ public class Random implements Command.Class {
                     messageHandler.sendEmbed(new EmbedBuilder().withDesc(uppercaseWord));
                     return;
                 default:
-                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "random **quote/word/number**");
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "random [quote/word/number]");
             }
         };
     }
@@ -76,7 +76,7 @@ public class Random implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("random number [max]", "Gives random number with an optional max value.");
+        st.put("random number {max}", "Gives random number with an optional max value.");
         st.put("random word", "Gets a random word.");
         return Command.helpCommand(st, "Random", e);
 

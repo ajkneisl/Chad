@@ -44,7 +44,7 @@ public class GuildSettings implements Command.Class {
                 case "category":
                     // Arguments : cmd category <category> <off/on>
                     if (args.size() != 3) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings category **category name** **on/off**");
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings category [category name] [on/off]");
                         return;
                     }
 
@@ -110,7 +110,7 @@ public class GuildSettings implements Command.Class {
                     return;
 
                 default:
-                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings **category/clearstats/stats**");
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings [category/clearstats/stats]");
             }
         };
     }

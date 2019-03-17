@@ -6,6 +6,7 @@ import org.woahoverflow.chad.framework.obj.Guild.DataType
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The command utility for Chad Bot
@@ -103,21 +104,30 @@ object Command {
      * @param messageReceivedEvent The messagerecievedevent
      * @return The help runnable
      */
-    @Synchronized
     @JvmStatic
     fun helpCommand(commands: HashMap<String, String>, commandName: String, messageReceivedEvent: MessageEvent): Runnable {
         return Runnable {
-            // The guild's prefix
-            val prefix = GuildHandler.getGuild(messageReceivedEvent.guild.longID).getObject(
-                    DataType.PREFIX) as String
+            if (!helpCommands.containsKey(commandName)) {
+                // The guild's prefix
+                val prefix = GuildHandler.getGuild(messageReceivedEvent.guild.longID).getObject(
+                        DataType.PREFIX) as String
 
-            // The embed builder
-            val embedBuilder = EmbedBuilder()
-            embedBuilder.withTitle("Help : `$commandName`")
-            commands.forEach { key, `val` -> embedBuilder.appendField(String.format("`%s%s`", prefix, key), `val`, false) }
+                // The embed builder
+                val embedBuilder = EmbedBuilder()
+                embedBuilder.withTitle("Help : `$commandName`")
+                commands.forEach { key, `val` -> embedBuilder.appendField(String.format("`%s%s`", prefix, key), `val`, false) }
+
+                helpCommands[commandName] = embedBuilder
+            }
 
             // Sends it
-            MessageHandler(messageReceivedEvent.channel, messageReceivedEvent.author).sendEmbed(embedBuilder)
+            MessageHandler(messageReceivedEvent.channel, messageReceivedEvent.author).sendEmbed(helpCommands[commandName]!!)
         }
     }
+
+    /**
+     * The stored help commands
+     */
+    @JvmStatic
+    private val helpCommands = ConcurrentHashMap<String, EmbedBuilder>()
 }

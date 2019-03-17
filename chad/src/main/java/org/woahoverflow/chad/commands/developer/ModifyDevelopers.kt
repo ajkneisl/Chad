@@ -16,7 +16,7 @@ import java.util.*
 class ModifyDevelopers : Command.Class {
     override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
-        st["moddev <add/view/remove> [id]"] = "Modifies users with developer role."
+        st["moddev [add/view/remove] [id]"] = "Modifies users with developer role."
         return Command.helpCommand(st, "Modify Developers", e)
     }
 
@@ -26,14 +26,14 @@ class ModifyDevelopers : Command.Class {
             val prefix = GuildHandler.getGuild(e.guild.longID)
 
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev **add/view/remove**")
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev [add/view/remove]")
                 return@Runnable
             }
 
             when (args[0].toLowerCase()) {
                 "add" -> {
                     if (args.size != 2) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev add **id**")
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev add [id]")
                         return@Runnable
                     }
 
@@ -59,7 +59,7 @@ class ModifyDevelopers : Command.Class {
 
                 "remove" -> {
                     if (args.size != 2) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev remove **id**")
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev remove [id]")
                         return@Runnable
                     }
 

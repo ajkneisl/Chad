@@ -29,7 +29,7 @@ public class Cuddle implements Command.Class {
 
             IUser target = e.getMessage().getMentions().get(0);
 
-            messageHandler.sendEmbed(new EmbedBuilder().withDesc("You cuddled with " + target.getName() + ", they most likely didn't consent, how nice."));
+            messageHandler.sendEmbed(new EmbedBuilder().withDesc("You cuddled with `" + target.getName() + "` without direct consent."));
         };
     }
 
@@ -37,7 +37,7 @@ public class Cuddle implements Command.Class {
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("cuddle <@user>", "Cuddle with another user.");
+        st.put("cuddle [@user]", "Cuddle with another user.");
         st.put("cuddle", "Cuddle with yourself. :)");
         return Command.helpCommand(st, "Cuddle", e);
     }

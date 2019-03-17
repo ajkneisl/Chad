@@ -47,7 +47,7 @@ public class Balance implements Command.Class {
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("balance", "See your balance.");
-        st.put("balance <@user>", "See another user's balance.");
+        st.put("balance [@user]", "See another user's balance.");
         return Command.helpCommand(st, "Balance", e);
     }
 }

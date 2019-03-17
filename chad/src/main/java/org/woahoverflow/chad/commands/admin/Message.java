@@ -309,12 +309,12 @@ public class Message implements Command.Class  {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("im join <message>", "Sets the join message.");
-        st.put("im leave <message>", "Sets the leave message.");
-        st.put("im ban <message>", "Sets the ban message.");
-        st.put("im kick <message>", "Sets the kick message.");
-        st.put("im toggle <join/leave/ban/kick> <true/false>", "Toggles the different message types.");
-        st.put("im setchannel <join/leave> <channel name>", "Toggles the join/leave messages.");
+        st.put("im join <message]", "Sets the join message.");
+        st.put("im leave <message]", "Sets the leave message.");
+        st.put("im ban <message]", "Sets the ban message.");
+        st.put("im kick <message]", "Sets the kick message.");
+        st.put("im toggle <join/leave/ban/kick] <true/false]", "Toggles the different message types.");
+        st.put("im setchannel <join/leave> <channel name]", "Toggles the join/leave messages.");
         st.put("Variables", "&guild&, &user&, &reason& (punishment)");
         return Command.helpCommand(st, "Interactive Message", e);
     }

@@ -37,7 +37,7 @@ public class Purge implements Command.Class  {
 
             // Makes sure they've got the amount of messages they want to delete
             if (args.size() != 1) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "purge **amount of messages**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "purge [amount of messages]");
                 return;
             }
 
@@ -46,7 +46,7 @@ public class Purge implements Command.Class  {
             try {
                 requestedAmount = Integer.parseInt(args.get(0));
             } catch (NumberFormatException throwaway) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "purge **amount of messages**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "purge [amount of messages]");
                 return;
             }
 
@@ -79,8 +79,9 @@ public class Purge implements Command.Class  {
     @NotNull
     @Override
     public Runnable help(@NotNull MessageEvent e) {
+
         HashMap<String, String> st = new HashMap<>();
-        st.put("purge <amount of messages>", "Removes a specific amount of messages from the current channel.");
+        st.put("purge [amount of messages]", "Removes a specific amount of messages from the current channel.");
         return Command.helpCommand(st, "Purge", e);
     }
 }

@@ -96,7 +96,7 @@ public class Permissions implements Class  {
                     case "add":
                         // The add can only add 1 command
                         if (args.size() != 1) {
-                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] add **command name**");
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] add [command name]");
                             return;
                         }
 
@@ -115,7 +115,7 @@ public class Permissions implements Class  {
                     case "remove":
                         // The remove can only remove 1 command
                         if (args.size() != 1) {
-                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] remove **command name**");
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] remove [command name]");
                             return;
                         }
 
@@ -154,11 +154,11 @@ public class Permissions implements Class  {
                         messageHandler.sendEmbed(embedBuilder);
                         return;
                     default:
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] **add/remove/view**");
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] [add/remove/view]");
                         return;
                 }
             }
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role **role name** **add/remove/view**");
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "perms role [role name] [add/remove/view]");
         };
     }
 
@@ -166,9 +166,9 @@ public class Permissions implements Class  {
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("perm role <role name> add <command>", "Adds a Chad command to a Discord role..");
-        st.put("perm role <role name> remove <command>", "Removes a Chad command to a Discord role.");
-        st.put("perm role <role name> view", "Displays all Chad commands tied to that Discord role.");
+        st.put("perm role [role name] add [command]", "Adds a Chad command to a Discord role.");
+        st.put("perm role [role name] remove [command]", "Removes a Chad command to a Discord role.");
+        st.put("perm role [role name] view", "Displays all Chad commands tied to that Discord role.");
         return Command.helpCommand(st, "Permissions", e);
     }
 }

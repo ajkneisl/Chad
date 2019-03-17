@@ -17,7 +17,7 @@ import java.util.*
 class Aliases : Command.Class {
     override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
-        st["aliases <command>"] = "Gets all aliases for a command."
+        st["aliases [command]"] = "Gets all aliases for a command."
         return Command.helpCommand(st, "Aliases", e)
     }
 

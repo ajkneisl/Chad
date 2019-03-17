@@ -37,7 +37,7 @@ public class DatabaseHandle {
      * @param object The object to get
      * @return The retrieved object
      */
-    public final synchronized Object getObject(Object key, String object) {
+    public final Object getObject(Object key, String object) {
         Document get = collection.find(new Document(keyObject, key)).first();
 
         if (get == null)
@@ -53,7 +53,7 @@ public class DatabaseHandle {
      * @param object The object to set
      * @param value The new value
      */
-    public final synchronized void setObject(Object key, String object, Object value) {
+    public final void setObject(Object key, String object, Object value) {
         Document get = collection.find(new Document(keyObject, key)).first();
 
         if (get == null)
@@ -68,7 +68,7 @@ public class DatabaseHandle {
      * @param key The identifier
      * @return If it exists
      */
-    public final synchronized boolean documentExists(Object key) {
+    public final boolean documentExists(Object key) {
         return !(collection.find(new Document(keyObject, key)).first() == null);
     }
 
@@ -77,7 +77,7 @@ public class DatabaseHandle {
      *
      * @param key The identifier
      */
-    public final synchronized void removeDocument(Object key) {
+    public final void removeDocument(Object key) {
         Document get = collection.find(new Document(keyObject, key)).first();
 
         if (get == null)

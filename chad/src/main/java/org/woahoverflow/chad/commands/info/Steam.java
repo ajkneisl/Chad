@@ -38,7 +38,7 @@ public class Steam implements Command.Class  {
 
             // Checks if the arguments are invalid
             if (args.isEmpty() || args.size() == 1) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam profile **steam name**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam profile [steam name]");
                 return;
             }
 
@@ -145,8 +145,8 @@ public class Steam implements Command.Class  {
                     }
                     else {
                         // If none of those were selected
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam csgo **steam name** **nothing" +
-                                "/kills/maps/lastmatch");
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam csgo [steam name] {" +
+                                "kills/maps/lastmatch}");
                         return;
                     }
 
@@ -154,7 +154,7 @@ public class Steam implements Command.Class  {
                     messageHandler.sendEmbed(embedBuilder);
                 } else {
                     // If neither the profile or CS:GO were accessed
-                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam profile **steam name**");
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "steam profile [steam name]");
                 }
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -172,8 +172,8 @@ public class Steam implements Command.Class  {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("steam profile <steam name>", "Gets a steam user's profile.");
-        st.put("steam csgo <steam name> [kills/maps/lastmatch]", "Gets a steam user's CS:GO stats.");
+        st.put("steam profile [steam name]", "Gets a steam user's profile.");
+        st.put("steam csgo [steam name] {kills/maps/lastmatch}", "Gets a steam user's CS:GO stats.");
         return Command.helpCommand(st, "Steam", e);
     }
 }

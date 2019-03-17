@@ -26,7 +26,7 @@ public class SubscriberCount implements Command.Class {
         return () -> {
             if (args.isEmpty()) {
                 String prefix = ((String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX));
-                new MessageHandler(e.getChannel(), e.getAuthor()).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "subcount <channel name>");
+                new MessageHandler(e.getChannel(), e.getAuthor()).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "subcount [channel name]");
             }
 
             // Puts two YouTube channels in a VS format
@@ -92,8 +92,8 @@ public class SubscriberCount implements Command.Class {
     @Override
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("subcount <youtuber name>", "Gets a profile of a YouTuber.");
-        st.put("subcount vs <youtuber name> <2nd youtuber name>", "Compares two YouTuber's subscriber counts.");
+        st.put("subcount [youtuber name]", "Gets a profile of a YouTuber.");
+        st.put("subcount vs [youtuber name] [2nd youtuber name]", "Compares two YouTuber's subscriber counts.");
         return Command.helpCommand(st, "Subscriber Count", e);
     }
 }

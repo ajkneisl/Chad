@@ -60,7 +60,7 @@ public class RedditNew implements Command.Class{
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("rnew <subreddit>", "Displays the most recent post from a subreddit.");
+        st.put("rnew [subreddit]", "Displays the most recent post from a subreddit.");
         return Command.helpCommand(st, "Reddit New", e);
     }
 }

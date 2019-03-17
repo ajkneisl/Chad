@@ -5,9 +5,11 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import org.woahoverflow.chad.core.ChadVar.playerManager
+import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
+import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.util.Util
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.Permissions
@@ -23,13 +25,14 @@ class Play : Command.Class {
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
+            val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             // If the bot needs to join the music channel
             val userChannel = e.author.getVoiceStateForGuild(e.guild).channel
             val chadChannel = e.client.ourUser.getVoiceStateForGuild(e.guild).channel
 
             if (args.isEmpty()) {
-                messageHandler.sendError("Invalid arguments!")
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}play [song name]")
                 return@Runnable
             }
 
@@ -170,7 +173,7 @@ class Play : Command.Class {
 
     override fun help(e: MessageEvent): Runnable {
         val st = HashMap<String, String>()
-        st["play"] = "Play music."
+        st["play [song name]"] = "Play music."
         return Command.helpCommand(st, "Play", e)
     }
 }

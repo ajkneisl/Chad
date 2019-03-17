@@ -17,7 +17,7 @@ import java.util.*
 class Sync : Command.Class {
     override fun help(e: MessageEvent): Runnable {
         val hash = HashMap<String, String>()
-        hash["sync"] = "Syncs with other applications."
+        hash["sync [type]"] = "Syncs with other applications."
         return Command.helpCommand(hash, "Sync", e)
     }
 
@@ -27,7 +27,7 @@ class Sync : Command.Class {
             val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX) as String
 
             if (args.size == 0) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}sync <website>")
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}sync [website]")
                 return@Runnable
             }
 

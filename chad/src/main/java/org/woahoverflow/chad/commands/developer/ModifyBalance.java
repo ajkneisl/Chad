@@ -28,7 +28,7 @@ public class ModifyBalance implements Command.Class {
 
             // Checks if the arguments is empty
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "setbalance **new balance**");
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "setbalance [new balance]");
                 return;
             }
 
@@ -88,7 +88,7 @@ public class ModifyBalance implements Command.Class {
     @Override
     public final Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
-        st.put("modbal <amount> [@user]", "Sets a user's balance.");
+        st.put("modbal [amount] {@user}", "Sets a user's balance.");
         return Command.helpCommand(st, "Modify Balance", e);
     }
 }

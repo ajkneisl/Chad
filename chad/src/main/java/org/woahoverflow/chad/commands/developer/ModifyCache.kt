@@ -33,14 +33,14 @@ class ModifyCache : Command.Class {
             val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
             if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache <reset/view> [cache name]")
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache [reset/view] [cache name]")
                 return@Runnable
             }
 
             when (args[0].toLowerCase()) {
                 "reset" -> {
                     if (args.size != 2) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache reset <cache name>")
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache reset [cache name]")
                         return@Runnable
                     }
 
@@ -199,7 +199,7 @@ class ModifyCache : Command.Class {
                         }
 
                         else -> {
-                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache reset <cache name>")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache reset [cache name]")
                         }
                     }
                 }
@@ -275,13 +275,13 @@ class ModifyCache : Command.Class {
                         }
 
                         else -> {
-                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache view <cache name>")
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache reset [cache name]")
                         }
                     }
                 }
 
                 else -> {
-                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache <reset/view> [cache name]")
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}modcache [reset/view] [cache name]")
                 }
             }
         }
