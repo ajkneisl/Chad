@@ -59,7 +59,7 @@ public class Random implements Command.Class {
                     messageHandler.sendEmbed(new EmbedBuilder().withDesc("Your random number is `"+rand.nextInt(100)+"`."));
                     return;
                 case "word":
-                    String word = ChadVar.wordsList.get(new java.util.Random().nextInt(ChadVar.wordsList.size()));
+                    String word = ChadVar.getWordsList().get(new java.util.Random().nextInt(ChadVar.getWordsList().size()));
 
                     // Makes the first letter of the word uppercase
                     String uppercaseWord = word.toUpperCase().charAt(0)+word.substring(1);

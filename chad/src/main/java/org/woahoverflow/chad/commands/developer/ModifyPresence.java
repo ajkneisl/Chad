@@ -41,25 +41,25 @@ public class ModifyPresence implements Command.Class {
                     String formattedMessage = args.stream().map(str -> str + ' ').collect(Collectors.joining());
 
                     // Changes the presence
-                    ChadInstance.cli.changePresence(ChadVar.statusType, ActivityType.PLAYING, formattedMessage.trim());
+                    ChadInstance.cli.changePresence(ChadVar.getStatusType(), ActivityType.PLAYING, formattedMessage.trim());
 
                     // Updates the message
                     message = "Changed presence to `" + formattedMessage.trim() + "`.";
 
                     // Updates the ChadVar variable
-                    ChadVar.currentStatus = formattedMessage.trim();
+                    ChadVar.setCurrentStatus(formattedMessage.trim());
 
                     break;
                 case "rotate":
                     // Enables presence rotation
-                    ChadVar.rotatePresence = true;
+                    ChadVar.setRotatePresence(true);
 
                     // Updates the message
                     message = "Enabled presence rotation.";
                     break;
                 case "static":
                     // Disables presence rotation
-                    ChadVar.rotatePresence = false;
+                    ChadVar.setRotatePresence(false);
 
                     // Updates the message
                     message = "Disabled presence rotation.";
@@ -72,7 +72,7 @@ public class ModifyPresence implements Command.Class {
                     String string = args.stream().map(str -> str + ' ').collect(Collectors.joining());
 
                     // Adds the message into the rotation pool.
-                    ChadVar.presenceRotation.add(string.trim());
+                    ChadVar.getPresenceRotation().add(string.trim());
 
                     // Updates the message
                     message = "Added `" + string.trim() + "` to rotation";
@@ -80,7 +80,7 @@ public class ModifyPresence implements Command.Class {
                 case "view":
                     StringBuilder stringBuilder = new StringBuilder();
 
-                    for (String s : ChadVar.presenceRotation) {
+                    for (String s : ChadVar.getPresenceRotation()) {
                         stringBuilder.append('`').append(s).append("`, ");
                     }
 
@@ -92,10 +92,10 @@ public class ModifyPresence implements Command.Class {
 
                     if (args.get(0).equalsIgnoreCase("idle")) {
                         // Updates the ChadVar to IDLE
-                        ChadVar.statusType = StatusType.IDLE;
+                        ChadVar.setStatusType(StatusType.IDLE);
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.IDLE, ActivityType.PLAYING, ChadVar.currentStatus);
+                        e.getClient().changePresence(StatusType.IDLE, ActivityType.PLAYING, ChadVar.getCurrentStatus());
 
                         // Updates the message
                         message = "Changed status type to `Idle`";
@@ -104,10 +104,10 @@ public class ModifyPresence implements Command.Class {
 
                     if (args.get(0).equalsIgnoreCase("online")) {
                         // Updates the ChadVar to Online
-                        ChadVar.statusType = StatusType.ONLINE;
+                        ChadVar.setStatusType(StatusType.ONLINE);
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ChadVar.currentStatus);
+                        e.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, ChadVar.getCurrentStatus());
 
                         // Updates the message
                         message = "Changed status type to `Online`";
@@ -116,10 +116,10 @@ public class ModifyPresence implements Command.Class {
 
                     if (args.get(0).equalsIgnoreCase("offline")) {
                         // Updates the ChadVar to Offline
-                        ChadVar.statusType = StatusType.OFFLINE;
+                        ChadVar.setStatusType(StatusType.OFFLINE);
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.INVISIBLE, ActivityType.PLAYING, ChadVar.currentStatus);
+                        e.getClient().changePresence(StatusType.INVISIBLE, ActivityType.PLAYING, ChadVar.getCurrentStatus());
 
                         // Updates the message
                         message = "Changed status type to `Offline`";
@@ -128,10 +128,10 @@ public class ModifyPresence implements Command.Class {
 
                     if (args.get(0).equalsIgnoreCase("dnd")) {
                         // Updates the ChadVar to Do Not Disturb
-                        ChadVar.statusType = StatusType.DND;
+                        ChadVar.setStatusType(StatusType.DND);
 
                         // Changes the presence
-                        e.getClient().changePresence(StatusType.DND, ActivityType.PLAYING, ChadVar.currentStatus);
+                        e.getClient().changePresence(StatusType.DND, ActivityType.PLAYING, ChadVar.getCurrentStatus());
 
                         // Updates the message
                         message = "Changed status type to `Do Not Disturb`";

@@ -30,7 +30,7 @@ public class Steam implements Command.Class  {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor()).credit("Steam API");
             String prefix = (String) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(Guild.DataType.PREFIX);
 
-            if (ChadVar.STEAM_API_KEY == null) {
+            if (ChadVar.getSTEAM_API_KEY() == null) {
                 ChadInstance.getLogger().error("Steam API Key not set!");
                 messageHandler.sendError("Internal error!");
                 return;
@@ -50,7 +50,7 @@ public class Steam implements Command.Class  {
                 
                 // Gets the user's steam id by their username
                 JSONObject steamUser = Objects.requireNonNull(JsonHandler.INSTANCE
-                        .read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + ChadVar.STEAM_API_KEY + "&vanityurl=" + args.get(1)))
+                        .read("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + ChadVar.getSTEAM_API_KEY() + "&vanityurl=" + args.get(1)))
                     .getJSONObject("response");
                 
                 // Checks to see if the user actually exists
@@ -64,7 +64,7 @@ public class Steam implements Command.Class  {
                 
                 // Gets the user's profile
                 JSONObject steamUserProfile = Objects.requireNonNull(JsonHandler.INSTANCE
-                        .read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + ChadVar.STEAM_API_KEY + "&steamids=" + steamId)).getJSONObject("response").getJSONArray("players").getJSONObject(0);
+                        .read("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + ChadVar.getSTEAM_API_KEY() + "&steamids=" + steamId)).getJSONObject("response").getJSONArray("players").getJSONObject(0);
                 
                 // The user's name
                 String userName = steamUserProfile.getString("personaname");
@@ -85,7 +85,7 @@ public class Steam implements Command.Class  {
                     
                     JSONArray csgoStats = Objects.requireNonNull(JsonHandler.INSTANCE.read(
                             "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="
-                                    + ChadVar.STEAM_API_KEY + "&steamid=" + steamId)).getJSONObject("playerstats")
+                                    + ChadVar.getSTEAM_API_KEY() + "&steamid=" + steamId)).getJSONObject("playerstats")
                         .getJSONArray("stats");
 
                     if (csgoStats == null) {

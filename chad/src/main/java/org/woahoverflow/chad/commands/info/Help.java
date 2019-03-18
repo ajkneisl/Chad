@@ -47,7 +47,7 @@ public class Help implements Command.Class {
 
                 // The commands builder
                 StringBuilder commandsBuilder = new StringBuilder();
-                for (Entry<String, Data> stringDataEntry : ChadVar.COMMANDS.entrySet()) {
+                for (Entry<String, Data> stringDataEntry : ChadVar.getCOMMANDS().entrySet()) {
                     // Gets the command's data
                     Data meta = stringDataEntry.getValue();
 

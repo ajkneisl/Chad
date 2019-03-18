@@ -54,25 +54,25 @@ public final class OnReady {
         }, 0, 86400 * 1000);
 
         // If the presence rotation is disabled, return
-        if (!ChadVar.rotatePresence)
+        if (!ChadVar.getRotatePresence())
             return;
 
         // Rotation Values
-        Object[] ar = ChadVar.presenceRotation.toArray();
+        Object[] ar = ChadVar.getPresenceRotation().toArray();
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!ChadVar.rotatePresence) return;
+                if (!ChadVar.getRotatePresence()) return;
 
                 // Sets the new status
                 if (ar.length == 0)
-                    ChadVar.currentStatus = "uh oh!";
+                    ChadVar.setCurrentStatus("uh oh!");
                 else
-                    ChadVar.currentStatus = (String) ar[new SecureRandom().nextInt(ar.length)];
+                    ChadVar.setCurrentStatus((String) ar[new SecureRandom().nextInt(ar.length)]);
 
                 // Changes the discord presence
-                RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus));
+                RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.getStatusType(), ActivityType.PLAYING, ChadVar.getCurrentStatus()));
             }
         }, 0, 1000 * 60 * 5);
     }

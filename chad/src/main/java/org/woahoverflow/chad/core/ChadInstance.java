@@ -21,14 +21,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import static org.woahoverflow.chad.core.ChadVar.eightBallResults;
-import static org.woahoverflow.chad.core.ChadVar.swearWords;
 
 /**
  * Main class within Chad
@@ -82,7 +79,7 @@ public final class ChadInstance {
         ch.qos.logback.classic.Logger rootLogger = loggerContext.getLogger("org.mongodb.driver");
         rootLogger.setLevel(Level.OFF);
 
-        getLogger().debug("woahoverflow: Chad ("+ChadVar.VERSION+")");
+        getLogger().debug("woahoverflow: Chad ("+ ChadVar.VERSION +")");
 
         ArgumentHandler.load(args);
 
@@ -97,13 +94,13 @@ public final class ChadInstance {
         ThreadHandler.initThreads();
 
         Thread ex = new Thread(() -> {
-            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach((word) -> swearWords.add((String) word));
-            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach((word) -> eightBallResults.add((String) word));
-            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")).forEach((v) -> ChadVar.presenceRotation.add((String) v));
+            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach((word) -> ChadVar.getSwearWords().add((String) word));
+            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach((word) -> ChadVar.getEightBallResults().add((String) word));
+            Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")).forEach((v) -> ChadVar.getPresenceRotation().add((String) v));
             Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach((v) -> {
                 if (Boolean.parseBoolean(((JSONObject) v).getString("allow"))) {
                     ChadInstance.getLogger().debug("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator");
-                    ChadVar.DEVELOPERS.add(((JSONObject) v).getLong("id"));
+                    ChadVar.getDEVELOPERS().add(((JSONObject) v).getLong("id"));
                 } else {
                     ChadInstance.getLogger().debug("Avoided adding user " + ((JSONObject) v).getString("display_name"));
                 }
@@ -115,7 +112,9 @@ public final class ChadInstance {
                 con.setRequestMethod("GET");
                 con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT);
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-                ChadVar.wordsList = in.lines().collect(Collectors.toList());
+                ArrayList<String> ar = new ArrayList<>();
+                in.lines().forEach(ar::add);
+                ChadVar.setWordsList(ar);
                 in.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
