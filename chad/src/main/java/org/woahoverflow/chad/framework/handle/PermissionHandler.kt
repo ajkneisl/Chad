@@ -34,12 +34,7 @@ object PermissionHandler {
      */
     @JvmStatic
     fun userNoPermission(command: String, user: IUser, guild: IGuild): Boolean {
-        val cmd = ChadVar.COMMANDS[command]!!.commandClass
-
         val guildInstance = GuildHandler.getGuild(guild.longID)
-
-        if (cmd == null)
-            return true // return false if the command doesnt exist
 
         val meta = ChadVar.COMMANDS[command]
 
