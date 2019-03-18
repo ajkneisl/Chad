@@ -5,7 +5,6 @@ import org.woahoverflow.chad.core.ChadVar;
 import org.woahoverflow.chad.framework.handle.ArgumentHandler;
 import org.woahoverflow.chad.framework.handle.Reddit;
 import org.woahoverflow.chad.framework.sync.WebsiteSync;
-import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
@@ -35,8 +34,7 @@ public final class OnReady {
             ChadInstance.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
         }
         else {
-            UI.handle.addLog("Bot started with " + event.getClient().getGuilds().size() + " guilds!", UI.LogLevel.INFO);
-            UI.handle.update();
+            ChadInstance.getLogger().debug("Bot started with " + event.getClient().getGuilds().size() + " guilds!");
         }
 
         Timer timer = new Timer();

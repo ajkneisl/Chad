@@ -25,9 +25,8 @@ object ArgumentHandler {
     fun load(args: Array<String>) {
         if (!ran) {
             LAUNCH_ARGUMENTS["TEST_RUN"] = false
-            LAUNCH_ARGUMENTS["DISABLE_UI"] = false
-            LAUNCH_ARGUMENTS["DISABLE_UI_UPDATE"] = false
             LAUNCH_ARGUMENTS["DISABLE_EXTERNAL_SYNC"] = false
+            LAUNCH_ARGUMENTS["DISABLE_STEAM_CACHE"] = false
         }
 
         val start = System.currentTimeMillis()

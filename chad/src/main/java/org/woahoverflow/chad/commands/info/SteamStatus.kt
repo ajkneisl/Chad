@@ -2,6 +2,7 @@ package org.woahoverflow.chad.commands.info
 
 import org.json.JSONObject
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.framework.handle.ArgumentHandler
 import org.woahoverflow.chad.framework.handle.JsonHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
@@ -21,9 +22,11 @@ class SteamStatus : Command.Class {
      *
      * It updates every hour
      */
-    val cached = object : ConcurrentHashMap<String, String>() {
+    private val cached = object : ConcurrentHashMap<String, String>() {
         init {
             fun update() {
+                if (ArgumentHandler.isToggled("DISABLE_STEAM_CACHE")) return
+
                 val csgo = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
 
                 val pubg = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()

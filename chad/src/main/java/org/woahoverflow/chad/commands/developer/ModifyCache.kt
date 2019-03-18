@@ -1,13 +1,13 @@
 package org.woahoverflow.chad.commands.developer
 
 import org.json.JSONObject
+import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.core.ChadVar.eightBallResults
 import org.woahoverflow.chad.core.ChadVar.swearWords
 import org.woahoverflow.chad.framework.handle.*
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
-import org.woahoverflow.chad.framework.ui.UI
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.util.EmbedBuilder
@@ -114,11 +114,10 @@ class ModifyCache : Command.Class {
                             JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")!!.forEach { v ->
                                 run {
                                     if (java.lang.Boolean.parseBoolean((v as JSONObject).getString("allow"))) {
-                                        UI.handle
-                                                .addLog("Added user " + v.getString("display_name") + " to group System Administrator", UI.LogLevel.INFO)
+                                        ChadInstance.getLogger().debug("Added user " + v.getString("display_name") + " to group System Administrator")
                                         ChadVar.DEVELOPERS.add(v.getLong("id"))
                                     } else {
-                                        UI.handle.addLog("Avoided adding user " + v.getString("display_name"), UI.LogLevel.INFO)
+                                        ChadInstance.getLogger().debug("Avoided adding user " + v.getString("display_name"))
                                     }
                                 }
                             }

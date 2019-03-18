@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.obj.Command;
-import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.ActivityType;
@@ -83,7 +82,7 @@ public class Shutdown implements Command.Class  {
             new MessageHandler(e.getChannel(), e.getAuthor()).sendEmbed(new EmbedBuilder().withDesc("Chad is shutting down in 10 seconds..."));
 
             // Warns within the UI
-            UI.handle.addLog("Shutting down in 10 seconds...", UI.LogLevel.SEVERE);
+            ChadInstance.getLogger().warn("Shutting down in 10 seconds...");
 
             // Updates the presence
             ChadInstance.cli.changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...");

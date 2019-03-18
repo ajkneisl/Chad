@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.apache.commons.lang3.SystemUtils
 import org.woahoverflow.chad.core.ChadInstance
-import org.woahoverflow.chad.framework.ui.ChadError
 import org.woahoverflow.chad.framework.util.Util
 import java.io.File
 import java.io.FileWriter
@@ -25,14 +24,14 @@ object JsonHandler {
         val woahoverflowDirectory = if (linux) File("/home/" + System.getProperty("user.name") + "/woahoverflow") else File(System.getenv("appdata") + "\\woahoverflow")
 
         if (!woahoverflowDirectory.exists() && woahoverflowDirectory.mkdirs()) {
-            ChadError.throwError("There was an error making the woahoverflow directory.")
+            ChadInstance.getLogger().error("There was an error making the woahoverflow directory.")
             System.exit(1)
         }
 
         fileLocation = if (linux) File(woahoverflowDirectory.path + "/chad") else File(woahoverflowDirectory.path + "\\chad")
 
         if (!fileLocation.exists() && !fileLocation.mkdirs()) {
-            ChadError.throwError("There was an error making the Chad directory.")
+            ChadInstance.getLogger().error("There was an error making the Chad directory.")
             System.exit(1)
         }
 
@@ -40,7 +39,7 @@ object JsonHandler {
 
         if (!botLocation.exists()) {
             if (!botLocation.createNewFile()) {
-                ChadError.throwError("There was an error making the bot.json file.")
+                ChadInstance.getLogger().error("There was an error creating the bot.json file.")
                 System.exit(1)
             }
 
@@ -57,7 +56,7 @@ object JsonHandler {
                     fileWriter.flush()
                 }
             } catch (e: IOException) {
-                ChadError.throwError("There was an error creating files during startup!", e)
+                ChadInstance.getLogger().error("There was an issue creating files at startup!", e)
             }
         }
     }

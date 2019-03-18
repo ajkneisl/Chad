@@ -1,12 +1,12 @@
 package org.woahoverflow.chad.core.listener;
 
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.PlayerHandler;
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
-import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent;
@@ -49,11 +49,8 @@ public final class GuildJoinLeave {
             // By retrieving the guild's instance, it creates an instance for the guild within the database
             Guild guild = GuildHandler.getGuild(event.getGuild().getLongID());
 
-            // Display the new guild in the UI
-            UI.displayGuild(event.getGuild());
-
             // Send a log with the new guild
-            UI.handle.addLog('[' +event.getGuild().getStringID()+"] Joined Guild", UI.LogLevel.INFO);
+            ChadInstance.getLogger().debug('['+event.getGuild().getStringID()+"] Joined Guild");
 
             // The guild's default channel
             IChannel defaultChannel = RequestBuffer.request(() -> event.getGuild().getDefaultChannel()).get();
@@ -89,8 +86,7 @@ public final class GuildJoinLeave {
      */
     @EventSubscriber
     @SuppressWarnings("unused")
-    public void leaveGuild(GuildLeaveEvent event)
-    {
+    public void leaveGuild(GuildLeaveEvent event) {
         // Delete the guild's document
         DatabaseManager.GUILD_DATA.removeDocument(event.getGuild().getStringID());
 
@@ -98,6 +94,6 @@ public final class GuildJoinLeave {
         GuildHandler.removeGuild(event.getGuild().getLongID());
 
         // Send a log
-        UI.handle.addLog('<' +event.getGuild().getStringID()+"> Left Guild", UI.LogLevel.INFO);
+        ChadInstance.getLogger().debug('<' +event.getGuild().getStringID()+"> Left Guild");
     }
 }

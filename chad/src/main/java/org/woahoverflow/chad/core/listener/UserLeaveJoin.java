@@ -10,7 +10,6 @@ import org.woahoverflow.chad.framework.handle.database.DatabaseManager;
 import org.woahoverflow.chad.framework.obj.Guild;
 import org.woahoverflow.chad.framework.obj.Player;
 import org.woahoverflow.chad.framework.obj.Player.DataType;
-import org.woahoverflow.chad.framework.ui.ChadError;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.member.UserJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.member.UserLeaveEvent;
@@ -88,7 +87,7 @@ public final class UserLeaveJoin {
                 } catch (NumberFormatException throwaway)
                 {
                     // Throws error in the UI
-                    ChadError.throwError("Guild " + guild.getName() + " has an invalid join message channel!");
+                    ChadInstance.getLogger().error("Guild " + guild.getName() + " has an invalid join message channel!");
                     return;
                 }
                 // Gets the channel
@@ -115,7 +114,7 @@ public final class UserLeaveJoin {
 
         String joinRoleStringID = (String) g.getObject(Guild.DataType.JOIN_ROLE);
         if (!joinRoleStringID.equalsIgnoreCase("none")) {
-            Long joinRoleID = Long.parseLong(joinRoleStringID);
+            long joinRoleID = Long.parseLong(joinRoleStringID);
             List<IRole> botRoles = ChadInstance.cli.getOurUser().getRolesForGuild(e.getGuild());
             IRole joinRole = e.getGuild().getRoleByID(joinRoleID);
 
@@ -202,7 +201,7 @@ public final class UserLeaveJoin {
                     id = Long.parseLong(leaveMsgCh);
                 } catch (NumberFormatException throwaway) {
                     // Throws error in the UI
-                    ChadError.throwError("Guild " + guild.getName() + " has an invalid leave message channel!");
+                    ChadInstance.getLogger().error("Guild " + guild.getName() + " has an invalid leave message channel!");
                     return;
                 }
                 // Gets the channel

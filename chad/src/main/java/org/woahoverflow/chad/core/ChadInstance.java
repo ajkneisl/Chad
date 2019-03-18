@@ -11,7 +11,6 @@ import org.woahoverflow.chad.framework.handle.ArgumentHandler;
 import org.woahoverflow.chad.framework.handle.GuildHandler;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import org.woahoverflow.chad.framework.handle.ThreadHandler;
-import org.woahoverflow.chad.framework.ui.UI;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.RequestBuffer;
@@ -97,18 +96,16 @@ public final class ChadInstance {
 
         ThreadHandler.initThreads();
 
-        UI.handle = new UI();
-
         Thread ex = new Thread(() -> {
             Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach((word) -> swearWords.add((String) word));
             Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach((word) -> eightBallResults.add((String) word));
             Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")).forEach((v) -> ChadVar.presenceRotation.add((String) v));
             Objects.requireNonNull(JsonHandler.INSTANCE.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach((v) -> {
                 if (Boolean.parseBoolean(((JSONObject) v).getString("allow"))) {
-                    UI.handle.addLog("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator", UI.LogLevel.INFO);
+                    ChadInstance.getLogger().debug("Added user " + ((JSONObject) v).getString("display_name") + " to group System Administrator");
                     ChadVar.DEVELOPERS.add(((JSONObject) v).getLong("id"));
                 } else {
-                    UI.handle.addLog("Avoided adding user " + ((JSONObject) v).getString("display_name"), UI.LogLevel.INFO);
+                    ChadInstance.getLogger().debug("Avoided adding user " + ((JSONObject) v).getString("display_name"));
                 }
             });
 
