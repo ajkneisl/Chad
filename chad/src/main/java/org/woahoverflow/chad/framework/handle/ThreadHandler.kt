@@ -23,37 +23,6 @@ object ThreadHandler {
     private val executorService = Executors.newCachedThreadPool()
 
     /**
-     * Initializes the Thread Handler
-     */
-    @JvmStatic
-    fun initThreads() {
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                if (!threadHash.isEmpty()) {
-                    threadHash.forEach {
-                        user, array ->
-                        run {
-                            if (!array.isEmpty()) {
-                                var i = 0
-
-                                while (array.size > i) {
-                                    if (array[i].isDone) {
-                                        array.removeAt(i)
-                                        runningThreads--
-                                    }
-                                    i++
-                                }
-                            } else {
-                                threadHash.remove(user)
-                            }
-                        }
-                    }
-                }
-            }
-        }, 0, 2)
-    }
-
-    /**
      * Runs a thread for a user.
      *
      * @param thread The thread to run

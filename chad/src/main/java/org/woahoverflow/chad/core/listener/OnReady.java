@@ -1,18 +1,8 @@
 package org.woahoverflow.chad.core.listener;
 
 import org.woahoverflow.chad.core.ChadInstance;
-import org.woahoverflow.chad.core.ChadVar;
-import org.woahoverflow.chad.framework.handle.ArgumentHandler;
-import org.woahoverflow.chad.framework.handle.Reddit;
-import org.woahoverflow.chad.framework.sync.WebsiteSync;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.obj.ActivityType;
-import sx.blah.discord.util.RequestBuffer;
-
-import java.security.SecureRandom;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * The on ready event from Discord
@@ -29,51 +19,6 @@ public final class OnReady {
     @EventSubscriber
     @SuppressWarnings("unused")
     public void onReadyEvent(ReadyEvent event) {
-        // UI Begin
-        if (ArgumentHandler.isToggled("disable_ui")) {
-            ChadInstance.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
-        }
-        else {
-            ChadInstance.getLogger().debug("Bot started with " + event.getClient().getGuilds().size() + " guilds!");
-        }
-
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                WebsiteSync.sync(event.getClient());
-            }
-        }, 0, 1000 * 60 * 5);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Reddit.getSubreddits().clear();
-
-                ChadInstance.getLogger().debug("Reset all cached subreddits!");
-            }
-        }, 0, 86400 * 1000);
-
-        // If the presence rotation is disabled, return
-        if (!ChadVar.getRotatePresence())
-            return;
-
-        // Rotation Values
-        Object[] ar = ChadVar.getPresenceRotation().toArray();
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!ChadVar.getRotatePresence()) return;
-
-                // Sets the new status
-                if (ar.length == 0)
-                    ChadVar.setCurrentStatus("uh oh!");
-                else
-                    ChadVar.setCurrentStatus((String) ar[new SecureRandom().nextInt(ar.length)]);
-
-                // Changes the discord presence
-                RequestBuffer.request(() -> event.getClient().changePresence(ChadVar.getStatusType(), ActivityType.PLAYING, ChadVar.getCurrentStatus()));
-            }
-        }, 0, 1000 * 60 * 5);
+        ChadInstance.getLogger().info("Bot started with {} guilds!", event.getClient().getGuilds().size());
     }
 }

@@ -59,7 +59,7 @@ public final class Util
                 ChadInstance.getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode);
                 return "";
             }
-            ChadInstance.getLogger().info("Fulfilled a request at URL : {}", url);
+            ChadInstance.getLogger().debug("Fulfilled a request at URL : {}", url);
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             String response = in.lines().collect(Collectors.joining());
