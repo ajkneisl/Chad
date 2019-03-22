@@ -60,7 +60,6 @@ object YouTubeHandler {
     @JvmStatic
     fun getYoutubeChannel(username: String): YouTubeChannel? {
         // If the API key wasn't set, throw something
-        if (ChadVar.YOUTUBE_API_KEY == null) throw IllegalArgumentException("YouTube API key is not set!")
         if (!CACHED.containsKey(username)) {
             val channel = getEmptyYouTubeChannel(username)
 

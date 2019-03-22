@@ -36,7 +36,15 @@ class UserLeaveJoin {
         // Add it to the user's data set
         val player = PlayerHandler.getPlayer(e.user.longID)
 
-        val guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<Long>
+        var guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<*>
+        try {
+            @Suppress("UNCHECKED_CAST")
+            guildData = guildData as ArrayList<Long>
+        } catch (e: ClassCastException) {
+            ChadInstance.getLogger().error("Error with cast!", e)
+            return
+        }
+
         if (!guildData.contains(e.guild.longID)) guildData.add(e.guild.longID)
         player.setObject(DataType.GUILD_DATA, guildData)
 
@@ -129,7 +137,14 @@ class UserLeaveJoin {
         // Remove it from the user's data set
         val player = PlayerHandler.getPlayer(e.user.longID)
 
-        val guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<Long>
+        var guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<*>
+        try {
+            @Suppress("UNCHECKED_CAST")
+            guildData = guildData as ArrayList<Long>
+        } catch (e: ClassCastException) {
+            ChadInstance.getLogger().error("Error with cast!", e)
+            return
+        }
 
         // Remove the guild that was left
         guildData.remove(e.guild.longID)

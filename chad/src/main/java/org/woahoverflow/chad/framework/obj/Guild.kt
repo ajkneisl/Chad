@@ -198,6 +198,7 @@ class Guild {
 
         // Try to cast it
         try {
+            @Suppress("UNCHECKED_CAST")
             permissionSet = permissions as ArrayList<String>
         } catch (castException: ClassCastException) {
             // If it for some reason doesn't cast properly

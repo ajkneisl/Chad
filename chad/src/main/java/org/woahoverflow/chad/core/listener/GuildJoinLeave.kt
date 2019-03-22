@@ -32,7 +32,15 @@ class GuildJoinLeave {
             val users = RequestBuffer.request<List<IUser>> { event.guild.users }.get()
             for (user in users) {
                 val player = PlayerHandler.getPlayer(user.longID)
-                val guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<Long>
+                var guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<*>
+
+                try {
+                    @Suppress("UNCHECKED_CAST")
+                    guildData = guildData as ArrayList<Long>
+                } catch (e: ClassCastException) {
+                    ChadInstance.getLogger().error("Error with cast!", e)
+                    return@Thread
+                }
 
                 if (!guildData.contains(event.guild.longID)) {
                     guildData.add(event.guild.longID)
