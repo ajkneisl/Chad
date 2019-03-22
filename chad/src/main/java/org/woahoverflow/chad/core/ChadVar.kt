@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author sho
  */
 object ChadVar {
-    const val VERSION = "v0.9.14n"
+    const val VERSION = "v0.9.14-B2"
 
     /**
      * Gigantic Words List
