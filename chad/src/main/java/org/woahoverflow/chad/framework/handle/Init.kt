@@ -71,12 +71,16 @@ object Init {
 
             /**
              * Syncs with the website
+             * Updates money leaderboard
+             *
+             * TODO add other leaderboard types
              *
              * # 5 minutes
              */
             timer.schedule(object : TimerTask(){
                 override fun run() {
                     sync(ChadInstance.cli)
+                    LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.MONEY)
                 }
             }, 0, 1000*60*5)
 

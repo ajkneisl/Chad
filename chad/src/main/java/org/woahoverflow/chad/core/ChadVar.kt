@@ -137,6 +137,7 @@ object ChadVar {
             this["subscribercount"] = Data(Command.Category.INFO, SubscriberCount(), "subcount", "subc")
             this["steamstatus"] = Data(Command.Category.INFO, SteamStatus(), "steamst")
             this["aliases"] = Data(Command.Category.INFO, Aliases(), "alias")
+            this["leaderboard"] = Data(Command.Category.INFO, Leaderboard(), "lb")
 
             // PUNISHMENTS!
             this["kick"] = Command.Data(Command.Category.PUNISHMENTS, Kick())

@@ -1,12 +1,15 @@
 package org.woahoverflow.chad.commands.developer
 
 import org.woahoverflow.chad.framework.handle.GuildHandler
+import org.woahoverflow.chad.framework.handle.LeaderboardHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.sync.sync
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
+import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.util.EmbedBuilder
+import sx.blah.discord.util.RequestBuffer
 import java.util.*
 
 /**
@@ -38,6 +41,19 @@ class Sync : Command.Class {
                     messageHandler.sendEmbed(EmbedBuilder().withDesc("Successfully synced with website!"))
 
                     return@Runnable
+                }
+
+                "leaderboard" -> {
+                    val message = RequestBuffer.request<IMessage> {
+                        e.channel.sendMessage("Syncing leaderboard...")
+                    }.get()
+
+                    val ref = LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.MONEY)
+                    println(LeaderboardHandler.moneyLeaderBoard.getLeaderBoard())
+
+                    RequestBuffer.request {
+                        message.edit("Synced the leaderboard from `${ref.am}` users in `${ref.time}`ms")
+                    }
                 }
 
                 else -> {
