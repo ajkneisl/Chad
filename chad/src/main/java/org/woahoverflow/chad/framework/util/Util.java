@@ -13,6 +13,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -174,4 +175,19 @@ public final class Util
         return string;
     }
 
+    public static String formatNumber(int i) {
+        DecimalFormat format = new DecimalFormat("#, ###");
+        String formattedString = format.format(i).trim();
+
+        String[] suffixes = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+        switch (i % 100) {
+            case 11:
+            case 12:
+            case 13:
+                return formattedString + "th";
+            default:
+                return formattedString + suffixes[i % 10];
+
+        }
+    }
 }

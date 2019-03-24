@@ -115,7 +115,15 @@ object Command {
                 // The embed builder
                 val embedBuilder = EmbedBuilder()
                 embedBuilder.withTitle("Help : `$commandName`")
-                commands.forEach { key, `val` -> embedBuilder.appendField(String.format("`%s%s`", prefix, key), `val`, false) }
+                commands.forEach { key, `val` ->
+                    run {
+                        if (key.startsWith("!TEXT!")) {
+                            embedBuilder.appendField(String.format("%s", key.removePrefix("!TEXT!")), `val`, false)
+                        } else {
+                            embedBuilder.appendField(String.format("`%s%s`", prefix, key), `val`, false)
+                        }
+                    }
+                }
 
                 helpCommands[commandName] = embedBuilder
             }

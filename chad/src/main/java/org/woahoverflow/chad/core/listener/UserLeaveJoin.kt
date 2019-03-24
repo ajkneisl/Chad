@@ -8,12 +8,11 @@ import org.woahoverflow.chad.framework.handle.PlayerHandler
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Player.DataType
+import org.woahoverflow.chad.framework.util.Util
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.member.UserJoinEvent
 import sx.blah.discord.handle.impl.events.guild.member.UserLeaveEvent
-import sx.blah.discord.handle.obj.IChannel
-import sx.blah.discord.handle.obj.IMessage
-import sx.blah.discord.handle.obj.Permissions
+import sx.blah.discord.handle.obj.*
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
 import java.util.*
@@ -33,7 +32,6 @@ class UserLeaveJoin {
      */
     @EventSubscriber
     fun userJoin(e: UserJoinEvent) {
-        // Add it to the user's data set
         val player = PlayerHandler.getPlayer(e.user.longID)
 
         var guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<*>
@@ -51,79 +49,51 @@ class UserLeaveJoin {
         // Logs the user's join
         val guild = e.guild
         val embedBuilder = EmbedBuilder()
-
-        // Builds the embed
         embedBuilder.withTitle("User Join : " + e.user.name).withFooterIcon(e.user.avatarURL)
-
-        // Sends the log
         MessageHandler.sendLog(embedBuilder, guild)
 
         // If the guild has user join messages on, do that
         val g = GuildHandler.getGuild(e.guild.longID)
         if (g.getObject(Guild.DataType.JOIN_MESSAGE_ON) as Boolean) {
-            // Gets the join message channel
-            val joinMsgCh = g.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL) as String
+            val joinMsgCh = g.getObject(Guild.DataType.JOIN_MESSAGE_CHANNEL)
 
-            // Makes sure they actually assigned a channel
-            if (!joinMsgCh.equals("none", ignoreCase = true)) {
-                val id: Long
-                try {
-                    id = joinMsgCh.toLong()
-                } catch (throwaway: NumberFormatException) {
-                    // Throws error in the UI
-                    ChadInstance.getLogger().error("Guild " + guild.name + " has an invalid join message channel!")
+            if (joinMsgCh is Long) {
+                val channel = RequestBuffer.request<IChannel> { guild.getChannelByID(joinMsgCh) }.get()
+
+                if (channel != null && !channel.isDeleted) {
+                    RequestBuffer.request<IMessage> {
+                        channel.sendMessage(convert(g.getObject(Guild.DataType.JOIN_MESSAGE) as String, e.guild, e.user, e.guild.totalMemberCount + 1))
+                    }
+                }
+            }
+        }
+
+        if (
+            ChadInstance.cli.ourUser.getPermissionsForGuild(e.guild).contains(Permissions.MANAGE_ROLES)
+            && g.getObject(Guild.DataType.ROLE_ON_JOIN) as Boolean
+                ) {
+            val joinRoleStringID = g.getObject(Guild.DataType.JOIN_ROLE)
+            if (joinRoleStringID is Long) {
+                val joinRole = e.guild.getRoleByID(joinRoleStringID)
+                MessageHandler(e.guild.defaultChannel, e.user).sendError("There's an issue with the role in auto role!")
+
+                if (joinRole.isDeleted || joinRole.isEveryoneRole) {
+                    MessageHandler(e.guild.defaultChannel, e.user).sendError("There's an issue with the role in auto role!")
                     return
                 }
 
-                // Gets the channel
-                val channel = RequestBuffer.request<IChannel> { guild.getChannelByID(id) }.get()
+                val botRoles = e.client.ourUser.getRolesForGuild(e.guild)
 
-                // Makes sure the channel isn't deleted
-                if (!channel.isDeleted) {
-                    // Gets the message, makes sure it isn't null, then sends
-                    var msg = g.getObject(Guild.DataType.JOIN_MESSAGE) as String
-                    msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(msg).replaceAll(e.user.name)).replaceAll(e.guild.name)
-                    val finalMsg = msg
-                    RequestBuffer.request<IMessage> { channel.sendMessage(finalMsg) }
+                var botPosition = 0
+                for (role in botRoles) if (role.position > botPosition) botPosition = role.position
+
+                if (joinRole.position > botPosition) {
+                    MessageHandler(e.guild.defaultChannel, e.user).sendError("Chad doesn't have permission to assign the role in auto role!")
+                    return
                 }
+
+                e.user.addRole(joinRole)
             }
-        }
-
-        // does the bot have MANAGE_ROLES?
-        if (!ChadInstance.cli.ourUser.getPermissionsForGuild(e.guild).contains(Permissions.MANAGE_ROLES)) {
-            MessageHandler(e.guild.defaultChannel, e.user).sendError("Auto role failed!\nChad needs the permission `MANAGE_ROLES`!")
-            return
-        }
-
-        // you probably shouldn't put code below this comment
-        val joinRoleStringID = g.getObject(Guild.DataType.JOIN_ROLE) as String
-        if (!joinRoleStringID.equals("none", ignoreCase = true)) {
-            val joinRoleID = java.lang.Long.parseLong(joinRoleStringID)
-            val botRoles = ChadInstance.cli.ourUser.getRolesForGuild(e.guild)
-            val joinRole = e.guild.getRoleByID(joinRoleID)
-
-            // get the bots highest role position in the guild
-            var botPosition = 0
-            for (role in botRoles)
-                if (role.position > botPosition)
-                    botPosition = role.position
-
-            // can the bot assign the user the configured role?
-            if (joinRole.position > botPosition) {
-                MessageHandler(e.guild.defaultChannel, e.user).sendError("Auto role assignment failed; Bot isn't allowed to assign the role.")
-                return
-            }
-
-            // is the role @everyone?
-            if (joinRole.isEveryoneRole) {
-                MessageHandler(e.guild.defaultChannel, e.user).sendError("Auto role assignment failed; Misconfigured role.")
-                return
-            }
-
-            // assign the role
-            if (g.getObject(Guild.DataType.ROLE_ON_JOIN) as Boolean)
-                if (joinRoleStringID != "none")
-                    e.user.addRole(joinRole)
         }
     }
 
@@ -134,7 +104,6 @@ class UserLeaveJoin {
      */
     @EventSubscriber
     fun userLeave(e: UserLeaveEvent) {
-        // Remove it from the user's data set
         val player = PlayerHandler.getPlayer(e.user.longID)
 
         var guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<*>
@@ -146,10 +115,7 @@ class UserLeaveJoin {
             return
         }
 
-        // Remove the guild that was left
         guildData.remove(e.guild.longID)
-
-        val g = GuildHandler.getGuild(e.guild.longID)
 
         if (guildData.isEmpty()) {
             // If it's the last guild that they're in with Chad, remove theirs
@@ -165,49 +131,44 @@ class UserLeaveJoin {
             )
         }
 
-        // Log if the user leaves
+        // Logs the user's join
         val guild = e.guild
         val embedBuilder = EmbedBuilder()
-
-        // Builds the embed
-        embedBuilder.withTitle("User Leave : " + e.user.name)
-                .withFooterIcon(e.user.avatarURL)
-
-        // Sends the log
+        embedBuilder.withTitle("User Leave : " + e.user.name).withFooterIcon(e.user.avatarURL)
         MessageHandler.sendLog(embedBuilder, guild)
 
         // If the guild has user leave messages on, do that
+        val g = GuildHandler.getGuild(e.guild.longID)
         if (g.getObject(Guild.DataType.LEAVE_MESSAGE_ON) as Boolean) {
-            // Gets the leave message channel
-            val leaveMsgCh = g.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL) as String
+            val leaveMsgCh = g.getObject(Guild.DataType.LEAVE_MESSAGE_CHANNEL)
 
-            // Makes sure they actually assigned a channel
-            if (!leaveMsgCh.equals("none", ignoreCase = true)) {
-                val id: Long
-                try {
-                    id = leaveMsgCh.toLong()
-                } catch (throwaway: NumberFormatException) {
-                    // Throws error in the UI
-                    ChadInstance.getLogger().error("Guild " + guild.name + " has an invalid leave message channel!")
-                    return
-                }
+            if (leaveMsgCh is Long) {
+                val channel = RequestBuffer.request<IChannel> { guild.getChannelByID(leaveMsgCh) }.get()
 
-                // Gets the channel
-                val channel = RequestBuffer.request<IChannel> { guild.getChannelByID(id) }.get()
-
-                // Makes sure the channel isn't deleted
-                if (!channel.isDeleted) {
-                    // Gets the message, makes sure it isn't null, then sends
-                    var msg = g.getObject(Guild.DataType.LEAVE_MESSAGE) as String
-                    msg = GUILD_PATTERN.matcher(USER_PATTERN.matcher(Objects.requireNonNull(msg)).replaceAll(e.user.name)).replaceAll(e.guild.name)
-                    val finalMsg = msg
-                    RequestBuffer.request<IMessage> { channel.sendMessage(finalMsg) }
+                if (channel != null && !channel.isDeleted) {
+                    RequestBuffer.request<IMessage> {
+                        channel.sendMessage(convert(g.getObject(Guild.DataType.LEAVE_MESSAGE) as String, e.guild, e.user, e.guild.totalMemberCount - 1))
+                    }
                 }
             }
         }
     }
 
+    private fun convert(msg: String, guild: IGuild, user: IUser, total: Int): String
+        = GUILD_PATTERN.matcher(
+                USER_PATTERN.matcher(
+                        TOTAL_PATTERN.matcher(
+                                FORMATTED_PATTERN.matcher(
+                                        msg
+                                ).replaceAll(Util.formatNumber(total))
+                        ).replaceAll(total.toString())
+                ).replaceAll(user.name)
+        ).replaceAll(guild.name)
+
+
     companion object {
+        private val TOTAL_PATTERN = Pattern.compile("&count&")
+        private val FORMATTED_PATTERN = Pattern.compile("&formatted_count&")
         private val USER_PATTERN = Pattern.compile("&user&")
         private val GUILD_PATTERN = Pattern.compile("&guild&")
     }
