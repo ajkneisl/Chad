@@ -92,11 +92,11 @@ object Init {
              * # 5 minutes
              */
             if (ChadVar.rotatePresence) {
-                val ar = ChadVar.presenceRotation.toTypedArray()
-
                 timer.schedule(object : TimerTask() {
                     override fun run() {
                         if (!ChadVar.rotatePresence) return
+
+                        val ar = ChadVar.presenceRotation.toTypedArray()
 
                         // Sets the new status
                         if (ar.isEmpty())
