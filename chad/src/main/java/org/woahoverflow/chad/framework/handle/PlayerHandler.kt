@@ -74,6 +74,12 @@ object PlayerHandler {
         // The user's balance
         playerDocument["balance"] = 0L
 
+        // The user's XP
+        playerDocument["xp"] = 0L
+
+        // The user's rank
+        playerDocument["rank"] = 0
+
         // Other default user data
         playerDocument["marry_data"] = "none&none"
         playerDocument["profile_description"] = "No description!"
@@ -111,9 +117,16 @@ object PlayerHandler {
 
         // Sets the data
         for (type in DataType.values()) {
-            if (playerDataDocument[type.toString().toLowerCase()] == null)
-                println(type.toString().toLowerCase())
-            playerData[type] = playerDataDocument[type.toString().toLowerCase()]!!
+            if (playerDataDocument[type.toString().toLowerCase()] == null) {
+                when (type.type) {
+                    0 -> playerData[type] = 0L
+                    1 -> playerData[type] = 0
+                    2 -> playerData[type] = ""
+                    3 -> playerData[type] = ArrayList<Any>()
+                }
+            } else {
+                playerData[type] = playerDataDocument[type.toString().toLowerCase()]!!
+            }
         }
 
         return Player(playerData, user)

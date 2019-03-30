@@ -5,6 +5,7 @@ import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PermissionHandler
 import org.woahoverflow.chad.framework.handle.ThreadHandler
+import org.woahoverflow.chad.framework.handle.xp.XPHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.api.events.EventSubscriber
@@ -21,8 +22,10 @@ class MessageReceived {
         val argArray = event.message.content.split(" ")
 
         // If there's none, return
-        if (argArray.isEmpty())
-            return
+        if (argArray.isEmpty()) return
+
+        // Registers that a user chatted
+        XPHandler.getUserInstance(event.author).registerChat(event.message)
 
         // The guild's instance
         val guild = GuildHandler.getGuild(event.guild.longID)
