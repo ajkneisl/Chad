@@ -45,14 +45,15 @@ class Sync : Command.Class {
 
                 "leaderboard" -> {
                     val message = RequestBuffer.request<IMessage> {
-                        e.channel.sendMessage("Syncing leaderboard...")
+                        e.channel.sendMessage("Syncing leaderboards...")
                     }.get()
 
                     val ref = LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.MONEY)
-                    println(LeaderboardHandler.moneyLeaderBoard.getLeaderBoard())
+                    val ref2 = LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.XP)
 
                     RequestBuffer.request {
-                        message.edit("Synced the leaderboard from `${ref.am}` users in `${ref.time}`ms")
+                        message.edit("Synced the money leaderboard with `${ref.am}` users in `${ref.time}`ms" +
+                                "\nSynced the XP leaderboard with `${ref2.am}` users in `${ref.time}`ms")
                     }
                 }
 

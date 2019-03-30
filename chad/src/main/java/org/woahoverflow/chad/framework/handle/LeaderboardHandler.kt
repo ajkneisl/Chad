@@ -16,7 +16,7 @@ object LeaderboardHandler {
     /**
      * The user's XP set
      */
-    data class XPUserSet(val user: IUser, val xp: Long, val rank: Int)
+    data class XPUserSet(val user: IUser, val xp: Long)
 
     /**
      * The amount of users it refreshed.
@@ -111,7 +111,7 @@ object LeaderboardHandler {
                     list
                 }.get()
 
-                ChadInstance.getLogger().debug("Refreshing ${users.size} users...")
+                ChadInstance.getLogger().debug("Refreshing ${users.size} users for MONEY leaderboard...")
 
                 moneyLeaderBoard.reset()
                 val amount = moneyLeaderBoard.amount
@@ -132,7 +132,7 @@ object LeaderboardHandler {
 
                         if (balance > pos.bal) {
                             moneyLeaderBoard.setPos(i, MoneyUserSet(user, balance))
-                            checkUser(pos.bal, pos.user)
+                            checkUser(pos)
                             break
                         }
                     }
@@ -142,7 +142,54 @@ object LeaderboardHandler {
                 return TimeResult(users.size, System.currentTimeMillis()-start)
             }
 
-            LeaderboardHandler.LeaderboardType.XP -> TODO()
+            LeaderboardHandler.LeaderboardType.XP -> {
+                val guilds = RequestBuffer.request<List<IGuild>> {
+                    ChadInstance.cli.guilds
+                }.get()
+
+                // Gets all users and checks for duplicates
+                val users = RequestBuffer.request<List<IUser>> {
+                    val list = ArrayList<IUser>()
+                    for (guild in guilds) {
+                        for (user1 in guild.users) {
+                            if (!checkDuplicate(list, user1)) list.add(user1)
+                        }
+                    }
+
+                    list
+                }.get()
+
+                ChadInstance.getLogger().debug("Refreshing ${users.size} users for XP leaderboard...")
+
+                xpLeaderBoard.reset()
+                val amount = xpLeaderBoard.amount
+
+                for (user in users) {
+                    val player = PlayerHandler.getPlayer(user.longID)
+                    val xp = player.getObject(Player.DataType.XP) as Long
+
+                    if (xp < xpLeaderBoard.minimum) continue
+
+                    for (i in 1..amount) {
+                        val pos = xpLeaderBoard.getPos(i)
+
+                        if (pos == null) {
+                            xpLeaderBoard.setPos(i, XPUserSet(user, xp))
+                            break
+                        }
+
+                        if (xp > pos.xp) {
+                            xpLeaderBoard.setPos(i, XPUserSet(user, xp))
+                            checkUser(pos)
+                            break
+                        }
+                    }
+                }
+
+                ChadInstance.getLogger().debug("Completed XP leaderboard refresh! Took ${System.currentTimeMillis()-start}ms")
+                return TimeResult(users.size, System.currentTimeMillis()-start)
+            }
+
             LeaderboardHandler.LeaderboardType.WORLD -> TODO()
         }
     }
@@ -150,22 +197,46 @@ object LeaderboardHandler {
     /**
      * Rechecks a user's position on the money leaderboard
      */
-    private fun checkUser(balance: Long, user: IUser) {
+    private fun checkUser(user: MoneyUserSet) {
         val amount = moneyLeaderBoard.amount
 
-        if (balance < moneyLeaderBoard.minimum) return
+        if (user.bal < moneyLeaderBoard.minimum) return
 
         for (i in 1..amount) {
             val pos = moneyLeaderBoard.getPos(i)
 
             if (pos == null) {
-                moneyLeaderBoard.setPos(i, MoneyUserSet(user, balance))
+                moneyLeaderBoard.setPos(i, MoneyUserSet(user.user, user.bal))
                 break
             }
 
-            if (balance > pos.bal) {
-                moneyLeaderBoard.setPos(i, MoneyUserSet(user, balance))
-                checkUser(pos.bal, pos.user)
+            if (user.bal > pos.bal) {
+                moneyLeaderBoard.setPos(i, MoneyUserSet(user.user, user.bal))
+                checkUser(pos)
+                break
+            }
+        }
+    }
+
+    /**
+     * Rechecks a user's position on the xp leaderboard
+     */
+    private fun checkUser(user: XPUserSet) {
+        val amount = xpLeaderBoard.amount
+
+        if (user.xp < xpLeaderBoard.minimum) return
+
+        for (i in 1..amount) {
+            val pos = xpLeaderBoard.getPos(i)
+
+            if (pos == null) {
+                xpLeaderBoard.setPos(i, XPUserSet(user.user, user.xp))
+                break
+            }
+
+            if (user.xp > pos.xp) {
+                xpLeaderBoard.setPos(i, XPUserSet(user.user, user.xp))
+                checkUser(pos)
                 break
             }
         }

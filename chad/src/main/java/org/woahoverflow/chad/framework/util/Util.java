@@ -12,10 +12,12 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -101,12 +103,6 @@ public final class Util
      */
     public static synchronized boolean guildExists(IDiscordClient cli, Long guild) {
         return RequestBuffer.request(cli::getGuilds).get().stream().anyMatch(g -> g.getLongID() == guild);
-    }
-
-    private static String getCurrentDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        System.out.println(dateFormat.format(new Date()));
-        return dateFormat.format(new Date());
     }
 
     public static long howOld(long searchTimestamp)

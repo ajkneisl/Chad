@@ -79,7 +79,9 @@ object Init {
             timer.schedule(object : TimerTask(){
                 override fun run() {
                     sync(ChadInstance.cli)
+
                     LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.MONEY)
+                    LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.XP)
                 }
             }, 0, 1000*60*5)
 

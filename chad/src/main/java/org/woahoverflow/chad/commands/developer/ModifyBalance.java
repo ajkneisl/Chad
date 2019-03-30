@@ -48,8 +48,6 @@ public class ModifyBalance implements Command.Class {
                 // Sets the balance
                 player.setObject(DataType.BALANCE, Long.parseLong(args.get(0)));
 
-                System.out.println(args.get(0));
-
                 // Sends the message
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("Set your balance to `"+args.get(0)+"`."));
                 return;

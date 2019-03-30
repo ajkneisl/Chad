@@ -34,11 +34,20 @@ class Leaderboard: Command.Class {
                     val leaderboard = LeaderboardHandler.moneyLeaderBoard.getLeaderBoard()
                     val sb = StringBuilder()
 
-                    for (i in 1..leaderboard.size) sb.append("**[$i]** `${leaderboard[i]!!.user.name}`: `$${leaderboard[i]!!.bal}`\n")
+                    for (i in 1..leaderboard.size) sb.append("**[$i]** `${leaderboard[i]!!.user.name}`: `${leaderboard[i]!!.bal}`\n")
 
                     messageHandler.sendEmbed(EmbedBuilder().withTitle("Money Leaderboard").withDesc(sb.toString().removeSuffix("\n")))
 
                     return@Runnable
+                }
+
+                "xp" -> {
+                    val leaderboard = LeaderboardHandler.xpLeaderBoard.getLeaderBoard()
+                    val sb = StringBuilder()
+
+                    for (i in 1..leaderboard.size) sb.append("**[$i]** `${leaderboard[i]!!.user.name}`: `${leaderboard[i]!!.xp}`\n")
+
+                    messageHandler.sendEmbed(EmbedBuilder().withTitle("XP Leaderboard").withDesc(sb.toString().removeSuffix("\n")))
                 }
 
                 else -> {
