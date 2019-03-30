@@ -22,6 +22,7 @@ import org.woahoverflow.chad.framework.handle.JsonHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Command.Data
 import org.woahoverflow.chad.framework.obj.GuildMusicManager
+import sx.blah.discord.handle.obj.ActivityType
 import sx.blah.discord.handle.obj.StatusType
 import java.util.concurrent.ConcurrentHashMap
 
@@ -80,6 +81,12 @@ object ChadVar {
      */
     @JvmStatic
     var statusType = StatusType.ONLINE
+
+    /**
+     * The activity type
+     */
+    @JvmStatic
+    var activityType = ActivityType.PLAYING
 
     /**
      * The current status string

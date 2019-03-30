@@ -6,7 +6,6 @@ import org.json.JSONObject
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.sync.sync
-import sx.blah.discord.handle.obj.ActivityType
 import sx.blah.discord.util.RequestBuffer
 import java.io.BufferedReader
 import java.io.IOException
@@ -105,7 +104,7 @@ object Init {
                             ChadVar.currentStatus = ar[SecureRandom().nextInt(ar.size)]
 
                         // Changes the discord presence
-                        RequestBuffer.request { ChadInstance.cli.changePresence(ChadVar.statusType, ActivityType.PLAYING, ChadVar.currentStatus) }
+                        RequestBuffer.request { ChadInstance.cli.changePresence(ChadVar.statusType, ChadVar.activityType, ChadVar.currentStatus) }
                     }
                 }, 0, 1000 * 60 * 5)
             }
