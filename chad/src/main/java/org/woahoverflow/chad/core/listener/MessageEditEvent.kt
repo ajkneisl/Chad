@@ -28,6 +28,8 @@ class MessageEditEvent {
      */
     @EventSubscriber
     fun messageEditEvent(event: sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent) {
+        if (event.author.isBot) return
+
         // The message split into each word
         val argArray = event.message.content.split(" ")
 

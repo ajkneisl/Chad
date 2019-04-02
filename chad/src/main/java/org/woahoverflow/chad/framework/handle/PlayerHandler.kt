@@ -140,9 +140,7 @@ object PlayerHandler {
     @JvmStatic
     fun getPlayer(user: Long): Player {
         // If the user's in in the hash map, return it
-        if (players.containsKey(user)) {
-            return players[user]!!
-        }
+        if (players.containsKey(user)) return players[user]!!
 
         if (userDataExists(user)) {
             val get = DatabaseManager.USER_DATA.collection.find(Document("id", user)).first()!!
