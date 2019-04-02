@@ -4,6 +4,7 @@ import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.PresenceHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -28,32 +29,33 @@ class ModifyPresence : Command.Class {
             }
 
             when (args[0]) {
+                "refresh" -> {
+                    PresenceHandler.refreshPresences()
+                    MessageHandler(e.channel, e.author).sendMessage("Refreshed presences.")
+                }
+
                 "rotate" -> {
                     ChadVar.rotatePresence = true
                     MessageHandler(e.channel, e.author).sendMessage("Enabled presence rotation.")
                 }
+
                 "static" -> {
                     ChadVar.rotatePresence = false
                     MessageHandler(e.channel, e.author).sendMessage("Disabled presence rotation.")
                 }
 
-                "add" -> {
-                    // Removes the option argument
-                    args.removeAt(0)
-
-                    val sb = StringBuilder()
-                    for (arg in args) sb.append("$arg ")
-
-                    ChadVar.presenceRotation.add(sb.toString().trim { it <= ' ' })
-                    MessageHandler(e.channel, e.author).sendMessage("Added `" + sb.toString().trim { it <= ' ' } + "` to rotation")
-                }
-
                 "view" -> {
                     val stringBuilder = StringBuilder()
 
-                    for (s in ChadVar.presenceRotation) stringBuilder.append("`$s`, ")
+                    for (s in PresenceHandler.presences) stringBuilder.append("Activity Type: `${s.activityType}`, Status Type: `${s.statusType}`, Status: `${s.status}`\n")
 
-                    MessageHandler(e.channel, e.author).sendMessage(stringBuilder.toString().substring(0, stringBuilder.toString().length - 2))
+                    MessageHandler(e.channel, e.author).sendMessage(stringBuilder.removeSuffix("\n").toString())
+                }
+
+                "random" -> {
+                    PresenceHandler.randomPresence()
+
+                    MessageHandler(e.channel, e.author).sendMessage("Changed to random presence!")
                 }
 
                 "status" -> {

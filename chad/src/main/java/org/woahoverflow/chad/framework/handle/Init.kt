@@ -6,13 +6,11 @@ import org.json.JSONObject
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.sync.sync
-import sx.blah.discord.util.RequestBuffer
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.StandardCharsets
-import java.security.SecureRandom
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.HttpsURLConnection
@@ -80,6 +78,8 @@ object Init {
                 override fun run() {
                     sync(ChadInstance.cli)
 
+                    PresenceHandler.refreshPresences()
+
                     LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.MONEY)
                     LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.XP)
                 }
@@ -97,16 +97,7 @@ object Init {
                     override fun run() {
                         if (!ChadVar.rotatePresence) return
 
-                        val ar = ChadVar.presenceRotation.toTypedArray()
-
-                        // Sets the new status
-                        if (ar.isEmpty())
-                            ChadVar.currentStatus = "uh oh!"
-                        else
-                            ChadVar.currentStatus = ar[SecureRandom().nextInt(ar.size)]
-
-                        // Changes the discord presence
-                        RequestBuffer.request { ChadInstance.cli.changePresence(ChadVar.statusType, ChadVar.activityType, ChadVar.currentStatus) }
+                        PresenceHandler.randomPresence()
                     }
                 }, 0, 1000 * 60 * 5)
             }
@@ -163,7 +154,6 @@ object Init {
         threads.add(Thread {
             Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach { word -> ChadVar.swearWords.add(word as String) }
             Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach { word -> ChadVar.eightBallResults.add(word as String) }
-            Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")).forEach { v -> ChadVar.presenceRotation.add(v as String) }
             Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
                 if ((v as JSONObject).getBoolean("allow")) {
                     ChadInstance.getLogger().debug("Added user " + v.getString("display_name") + " to group System Administrator")

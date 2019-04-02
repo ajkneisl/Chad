@@ -149,17 +149,11 @@ class ModifyCache : Command.Class {
                         }
 
                         "presences" -> {
-                            var message: IMessage? = null
-                            val request = RequestBuffer.request { message = e.channel.sendMessage("Re-caching `presences`...") }
 
-                            JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/presence.json")!!.forEach { v -> ChadVar.presenceRotation.add(v as String) }
-
-                            while (!request.isDone) {
-                                TimeUnit.MICROSECONDS.sleep(100)
-                            }
+                            PresenceHandler.refreshPresences()
 
                             RequestBuffer.request {
-                                message!!.edit("Re-caching `presences`... complete!")
+                                messageHandler.sendMessage("Recached `presences`!")
                             }
                             return@Runnable
                         }
@@ -236,9 +230,9 @@ class ModifyCache : Command.Class {
 
                         "presences" -> {
                             val stringBuilder = StringBuilder()
-                            for (presence in ChadVar.presenceRotation) stringBuilder.append("`$presence`, ")
+                            for (s in PresenceHandler.presences) stringBuilder.append("Activity Type: `${s.activityType}`, Status Type: `${s.statusType}`, Status: `${s.status}`\n")
 
-                            messageHandler.sendMessage("**Presences**: " + stringBuilder.toString().removeSuffix(", "))
+                            messageHandler.sendMessage("**Presences**: " + stringBuilder.toString().removeSuffix("\n"))
                             return@Runnable
                         }
 

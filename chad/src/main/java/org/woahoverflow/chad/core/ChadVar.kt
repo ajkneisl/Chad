@@ -101,12 +101,6 @@ object ChadVar {
     var rotatePresence = true
 
     /**
-     * The presences to rotate between
-     */
-    @JvmStatic
-    val presenceRotation: ArrayList<String> = ArrayList()
-
-    /**
      * The full list of Commands
      */
     @JvmStatic
