@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.woahoverflow'
-version '0.10.0'
+version '0.10.1'
 
 sourceCompatibility = 1.8
 

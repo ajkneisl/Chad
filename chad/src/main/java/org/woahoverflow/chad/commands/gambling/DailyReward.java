@@ -13,6 +13,7 @@ import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Gets a daily reward of 'money'
@@ -28,7 +29,7 @@ public class DailyReward implements Class {
             Player player = PlayerHandler.getPlayer(e.getAuthor().getLongID());
             
             // If the user hasn't claimed the daily reward ever
-            if (player.getObject(DataType.LAST_DAILY_REWARD).equals("none")) {
+            if (Objects.equals(player.getObject(DataType.LAST_DAILY_REWARD), "none")) {
                 // Get the user's current balance
                 long userBalance = (long) player.getObject(DataType.BALANCE);
 
@@ -46,11 +47,11 @@ public class DailyReward implements Class {
             // Gets the date of their last daily reward
             long lastDailyReward = (long) player.getObject(DataType.LAST_DAILY_REWARD); // TODO
 
-            long difference = Util.howOld(lastDailyReward);
+            long difference = Util.INSTANCE.howOld(lastDailyReward);
             int day = 24 * 60 * 60 * 1000;
 
             if (difference < day) {
-                messageHandler.sendError("You can only claim your reward once a day!\nTime left: " + Util.fancyDate(day - difference));
+                messageHandler.sendError("You can only claim your reward once a day!\nTime left: " + Util.INSTANCE.fancyDate(day - difference));
                 return;
             }
 

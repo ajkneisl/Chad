@@ -14,6 +14,7 @@ import sx.blah.discord.util.EmbedBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Divorces a player if a player is married
@@ -30,7 +31,7 @@ public class DivorcePlayer implements Command.Class {
             Player player = PlayerHandler.getPlayer(e.getAuthor().getLongID());
 
             // Player's marry data, in format `player_id&guild_id`
-            String[] playerMarryData = ((String) player.getObject(DataType.MARRY_DATA)).split("&");
+            String[] playerMarryData = ((String) Objects.requireNonNull(player.getObject(DataType.MARRY_DATA))).split("&");
 
             // Makes sure it's just the username and the guild id
             if (playerMarryData.length != 2) {
@@ -54,7 +55,7 @@ public class DivorcePlayer implements Command.Class {
             }
 
             // Makes sure the guild isn't deleted/doesn't exist
-            if (!Util.guildExists(e.getClient(), guild.getLongID()) || guild.isDeleted()) {
+            if (!Util.INSTANCE.guildExists(e.getClient(), guild.getLongID()) || guild.isDeleted()) {
                 messageHandler.sendError("The user wasn't found, divorcing!");
                 player.setObject(DataType.MARRY_DATA, "none&none");
                 return;

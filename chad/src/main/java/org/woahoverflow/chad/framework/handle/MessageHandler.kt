@@ -179,7 +179,7 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
             if (RequestBuffer.request<Boolean> { loggingChannel.isDeleted }.get()) return null
 
             // Applies the timestamp to the footer & applies color
-            embedBuilder.withFooterText(Util.getTimeStamp()).withColor(Color(SecureRandom().nextFloat(), SecureRandom().nextFloat(), SecureRandom().nextFloat()))
+            embedBuilder.withFooterText(Util.timeStamp).withColor(Color(SecureRandom().nextFloat(), SecureRandom().nextFloat(), SecureRandom().nextFloat()))
 
             // Sends the log on it's way :)
             return RequestBuffer.request<IMessage> { loggingChannel.sendMessage(embedBuilder.build()) }.get()
@@ -202,7 +202,7 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
 
             // Creates an embed builder with all the details
             val embedBuilder = EmbedBuilder().withTitle("Punishment : " + punished.name).appendField("Punished User", punished.name, true).appendField("Moderator", moderator.name, true).appendField("Punishment", punishment, true).appendField("Reason", stringBuilder.toString()
-                    .trim { it <= ' ' }, false).withImage(punished.avatarURL).withFooterText(Util.getTimeStamp())
+                    .trim { it <= ' ' }, false).withImage(punished.avatarURL).withFooterText(Util.timeStamp)
 
             // Sends the log
             return sendLog(embedBuilder, guild)
@@ -219,7 +219,7 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
          */
         @JvmStatic
         fun sendConfigLog(changedValue: String, newValue: String, oldValue: String, moderator: IUser, guild: IGuild): IMessage? {
-            val embedBuilder = EmbedBuilder().withTitle("Config Change : $changedValue").appendField("New Value", newValue, true).appendField("Old Value", oldValue, true).appendField("Admin", moderator.name, true).withFooterText(Util.getTimeStamp())
+            val embedBuilder = EmbedBuilder().withTitle("Config Change : $changedValue").appendField("New Value", newValue, true).appendField("Old Value", oldValue, true).appendField("Admin", moderator.name, true).withFooterText(Util.timeStamp)
 
             return sendLog(embedBuilder, guild)
         }

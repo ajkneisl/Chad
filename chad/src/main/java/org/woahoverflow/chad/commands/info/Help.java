@@ -66,7 +66,7 @@ public class Help implements Command.Class {
 
                 // Replaces the end and makes sure there's content
                 if (commandsBuilder.length() != 0) {
-                    stringBuilder.append("\n\n").append("**").append(Util.fixEnumString(category.toString().toLowerCase())).append("**").append(": \n").append(REGEX.matcher(commandsBuilder.toString()).replaceAll(""));
+                    stringBuilder.append("\n\n").append("**").append(Util.INSTANCE.fixEnumString(category.toString().toLowerCase())).append("**").append(": \n").append(REGEX.matcher(commandsBuilder.toString()).replaceAll(""));
                 }
             }
 
