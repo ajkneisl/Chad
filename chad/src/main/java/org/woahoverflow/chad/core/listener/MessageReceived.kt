@@ -18,6 +18,8 @@ import java.util.regex.Pattern
 class MessageReceived {
     @EventSubscriber
     fun messageReceived(event: MessageReceivedEvent) {
+        if (event.guild == null) return
+
         if (event.author.isBot) return
 
         // The message split into each word
