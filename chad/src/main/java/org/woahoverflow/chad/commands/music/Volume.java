@@ -50,7 +50,7 @@ public class Volume implements Command.Class {
             }
 
             // Makes sure the value isn't over 100, but also allows developers to get whatever they want
-            if (100 < volume && ChadVar.getDEVELOPERS().contains(e.getAuthor().getLongID())) {
+            if (100 < volume && !ChadVar.getDEVELOPERS().contains(e.getAuthor().getLongID())) {
                 messageHandler.sendError("That's too high!");
                 return;
             }
