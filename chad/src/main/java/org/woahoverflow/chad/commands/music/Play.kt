@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import org.woahoverflow.chad.core.ChadVar.playerManager
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.PermissionHandler
 import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
@@ -84,7 +85,7 @@ class Play : Command.Class {
 
                             // When something is searched
                             override fun playlistLoaded(playlist: AudioPlaylist) {
-                                if (playlist.tracks.size > 100) {
+                                if (playlist.tracks.size > 100 && !PermissionHandler.isDeveloper(e.author)) {
                                     messageHandler.sendError("Please don't play playlists with more than 100 songs in them!")
                                     return
                                 }
@@ -95,9 +96,15 @@ class Play : Command.Class {
                                 }
 
                                 val builder = StringBuilder()
+                                var removed = false
 
                                 var loc = 0
                                 for (track in playlist.tracks) {
+                                    if (track.duration > 60*1000*60*2 && !PermissionHandler.isDeveloper(e.author)) {
+                                        removed = true
+                                        continue
+                                    }
+
                                     if (loc <= 10) {
                                         builder.append("`${track.info.title}`, ")
                                         loc++
@@ -111,6 +118,13 @@ class Play : Command.Class {
 
                                 if (join) userChannel.join()
 
+                                if (removed) {
+                                    messageHandler.sendMessage(
+                                            String.format("One or more songs have not been queued due to their length.\n\nQueued playlist `%s` [`%s` tracks]\n\nIncludes %s", playlist.name, playlist.tracks.size, builder.toString())
+                                    )
+                                    return
+                                }
+
                                 messageHandler.sendMessage(
                                         String.format("Queued playlist `%s` [`%s` tracks]\n\nIncludes %s", playlist.name, playlist.tracks.size, builder.toString())
                                 )
@@ -123,7 +137,7 @@ class Play : Command.Class {
                             // If there's an exception
                             override fun loadFailed(exception: FriendlyException) {
                                 exception.printStackTrace()
-                                // something failed, we'll only see and they'll just receive that there was no matches
+                                messageHandler.sendError("There was no results for `$string`!")
                             }
                         })
                 return@Runnable
@@ -143,11 +157,14 @@ class Play : Command.Class {
                                 return
                             }
 
-                            if (join) {
-                                userChannel.join()
-                            }
+                            if (join) userChannel.join()
 
                             val track = playlist.tracks[0]
+
+                            if (track.duration > 60*1000*60*2 && !PermissionHandler.isDeveloper(e.author)) {
+                                messageHandler.sendError("Please play songs that are under 2 hours!")
+                                return
+                            }
 
                             manager.scheduler.queue(track)
 
@@ -163,7 +180,7 @@ class Play : Command.Class {
                         // If there's an exception
                         override fun loadFailed(exception: FriendlyException) {
                             exception.printStackTrace()
-                            // something failed, we'll only see and they'll just receive that there was no matches
+                            messageHandler.sendError("There was no results for `$string`!")
                         }
                     })
         }
