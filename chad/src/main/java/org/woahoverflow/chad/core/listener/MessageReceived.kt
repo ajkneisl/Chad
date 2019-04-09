@@ -122,7 +122,7 @@ class MessageReceived {
 
         // if the command is developer only, and the user is NOT a developer, deny them access
         if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.userIsDeveloper(event.author)) {
-            MessageHandler(event.channel, event.author).sendError("This command is Developer only!")
+            MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
             return
         }
 
