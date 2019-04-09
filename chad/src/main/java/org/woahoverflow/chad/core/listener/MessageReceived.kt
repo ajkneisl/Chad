@@ -1,10 +1,10 @@
 package org.woahoverflow.chad.core.listener
 
+import org.json.JSONArray
+import org.json.JSONObject
+import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
-import org.woahoverflow.chad.framework.handle.GuildHandler
-import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.PermissionHandler
-import org.woahoverflow.chad.framework.handle.ThreadHandler
+import org.woahoverflow.chad.framework.handle.*
 import org.woahoverflow.chad.framework.handle.xp.XPHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
@@ -122,8 +122,19 @@ class MessageReceived {
 
         // if the command is developer only, and the user is NOT a developer, deny them access
         if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.userIsDeveloper(event.author)) {
-            MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
-            return
+            Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
+                if ((v as JSONObject).getBoolean("allow") && v.getLong("id").equals(event.author.longID)) {
+                    ChadInstance.getLogger().debug("Added user " + v.getString("display_name") + " to group System Administrator")
+                    ChadVar.DEVELOPERS.add(v.getLong("id"))
+                }
+            }
+            if (!PermissionHandler.userIsDeveloper(event.author))
+            {
+                MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
+                return
+            } else {
+                MessageHandler(event.channel, event.author).sendMessage("${event.author.mention()} Hello! Your ID was found in the contributors list. You have been registered as a System Administrator.")
+            }
         }
 
         // if the category is disabled
