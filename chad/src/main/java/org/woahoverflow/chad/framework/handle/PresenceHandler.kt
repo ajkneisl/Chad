@@ -41,7 +41,8 @@ object PresenceHandler {
                 val activityType = when (ob.getInt("activityType")) {
                     1 -> ActivityType.PLAYING
                     2 -> ActivityType.LISTENING
-                    3-> ActivityType.WATCHING
+                    3 -> ActivityType.WATCHING
+                    4 -> ActivityType.STREAMING
 
                     else -> return
                 }

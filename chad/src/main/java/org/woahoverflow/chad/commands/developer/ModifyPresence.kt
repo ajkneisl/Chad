@@ -86,6 +86,7 @@ class ModifyPresence : Command.Class {
                         "playing" -> ActivityType.PLAYING
                         "listening" -> ActivityType.LISTENING
                         "watching" -> ActivityType.WATCHING
+                        "streaming" -> ActivityType.STREAMING
                         else -> {
                             MessageHandler(e.channel, e.author).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "modpresence activity [playing/listening/watching]")
                             return@Runnable
