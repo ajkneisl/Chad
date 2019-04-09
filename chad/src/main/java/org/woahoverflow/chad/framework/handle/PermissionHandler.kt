@@ -35,7 +35,16 @@ object PermissionHandler {
 
             Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.GAMBLING, Category.MUSIC, Category.COMMUNITY).anyMatch { category -> meta.commandCategory == category } -> true
 
-            else -> if (user.getPermissionsForGuild(guild).contains(Permissions.ADMINISTRATOR)) false else user.getRolesForGuild(guild).stream().noneMatch { role -> guildInstance.getRolePermissions(role.longID).contains(command) }
+            else -> {
+                if (user.getPermissionsForGuild(guild).contains(Permissions.ADMINISTRATOR)) return true
+
+
+                for (role in user.getRolesForGuild(guild)) {
+                    if (guildInstance.getRolePermissions(role.longID).contains(command)) return true
+                }
+
+                false
+            }
         }
     }
 
