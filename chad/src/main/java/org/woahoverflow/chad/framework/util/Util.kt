@@ -33,8 +33,7 @@ object Util {
      *
      * @return The current timestamp
      */
-    val timeStamp: String
-        @Synchronized get() = SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().time)
+    val timeStamp: String = SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().time)
 
     /**
      * Gets a String from an http
@@ -100,10 +99,7 @@ object Util {
      * @param guild The guild's ID
      * @return If it exists/still exists
      */
-    @Synchronized
-    fun guildExists(cli: IDiscordClient, guild: Long?): Boolean {
-        return RequestBuffer.request<List<IGuild>> { cli.guilds }.get().stream().anyMatch { g -> g.longID == guild }
-    }
+    fun guildExists(cli: IDiscordClient, guild: Long?): Boolean =  RequestBuffer.request<List<IGuild>> { cli.guilds }.get().stream().anyMatch { g -> g.longID == guild }
 
     fun howOld(searchTimestamp: Long): Long = Math.abs(System.currentTimeMillis() - searchTimestamp)
 
@@ -174,9 +170,22 @@ object Util {
         val formattedString = format.format(i.toLong()).trim { it <= ' ' }
 
         val suffixes = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
-        when (i % 100) {
-            11, 12, 13 -> return formattedString + "th"
-            else -> return formattedString + suffixes[i % 10]
+        return when (i % 100) {
+            11, 12, 13 -> formattedString + "th"
+            else -> formattedString + suffixes[i % 10]
         }
+    }
+
+    /**
+     * If any = true, then if any of the string start with the specified string it'll return true. If false, all strungs must start with the specified string.
+     */
+    fun startsWith(str: String, vararg strings: String, any: Boolean = true): Boolean {
+        for (string in strings) {
+            if (any && str.startsWith(string)) return true
+
+            if (!any && !str.startsWith(string)) return false
+        }
+
+        return !any
     }
 }

@@ -69,7 +69,7 @@ class Play : Command.Class {
             string = string.trim()
 
             // If they're using a supported url
-            if (string.startsWith("https://soundcloud.com")|| string.startsWith("http://soundcloud.com")) {
+            if (Util.startsWith(string, "https://www.youtube.com/watch?v=", "https://youtube.com/watch?v=", "http://youtube.com/watch?v=", "https://soundcloud.com/",  "https://soundcloud.com/")) {
                 playerManager.loadItemOrdered(manager, string,
                         object : AudioLoadResultHandler {
                             override fun trackLoaded(track: AudioTrack) {
@@ -109,9 +109,7 @@ class Play : Command.Class {
                                     manager.scheduler.queue(track)
                                 }
 
-                                if (join) {
-                                    userChannel.join()
-                                }
+                                if (join) userChannel.join()
 
                                 messageHandler.sendMessage(
                                         String.format("Queued playlist `%s` [`%s` tracks]\n\nIncludes %s", playlist.name, playlist.tracks.size, builder.toString())
