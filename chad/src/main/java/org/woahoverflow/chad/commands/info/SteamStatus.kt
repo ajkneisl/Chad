@@ -25,7 +25,7 @@ class SteamStatus : Command.Class {
     private val cached = object : ConcurrentHashMap<String, String>() {
         init {
             fun update() {
-                if (ArgumentHandler.isToggled("DISABLE_STEAM_CACHE")) return
+                if (ArgumentHandler.isToggled("DISABLE_STEAM_CACHE") || ArgumentHandler.isToggled("TEST_RUN")) return
 
                 val csgo = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
 

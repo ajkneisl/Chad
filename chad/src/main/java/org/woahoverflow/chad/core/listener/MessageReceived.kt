@@ -121,20 +121,9 @@ class MessageReceived {
             return
 
         // if the command is developer only, and the user is NOT a developer, deny them access
-        if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.userIsDeveloper(event.author)) {
-            Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
-                if ((v as JSONObject).getBoolean("allow") && v.getLong("id").equals(event.author.longID)) {
-                    ChadInstance.getLogger().debug("Added user " + v.getString("display_name") + " to group System Administrator")
-                    ChadVar.DEVELOPERS.add(v.getLong("id"))
-                }
-            }
-            if (!PermissionHandler.userIsDeveloper(event.author))
-            {
-                MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
-                return
-            } else {
-                MessageHandler(event.channel, event.author).sendMessage("${event.author.mention()} Hello! Your ID was found in the contributors list. You have been registered as a System Administrator.")
-            }
+        if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(event.author)) {
+            MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
+            return
         }
 
         // if the category is disabled
@@ -143,7 +132,7 @@ class MessageReceived {
         }
 
         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-        if (PermissionHandler.userNoPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
+        if (!PermissionHandler.hasPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NO_PERMISSION)
             return
         }

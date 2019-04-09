@@ -24,7 +24,7 @@ val syncLogger: Logger = LoggerFactory.getLogger("Sync")
  * @author sho
  */
 fun sync(client: IDiscordClient) {
-    if (ArgumentHandler.isToggled("DISABLE_EXTERNAL_SYNC")) return
+    if (ArgumentHandler.isToggled("DISABLE_EXTERNAL_SYNC") || ArgumentHandler.isToggled("TEST_RUN")) return
 
     val connection: Connection
 
@@ -35,7 +35,7 @@ fun sync(client: IDiscordClient) {
         Class.forName("com.mysql.jdbc.Driver")
         connection = DriverManager.getConnection(JsonHandler["jdbc"])
     } catch (ex: Exception) {
-        ChadInstance.getLogger().error("Couldn't connect to database!", ex)
+        ChadInstance.getLogger().error("Failed to connect to the database!")
         return
     }
 

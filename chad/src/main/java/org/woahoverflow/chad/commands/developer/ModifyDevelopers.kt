@@ -46,7 +46,7 @@ class ModifyDevelopers : Command.Class {
                         return@Runnable
                     }
 
-                    if (ChadVar.DEVELOPERS.contains(id)) {
+                    if (ChadVar.DEVELOPERS.contains(id) || ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
                         messageHandler.sendError("That user is already a developer!")
                         return@Runnable
                     }
@@ -75,6 +75,9 @@ class ModifyDevelopers : Command.Class {
                     if (!ChadVar.DEVELOPERS.contains(id)) {
                         messageHandler.sendError("That user isn't a developer!")
                         return@Runnable
+                    } else if (ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
+                        messageHandler.sendError("You aren't allowed to remove that person!")
+                        return@Runnable
                     }
 
                     ChadVar.DEVELOPERS.remove(id)
@@ -86,9 +89,8 @@ class ModifyDevelopers : Command.Class {
                 "view" -> {
                     val stringBuilder = StringBuilder()
 
-                    for (id in ChadVar.DEVELOPERS) {
-                        stringBuilder.append("$id, ")
-                    }
+                    for (id in ChadVar.DEVELOPERS) stringBuilder.append("$id, ")
+                    for (id in ChadVar.ORIGINAL_DEVELOPERS) stringBuilder.append("[O] $id, ")
 
                     messageHandler.sendEmbed(EmbedBuilder().withDesc(stringBuilder.toString().removeSuffix(", ")))
                 }

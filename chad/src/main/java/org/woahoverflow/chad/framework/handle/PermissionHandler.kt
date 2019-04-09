@@ -20,34 +20,23 @@ object PermissionHandler {
      * @return If they're a verified developer
      */
     @JvmStatic
-    fun userIsDeveloper(user: IUser): Boolean {
-        return ChadVar.DEVELOPERS.contains(user.longID)
-    }
+    fun isDeveloper(user: IUser): Boolean = ChadVar.DEVELOPERS.contains(user.longID) || ChadVar.ORIGINAL_DEVELOPERS.contains(user.longID)
 
     /**
      * Checks if a user has permission for a command
-     *
-     * @param command The command
-     * @param user The user to check
-     * @param guild The guild in which it's happening
-     * @return If the user doesn't have permission to use it
      */
     @JvmStatic
-    fun userNoPermission(command: String, user: IUser, guild: IGuild): Boolean {
+    fun hasPermission(command: String, user: IUser, guild: IGuild): Boolean {
         val guildInstance = GuildHandler.getGuild(guild.longID)
-
         val meta = ChadVar.COMMANDS[command]
 
-        // developers should always have permission for developer commands
-        if (meta!!.commandCategory == Category.DEVELOPER && userIsDeveloper(user))
-            return false
+        return when {
+            meta!!.commandCategory == Category.DEVELOPER && isDeveloper(user) -> true
 
-        // All users should have access to these categories
-        if (Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.GAMBLING, Category.MUSIC, Category.COMMUNITY).anyMatch { category -> meta.commandCategory == category })
-            return false
+            Stream.of(Category.FUN, Category.INFO, Category.NSFW, Category.GAMBLING, Category.MUSIC, Category.COMMUNITY).anyMatch { category -> meta.commandCategory == category } -> true
 
-        // If the user is Administrator, they should have all guild related permissions
-        return if (user.getPermissionsForGuild(guild).contains(Permissions.ADMINISTRATOR)) false else user.getRolesForGuild(guild).stream().noneMatch { role -> guildInstance.getRolePermissions(role.longID).contains(command) }
+            else -> if (user.getPermissionsForGuild(guild).contains(Permissions.ADMINISTRATOR)) false else user.getRolesForGuild(guild).stream().noneMatch { role -> guildInstance.getRolePermissions(role.longID).contains(command) }
+        }
     }
 
     /**

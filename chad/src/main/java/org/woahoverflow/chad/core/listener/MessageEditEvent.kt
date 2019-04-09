@@ -127,7 +127,7 @@ class MessageEditEvent {
             return
 
         // if the command is developer only, and the user is NOT a developer, deny them access
-        if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.userIsDeveloper(event.author)) {
+        if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(event.author)) {
             MessageHandler(event.channel, event.author).sendError("This command is Developer only!")
             return
         }
@@ -138,7 +138,7 @@ class MessageEditEvent {
         }
 
         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
-        if (PermissionHandler.userNoPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
+        if (!PermissionHandler.hasPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NO_PERMISSION)
             return
         }
