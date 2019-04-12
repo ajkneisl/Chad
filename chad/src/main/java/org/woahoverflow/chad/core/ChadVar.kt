@@ -18,6 +18,7 @@ import org.woahoverflow.chad.commands.nsfw.Hentai
 import org.woahoverflow.chad.commands.nsfw.Porn
 import org.woahoverflow.chad.commands.punishments.Ban
 import org.woahoverflow.chad.commands.punishments.Kick
+import org.woahoverflow.chad.commands.punishments.Mute
 import org.woahoverflow.chad.framework.handle.JsonHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Command.Data
@@ -143,6 +144,7 @@ object ChadVar {
             // PUNISHMENTS!
             this["kick"] = Command.Data(Command.Category.PUNISHMENTS, Kick())
             this["ban"] = Command.Data(Command.Category.PUNISHMENTS, Ban())
+            this["mute"] = Command.Data(Command.Category.PUNISHMENTS, Mute())
 
             // ADMINISTRATOR!
             this["prefix"] = Command.Data(Command.Category.ADMINISTRATOR, Prefix())
