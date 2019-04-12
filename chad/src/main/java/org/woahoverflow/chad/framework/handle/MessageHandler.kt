@@ -43,7 +43,7 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
              */
             val replaceable: Int)
     {
-        USER_NOT_DEVELOPER("Oh noes! Looks like you're not a developer!", 0),
+        USER_NOT_DEVELOPER("You don't have permission for this!", 0),
         INVALID_USER("That user couldn't be found!", 0), BOT_NO_PERMISSION("The bot doesn't have permission to perform this!", 0),
         USER_NO_PERMISSION("You don't have permission to perform this!", 0), CHANNEL_NOT_NSFW("This channel isn't NSFW!", 0),
         INVALID_ARGUMENTS("Invalid Usage!\nProper Usage: `<>`", 1),
