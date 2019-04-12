@@ -38,7 +38,7 @@ public class Help implements Command.Class {
                 if (category == Command.Category.NSFW && !e.getChannel().isNSFW())
                     continue;
                 // If the category is Admin and the user isn't an Admin, don't show.
-                if (category == Command.Category.DEVELOPER && !PermissionHandler.userIsDeveloper(e.getAuthor()))
+                if (category == Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(e.getAuthor()))
                     continue;
                 // If the category is disabled
                 if (((ArrayList<String>) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(
@@ -56,7 +56,7 @@ public class Help implements Command.Class {
                         continue;
 
                     // Makes sure the user has permission
-                    if (PermissionHandler.userNoPermission(stringDataEntry.getKey(), e.getAuthor(), e.getGuild()))
+                    if (!PermissionHandler.hasPermission(stringDataEntry.getKey(), e.getAuthor(), e.getGuild()))
                         continue;
 
                     // Adds the command to the builder

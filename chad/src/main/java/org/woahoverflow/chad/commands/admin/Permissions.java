@@ -77,8 +77,7 @@ public class Permissions implements Class  {
 
                 // Removes the amount of arguments that the role name used
                 int i1 = 0;
-                while (i > i1)
-                {
+                while (i > i1) {
                     i1++;
                     args.remove(0);
                 }

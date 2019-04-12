@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author sho
  */
 object ChadVar {
-    const val VERSION = "v0.10.1"
+    const val VERSION = "v0.10.2-B2"
 
     /**
      * Gigantic Words List
@@ -192,6 +192,14 @@ object ChadVar {
      */
     @JvmStatic
     val DEVELOPERS: ArrayList<Long> = arrayListOf()
+
+    /**
+     * The originally cached developers.
+     *
+     * Adds a useful fallback if an original developer gets removed through mistake etc.
+     */
+    @JvmStatic
+    val ORIGINAL_DEVELOPERS: ArrayList<Long> = arrayListOf()
 
     /*
       Registers sources for the player manager

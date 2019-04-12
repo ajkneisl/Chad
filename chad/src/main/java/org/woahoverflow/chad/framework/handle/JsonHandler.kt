@@ -140,7 +140,7 @@ object JsonHandler {
         if (url == null || url.isEmpty())
             return null
         val httpGet = Util.httpGet(url)
-        return if (httpGet == null || httpGet.isEmpty()) null else org.json.JSONObject(httpGet)
+        return if (httpGet.isEmpty()) null else org.json.JSONObject(httpGet)
     }
 
     /**
@@ -153,7 +153,7 @@ object JsonHandler {
         if (url == null || url.isEmpty())
             return null
         val httpGet = Util.httpGet(url)
-        return if (httpGet == null || httpGet.isEmpty()) null else org.json.JSONArray(httpGet)
+        return if (httpGet.isEmpty()) null else org.json.JSONArray(httpGet)
     }
 
     /**

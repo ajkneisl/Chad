@@ -6,6 +6,7 @@ import org.json.JSONObject
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.sync.sync
+import org.woahoverflow.chad.framework.util.Util
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -111,7 +112,7 @@ object Init {
                 override fun run() {
                     Reddit.subreddits.clear()
 
-                    ChadInstance.getLogger().debug("Reset all cached subreddits!")
+                    ChadInstance.getLogger().debug("Reset all Reddit data!")
                 }
             }, 0, 86400 * 1000)
             /**
@@ -154,14 +155,7 @@ object Init {
         threads.add(Thread {
             Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach { word -> ChadVar.swearWords.add(word as String) }
             Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach { word -> ChadVar.eightBallResults.add(word as String) }
-            Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
-                if ((v as JSONObject).getBoolean("allow")) {
-                    ChadInstance.getLogger().debug("Added user " + v.getString("display_name") + " to group System Administrator")
-                    ChadVar.DEVELOPERS.add(v.getLong("id"))
-                } else {
-                    ChadInstance.getLogger().debug("Avoided adding user " + v.getString("display_name"))
-                }
-            }
+            Util.refreshDevelopers()
 
             try {
                 val url = URL("https://cdn.woahoverflow.org/data/chad/words.txt")

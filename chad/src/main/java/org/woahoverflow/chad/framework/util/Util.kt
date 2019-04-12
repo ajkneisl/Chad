@@ -1,6 +1,10 @@
 package org.woahoverflow.chad.framework.util
 
+import org.json.JSONArray
+import org.json.JSONObject
 import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.framework.handle.JsonHandler
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.util.RequestBuffer
@@ -33,8 +37,7 @@ object Util {
      *
      * @return The current timestamp
      */
-    val timeStamp: String
-        @Synchronized get() = SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().time)
+    val timeStamp: String = SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().time)
 
     /**
      * Gets a String from an http
@@ -100,10 +103,7 @@ object Util {
      * @param guild The guild's ID
      * @return If it exists/still exists
      */
-    @Synchronized
-    fun guildExists(cli: IDiscordClient, guild: Long?): Boolean {
-        return RequestBuffer.request<List<IGuild>> { cli.guilds }.get().stream().anyMatch { g -> g.longID == guild }
-    }
+    fun guildExists(cli: IDiscordClient, guild: Long?): Boolean =  RequestBuffer.request<List<IGuild>> { cli.guilds }.get().stream().anyMatch { g -> g.longID == guild }
 
     fun howOld(searchTimestamp: Long): Long = Math.abs(System.currentTimeMillis() - searchTimestamp)
 
@@ -174,9 +174,38 @@ object Util {
         val formattedString = format.format(i.toLong()).trim { it <= ' ' }
 
         val suffixes = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
-        when (i % 100) {
-            11, 12, 13 -> return formattedString + "th"
-            else -> return formattedString + suffixes[i % 10]
+        return when (i % 100) {
+            11, 12, 13 -> formattedString + "th"
+            else -> formattedString + suffixes[i % 10]
+        }
+    }
+
+    /**
+     * If any = true, then if any of the string start with the specified string it'll return true. If false, all strings must start with the specified string.
+     */
+    fun startsWith(str: String, vararg strings: String, any: Boolean = true): Boolean {
+        for (string in strings) {
+            if (any && str.startsWith(string)) return true
+
+            if (!any && !str.startsWith(string)) return false
+        }
+
+        return !any
+    }
+
+    /**
+     * Refreshes the original developer list using the woahoverflow cdn.
+     *
+     * These users are marked as trusted, and cannot be removed from the developer list.
+     */
+    fun refreshDevelopers() {
+        Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
+            ChadVar.ORIGINAL_DEVELOPERS.clear()
+
+            if ((v as JSONObject).getBoolean("developer")) {
+                ChadInstance.getLogger().debug("User ${v.getString("display_name")} has been given the role of Developer.")
+                ChadVar.ORIGINAL_DEVELOPERS.add(v.getLong("id"))
+            }
         }
     }
 }

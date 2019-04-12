@@ -48,7 +48,5 @@ object ArgumentHandler {
      * If an option is toggled
      */
     @JvmStatic
-    fun isToggled(option: String): Boolean {
-        return LAUNCH_ARGUMENTS.keys.contains(option.toUpperCase()) && LAUNCH_ARGUMENTS[option.toUpperCase()]!!
-    }
+    fun isToggled(option: String): Boolean = LAUNCH_ARGUMENTS.keys.contains(option.toUpperCase()) && LAUNCH_ARGUMENTS[option.toUpperCase()]!!
 }
