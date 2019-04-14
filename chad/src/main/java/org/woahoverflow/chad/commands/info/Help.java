@@ -35,15 +35,13 @@ public class Help implements Command.Class {
             // Go through each category and add all it's commands to the help string
             for (Category category : Command.Category.values()) {
                 // If the category is Nsfw and the channel isn't Nsfw, don't show.
-                if (category == Command.Category.NSFW && !e.getChannel().isNSFW())
-                    continue;
+                if (category == Command.Category.NSFW && !e.getChannel().isNSFW()) continue;
+
                 // If the category is Admin and the user isn't an Admin, don't show.
-                if (category == Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(e.getAuthor()))
-                    continue;
+                if (category == Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(e.getAuthor())) continue;
+
                 // If the category is disabled
-                if (((ArrayList<String>) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(
-                    DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase()))
-                    continue;
+                if (((ArrayList<String>) GuildHandler.getGuild(e.getGuild().getLongID()).getObject(DataType.DISABLED_CATEGORIES)).contains(category.toString().toLowerCase())) continue;
 
                 // The commands builder
                 StringBuilder commandsBuilder = new StringBuilder();

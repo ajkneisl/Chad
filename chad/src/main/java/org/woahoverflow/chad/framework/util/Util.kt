@@ -11,6 +11,7 @@ import sx.blah.discord.util.RequestBuffer
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.Exception
 import java.net.MalformedURLException
 import java.net.ProtocolException
 import java.net.URL
@@ -67,34 +68,15 @@ object Util {
             for (l in `in`.lines()) resp.append("$l ")
             `in`.close()
             return resp.toString().removeSuffix(" ")
-        } catch (e: MalformedURLException) {
-            e.printStackTrace()
-        } catch (e: ProtocolException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
+        } catch (e: Exception) {
             return ""
         }
-
-        return ""
     }
 
     fun fixEnumString(input: String): String {
         return input.substring(0, 1).toUpperCase() + input.substring(1)
     }
 
-    /**
-     * Flips a coin
-     *
-     * @return Returns either true or false, it's randomized
-     */
-    fun coinFlip(): Boolean {
-        val random = Random()
-        var flip = -1
-        for (i in 0..99)
-            flip = random.nextInt(2)
-        return flip == 0
-    }
 
     /**
      * Checks if a guild exists within the Client
@@ -199,8 +181,8 @@ object Util {
      * These users are marked as trusted, and cannot be removed from the developer list.
      */
     fun refreshDevelopers() {
+        ChadVar.ORIGINAL_DEVELOPERS.clear()
         Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
-            ChadVar.ORIGINAL_DEVELOPERS.clear()
 
             if ((v as JSONObject).getBoolean("developer")) {
                 ChadInstance.getLogger().debug("User ${v.getString("display_name")} has been given the role of Developer.")

@@ -56,12 +56,12 @@ object PermissionHandler {
      */
     @JvmStatic
     fun parseErrorCode(i: Int): String {
-        if (i == 1)
-            return "This role already has this command!"
-        if (i == 2)
-            return "This role doesn't have that command!"
-        if (i == 3)
-            return "That command doesn't exist!"
-        return if (i == 4) "This role doesn't have any commands!" else "I don't know how you got here.\nPlease report the used command to our forums at https://woahoverflow.org"
+        return when (i) {
+            1 -> "This role already has this command!"
+            2 -> "This role doesn't have that command!"
+            3 -> "That command doesn't exist!"
+            4 -> "This role doesn't have any commands!"
+            else -> "There was an internal error, please try again later."
+        }
     }
 }

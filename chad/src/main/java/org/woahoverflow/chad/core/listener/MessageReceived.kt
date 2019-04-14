@@ -1,8 +1,5 @@
 package org.woahoverflow.chad.core.listener
 
-import org.json.JSONArray
-import org.json.JSONObject
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.*
 import org.woahoverflow.chad.framework.handle.xp.XPHandler
@@ -78,8 +75,7 @@ class MessageReceived {
         val prefix: String = guild.getObject(Guild.DataType.PREFIX) as String
 
         // Check if message is an actual command
-        if (!argArray[0].toLowerCase().startsWith(prefix))
-            return
+        if (!argArray[0].toLowerCase().startsWith(prefix)) return
 
         // The command string aka the first argument without the prefix
         val commandString = argArray[0].substring(prefix.length).toLowerCase()
@@ -89,8 +85,7 @@ class MessageReceived {
         args.removeAt(0)
 
         // If the user doesn't have 3 threads currently running
-        if (!ThreadHandler.canUserRunThread(event.author.longID))
-            return
+        if (!ThreadHandler.canUserRunThread(event.author.longID)) return
 
         // The found command's data, unless if it isn't found it's null
         var command: Command.Data? = null
@@ -117,8 +112,7 @@ class MessageReceived {
             }
         }
 
-        if (command == null)
-            return
+        if (command == null) return
 
         // if the command is developer only, and the user is NOT a developer, deny them access
         if (command.commandCategory == Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(event.author)) {
@@ -127,9 +121,7 @@ class MessageReceived {
         }
 
         // if the category is disabled
-        if ((guild.getObject(Guild.DataType.DISABLED_CATEGORIES) as ArrayList<*>).contains(command.commandCategory.toString().toLowerCase())) {
-            return
-        }
+        if ((guild.getObject(Guild.DataType.DISABLED_CATEGORIES) as ArrayList<*>).contains(command.commandCategory.toString().toLowerCase())) return
 
         // if the user does NOT have permission for the command, and does NOT have the administrator permission, deny them access
         if (!PermissionHandler.hasPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
