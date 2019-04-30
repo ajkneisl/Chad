@@ -4,6 +4,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
+import sx.blah.discord.util.RequestBuffer
 import java.util.*
 
 /**
@@ -21,30 +22,34 @@ class Resume : Command.Class {
     override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
         return Runnable {
             val messageHandler = MessageHandler(e.channel, e.author)
-
-            // The channel the bot is in
             val channel = e.client.ourUser.getVoiceStateForGuild(e.guild).channel
+            var musicManager = getMusicManager(e.guild)
 
-            if (channel == null) {
+            if (musicManager == null) {
                 messageHandler.sendError("Music isn't paused!")
                 return@Runnable
             }
 
-            if (e.author.getVoiceStateForGuild(e.guild).channel != channel) {
-                messageHandler.sendError("You're not in the same channel as Chad!")
+            if (channel == null && musicManager.player.isPaused) {
+                val userChannel = e.author.getVoiceStateForGuild(e.guild).channel
+
+                if (userChannel == null) {
+                    messageHandler.sendError("You aren't in a channel!")
+                    return@Runnable
+                }
+
+                musicManager = getMusicManager(e.guild, userChannel)
+
+                RequestBuffer.request {
+                    userChannel.join()
+                }
+
+                musicManager.player.isPaused = false
+                messageHandler.sendError("Music has been resumed!")
                 return@Runnable
             }
 
-            val musicManager = getMusicManager(e.guild, channel)
-
-            if (!musicManager.player.isPaused) {
-                messageHandler.sendError("Music isn't paused!")
-                return@Runnable
-            }
-
-            musicManager.player.isPaused = false
-
-            messageHandler.sendMessage("Music is now un-paused!")
+            messageHandler.sendError("Music isn't paused!")
         }
     }
 }

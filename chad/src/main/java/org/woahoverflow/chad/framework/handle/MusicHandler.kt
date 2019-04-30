@@ -26,3 +26,14 @@ fun getMusicManager(guild: IGuild, voiceChannel: IVoiceChannel): GuildMusicManag
     guild.audioManager.audioProvider = musicManager.audioProvider
     return musicManager
 }
+
+/**
+ * This doesn't reset the music manager for the new channel, and just grabs the guild's instance.
+ */
+fun getMusicManager(guild: IGuild): GuildMusicManager? {
+    val guildId = guild.longID
+
+    val musicManager = musicManagers[guildId] ?: return null
+    guild.audioManager.audioProvider = musicManager.audioProvider
+    return musicManager
+}
