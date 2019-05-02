@@ -56,8 +56,6 @@ public final class ChadInstance {
         // No UI due to servers and stuff
         if (JsonHandler.INSTANCE.get("token").isEmpty() || JsonHandler.INSTANCE.get("uri_link").isEmpty()) {
             getLogger().error("Bot.json is not filled!");
-
-            // Exits
             System.exit(1);
         }
     }
@@ -89,5 +87,4 @@ public final class ChadInstance {
         // Initializes the framework & a lot of stuff
         InitKt.init();
     }
-
 }

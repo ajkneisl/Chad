@@ -77,6 +77,7 @@ class Play : Command.Class {
                                 if (join) userChannel.join()
 
                                 manager.scheduler.queue(track)
+                                manager.setActive(true)
 
                                 messageHandler.sendMessage(
                                         String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
@@ -114,6 +115,7 @@ class Play : Command.Class {
                                     }
 
                                     manager.scheduler.queue(track)
+                                    manager.setActive(true)
                                 }
 
                                 if (join) userChannel.join()
@@ -167,6 +169,7 @@ class Play : Command.Class {
                             }
 
                             manager.scheduler.queue(track)
+                            manager.setActive(true)
 
                             messageHandler.sendMessage(
                                     String.format("Now playing `%s` by `%s` [`%s`]\n%s", track.info.title, track.info.author, Util.fancyDate(track.info.length), track.info.uri)
