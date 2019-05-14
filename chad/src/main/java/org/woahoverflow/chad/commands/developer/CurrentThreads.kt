@@ -2,7 +2,7 @@ package org.woahoverflow.chad.commands.developer
 
 import com.sun.management.OperatingSystemMXBean
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.coroutine.ThreadHandler
+import org.woahoverflow.chad.framework.handle.coroutine.CoroutineManager
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
@@ -22,11 +22,11 @@ class CurrentThreads : Command.Class {
 
         // Adds all threads running threads to the stringbuilder, than to the description.
         val stringBuilder = StringBuilder()
-        ThreadHandler.threadHash.forEach { (key, `val`) ->
+        CoroutineManager.instance.users.forEach { (key, `val`) ->
             stringBuilder.append('`')
-                    .append(key)
+                    .append(key.name)
                     .append("`: ")
-                    .append(`val`.size)
+                    .append(`val`)
                     .append('\n')
         }
 
@@ -36,9 +36,6 @@ class CurrentThreads : Command.Class {
                 .append(
                         (ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean).totalPhysicalMemorySize / 1000 / 1000
                 ).append("`mb.")
-
-        // Get the internal and user run threads
-        stringBuilder.append("\n\nThere's currently `").append(ThreadHandler.runningThreads).append("` threads running.")
 
         // Append to builder
         embedBuilder.appendDesc(stringBuilder.toString())

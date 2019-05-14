@@ -1,6 +1,8 @@
 package org.woahoverflow.chad.framework.handle.coroutine
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.GuildHandler
@@ -14,11 +16,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.handle.obj.Permissions
 import sx.blah.discord.util.RequestBuffer
-import java.lang.Runnable
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
 import java.util.regex.Pattern
 
 class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(Dispatchers.Unconfined) {
@@ -150,63 +149,4 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
         @JvmStatic
         val instance = CoroutineManager()
     }
-}
-
-/**
- * Thread management file.
- *
- * Each user run command is a runnable, and that runnable is ran here and is tied to that user's Long ID.
- *
- * @author sho
- */
-object ThreadHandler {
-    /**
-     * The amount of running threads from users.
-     */
-    @JvmStatic
-    var runningThreads = 0
-
-    /**
-     * The users tied to their thread.
-     */
-    @JvmStatic
-    val threadHash = ConcurrentHashMap<Long, ArrayList<Future<*>>>()
-
-    /**
-     * The main thread executive service.
-     */
-    @JvmStatic
-    private val executorService = Executors.newCachedThreadPool()
-
-    /**
-     * Runs a thread for a user.
-     *
-     * @param thread The thread to run
-     * @param long The user's ID
-     */
-    @JvmStatic
-    fun runThread(thread: Runnable, long: Long) {
-        val future: Future<*> = executorService.submit(thread)
-
-        if (threadHash.containsKey(long)) {
-            val th = threadHash[long]!!
-            th.add(future)
-            threadHash[long] = th
-        } else {
-            val th = arrayListOf(future)
-            threadHash[long] = th
-        }
-
-        runningThreads++
-    }
-
-    /**
-     * Checks if a user can run a thread.
-     *
-     * A user can't run a thread if they've got more than 3 threads currently running.
-     *
-     * @param long The user's ID
-     */
-    @JvmStatic
-    fun canUserRunThread(long: Long): Boolean = threadHash[long] == null || threadHash[long]!!.size < 3
 }

@@ -8,7 +8,6 @@ import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.ArgumentHandler
 import org.woahoverflow.chad.framework.handle.JsonHandler
-import org.woahoverflow.chad.framework.handle.coroutine.ThreadHandler
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.obj.IGuild
 import java.lang.management.ManagementFactory
@@ -59,7 +58,7 @@ fun sync(client: IDiscordClient) {
     }
 
     prepared = connection.prepareStatement("INSERT INTO `chad` (`stats`, `uptime`, `version`, `time`) VALUES (?, ?, ?, ?)")
-    prepared.setString(1, "{\"guilds\":{\"amount\":${client.guilds.size},\"biggest\":{\"name\":\"${biggestGuild!!.name}\",\"size\":$biggestGuildSize}},\"users\":{\"amount\":$users},\"shards\":{\"amount\":${client.shardCount}},\"threads\":{\"external\":${ThreadHandler.runningThreads}}}")
+    prepared.setString(1, "{\"guilds\":{\"amount\":${client.guilds.size},\"biggest\":{\"name\":\"${biggestGuild!!.name}\",\"size\":$biggestGuildSize}},\"users\":{\"amount\":$users},\"shards\":{\"amount\":${client.shardCount}}}")
     prepared.setLong(2, ManagementFactory.getRuntimeMXBean().uptime)
     prepared.setString(3, ChadVar.VERSION)
     prepared.setLong(4, Instant.now().epochSecond)

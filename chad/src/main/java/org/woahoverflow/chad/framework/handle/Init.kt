@@ -4,7 +4,6 @@ import com.google.common.net.HttpHeaders
 import org.json.JSONArray
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
-import org.woahoverflow.chad.framework.handle.coroutine.ThreadHandler
 import org.woahoverflow.chad.framework.sync.sync
 import org.woahoverflow.chad.framework.util.Util
 import java.io.BufferedReader
@@ -115,35 +114,6 @@ object Init {
                     ChadInstance.getLogger().debug("Reset all Reddit data!")
                 }
             }, 0, 86400 * 1000)
-            /**
-             * Users can only have 3 running threads, and this makes sure of it
-             *
-             * # 1 second
-             */
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    if (!ThreadHandler.threadHash.isEmpty()) {
-                        ThreadHandler.threadHash.forEach {
-                            user, array ->
-                            run {
-                                if (!array.isEmpty()) {
-                                    var i = 0
-
-                                    while (array.size > i) {
-                                        if (array[i].isDone) {
-                                            array.removeAt(i)
-                                            ThreadHandler.runningThreads--
-                                        }
-                                        i++
-                                    }
-                                } else {
-                                    ThreadHandler.threadHash.remove(user)
-                                }
-                            }
-                        }
-                    }
-                }
-            }, 0, 1000)
         })
     }
 
