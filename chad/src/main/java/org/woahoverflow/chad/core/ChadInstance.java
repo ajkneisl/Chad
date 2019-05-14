@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.woahoverflow.chad.core.listener.*;
 import org.woahoverflow.chad.framework.handle.ArgumentHandler;
+import org.woahoverflow.chad.framework.handle.coroutine.CoroutineManager;
 import org.woahoverflow.chad.framework.handle.InitKt;
 import org.woahoverflow.chad.framework.handle.JsonHandler;
 import sx.blah.discord.api.ClientBuilder;
@@ -82,7 +83,7 @@ public final class ChadInstance {
 
         // Logs in and registers the listeners
         cli.login();
-        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new MessageReceived(), new OnReady(), new UserLeaveJoin(), new MessageEditEvent());
+        cli.getDispatcher().registerListeners(new GuildJoinLeave(), new OnReady(), new UserLeaveJoin(), CoroutineManager.getInstance());
 
         // Initializes the framework & a lot of stuff
         InitKt.init();

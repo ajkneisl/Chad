@@ -1,7 +1,10 @@
 package org.woahoverflow.chad.framework.handle
 
+import kotlinx.coroutines.*
 import org.json.JSONObject
+import org.woahoverflow.chad.core.ChadInstance
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 /**
@@ -22,6 +25,11 @@ object Reddit {
     }
 
     /**
+     * When there's a mass refresh going on, to not start another one until this one is complete.
+     */
+    var massRefresh = false
+
+    /**
      * The subreddit's posts
      */
     @JvmStatic
@@ -31,7 +39,7 @@ object Reddit {
      * Gets a post from multiple subreddits
      */
     @JvmStatic
-    fun getPost(subs: ArrayList<String>, postType: PostType): JSONObject? {
+    fun getPost(subs: ArrayList<String>, postType: PostType, saveAll: Boolean = true): JSONObject? {
         val loc = Random.nextInt(subs.size)
         val sub = subs[loc]
 
@@ -84,15 +92,17 @@ object Reddit {
 
             subreddits[subreddit]!![postType]!!.clear()
 
-            Runnable {
+            GlobalScope.launch {
                 for (post in json.getJSONObject("data").getJSONArray("children")) {
-                    Runnable {
+                    launch {
                         val postJson = post as JSONObject
                         if (!postJson.getJSONObject("data").getBoolean("stickied") && !(postJson.getJSONObject("data").getString("url").contains(postJson.getJSONObject("data").getString("permalink"))))
                             subreddits[subreddit]!![postType]!!.add(postJson)
-                    }.run()
+                    }
                 }
-            }.run()
+            }
+
+            TimeUnit.SECONDS.sleep(1)
 
             return true
         } catch (ex: Exception) {

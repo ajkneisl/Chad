@@ -5,6 +5,11 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.woahoverflow.chad.commands.Hentai
+import org.woahoverflow.chad.commands.Meme
+import org.woahoverflow.chad.commands.Porn
 import org.woahoverflow.chad.commands.`fun`.*
 import org.woahoverflow.chad.commands.admin.*
 import org.woahoverflow.chad.commands.community.*
@@ -14,8 +19,6 @@ import org.woahoverflow.chad.commands.gambling.CoinFlip
 import org.woahoverflow.chad.commands.gambling.DailyReward
 import org.woahoverflow.chad.commands.info.*
 import org.woahoverflow.chad.commands.music.*
-import org.woahoverflow.chad.commands.nsfw.Hentai
-import org.woahoverflow.chad.commands.nsfw.Porn
 import org.woahoverflow.chad.commands.punishments.Ban
 import org.woahoverflow.chad.commands.punishments.Kick
 import org.woahoverflow.chad.commands.punishments.Mute

@@ -13,38 +13,36 @@ import java.util.*
  * @author sho
  */
 class DogGallery : Command.Class {
-    override fun help(e: MessageEvent): Runnable {
+    override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
         st["doggallery"] = "Get a picture of a dog."
-        return Command.helpCommand(st, "Dog Gallery", e)
+        Command.helpCommand(st, "Dog Gallery", e)
     }
 
-    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
-        return Runnable {
-            val messageHandler = MessageHandler(e.channel, e.author)
+    override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        val messageHandler = MessageHandler(e.channel, e.author)
 
-            // The embed builder
-            val embedBuilder = EmbedBuilder()
+        // The embed builder
+        val embedBuilder = EmbedBuilder()
 
-            // The API we use for our dog images :)
-            val url = "https://api.thedogapi.com/v1/images/search?size=full"
+        // The API we use for our dog images :)
+        val url = "https://api.thedogapi.com/v1/images/search?size=full"
 
-            val response = JsonHandler.readArray(url)
+        val response = JsonHandler.readArray(url)
 
-            embedBuilder.withImage(
-                    response!!.getJSONObject(0).getString("url")
-            )
+        embedBuilder.withImage(
+                response!!.getJSONObject(0).getString("url")
+        )
 
-            if (response.getJSONObject(0).getJSONArray("breeds").length() != 0) {
-                val dog = response.getJSONObject(0).getJSONArray("breeds").getJSONObject(0)
-                val desc = "**Breed** ${dog.getString("name")}" +
-                        "\n**Life Span** ${dog.getString("life_span")}" +
-                        "\n**Temperament** ${dog.getString("temperament")}"
+        if (response.getJSONObject(0).getJSONArray("breeds").length() != 0) {
+            val dog = response.getJSONObject(0).getJSONArray("breeds").getJSONObject(0)
+            val desc = "**Breed** ${dog.getString("name")}" +
+                    "\n**Life Span** ${dog.getString("life_span")}" +
+                    "\n**Temperament** ${dog.getString("temperament")}"
 
-                embedBuilder.withDesc(desc)
-            }
-
-            messageHandler.credit("thedogapi.com").sendEmbed(embedBuilder)
+            embedBuilder.withDesc(desc)
         }
+
+        messageHandler.credit("thedogapi.com").sendEmbed(embedBuilder)
     }
 }

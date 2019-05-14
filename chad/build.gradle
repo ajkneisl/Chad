@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.woahoverflow'
-version '0.10.4'
+version '1.0.0'
 
 sourceCompatibility = 1.8
 
@@ -30,6 +30,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
     compile "com.discord4j:Discord4J:2.10.1"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
 }
 
 jar {

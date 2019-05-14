@@ -18,93 +18,90 @@ import java.util.regex.Pattern
  * @author sho
  */
 class Message : Command.Class {
+    override suspend fun run(e: MessageEvent, args: MutableList<String>)  {
+        val messageHandler = MessageHandler(e.channel, e.author)
+        val guild = GuildHandler.getGuild(e.guild.longID)
 
-    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
-        return Runnable {
-            val messageHandler = MessageHandler(e.channel, e.author)
-            val guild = GuildHandler.getGuild(e.guild.longID)
+        val prefix = guild.getObject(DataType.PREFIX) as String
 
-            val prefix = guild.getObject(DataType.PREFIX) as String
+        // Makes sure there's arguments
+        if (args.isEmpty()) {
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im help")
+            return
+        }
 
-            // Makes sure there's arguments
-            if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im help")
-                return@Runnable
+        when (args[0].toLowerCase()) {
+            "join" -> setMessage("join", messageHandler, args, guild, Guild.DataType.JOIN_MESSAGE, e)
+            "leave" -> setMessage("leave", messageHandler, args, guild, Guild.DataType.LEAVE_MESSAGE, e)
+            "ban" -> setMessage("ban", messageHandler, args, guild, Guild.DataType.BAN_MESSAGE, e)
+            "kick" -> setMessage("kick", messageHandler, args, guild, Guild.DataType.KICK_MESSAGE, e)
+
+            "set" -> {
+                if (args.size != 3) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im set [type] [true/false]")
+                    return
+                }
+
+                val set: Boolean = when {
+                    args[2].equals("true", ignoreCase = true) -> true
+                    args[2].equals("false", ignoreCase = true) -> false
+
+                    else -> {
+                        messageHandler.sendError("Please use `true` or `false`!")
+                        return
+                    }
+                }
+
+                when (args[1].toLowerCase()) {
+                    "join" -> setToggle("join", messageHandler, set, guild, Guild.DataType.JOIN_MESSAGE_ON, e)
+                    "ban" -> setToggle("ban", messageHandler, set, guild, Guild.DataType.BAN_MESSAGE_ON, e)
+                    "kick" -> setToggle("kick", messageHandler, set, guild, Guild.DataType.KICK_MESSAGE_ON, e)
+                    "leave" -> setToggle("leave", messageHandler, set, guild, Guild.DataType.LEAVE_MESSAGE_ON, e)
+
+                    else -> {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")
+                        return
+                    }
+                }
+
+                return
             }
 
-            when (args[0].toLowerCase()) {
-                "join" -> setMessage("join", messageHandler, args, guild, Guild.DataType.JOIN_MESSAGE, e)
-                "leave" -> setMessage("leave", messageHandler, args, guild, Guild.DataType.LEAVE_MESSAGE, e)
-                "ban" -> setMessage("ban", messageHandler, args, guild, Guild.DataType.BAN_MESSAGE, e)
-                "kick" -> setMessage("kick", messageHandler, args, guild, Guild.DataType.KICK_MESSAGE, e)
-
-                "set" -> {
-                    if (args.size != 3) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im set [type] [true/false]")
-                        return@Runnable
-                    }
-
-                    val set: Boolean = when {
-                        args[2].equals("true", ignoreCase = true) -> true
-                        args[2].equals("false", ignoreCase = true) -> false
-
-                        else -> {
-                            messageHandler.sendError("Please use `true` or `false`!")
-                            return@Runnable
-                        }
-                    }
-
-                    when (args[1].toLowerCase()) {
-                        "join" -> setToggle("join", messageHandler, set, guild, Guild.DataType.JOIN_MESSAGE_ON, e)
-                        "ban" -> setToggle("ban", messageHandler, set, guild, Guild.DataType.BAN_MESSAGE_ON, e)
-                        "kick" -> setToggle("kick", messageHandler, set, guild, Guild.DataType.KICK_MESSAGE_ON, e)
-                        "leave" -> setToggle("leave", messageHandler, set, guild, Guild.DataType.LEAVE_MESSAGE_ON, e)
-
-                        else -> {
-                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")
-                            return@Runnable
-                        }
-                    }
-
-                    return@Runnable
+            "setchannel" -> {
+                if (args.size < 3) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im setchannel [type] [channel name]")
+                    return
                 }
 
-                "setchannel" -> {
-                    if (args.size < 3) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im setchannel [type] [channel name]")
-                        return@Runnable
-                    }
+                val option = args[1]
 
-                    val option = args[1]
+                args.removeAt(0)
+                args.removeAt(0)
 
-                    args.removeAt(0)
-                    args.removeAt(0)
+                val stringBuilder = StringBuilder()
+                for (arg in args) stringBuilder.append("$arg ")
 
-                    val stringBuilder = StringBuilder()
-                    for (arg in args) stringBuilder.append("$arg ")
+                val channels = RequestBuffer.request<List<IChannel>> { e.guild.getChannelsByName(stringBuilder.toString().trim(' ')) }.get()
 
-                    val channels = RequestBuffer.request<List<IChannel>> { e.guild.getChannelsByName(stringBuilder.toString().trim(' ')) }.get()
-
-                    if (channels.isEmpty()) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im setchannel [type] [channel name]")
-                        return@Runnable
-                    }
-
-                    when (option.toLowerCase()) {
-                        "join" -> setChannel("join", messageHandler, channels[0], guild, Guild.DataType.JOIN_MESSAGE_CHANNEL, e)
-                        "leave" -> setChannel("leave", messageHandler, channels[0], guild, Guild.DataType.LEAVE_MESSAGE_CHANNEL, e)
-
-                        else -> {
-                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")
-                            return@Runnable
-                        }
-                    }
-                    return@Runnable
+                if (channels.isEmpty()) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im setchannel [type] [channel name]")
+                    return
                 }
 
-                else -> {
-                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")
+                when (option.toLowerCase()) {
+                    "join" -> setChannel("join", messageHandler, channels[0], guild, Guild.DataType.JOIN_MESSAGE_CHANNEL, e)
+                    "leave" -> setChannel("leave", messageHandler, channels[0], guild, Guild.DataType.LEAVE_MESSAGE_CHANNEL, e)
+
+                    else -> {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")
+                        return
+                    }
                 }
+                return
+            }
+
+            else -> {
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")
             }
         }
     }
@@ -151,7 +148,7 @@ class Message : Command.Class {
     }
 
 
-    override fun help(e: MessageEvent): Runnable {
+    override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
         st["im join [message]"] = "Sets the join message."
         st["im leave [message]"] = "Sets the leave message."
@@ -161,7 +158,7 @@ class Message : Command.Class {
         st["im setchannel [join/leave] [channel name]"] = "Toggles the join/leave messages."
         st["!TEXT!Variables"] = "The guild: `&guild&`\nThe user's name: `&user&`\nThe reason for a punishment: `&reason&` (ban & kick only)" +
                 "\nThe amount of players after the action: `&count&`\nThe amount of players after the action with an ending like `st`, `rd`: `&formatted_count&`"
-        return Command.helpCommand(st, "Interactive Message", e)
+        Command.helpCommand(st, "Interactive Message", e)
     }
 
     companion object {

@@ -50,38 +50,36 @@ class SteamStatus : Command.Class {
             }, 0, 1000*60*60) // One hour
         }
     }
-    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
-        return Runnable {
-            val status = JsonHandler.read("https://steamgaug.es/api/v2")
-            val embedBuilder = EmbedBuilder()
+    override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        val status = JsonHandler.read("https://steamgaug.es/api/v2")
+        val embedBuilder = EmbedBuilder()
 
-            // All of the statistics from SteamGauge
-            val steamCommunity = if (Objects.requireNonNull<JSONObject>(status).getJSONObject("SteamCommunity").getInt("online") == 1) "online" else "offline"
-            val steamCommunityLatency = status!!.getJSONObject("SteamCommunity").getInt("time").toString() + "ms"
+        // All of the statistics from SteamGauge
+        val steamCommunity = if (Objects.requireNonNull<JSONObject>(status).getJSONObject("SteamCommunity").getInt("online") == 1) "online" else "offline"
+        val steamCommunityLatency = status!!.getJSONObject("SteamCommunity").getInt("time").toString() + "ms"
 
-            val steamStore = if (status.getJSONObject("SteamStore").getInt("online") == 1) "online" else "offline"
-            val steamStoreLatency = status.getJSONObject("SteamStore").getInt("time").toString() + "ms"
+        val steamStore = if (status.getJSONObject("SteamStore").getInt("online") == 1) "online" else "offline"
+        val steamStoreLatency = status.getJSONObject("SteamStore").getInt("time").toString() + "ms"
 
-            val steamApi = if (status.getJSONObject("ISteamUser").getInt("online") == 1) "online" else "offline"
-            val steamApiLatency = status.getJSONObject("ISteamUser").getInt("time").toString() + "ms"
+        val steamApi = if (status.getJSONObject("ISteamUser").getInt("online") == 1) "online" else "offline"
+        val steamApiLatency = status.getJSONObject("ISteamUser").getInt("time").toString() + "ms"
 
-            embedBuilder.withDesc(
-                    "Steam Community: `" + steamCommunity + "` (" + steamCommunityLatency + ')'.toString() +
-                            "\nSteam Store: `" + steamStore + "` (" + steamStoreLatency + ')'.toString() +
-                            "\nSteam API: `" + steamApi + "` (" + steamApiLatency + ')'.toString() +
-                            "\n\nCSGO: `${cached["csgo"]}`" +
-                            "\nPUBG: `${cached["pubg"]}`" +
-                            "\nDota 2: `${cached["dota"]}`" +
-                            "\nTF 2: `${cached["tf"]}`"
-            )
+        embedBuilder.withDesc(
+                "Steam Community: `" + steamCommunity + "` (" + steamCommunityLatency + ')'.toString() +
+                        "\nSteam Store: `" + steamStore + "` (" + steamStoreLatency + ')'.toString() +
+                        "\nSteam API: `" + steamApi + "` (" + steamApiLatency + ')'.toString() +
+                        "\n\nCSGO: `${cached["csgo"]}`" +
+                        "\nPUBG: `${cached["pubg"]}`" +
+                        "\nDota 2: `${cached["dota"]}`" +
+                        "\nTF 2: `${cached["tf"]}`"
+        )
 
-            MessageHandler(e.channel, e.author).credit("steamguag.es").sendEmbed(embedBuilder)
-        }
+        MessageHandler(e.channel, e.author).credit("steamguag.es").sendEmbed(embedBuilder)
     }
 
-    override fun help(e: MessageEvent): Runnable {
+    override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
         st["steamstatus"] = "Check if steam is online, and how many players there are in popular games."
-        return Command.helpCommand(st, "Steam Status", e)
+         Command.helpCommand(st, "Steam Status", e)
     }
 }

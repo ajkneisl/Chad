@@ -14,86 +14,84 @@ import java.util.*
  * @author sho
  */
 class ModifyDevelopers : Command.Class {
-    override fun help(e: MessageEvent): Runnable {
+    override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
         st["moddev [add/view/remove] [id]"] = "Modifies users with developer role."
-        return Command.helpCommand(st, "Modify Developers", e)
+        Command.helpCommand(st, "Modify Developers", e)
     }
 
-    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
-        return Runnable {
-            val messageHandler = MessageHandler(e.channel, e.author)
-            val prefix = GuildHandler.getGuild(e.guild.longID)
+    override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        val messageHandler = MessageHandler(e.channel, e.author)
+        val prefix = GuildHandler.getGuild(e.guild.longID)
 
-            if (args.isEmpty()) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev [add/view/remove]")
-                return@Runnable
+        if (args.isEmpty()) {
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev [add/view/remove]")
+            return
+        }
+
+        when (args[0].toLowerCase()) {
+            "add" -> {
+                if (args.size != 2) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev add [id]")
+                    return
+                }
+
+                val id: Long
+
+                try {
+                    id = args[1].toLong()
+                } catch (ex: NumberFormatException) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[1])
+                    return
+                }
+
+                if (ChadVar.DEVELOPERS.contains(id) || ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
+                    messageHandler.sendError("That user is already a developer!")
+                    return
+                }
+
+                ChadVar.DEVELOPERS.add(id)
+
+                messageHandler.sendEmbed(EmbedBuilder().withDesc("Added user `$id` temporarily to developer role."))
+                return
             }
 
-            when (args[0].toLowerCase()) {
-                "add" -> {
-                    if (args.size != 2) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev add [id]")
-                        return@Runnable
-                    }
-
-                    val id: Long
-
-                    try {
-                        id = args[1].toLong()
-                    } catch (ex: NumberFormatException) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[1])
-                        return@Runnable
-                    }
-
-                    if (ChadVar.DEVELOPERS.contains(id) || ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
-                        messageHandler.sendError("That user is already a developer!")
-                        return@Runnable
-                    }
-
-                    ChadVar.DEVELOPERS.add(id)
-
-                    messageHandler.sendEmbed(EmbedBuilder().withDesc("Added user `$id` temporarily to developer role."))
-                    return@Runnable
+            "remove" -> {
+                if (args.size != 2) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev remove [id]")
+                    return
                 }
 
-                "remove" -> {
-                    if (args.size != 2) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}moddev remove [id]")
-                        return@Runnable
-                    }
+                val id: Long
 
-                    val id: Long
-
-                    try {
-                        id = args[1].toLong()
-                    } catch (ex: NumberFormatException) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[1])
-                        return@Runnable
-                    }
-
-                    if (!ChadVar.DEVELOPERS.contains(id)) {
-                        messageHandler.sendError("That user isn't a developer!")
-                        return@Runnable
-                    } else if (ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
-                        messageHandler.sendError("You aren't allowed to remove that person!")
-                        return@Runnable
-                    }
-
-                    ChadVar.DEVELOPERS.remove(id)
-
-                    messageHandler.sendEmbed(EmbedBuilder().withDesc("Removed user `$id` temporarily from developer role."))
-                    return@Runnable
+                try {
+                    id = args[1].toLong()
+                } catch (ex: NumberFormatException) {
+                    messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ID, args[1])
+                    return
                 }
 
-                "view" -> {
-                    val stringBuilder = StringBuilder()
-
-                    for (id in ChadVar.DEVELOPERS) stringBuilder.append("$id, ")
-                    for (id in ChadVar.ORIGINAL_DEVELOPERS) stringBuilder.append("[O] $id, ")
-
-                    messageHandler.sendEmbed(EmbedBuilder().withDesc(stringBuilder.toString().removeSuffix(", ")))
+                if (!ChadVar.DEVELOPERS.contains(id)) {
+                    messageHandler.sendError("That user isn't a developer!")
+                    return
+                } else if (ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
+                    messageHandler.sendError("You aren't allowed to remove that person!")
+                    return
                 }
+
+                ChadVar.DEVELOPERS.remove(id)
+
+                messageHandler.sendEmbed(EmbedBuilder().withDesc("Removed user `$id` temporarily from developer role."))
+                return
+            }
+
+            "view" -> {
+                val stringBuilder = StringBuilder()
+
+                for (id in ChadVar.DEVELOPERS) stringBuilder.append("$id, ")
+                for (id in ChadVar.ORIGINAL_DEVELOPERS) stringBuilder.append("[O] $id, ")
+
+                messageHandler.sendEmbed(EmbedBuilder().withDesc(stringBuilder.toString().removeSuffix(", ")))
             }
         }
     }

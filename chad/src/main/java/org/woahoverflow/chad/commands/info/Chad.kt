@@ -15,27 +15,25 @@ import java.util.*
  * @author sho
  */
 class Chad : Command.Class {
-    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
-        return Runnable {
-            // Creates an embed builder, and adds links etc to it.
-            val embedBuilder = EmbedBuilder()
+    override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        // Creates an embed builder, and adds links etc to it.
+        val embedBuilder = EmbedBuilder()
 
-            val desc = "**Chad** by woahoverflow\n\n" +
-                    "**Uptime** ${Util.fancyDate(ManagementFactory.getRuntimeMXBean().uptime)}\n" +
-                    "**Ping** `${e.client.shards[0].responseTime}` ms\n" +
-                    "**GitHub** https://woahoverflow.org/github\n\nIf there's an issue, or something needs to be fixed, message shozer#0001 on Discord."
+        val desc = "**Chad** by woahoverflow\n\n" +
+                "**Uptime** ${Util.fancyDate(ManagementFactory.getRuntimeMXBean().uptime)}\n" +
+                "**Ping** `${e.client.shards[0].responseTime}` ms\n" +
+                "**GitHub** https://woahoverflow.org/github\n\nIf there's an issue, or something needs to be fixed, message shozer#0001 on Discord."
 
-            embedBuilder.withDesc(desc)
-            embedBuilder.withUrl("https://woahoverflow.org/chad")
+        embedBuilder.withDesc(desc)
+        embedBuilder.withUrl("https://woahoverflow.org/chad")
 
-            // Sends
-            MessageHandler(e.channel, e.author).credit(ChadVar.VERSION).sendEmbed(embedBuilder)
-        }
+        // Sends
+        MessageHandler(e.channel, e.author).credit(ChadVar.VERSION).sendEmbed(embedBuilder)
     }
 
-    override fun help(e: MessageEvent): Runnable {
+    override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
         st["chad"] = "Gives information about the bot."
-        return Command.helpCommand(st, "Chad", e)
+        Command.helpCommand(st, "Chad", e)
     }
 }

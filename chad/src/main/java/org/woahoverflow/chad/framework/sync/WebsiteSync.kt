@@ -8,7 +8,7 @@ import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.ArgumentHandler
 import org.woahoverflow.chad.framework.handle.JsonHandler
-import org.woahoverflow.chad.framework.handle.ThreadHandler
+import org.woahoverflow.chad.framework.handle.coroutine.ThreadHandler
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.obj.IGuild
 import java.lang.management.ManagementFactory

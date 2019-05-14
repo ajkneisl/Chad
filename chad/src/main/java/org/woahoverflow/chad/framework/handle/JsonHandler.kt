@@ -137,8 +137,7 @@ object JsonHandler {
      * @return The JSONObject
      */
     fun read(url: String?): org.json.JSONObject? {
-        if (url == null || url.isEmpty())
-            return null
+        if (url.isNullOrEmpty()) return null
         val httpGet = Util.httpGet(url)
         return if (httpGet.isEmpty()) null else org.json.JSONObject(httpGet)
     }
@@ -150,8 +149,7 @@ object JsonHandler {
      * @return The JSONArray
      */
     fun readArray(url: String?): org.json.JSONArray? {
-        if (url == null || url.isEmpty())
-            return null
+        if (url.isNullOrEmpty()) return null
         val httpGet = Util.httpGet(url)
         return if (httpGet.isEmpty()) null else org.json.JSONArray(httpGet)
     }

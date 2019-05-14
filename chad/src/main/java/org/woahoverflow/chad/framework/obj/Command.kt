@@ -25,11 +25,8 @@ object Command {
      * The class the commands implement from.
      */
     interface Class {
-        // When the command is run
-        fun run(e: MessageEvent, args: MutableList<String>): Runnable
-
-        // When the command is run with help with the only argument
-        fun help(e: MessageEvent): Runnable
+        suspend fun run(e: MessageEvent, args: MutableList<String>)
+        suspend fun help(e: MessageEvent)
     }
 
     /**
@@ -105,32 +102,30 @@ object Command {
      * @return The help runnable
      */
     @JvmStatic
-    fun helpCommand(commands: HashMap<String, String>, commandName: String, messageReceivedEvent: MessageEvent): Runnable {
-        return Runnable {
-            if (!helpCommands.containsKey(commandName)) {
-                // The guild's prefix
-                val prefix = GuildHandler.getGuild(messageReceivedEvent.guild.longID).getObject(
-                        DataType.PREFIX) as String
+    fun helpCommand(commands: HashMap<String, String>, commandName: String, messageReceivedEvent: MessageEvent) {
+        if (!helpCommands.containsKey(commandName)) {
+            // The guild's prefix
+            val prefix = GuildHandler.getGuild(messageReceivedEvent.guild.longID).getObject(
+                    DataType.PREFIX) as String
 
-                // The embed builder
-                val embedBuilder = EmbedBuilder()
-                embedBuilder.withTitle("Help : `$commandName`")
-                commands.forEach { key, `val` ->
-                    run {
-                        if (key.startsWith("!TEXT!")) {
-                            embedBuilder.appendField(String.format("%s", key.removePrefix("!TEXT!")), `val`, false)
-                        } else {
-                            embedBuilder.appendField(String.format("`%s%s`", prefix, key), `val`, false)
-                        }
+            // The embed builder
+            val embedBuilder = EmbedBuilder()
+            embedBuilder.withTitle("Help : `$commandName`")
+            commands.forEach { (key, `val`) ->
+                run {
+                    if (key.startsWith("!TEXT!")) {
+                        embedBuilder.appendField(String.format("%s", key.removePrefix("!TEXT!")), `val`, false)
+                    } else {
+                        embedBuilder.appendField(String.format("`%s%s`", prefix, key), `val`, false)
                     }
                 }
-
-                helpCommands[commandName] = embedBuilder
             }
 
-            // Sends it
-            MessageHandler(messageReceivedEvent.channel, messageReceivedEvent.author).sendEmbed(helpCommands[commandName]!!)
+            helpCommands[commandName] = embedBuilder
         }
+
+        // Sends it
+        MessageHandler(messageReceivedEvent.channel, messageReceivedEvent.author).sendEmbed(helpCommands[commandName]!!)
     }
 
     /**

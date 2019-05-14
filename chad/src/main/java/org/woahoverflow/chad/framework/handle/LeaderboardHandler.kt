@@ -90,6 +90,8 @@ object LeaderboardHandler {
      * Refreshes the leaderboard
      */
     fun refreshLeaderboard(type: LeaderboardType): TimeResult {
+        if (ArgumentHandler.isToggled("TEST_RUN")) return TimeResult(0, 0L)
+
         val start = System.currentTimeMillis()
         ChadInstance.getLogger().debug("Refreshing $type leaderboard...")
 

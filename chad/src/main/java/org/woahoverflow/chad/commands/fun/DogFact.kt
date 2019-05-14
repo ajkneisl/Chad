@@ -13,21 +13,17 @@ import java.util.*
  * @author sho
  */
 class DogFact : Command.Class {
-    override fun help(e: MessageEvent): Runnable {
+    override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
         st["dogfact"] = "Gets a dog fact."
-        return Command.helpCommand(st, "Dog Fact", e)
+        Command.helpCommand(st, "Dog Fact", e)
     }
 
-    override fun run(e: MessageEvent, args: MutableList<String>): Runnable {
-        return Runnable {
-            // Gets the fact
-            val fact = JsonHandler.read("https://dog-api.kinduff.com/api/facts")!!.getJSONArray("facts").getString(0)
+    override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        // Gets the fact
+        val fact = JsonHandler.read("https://dog-api.kinduff.com/api/facts")!!.getJSONArray("facts").getString(0)
 
-            // Sends the fact
-            MessageHandler(e.channel, e.author).credit("dog-api.kinduff.com").sendEmbed(EmbedBuilder().withDesc(fact))
-
-            // i don't even know how i could comprehend something so complicated like this
-        }
+        // Sends the fact
+        MessageHandler(e.channel, e.author).credit("dog-api.kinduff.com").sendEmbed(EmbedBuilder().withDesc(fact))
     }
 }
