@@ -27,7 +27,7 @@ class Swearing : Command.Class {
             val embedBuilder = EmbedBuilder()
             embedBuilder.withTitle("Swear Filter")
 
-            val status = if (guild.getObject(Guild.DataType.SWEAR_FILTER) as Boolean) "enabled" else "disabled"
+            val status = if (guild.getObject(DataType.SWEAR_FILTER) as Boolean) "enabled" else "disabled"
 
             embedBuilder.withDesc("Swearing in this guild is `$status`.")
 

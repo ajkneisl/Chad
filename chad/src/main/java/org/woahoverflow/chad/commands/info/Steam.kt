@@ -1,9 +1,7 @@
 package org.woahoverflow.chad.commands.info
 
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.JsonHandler
@@ -12,9 +10,7 @@ import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.HashMap
-import java.util.Objects
+import java.util.*
 
 /**
  * Steam statistics utilizing steam's API
@@ -97,7 +93,7 @@ class Steam : Command.Class {
                     if (args.size == 2)
                     /* Regular stats in CSGO */ {
                         embedBuilder.withTitle("CS:GO stats for $userName")
-                        embedBuilder.appendField("Total Kills", Integer.toString(csgoStats!!.getJSONObject(0).getInt("value")), true)
+                        embedBuilder.appendField("Total Kills", Integer.toString(csgoStats.getJSONObject(0).getInt("value")), true)
                         embedBuilder.appendField("Total Deaths", Integer.toString(csgoStats.getJSONObject(1).getInt("value")), true)
                         embedBuilder.appendField("Total Time Played", (csgoStats.getJSONObject(2).getInt("value") / 60 / 60).toString() + "hrs", true)
                         embedBuilder.appendField("Total Bombs Planted", Integer.toString(csgoStats.getJSONObject(3).getInt("value")), true)
@@ -109,7 +105,7 @@ class Steam : Command.Class {
                     } else if (args.size == 3 && args[2].equals("kills", ignoreCase = true))
                     /*User's kill stats in CS:GO */ {
                         embedBuilder.withTitle("Map Stats for $userName")
-                        embedBuilder.appendField("Knife", Integer.toString(csgoStats!!.getJSONObject(9).getInt("value")), true)
+                        embedBuilder.appendField("Knife", Integer.toString(csgoStats.getJSONObject(9).getInt("value")), true)
                         embedBuilder.appendField("Taser", Integer.toString(csgoStats.getJSONObject(166).getInt("value")), true)
                         embedBuilder.appendField("HE Grenade", Integer.toString(csgoStats.getJSONObject(10).getInt("value")), true)
                         embedBuilder.appendField("Glock", Integer.toString(csgoStats.getJSONObject(11).getInt("value")), true)
@@ -123,7 +119,7 @@ class Steam : Command.Class {
                     } else if (args.size == 3 && args[2].equals("maps", ignoreCase = true))
                     /*User's map stats in CS:GO */ {
                         embedBuilder.withTitle("Map Wins for $userName")
-                        embedBuilder.appendField("Office", Integer.toString(csgoStats!!.getJSONObject(28).getInt("value")), true)
+                        embedBuilder.appendField("Office", Integer.toString(csgoStats.getJSONObject(28).getInt("value")), true)
                         embedBuilder.appendField("Cobble", Integer.toString(csgoStats.getJSONObject(29).getInt("value")), true)
                         embedBuilder.appendField("Dust 2", Integer.toString(csgoStats.getJSONObject(30).getInt("value")), true)
                         embedBuilder.appendField("Inferno", Integer.toString(csgoStats.getJSONObject(31).getInt("value")), true)
@@ -132,7 +128,7 @@ class Steam : Command.Class {
                     } else if (args.size == 3 && args[2].equals("lastmatch", ignoreCase = true))
                     /*User's last match stats in CS:GO */ {
                         embedBuilder.withTitle("$userName's last game")
-                        embedBuilder.appendField("Round Wins", Integer.toString(csgoStats!!.getJSONObject(81).getInt("value") + csgoStats.getJSONObject(82).getInt("value")), true)
+                        embedBuilder.appendField("Round Wins", Integer.toString(csgoStats.getJSONObject(81).getInt("value") + csgoStats.getJSONObject(82).getInt("value")), true)
                         embedBuilder.appendField("Kills", Integer.toString(csgoStats.getJSONObject(85).getInt("value")), true)
                         embedBuilder.appendField("Deaths", Integer.toString(csgoStats.getJSONObject(86).getInt("value")), true)
                         embedBuilder.appendField("MVPs", Integer.toString(csgoStats.getJSONObject(87).getInt("value")), true)

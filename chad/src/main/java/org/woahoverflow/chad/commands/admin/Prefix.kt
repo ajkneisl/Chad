@@ -34,7 +34,7 @@ class Prefix : Command.Class {
         // If the arguments are 2, set the prefix
         if (args.size == 2 && args[0].equals("set", ignoreCase = true)) {
             // Gets the current prefix
-            val prefix = guild.getObject(Guild.DataType.PREFIX) as String
+            val prefix = guild.getObject(DataType.PREFIX) as String
 
             // The new prefix
             val newPrefix = args[1]

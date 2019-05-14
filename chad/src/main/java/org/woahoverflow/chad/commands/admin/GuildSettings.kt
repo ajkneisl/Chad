@@ -4,13 +4,10 @@ import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Command.Category
-import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Guild.DataType
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 /**
  * Modify the guild's settings
@@ -68,17 +65,17 @@ class GuildSettings : Command.Class {
                 // Turns the on/off to a boolean
                 val bool = !args[2].equals("off", ignoreCase = true)
 
-                if (bool && !(guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category!!.toString().toLowerCase())) {
+                if (bool && !(guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category.toString().toLowerCase())) {
                     messageHandler.sendError("That category isn't disabled!")
                     return
                 }
 
-                if (!bool && (guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category!!.toString().toLowerCase())) {
+                if (!bool && (guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category.toString().toLowerCase())) {
                     messageHandler.sendError("That category is already disabled!")
                     return
                 }
 
-                if (bool && (guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category!!.toString().toLowerCase())) {
+                if (bool && (guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category.toString().toLowerCase())) {
                     val disabled = guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>
 
                     disabled.remove(category.toString().toLowerCase())
@@ -89,7 +86,7 @@ class GuildSettings : Command.Class {
                     return
                 }
 
-                if (!bool && !(guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category!!.toString().toLowerCase())) {
+                if (!bool && !(guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(category.toString().toLowerCase())) {
                     val disabled = guild.getObject(DataType.DISABLED_CATEGORIES) as ArrayList<String>
 
                     disabled.add(category.toString().toLowerCase())

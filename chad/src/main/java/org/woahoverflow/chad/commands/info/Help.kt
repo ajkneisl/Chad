@@ -5,16 +5,11 @@ import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PermissionHandler
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.Command.Category
-import org.woahoverflow.chad.framework.obj.Command.Data
 import org.woahoverflow.chad.framework.obj.Guild.DataType
 import org.woahoverflow.chad.framework.util.Util
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.ArrayList
-import java.util.HashMap
-import kotlin.collections.Map.Entry
+import java.util.*
 import java.util.regex.Pattern
 
 /**

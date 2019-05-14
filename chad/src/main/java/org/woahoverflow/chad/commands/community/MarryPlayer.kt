@@ -1,22 +1,20 @@
 package org.woahoverflow.chad.commands.community
 
+import kotlinx.coroutines.delay
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
-import org.woahoverflow.chad.framework.obj.Player
 import org.woahoverflow.chad.framework.obj.Player.DataType
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.impl.obj.ReactionEmoji
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IReaction
-import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
 import sx.blah.discord.util.RequestBuilder
-
-import java.util.HashMap
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -106,11 +104,7 @@ class MarryPlayer : Command.Class {
             }
 
             // Sleeps a second so it doesn't go so fast
-            try {
-                TimeUnit.SECONDS.sleep(1)
-            } catch (e1: InterruptedException) {
-                e1.printStackTrace()
-            }
+            delay(1000L)
 
             // Increases the timeout value
             timeout++

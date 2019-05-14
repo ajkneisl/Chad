@@ -34,12 +34,11 @@ class RockPaperScissors : Command.Class {
 
             // Forms the author's value
             var i = 420
-            if (args[0].equals("rock", ignoreCase = true))
-                i = 0
-            else if (args[0].equals("paper", ignoreCase = true))
-                i = 1
-            else if (args[0].equals("scissors", ignoreCase = true))
-                i = 2
+            when {
+                args[0].equals("rock", ignoreCase = true) -> i = 0
+                args[0].equals("paper", ignoreCase = true) -> i = 1
+                args[0].equals("scissors", ignoreCase = true) -> i = 2
+            }
 
             // Sends the result
             messageHandler.sendEmbed(EmbedBuilder().withDesc(calculateWinner(i, i2)))
@@ -55,10 +54,10 @@ class RockPaperScissors : Command.Class {
 
         // Builds Chad's value
         val chadValue: String
-        when (i2) {
-            0 -> chadValue = "Rock"
-            1 -> chadValue = "Paper"
-            2 -> chadValue = "Scissors"
+        chadValue = when (i2) {
+            0 -> "Rock"
+            1 -> "Paper"
+            2 -> "Scissors"
             else -> return "Internal Exception!"
         }
 

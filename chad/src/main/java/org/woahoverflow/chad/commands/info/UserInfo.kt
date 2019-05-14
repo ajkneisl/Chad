@@ -7,11 +7,8 @@ import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
-
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.HashMap
-import java.util.stream.Collectors
+import java.util.*
 
 /**
  * Gets info about a discord user
@@ -24,7 +21,7 @@ class UserInfo : Command.Class {
         val messageHandler = MessageHandler(e.channel, e.author)
 
         // Gets the user from the mentions
-        if (!e.message.mentions.isEmpty() && args.size == 1)
+        if (e.message.mentions.isNotEmpty() && args.size == 1)
             u = e.message.mentions[0]
         else {
             // If user wasn't mentioned, return

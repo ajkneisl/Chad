@@ -12,9 +12,7 @@ import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
 import sx.blah.discord.util.RequestBuilder
-
-import java.util.HashMap
-import java.util.concurrent.TimeUnit
+import java.util.*
 
 /**
  * Shuts down the bot via discord

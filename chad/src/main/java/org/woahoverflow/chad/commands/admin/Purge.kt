@@ -10,9 +10,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.Permissions
 import sx.blah.discord.util.RequestBuffer
-
-import java.util.HashMap
-import java.util.concurrent.TimeUnit
+import java.util.*
 
 /**
  * Removes a large amount of messages from a channel

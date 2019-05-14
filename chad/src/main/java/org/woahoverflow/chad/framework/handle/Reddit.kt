@@ -1,8 +1,8 @@
 package org.woahoverflow.chad.framework.handle
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
-import org.woahoverflow.chad.core.ChadInstance
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random

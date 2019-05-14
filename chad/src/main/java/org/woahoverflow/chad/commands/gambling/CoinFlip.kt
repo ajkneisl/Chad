@@ -67,7 +67,7 @@ class CoinFlip : Command.Class {
             }
             return
         } else if (e.message.mentions.size == 1 && args.size == 2) {
-            val user: IUser = if (!e.message.mentions.isEmpty() && args[1].contains(e.message.mentions[0].stringID)) {
+            val user: IUser = if (e.message.mentions.isNotEmpty() && args[1].contains(e.message.mentions[0].stringID)) {
                 e.message.mentions[0]
             } else {
                 messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}coinflip [@user] [bet]")

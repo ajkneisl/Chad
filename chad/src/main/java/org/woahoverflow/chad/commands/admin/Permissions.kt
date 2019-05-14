@@ -10,9 +10,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
-
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 import java.util.regex.Pattern
 
 /**
@@ -41,7 +39,7 @@ class Permissions : Class {
                 i++
 
                 // Appends the string
-                stringBuilder.append(s).append(' ')
+                stringBuilder.append("$s ")
 
                 // Requests the roles from the guild
                 val rolesList = RequestBuffer.request<List<IRole>> { e.guild.roles }
@@ -93,7 +91,7 @@ class Permissions : Class {
                     }
 
                     // Adds it to the database and gets the result
-                    val add = guild.addPermissionToRole(role!!.longID, args[0].toLowerCase())
+                    val add = guild.addPermissionToRole(role.longID, args[0].toLowerCase())
 
                     // If the result was 0 (good) return the amount, if not return the correct error.
                     if (add == 0)
@@ -113,7 +111,7 @@ class Permissions : Class {
                     }
 
                     // Removes it from the database and gets the result
-                    val rem = guild.removePermissionFromRole(role!!.longID, args[0].toLowerCase())
+                    val rem = guild.removePermissionFromRole(role.longID, args[0].toLowerCase())
 
                     // If the result was 0 (good) return the amount, if not return the correct error.
                     if (rem == 0)
@@ -126,7 +124,7 @@ class Permissions : Class {
                 }
                 "view" -> {
                     // Gets the permissions to a role
-                    val ar = guild.getRolePermissions(role!!.longID)
+                    val ar = guild.getRolePermissions(role.longID)
 
                     // Checks if there's no permissions
                     if (ar.isEmpty()) {

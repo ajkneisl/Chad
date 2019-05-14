@@ -1,7 +1,10 @@
 package org.woahoverflow.chad.framework.handle
 
 import com.google.common.net.HttpHeaders
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
@@ -13,9 +16,7 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.*
-import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
-import kotlinx.coroutines.*
 import javax.net.ssl.HttpsURLConnection
 
 /** This class sorts all initialization procedures @author sho */
@@ -123,26 +124,28 @@ class Init {
      * Initializes stored data
      */
     fun data() {
-        val job = GlobalScope.launch(CoroutineName("Initialization Handler")) {
-            Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach { word -> ChadVar.swearWords.add(word as String) }
-            Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach { word -> ChadVar.eightBallResults.add(word as String) }
-            Util.refreshDevelopers()
-
-            try {
-                val url = URL("https://cdn.woahoverflow.org/data/chad/words.txt")
-                val con = url.openConnection() as HttpsURLConnection
-                con.requestMethod = "GET"
-                con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT)
-                val `in` = BufferedReader(InputStreamReader(con.inputStream, StandardCharsets.UTF_8))
-                val ar = ArrayList<String>()
-                `in`.lines().forEach { ar.add(it) }
-                ChadVar.wordsList = ar
-                `in`.close()
-            } catch (e1: IOException) {
-                e1.printStackTrace()
-            }
-        }
+        val job = GlobalScope.launch(CoroutineName("Initialization Handler")) { dataRequest() }
 
         threads.add(job)
+    }
+
+    private fun dataRequest() {
+        Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach { word -> ChadVar.swearWords.add(word as String) }
+        Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach { word -> ChadVar.eightBallResults.add(word as String) }
+        Util.refreshDevelopers()
+
+        try {
+            val url = URL("https://cdn.woahoverflow.org/data/chad/words.txt")
+            val con = url.openConnection() as HttpsURLConnection
+            con.requestMethod = "GET"
+            con.setRequestProperty("User-Agent", HttpHeaders.USER_AGENT)
+            val `in` = BufferedReader(InputStreamReader(con.inputStream, StandardCharsets.UTF_8))
+            val ar = ArrayList<String>()
+            `in`.lines().forEach { ar.add(it) }
+            ChadVar.wordsList = ar
+            `in`.close()
+        } catch (e1: IOException) {
+            e1.printStackTrace()
+        }
     }
 }

@@ -36,7 +36,7 @@ class Kick : Command.Class {
         // Forms user from author's mentions
         val user: IUser
         val reason: MutableList<String>
-        if (!e.message.mentions.isEmpty() && args[0].contains(e.message.mentions[0].stringID)) {
+        if (e.message.mentions.isNotEmpty() && args[0].contains(e.message.mentions[0].stringID)) {
             user = e.message.mentions[0]
             args.removeAt(0)
             reason = args
@@ -65,16 +65,16 @@ class Kick : Command.Class {
 
         // Builds reason
         val builtReason = StringBuilder()
-        if (!reason.isEmpty())
+        if (reason.isNotEmpty())
             for (s in reason)
-                builtReason.append(s).append(' ')
+                builtReason.append("$s ")
         else
             builtReason.append("no reason")
 
         // Checks if kick message is enabled
         if (guild.getObject(DataType.KICK_MESSAGE_ON) as Boolean) {
             // Gets the message from the cache
-            val message = guild.getObject(Guild.DataType.KICK_MESSAGE) as String
+            val message = guild.getObject(DataType.KICK_MESSAGE) as String
 
             // If the message isn't null, continue
             var formattedMessage = GUILD_PATTERN.matcher(message).replaceAll(e.guild.name) // replaces &guild& with guild's name

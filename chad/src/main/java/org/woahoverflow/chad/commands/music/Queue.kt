@@ -1,18 +1,13 @@
 package org.woahoverflow.chad.commands.music
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.*
+import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.GuildMusicManager
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IVoiceChannel
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
-
-import java.util.HashMap
-import java.util.stream.Collectors
-import java.util.stream.IntStream
+import java.util.*
 
 /**
  * Gets the music player's queue

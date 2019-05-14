@@ -31,10 +31,10 @@ class Message : Command.Class {
         }
 
         when (args[0].toLowerCase()) {
-            "join" -> setMessage("join", messageHandler, args, guild, Guild.DataType.JOIN_MESSAGE, e)
-            "leave" -> setMessage("leave", messageHandler, args, guild, Guild.DataType.LEAVE_MESSAGE, e)
-            "ban" -> setMessage("ban", messageHandler, args, guild, Guild.DataType.BAN_MESSAGE, e)
-            "kick" -> setMessage("kick", messageHandler, args, guild, Guild.DataType.KICK_MESSAGE, e)
+            "join" -> setMessage("join", messageHandler, args, guild, DataType.JOIN_MESSAGE, e)
+            "leave" -> setMessage("leave", messageHandler, args, guild, DataType.LEAVE_MESSAGE, e)
+            "ban" -> setMessage("ban", messageHandler, args, guild, DataType.BAN_MESSAGE, e)
+            "kick" -> setMessage("kick", messageHandler, args, guild, DataType.KICK_MESSAGE, e)
 
             "set" -> {
                 if (args.size != 3) {
@@ -53,10 +53,10 @@ class Message : Command.Class {
                 }
 
                 when (args[1].toLowerCase()) {
-                    "join" -> setToggle("join", messageHandler, set, guild, Guild.DataType.JOIN_MESSAGE_ON, e)
-                    "ban" -> setToggle("ban", messageHandler, set, guild, Guild.DataType.BAN_MESSAGE_ON, e)
-                    "kick" -> setToggle("kick", messageHandler, set, guild, Guild.DataType.KICK_MESSAGE_ON, e)
-                    "leave" -> setToggle("leave", messageHandler, set, guild, Guild.DataType.LEAVE_MESSAGE_ON, e)
+                    "join" -> setToggle("join", messageHandler, set, guild, DataType.JOIN_MESSAGE_ON, e)
+                    "ban" -> setToggle("ban", messageHandler, set, guild, DataType.BAN_MESSAGE_ON, e)
+                    "kick" -> setToggle("kick", messageHandler, set, guild, DataType.KICK_MESSAGE_ON, e)
+                    "leave" -> setToggle("leave", messageHandler, set, guild, DataType.LEAVE_MESSAGE_ON, e)
 
                     else -> {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")
@@ -89,8 +89,8 @@ class Message : Command.Class {
                 }
 
                 when (option.toLowerCase()) {
-                    "join" -> setChannel("join", messageHandler, channels[0], guild, Guild.DataType.JOIN_MESSAGE_CHANNEL, e)
-                    "leave" -> setChannel("leave", messageHandler, channels[0], guild, Guild.DataType.LEAVE_MESSAGE_CHANNEL, e)
+                    "join" -> setChannel("join", messageHandler, channels[0], guild, DataType.JOIN_MESSAGE_CHANNEL, e)
+                    "leave" -> setChannel("leave", messageHandler, channels[0], guild, DataType.LEAVE_MESSAGE_CHANNEL, e)
 
                     else -> {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "im help")

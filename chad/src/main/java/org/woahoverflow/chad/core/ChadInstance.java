@@ -48,6 +48,7 @@ public final class ChadInstance {
     public static Timer getTimer() {
         return timer;
     }
+
     /*
     Makes sure bot.json is filled
      */

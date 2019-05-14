@@ -9,11 +9,7 @@ import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.util.RequestBuffer
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.Exception
-import java.net.MalformedURLException
-import java.net.ProtocolException
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.text.DecimalFormat

@@ -2,15 +2,13 @@ package org.woahoverflow.chad.commands.info
 
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.youtube.YouTubeChannel
 import org.woahoverflow.chad.framework.handle.youtube.YouTubeHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
-
 import java.text.DecimalFormat
-import java.util.HashMap
+import java.util.*
 
 /**
  * Gets the subscriber count for YouTuber(s)

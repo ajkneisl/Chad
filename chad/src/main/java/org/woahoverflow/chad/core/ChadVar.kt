@@ -5,8 +5,6 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.woahoverflow.chad.commands.Hentai
 import org.woahoverflow.chad.commands.Meme
 import org.woahoverflow.chad.commands.Porn
@@ -108,17 +106,17 @@ object ChadVar {
      * The full list of Commands
      */
     @JvmStatic
-    val COMMANDS = object : ConcurrentHashMap<String, Command.Data>() {
+    val COMMANDS = object : ConcurrentHashMap<String, Data>() {
         init {
             // FUN!
-            this["random"] = Command.Data(Command.Category.FUN, Random())
-            this["photoeditor"] = Command.Data(Command.Category.FUN, PhotoEditor(), "pe")
-            this["eightball"] = Command.Data(Command.Category.FUN, EightBall(), "8ball")
-            this["catgallery"] = Command.Data(Command.Category.FUN, CatGallery(), "catgal")
-            this["catfact"] = Command.Data(Command.Category.FUN, CatFact())
-            this["russianroulette"] = Command.Data(Command.Category.FUN, RussianRoulette(), "rrl")
-            this["wordreverse"] = Command.Data(Command.Category.FUN, WordReverse(), "wr")
-            this["rockpaperscissors"] = Command.Data(Command.Category.FUN, RockPaperScissors(), "rps")
+            this["random"] = Data(Command.Category.FUN, Random())
+            this["photoeditor"] = Data(Command.Category.FUN, PhotoEditor(), "pe")
+            this["eightball"] = Data(Command.Category.FUN, EightBall(), "8ball")
+            this["catgallery"] = Data(Command.Category.FUN, CatGallery(), "catgal")
+            this["catfact"] = Data(Command.Category.FUN, CatFact())
+            this["russianroulette"] = Data(Command.Category.FUN, RussianRoulette(), "rrl")
+            this["wordreverse"] = Data(Command.Category.FUN, WordReverse(), "wr")
+            this["rockpaperscissors"] = Data(Command.Category.FUN, RockPaperScissors(), "rps")
             this["meme"] = Data(Command.Category.FUN, Meme())
             this["doggallery"] = Data(Command.Category.FUN, DogGallery())
             this["dogfact"] = Data(Command.Category.FUN, DogFact())
@@ -132,44 +130,44 @@ object ChadVar {
             this["downvote"] = Data(Command.Category.COMMUNITY, DownVote())
 
             // INFO!
-            this["help"] = Command.Data(Command.Category.INFO, Help())
-            this["userinfo"] = Command.Data(Command.Category.INFO, UserInfo(), "uinfo")
-            this["steam"] = Command.Data(Command.Category.INFO, Steam(), "st")
-            this["chad"] = Command.Data(Command.Category.INFO, Chad())
-            this["guildinfo"] = Command.Data(Command.Category.INFO, GuildInfo(), "ginfo")
-            this["reddittop"] = Command.Data(Command.Category.INFO, RedditTop(), "rtop")
-            this["redditnew"] = Command.Data(Command.Category.INFO, RedditNew(), "rnew")
+            this["help"] = Data(Command.Category.INFO, Help())
+            this["userinfo"] = Data(Command.Category.INFO, UserInfo(), "uinfo")
+            this["steam"] = Data(Command.Category.INFO, Steam(), "st")
+            this["chad"] = Data(Command.Category.INFO, Chad())
+            this["guildinfo"] = Data(Command.Category.INFO, GuildInfo(), "ginfo")
+            this["reddittop"] = Data(Command.Category.INFO, RedditTop(), "rtop")
+            this["redditnew"] = Data(Command.Category.INFO, RedditNew(), "rnew")
             this["subscribercount"] = Data(Command.Category.INFO, SubscriberCount(), "subcount", "subc")
             this["steamstatus"] = Data(Command.Category.INFO, SteamStatus(), "steamst")
             this["aliases"] = Data(Command.Category.INFO, Aliases(), "alias")
             this["leaderboard"] = Data(Command.Category.INFO, Leaderboard(), "lb")
 
             // PUNISHMENTS!
-            this["kick"] = Command.Data(Command.Category.PUNISHMENTS, Kick())
-            this["ban"] = Command.Data(Command.Category.PUNISHMENTS, Ban())
-            this["mute"] = Command.Data(Command.Category.PUNISHMENTS, Mute())
+            this["kick"] = Data(Command.Category.PUNISHMENTS, Kick())
+            this["ban"] = Data(Command.Category.PUNISHMENTS, Ban())
+            this["mute"] = Data(Command.Category.PUNISHMENTS, Mute())
 
             // ADMINISTRATOR!
-            this["prefix"] = Command.Data(Command.Category.ADMINISTRATOR, Prefix())
-            this["logging"] = Command.Data(Command.Category.ADMINISTRATOR, Logging())
-            this["purge"] = Command.Data(Command.Category.ADMINISTRATOR, Purge())
-            this["instantmessage"] = Command.Data(Command.Category.ADMINISTRATOR, Message(), "im")
-            this["autorole"] = Command.Data(Command.Category.ADMINISTRATOR, AutoRole(), "ar")
-            this["permissions"] = Command.Data(Command.Category.ADMINISTRATOR, Permissions(), "perms")
+            this["prefix"] = Data(Command.Category.ADMINISTRATOR, Prefix())
+            this["logging"] = Data(Command.Category.ADMINISTRATOR, Logging())
+            this["purge"] = Data(Command.Category.ADMINISTRATOR, Purge())
+            this["instantmessage"] = Data(Command.Category.ADMINISTRATOR, Message(), "im")
+            this["autorole"] = Data(Command.Category.ADMINISTRATOR, AutoRole(), "ar")
+            this["permissions"] = Data(Command.Category.ADMINISTRATOR, Permissions(), "perms")
             this["guildsettings"] = Data(Command.Category.ADMINISTRATOR, GuildSettings(), "gset")
-            this["nsfw"] = Command.Data(Command.Category.ADMINISTRATOR, Nsfw())
-            this["swearfilter"] = Command.Data(Command.Category.ADMINISTRATOR, Swearing(), "sf")
+            this["nsfw"] = Data(Command.Category.ADMINISTRATOR, Nsfw())
+            this["swearfilter"] = Data(Command.Category.ADMINISTRATOR, Swearing(), "sf")
 
             // NSFW !
-            this["porn"] = Command.Data(Command.Category.NSFW, Porn(), "pn")
-            this["hentai"] = Command.Data(Command.Category.NSFW, Hentai(), "hentie")
+            this["porn"] = Data(Command.Category.NSFW, Porn(), "pn")
+            this["hentai"] = Data(Command.Category.NSFW, Hentai(), "hentie")
 
             // DEVELOPER!
-            this["threads"] = Command.Data(Command.Category.DEVELOPER, CurrentThreads(), "cth")
-            this["modpresence"] = Command.Data(Command.Category.DEVELOPER, ModifyPresence(), "modp")
-            this["systeminfo"] = Command.Data(Command.Category.DEVELOPER, SystemInfo(), "sinf")
-            this["shutdown"] = Command.Data(Command.Category.DEVELOPER, Shutdown())
-            this["modifybalance"] = Command.Data(Command.Category.DEVELOPER, ModifyBalance(), "modbal")
+            this["threads"] = Data(Command.Category.DEVELOPER, CurrentThreads(), "cth")
+            this["modpresence"] = Data(Command.Category.DEVELOPER, ModifyPresence(), "modp")
+            this["systeminfo"] = Data(Command.Category.DEVELOPER, SystemInfo(), "sinf")
+            this["shutdown"] = Data(Command.Category.DEVELOPER, Shutdown())
+            this["modifybalance"] = Data(Command.Category.DEVELOPER, ModifyBalance(), "modbal")
             this["modifycache"] = Data(Command.Category.DEVELOPER, ModifyCache(), "modcache")
             this["modifydatabase"] = Data(Command.Category.DEVELOPER, ModifyDatabase(), "moddb")
             this["modifydevelopers"] = Data(Command.Category.DEVELOPER, ModifyDevelopers(), "moddev")
@@ -177,8 +175,8 @@ object ChadVar {
             this["statistics"] = Data(Command.Category.DEVELOPER, Statistics())
 
             // GAMBLING!
-            this["coinflip"] = Command.Data(Command.Category.GAMBLING, CoinFlip(), "cf")
-            this["balance"] = Command.Data(Command.Category.GAMBLING, Balance(), "bal")
+            this["coinflip"] = Data(Command.Category.GAMBLING, CoinFlip(), "cf")
+            this["balance"] = Data(Command.Category.GAMBLING, Balance(), "bal")
             this["dailyreward"] = Data(Command.Category.GAMBLING, DailyReward(), "drw")
 
             // MUSIC

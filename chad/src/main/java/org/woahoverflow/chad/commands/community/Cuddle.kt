@@ -3,10 +3,8 @@ package org.woahoverflow.chad.commands.community
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.HashMap
+import java.util.*
 
 /**
  * Why not?

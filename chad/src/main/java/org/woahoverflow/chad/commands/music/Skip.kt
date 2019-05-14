@@ -1,13 +1,10 @@
 package org.woahoverflow.chad.commands.music
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.*
+import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.GuildMusicManager
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.handle.obj.IVoiceChannel
-
-import java.util.HashMap
+import java.util.*
 
 /**
  * Skips songs within the guild's music player
@@ -34,7 +31,7 @@ class Skip : Command.Class {
         }
 
         // The guild's music manager
-        val manager = getMusicManager(e.guild, channel!!)
+        val manager = getMusicManager(e.guild, channel)
 
         // Skips all of the songs in the queue
         if (args.size == 1 && args[0].equals("all", ignoreCase = true)) {

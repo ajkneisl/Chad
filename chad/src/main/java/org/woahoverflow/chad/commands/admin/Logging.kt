@@ -3,14 +3,10 @@ package org.woahoverflow.chad.commands.admin
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Guild.DataType
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.HashMap
-import java.util.stream.Collectors
+import java.util.*
 
 /**
  * Add logging for specific triggers
@@ -41,7 +37,7 @@ class Logging : Command.Class {
                 GuildHandler.getGuild(e.guild.longID).setObject(DataType.LOGGING, actualBoolean)
 
                 // Sends a log
-                MessageHandler.sendConfigLog("Logging", bool, java.lang.Boolean.toString(guild.getObject(Guild.DataType.LOGGING) as Boolean), e.author, e.guild)
+                MessageHandler.sendConfigLog("Logging", bool, java.lang.Boolean.toString(guild.getObject(DataType.LOGGING) as Boolean), e.author, e.guild)
 
                 // Sends the message
                 messageHandler.sendEmbed(EmbedBuilder().withDesc("Logging has been turned `$bool`."))
@@ -79,7 +75,7 @@ class Logging : Command.Class {
             }
 
             // Gets the current logging channel and makes sure it isn't null
-            val loggingChannel = guild.getObject(Guild.DataType.LOGGING_CHANNEL) as String
+            val loggingChannel = guild.getObject(DataType.LOGGING_CHANNEL) as String
 
             // Sends the log
             if (loggingChannel.equals("none", ignoreCase = true))
@@ -88,7 +84,7 @@ class Logging : Command.Class {
                 MessageHandler.sendConfigLog("Logging Channel", formattedString.trim { it <= ' ' }, e.guild.getChannelByID(java.lang.Long.parseLong(loggingChannel)).name, e.author, e.guild)
 
             // Send Message
-            messageHandler.sendEmbed(EmbedBuilder().withDesc("Logging channel has been changed to `" + channel!!.name + "`."))
+            messageHandler.sendEmbed(EmbedBuilder().withDesc("Logging channel has been changed to `" + channel.name + "`."))
 
             // Sets in the database
             GuildHandler.getGuild(e.guild.longID).setObject(DataType.LOGGING, loggingChannel)

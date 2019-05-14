@@ -44,7 +44,7 @@ object Command {
         /**
          * @return The command's class
          */
-        val commandClass: Command.Class
+        val commandClass: Class
 
         /**
          * The command's aliases
@@ -63,7 +63,7 @@ object Command {
          * @param commandClass The command's class
          * @param commandAliases The command's aliases
          */
-        constructor(category: Category, commandClass: Command.Class, vararg commandAliases: String) {
+        constructor(category: Category, commandClass: Class, vararg commandAliases: String) {
             this.cmdAliases = commandAliases
             commandCategory = category
             this.commandClass = commandClass
@@ -76,7 +76,7 @@ object Command {
          * @param category The command's category
          * @param commandClass The command's class
          */
-        constructor(category: Category, commandClass: Command.Class) {
+        constructor(category: Category, commandClass: Class) {
             commandCategory = category
             this.commandClass = commandClass
             usesAliases = false

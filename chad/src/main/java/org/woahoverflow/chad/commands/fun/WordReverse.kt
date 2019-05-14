@@ -26,7 +26,7 @@ class WordReverse : Command.Class {
         // Gets the word from all the arguments
         val stringBuilder = StringBuilder()
         for (s in args)
-            stringBuilder.append(s).append(' ')
+            stringBuilder.append("$s ")
 
         // Gets the word & sends
         val word = stringBuilder.toString().trim { it <= ' ' }

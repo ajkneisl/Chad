@@ -13,9 +13,6 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class Guild {
     /**
-     * The guild's ID
-     */
-    /**
      * Gets the guild's ID
      *
      * @return The guild's ID

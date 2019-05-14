@@ -70,8 +70,8 @@ object XPHandler {
             break
         }
 
-        if (!message.mentions.isEmpty()) score + 1
-        if (!message.attachments.isEmpty()) score + 1
+        if (message.mentions.isNotEmpty()) score + 1
+        if (message.attachments.isNotEmpty()) score + 1
 
         return when {
             1 >= score -> 1

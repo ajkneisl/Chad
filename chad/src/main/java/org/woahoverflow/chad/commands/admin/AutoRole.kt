@@ -66,9 +66,9 @@ class AutoRole : Command.Class {
 
                 // Gets roles with the text said
                 for (s in args) {
-                    stringBuilder.append(s).append(' ')
+                    stringBuilder.append("$s ")
                     roles = RequestBuffer.request<List<IRole>> { e.guild.getRolesByName(stringBuilder.toString().trim { it <= ' ' }) }.get()
-                    if (!roles.isEmpty())
+                    if (roles.isNotEmpty())
                         break
                 }
 

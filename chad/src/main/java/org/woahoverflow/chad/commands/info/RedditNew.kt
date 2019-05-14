@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.commands.info
 
-import org.json.JSONObject
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.Reddit
@@ -9,9 +8,7 @@ import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.HashMap
-import java.util.Objects
+import java.util.*
 
 /**
  * Gets a new post from a subreddit
@@ -39,7 +36,7 @@ class RedditNew : Command.Class {
             return
         }
 
-        post = post!!.getJSONObject("data")
+        post = post.getJSONObject("data")
 
         val embedBuilder = EmbedBuilder()
 

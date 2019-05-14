@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.`fun`
 
+import kotlinx.coroutines.delay
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
@@ -34,7 +35,7 @@ class RussianRoulette : Command.Class {
 
         // Assigns the user to the mentioned user
         val unFinalUser: IUser
-        if (!e.message.mentions.isEmpty())
+        if (e.message.mentions.isNotEmpty())
             unFinalUser = e.message.mentions[0]
         else {
             messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS, prefix + "rrl [@user]")
@@ -75,11 +76,7 @@ class RussianRoulette : Command.Class {
             }
 
             // Sleeps a second so it doesn't go so fast
-            try {
-                TimeUnit.SECONDS.sleep(1)
-            } catch (e1: InterruptedException) {
-                e1.printStackTrace()
-            }
+            delay(1000L)
 
             // Increases the timeout value
             timeout++
@@ -120,6 +117,6 @@ class RussianRoulette : Command.Class {
         }
 
         // Sends the message
-        messageHandler.sendMessage('`'.toString() + win!!.name + "` is the winner! \n`" + loser!!.name + "`\uD83D\uDD2B")
+        messageHandler.sendMessage('`'.toString() + win.name + "` is the winner! \n`" + loser.name + "`\uD83D\uDD2B")
     }
 }
