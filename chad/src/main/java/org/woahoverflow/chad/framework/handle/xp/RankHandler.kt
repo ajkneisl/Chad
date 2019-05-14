@@ -13,7 +13,7 @@ object RankHandler {
      * The different ranks in Chad, with XP being the amount of XP to receive that rank
      */
     enum class Rank(val xp: Long, val id: Int) {
-        NONE(0, 0), ONE(50, 1), TWO(400, 2), THREE(1000, 3), FOUR(2000, 4), FIVE(3000, 5), SIX(4500, 6), SEVEN(6000, 7), EIGHT(8000, 8), NINE(10000, 9), TEN(15000, 10)
+        NONE(0, 0), ONE(50, 1), TWO(400, 2), THREE(1000, 3), FOUR(2000, 4), FIVE(3000, 5), SIX(4500, 6), SEVEN(6000, 7), EIGHT(8000, 8), NINE(10000, 9), TEN(15000, 10), ELEVEN(20000, 11), TWELVE(30000, 12), THIRTEEN(45000, 13), FOURTEEN(70000, 14), FIFTEEN(100000, 15)
     }
 
     /**
@@ -21,17 +21,9 @@ object RankHandler {
      */
     private val ranks = object : ConcurrentHashMap<Int, Rank>() {
         init {
-            put(0, RankHandler.Rank.NONE)
-            put(1, RankHandler.Rank.ONE)
-            put(2, RankHandler.Rank.TWO)
-            put(3, RankHandler.Rank.THREE)
-            put(4, RankHandler.Rank.FOUR)
-            put(5, RankHandler.Rank.FIVE)
-            put(6, RankHandler.Rank.SIX)
-            put(7, RankHandler.Rank.SEVEN)
-            put(8, RankHandler.Rank.EIGHT)
-            put(9, RankHandler.Rank.NINE)
-            put(10, RankHandler.Rank.TEN)
+            for (rank in Rank.values()) {
+                put(rank.id, rank)
+            }
         }
     }
 

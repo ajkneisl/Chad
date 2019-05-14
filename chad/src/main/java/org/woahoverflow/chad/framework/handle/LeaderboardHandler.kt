@@ -27,7 +27,7 @@ object LeaderboardHandler {
      * The type of leaderboard (from the instances)
      */
     enum class LeaderboardType {
-        MONEY, XP, WORLD
+        MONEY, XP
     }
 
     /**
@@ -191,8 +191,6 @@ object LeaderboardHandler {
                 ChadInstance.getLogger().debug("Completed XP leaderboard refresh! Took ${System.currentTimeMillis()-start}ms")
                 return TimeResult(users.size, System.currentTimeMillis()-start)
             }
-
-            LeaderboardHandler.LeaderboardType.WORLD -> TODO()
         }
     }
 

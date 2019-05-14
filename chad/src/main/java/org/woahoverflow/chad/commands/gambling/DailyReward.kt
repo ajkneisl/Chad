@@ -37,7 +37,7 @@ class DailyReward : Class {
         }
 
         // Gets the date of their last daily reward
-        val lastDailyReward = player.getObject(DataType.LAST_DAILY_REWARD) as Long // TODO
+        val lastDailyReward = player.getObject(DataType.LAST_DAILY_REWARD) as Long
 
         val difference = Util.howOld(lastDailyReward)
         val day = 24 * 60 * 60 * 1000

@@ -71,8 +71,6 @@ class Init {
              * Syncs with the website
              * Updates money leaderboard
              *
-             * TODO add other leaderboard types
-             *
              * # 5 minutes
              */
             timer.schedule(object : TimerTask(){
