@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.framework.handle
 
 import com.google.common.net.HttpHeaders
+import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
@@ -12,7 +13,9 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.*
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
 import javax.net.ssl.HttpsURLConnection
 
 /** This class sorts all initialization procedures @author sho */
@@ -32,24 +35,22 @@ fun init() {
     val start = System.currentTimeMillis()
     ChadInstance.getLogger().info("Starting initialization...")
 
-    Init.timers()
-    Init.data()
+    val initInstance = Init()
+    initInstance.timers()
+    initInstance.data()
 
-    if (Init.start()) ChadInstance.getLogger().info("Completed initialization! Took {}ms", System.currentTimeMillis()-start)
+    if (initInstance.start()) ChadInstance.getLogger().info("Completed initialization! Took {}ms", System.currentTimeMillis()-start)
 }
 
-object Init {
-    private val threads = ArrayList<Thread>()
+class Init {
+    private val threads = ArrayList<Job>()
 
-    @JvmStatic
     fun start(): Boolean {
         var active = true
 
-        for (thread in threads) thread.start()
-
         while (active) {
             var threadAlive = false
-            for (thread in threads) if (thread.isAlive) threadAlive = true
+            for (thread in threads) if (thread.isActive) threadAlive = true
 
             active = threadAlive
         }
@@ -61,9 +62,8 @@ object Init {
     /**
      * Initializes Timers
      */
-    @JvmStatic
     fun timers() {
-        threads.add(Thread {
+        val job = GlobalScope.launch(CoroutineName("Initialization Handler")) {
             val timer = ChadInstance.getTimer()
 
             /**
@@ -114,15 +114,16 @@ object Init {
                     ChadInstance.getLogger().debug("Reset all Reddit data!")
                 }
             }, 0, 86400 * 1000)
-        })
+        }
+
+        threads.add(job)
     }
 
     /**
      * Initializes stored data
      */
-    @JvmStatic
     fun data() {
-        threads.add(Thread {
+        val job = GlobalScope.launch(CoroutineName("Initialization Handler")) {
             Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/swears.json")).forEach { word -> ChadVar.swearWords.add(word as String) }
             Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/chad/8ball.json")).forEach { word -> ChadVar.eightBallResults.add(word as String) }
             Util.refreshDevelopers()
@@ -140,6 +141,8 @@ object Init {
             } catch (e1: IOException) {
                 e1.printStackTrace()
             }
-        })
+        }
+
+        threads.add(job)
     }
 }

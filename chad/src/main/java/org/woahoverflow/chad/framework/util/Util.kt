@@ -31,7 +31,7 @@ object Util {
     /**
      * The user agent
      */
-    private val USER_AGENT = "Mozilla/5.0"
+    private const val USER_AGENT = "Mozilla/5.0"
 
     /**
      * Gets the current timestamp
@@ -41,12 +41,11 @@ object Util {
     val timeStamp: String = SimpleDateFormat("MM/dd/yyyy hh:mm").format(Calendar.getInstance().time)
 
     /**
-     * Gets a String from an http
+     * Gets a String from a HTTPS connection.
      *
      * @param url The URL to request
-     * @return The gotten String
+     * @return The retrieved String
      */
-    @Synchronized
     fun httpGet(url: String): String {
         try {
             val obj = URL(url)

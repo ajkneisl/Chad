@@ -33,9 +33,9 @@ object ArgumentHandler {
         ChadInstance.getLogger().debug("Checking arguments...")
 
         for (arg in args) {
-            if (LAUNCH_ARGUMENTS.keys.contains(arg.toUpperCase().substring(1))) {
-                ChadInstance.getLogger().debug("{} has been enabled!", arg.toUpperCase().substring(1))
-                LAUNCH_ARGUMENTS[arg.toUpperCase().substring(1)] = true
+            if (LAUNCH_ARGUMENTS.keys.contains(arg)) {
+                ChadInstance.getLogger().debug("{} has been enabled!", arg)
+                LAUNCH_ARGUMENTS[arg.toUpperCase()] = true
             }
         }
 
