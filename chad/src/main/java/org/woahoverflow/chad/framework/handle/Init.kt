@@ -65,15 +65,13 @@ class Init {
      */
     fun timers() {
         val job = GlobalScope.launch(CoroutineName("Initialization Handler")) {
-            val timer = ChadInstance.getTimer()
-
             /**
              * Syncs with the website
              * Updates money leaderboard
              *
              * # 5 minutes
              */
-            timer.schedule(object : TimerTask(){
+            ChadInstance.getTimer().schedule(object : TimerTask(){
                 override fun run() {
                     sync(ChadInstance.cli)
 
@@ -92,7 +90,7 @@ class Init {
              * # 5 minutes
              */
             if (ChadVar.rotatePresence) {
-                timer.schedule(object : TimerTask() {
+                ChadInstance.getTimer().schedule(object : TimerTask() {
                     override fun run() {
                         if (!ChadVar.rotatePresence) return
 
@@ -106,7 +104,7 @@ class Init {
              *
              * # 1 day
              */
-            timer.schedule(object : TimerTask() {
+            ChadInstance.getTimer().schedule(object : TimerTask() {
                 override fun run() {
                     Reddit.subreddits.clear()
 

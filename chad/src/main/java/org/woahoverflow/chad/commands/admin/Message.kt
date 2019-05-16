@@ -2,13 +2,14 @@ package org.woahoverflow.chad.commands.admin
 
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Guild.DataType
 import org.woahoverflow.chad.framework.util.getChannelName
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IChannel
-import sx.blah.discord.util.RequestBuffer
 import java.util.*
 import java.util.regex.Pattern
 
@@ -81,7 +82,12 @@ class Message : Command.Class {
                 val stringBuilder = StringBuilder()
                 for (arg in args) stringBuilder.append("$arg ")
 
-                val channels = RequestBuffer.request<List<IChannel>> { e.guild.getChannelsByName(stringBuilder.toString().trim(' ')) }.get()
+                val channels = request {
+                    e.guild.getChannelsByName(stringBuilder.toString().trim(' '))
+                }.also {
+                    if (it.isUnit() || it.result !is List<*>)
+                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                }.result as List<IChannel>
 
                 if (channels.isEmpty()) {
                     messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im setchannel [type] [channel name]")

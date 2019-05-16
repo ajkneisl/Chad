@@ -53,8 +53,7 @@ class RockPaperScissors : Command.Class {
         // 'i2' is meant for the bot's input
 
         // Builds Chad's value
-        val chadValue: String
-        chadValue = when (i2) {
+        val chadValue: String = when (i2) {
             0 -> "Rock"
             1 -> "Paper"
             2 -> "Scissors"

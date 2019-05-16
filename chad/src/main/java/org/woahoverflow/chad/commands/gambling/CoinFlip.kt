@@ -1,10 +1,11 @@
 package org.woahoverflow.chad.commands.gambling
 
 import kotlinx.coroutines.delay
-import org.woahoverflow.chad.framework.handle.coroutine.CoroutineManager
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
+import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Player.DataType
@@ -86,7 +87,12 @@ class CoinFlip : Command.Class {
                 return
             }
 
-            val acceptMessage = RequestBuffer.request<IMessage> { e.channel.sendMessage("Do you accept `${e.author.name}`'s challenge, `${user.name}`?") }.get()
+            val acceptMessage = request {
+                e.channel.sendMessage("Do you accept `${e.author.name}`'s challenge, `${user.name}`?")
+            }.also {
+                if (it.isUnit() || it.result !is IMessage)
+                    return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+            }.result as IMessage
 
             val rb = RequestBuilder(e.client)
             rb.shouldBufferRequests(true)
@@ -111,8 +117,19 @@ class CoinFlip : Command.Class {
 
                 timeout++
 
-                val yReaction = RequestBuffer.request<IReaction> { acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE")) }.get()
-                val nReaction = RequestBuffer.request<IReaction> { acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3")) }.get()
+                val yReaction = request {
+                    acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))
+                }.also {
+                    if (it.isUnit() || it.result !is IReaction)
+                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                }.result as IReaction
+
+                val nReaction = request {
+                    acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))
+                }.also {
+                    if (it.isUnit() || it.result !is IReaction)
+                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                }.result as IReaction
 
                 if (yReaction.getUserReacted(user)) reacted = true
 
@@ -131,7 +148,12 @@ class CoinFlip : Command.Class {
                 return
             }
 
-            val pick = RequestBuffer.request<IMessage> { e.channel.sendMessage("**X** TAILS\n**O** HEADS") }.get()
+            val pick = request {
+                e.channel.sendMessage("**X** TAILS\n**O** HEADS")
+            }.also {
+                if (it.isUnit() || it.result !is IMessage)
+                    return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+            }.result as IMessage
 
             // Request buffer to apply the reactions
             val r = RequestBuilder(e.client)
@@ -157,10 +179,20 @@ class CoinFlip : Command.Class {
                 }
 
                 // X reaction
-                val x = RequestBuffer.request<IReaction> { pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFD")) }.get()
+                val x = request {
+                    pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFD"))
+                }.also {
+                    if (it.isUnit() || it.result !is IReaction)
+                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                }.result as IReaction
 
                 // O reaction
-                val o = RequestBuffer.request<IReaction> { pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF4")) }.get()
+                val o = request {
+                    pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF4"))
+                }.also {
+                    if (it.isUnit() || it.result !is IReaction)
+                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                }.result as IReaction
 
                 if (tails == null) {
                     if (x.getUserReacted(user)) {

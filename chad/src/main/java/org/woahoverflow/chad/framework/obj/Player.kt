@@ -14,7 +14,7 @@ class Player {
     /**
      * The user's ID
      */
-    val userId: Long
+    private val userId: Long
 
     /**
      * The player's full set of data

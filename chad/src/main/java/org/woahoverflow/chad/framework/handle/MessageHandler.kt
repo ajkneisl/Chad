@@ -146,6 +146,13 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
         }.get()
     }
 
+    /**
+     * Sends the initialized embed builder.
+     */
+    fun sendEmbed(init: EmbedBuilder.() -> Unit) {
+        sendEmbed(EmbedBuilder().apply(init))
+    }
+
     companion object {
         /**
          * Sends an embed to the guild's logging channel

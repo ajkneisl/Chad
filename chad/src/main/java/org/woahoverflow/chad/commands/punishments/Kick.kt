@@ -3,7 +3,6 @@ package org.woahoverflow.chad.commands.punishments
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Guild.DataType
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IUser
@@ -11,8 +10,7 @@ import sx.blah.discord.handle.obj.Permissions
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.MessageBuilder
 import sx.blah.discord.util.PermissionUtils
-
-import java.util.HashMap
+import java.util.*
 import java.util.regex.Pattern
 
 /**

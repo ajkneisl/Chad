@@ -164,5 +164,5 @@ object JsonHandler {
     fun readFile(file: String): org.json.JSONObject? = org.json.JSONObject(String(file.byteInputStream().readBytes()))
 
     var fileLocation: File = File("")
-    var botLocation: File = File("")
+    private var botLocation: File = File("")
 }

@@ -79,7 +79,7 @@ object RankHandler {
     /**
      * Gets the rank above the inputted rank
      */
-    fun getUpperRank(rank: Rank): Rank? = getRankByID(rank.id + 1)
+    private fun getUpperRank(rank: Rank): Rank? = getRankByID(rank.id + 1)
 
     /**
      * Gets the rank below the inputted rank

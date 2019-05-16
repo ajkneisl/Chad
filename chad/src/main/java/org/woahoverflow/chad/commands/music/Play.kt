@@ -8,6 +8,7 @@ import org.woahoverflow.chad.core.ChadVar.playerManager
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PermissionHandler
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
@@ -50,9 +51,9 @@ class Play : Command.Class {
             return
         }
 
-        val hasPermission = RequestBuffer.request<Boolean> {
+        val hasPermission = request {
             userChannel.getModifiedPermissions(e.client.ourUser).contains(Permissions.VOICE_CONNECT)
-        }.get()
+        }.result as? Boolean ?: return
 
         if (!hasPermission && join) {
             messageHandler.sendError("I don't have permission to join ${userChannel.name}!")

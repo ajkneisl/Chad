@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -58,7 +59,14 @@ class Purge : Command.Class {
         RequestBuffer.request<List<IMessage>> { e.channel.getMessageHistory(Integer.parseInt(args[0])).bulkDelete() }
 
         // Sends message confirming
-        val botConfirm = RequestBuffer.request<IMessage> { e.channel.sendMessage("Cleared `" + args[0] + "` messages from `" + e.channel.name + '`'.toString()) }.get()
+        val botConfirm = request {
+            e.channel.sendMessage("Cleared `" + args[0] + "` messages from `${e.channel.name }`.")
+        }.also {
+            if (it.result !is IMessage) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                return
+            }
+        }.result as IMessage
 
         // Waits 2 seconds, then deletes the bot's message
         delay(2000L)

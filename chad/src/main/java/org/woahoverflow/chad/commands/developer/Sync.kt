@@ -3,6 +3,7 @@ package org.woahoverflow.chad.commands.developer
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.LeaderboardHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.sync.sync
@@ -43,9 +44,14 @@ class Sync : Command.Class {
             }
 
             "leaderboard" -> {
-                val message = RequestBuffer.request<IMessage> {
+                val message = request {
                     e.channel.sendMessage("Syncing leaderboards...")
-                }.get()
+                }.also {
+                    if (it.result !is IMessage) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                        return
+                    }
+                }.result as IMessage
 
                 val ref = LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.MONEY)
                 val ref2 = LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.XP)

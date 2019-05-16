@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.commands.music
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.handle.getMusicManager
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -17,13 +18,14 @@ import java.util.*
 class Queue : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val messageHandler = MessageHandler(e.channel, e.author)
-        val chadChannel = RequestBuffer.request<IVoiceChannel> { e.client.ourUser.getVoiceStateForGuild(e.guild).channel }.get()
-
-        // If Chad's not even joined
-        if (chadChannel == null) {
-            messageHandler.sendEmbed(EmbedBuilder().withDesc("There's no things currently playing!"))
-            return
-        }
+        val chadChannel = request {
+            e.client.ourUser.getVoiceStateForGuild(e.guild).channel
+        }.also {
+            if (it.result !is IVoiceChannel) {
+                messageHandler.sendEmbed(EmbedBuilder().withDesc("There's no things currently playing!"))
+                return
+            }
+        }.result as IVoiceChannel
 
         val manager = getMusicManager(e.guild, chadChannel)
         val queue = manager.scheduler.fullQueue

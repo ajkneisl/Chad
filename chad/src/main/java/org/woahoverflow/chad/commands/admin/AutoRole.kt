@@ -2,16 +2,15 @@ package org.woahoverflow.chad.commands.admin
 
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.util.EmbedBuilder
-import sx.blah.discord.util.RequestBuffer
-
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 /**
  * Automatically adds a role to a user when they join a server
@@ -67,7 +66,14 @@ class AutoRole : Command.Class {
                 // Gets roles with the text said
                 for (s in args) {
                     stringBuilder.append("$s ")
-                    roles = RequestBuffer.request<List<IRole>> { e.guild.getRolesByName(stringBuilder.toString().trim { it <= ' ' }) }.get()
+
+                    roles = request {
+                        e.guild.getRolesByName(stringBuilder.toString().trim { it <= ' ' })
+                    }.also {
+                        if (it.isUnit() || it.result !is List<*>)
+                            return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                    }.result as List<IRole>
+
                     if (roles.isNotEmpty())
                         break
                 }

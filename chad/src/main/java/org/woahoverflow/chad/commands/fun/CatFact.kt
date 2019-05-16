@@ -5,10 +5,7 @@ import org.woahoverflow.chad.framework.handle.JsonHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.util.EmbedBuilder
-
-import java.util.HashMap
-import java.util.Objects
+import java.util.*
 
 /**
  * Gets a random cat fact from an API
@@ -21,7 +18,7 @@ class CatFact : Command.Class {
         val fact = Objects.requireNonNull<JSONObject>(JsonHandler.read("https://catfact.ninja/fact")).getString("fact")
 
         // Sends the fact
-        MessageHandler(e.channel, e.author).credit("catfact.ninja").sendEmbed(EmbedBuilder().withDesc(fact))
+        MessageHandler(e.channel, e.author).credit("catfact.ninja").sendEmbed { withDesc(fact) }
     }
 
     override suspend fun help(e: MessageEvent) {

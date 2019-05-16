@@ -17,7 +17,7 @@ class Guild {
      *
      * @return The guild's ID
      */
-    val guildID: Long
+    private val guildID: Long
 
     /**
      * The guild's full set of data
@@ -304,7 +304,7 @@ class Guild {
     /**
      * Updates the statistics into the database
      */
-    fun updateStatistics() {
+    private fun updateStatistics() {
         setObject(DataType.COMMANDS_SENT, commandsSent)
         setObject(DataType.MESSAGES_SENT, messagesSent)
     }

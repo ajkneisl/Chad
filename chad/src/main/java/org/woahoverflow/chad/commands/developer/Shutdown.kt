@@ -3,6 +3,7 @@ package org.woahoverflow.chad.commands.developer
 import kotlinx.coroutines.delay
 import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.impl.obj.ReactionEmoji
@@ -24,7 +25,12 @@ class Shutdown : Command.Class {
         val messageHandler = MessageHandler(e.channel, e.author)
 
         // Requests to send the confirmation message then gets it
-        val confirm = RequestBuffer.request<IMessage> { e.channel.sendMessage("Are you sure you want to do this?") }.get()
+        val confirm = request { e.channel.sendMessage("Are you sure you want to do this?") }.also {
+            if (it.result !is IMessage) {
+                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                return
+            }
+        }.result as IMessage
 
         // The emojis used in the message
         val yes = ReactionEmoji.of("\uD83C\uDDFE")

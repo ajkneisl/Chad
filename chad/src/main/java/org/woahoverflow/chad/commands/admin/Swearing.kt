@@ -3,12 +3,10 @@ package org.woahoverflow.chad.commands.admin
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Guild.DataType
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
-
-import java.util.HashMap
+import java.util.*
 
 /**
  * Filters through swears

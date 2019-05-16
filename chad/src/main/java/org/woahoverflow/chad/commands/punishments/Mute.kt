@@ -1,13 +1,13 @@
 package org.woahoverflow.chad.commands.punishments
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.handle.obj.Permissions
-import sx.blah.discord.util.RequestBuffer
-
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
@@ -35,15 +35,26 @@ class Mute : Command.Class {
                     sb.append("**Muted Users**")
 
                     for (pair in MUTED_USERS) {
-                        val ch = RequestBuffer.request<IChannel?> { e.guild.getChannelByID(pair.key) }.get()
+                        val ch = request {
+                            e.guild.getChannelByID(pair.key)
+                        }.also {
+                            if (it.isUnit() || it.result !is IChannel)
+                                return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                        }.result as IChannel? ?: continue
+
                         val muted = pair.value
 
-                        if (ch == null || ch.isDeleted) continue
+                        if (ch.isDeleted) continue
 
                         sb.append("\n`${ch.name}`: ```")
 
                         for (mutedUser in muted) {
-                            val userName = RequestBuffer.request<IUser?> { e.guild.getUserByID(mutedUser) }.get() ?: continue
+                            val userName = request {
+                                e.guild.getUserByID(mutedUser)
+                            }.also {
+                                if (it.isUnit() || it.result !is IUser)
+                                    return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
+                            }.result as IUser? ?: continue
 
                             sb.append("$userName, ")
                         }
