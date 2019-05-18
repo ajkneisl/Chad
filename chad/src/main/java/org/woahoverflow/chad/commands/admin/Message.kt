@@ -2,7 +2,7 @@ package org.woahoverflow.chad.commands.admin
 
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.asIChannelList
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
@@ -84,10 +84,7 @@ class Message : Command.Class {
 
                 val channels = request {
                     e.guild.getChannelsByName(stringBuilder.toString().trim(' '))
-                }.also {
-                    if (it.isUnit() || it.result !is List<*>)
-                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                }.result as List<IChannel>
+                }.asIChannelList()
 
                 if (channels.isEmpty()) {
                     messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}im setchannel [type] [channel name]")

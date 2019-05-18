@@ -3,15 +3,14 @@ package org.woahoverflow.chad.commands.`fun`
 import kotlinx.coroutines.delay
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.asIMessage
+import org.woahoverflow.chad.framework.handle.coroutine.asIReaction
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.impl.obj.ReactionEmoji
-import sx.blah.discord.handle.obj.IMessage
-import sx.blah.discord.handle.obj.IReaction
 import sx.blah.discord.handle.obj.IUser
-import sx.blah.discord.util.RequestBuffer
 import sx.blah.discord.util.RequestBuilder
 import java.security.SecureRandom
 import java.util.*
@@ -48,12 +47,9 @@ class RussianRoulette : Command.Class {
         }
 
         // Sends the invitation message
-        val acceptMessage = request { e.channel.sendMessage("Do you accept `" + e.author.name + "`'s challenge, `" + unFinalUser.name + "`?") }.also {
-            if (it.result !is IMessage) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                return
-            }
-        }.result as IMessage
+        val acceptMessage = request {
+            e.channel.sendMessage("Do you accept `" + e.author.name + "`'s challenge, `" + unFinalUser.name + "`?")
+        }.asIMessage()
 
         // Creates a request buffer and reacts with the Y and N emojis
         val rb = RequestBuilder(e.client)
@@ -84,19 +80,13 @@ class RussianRoulette : Command.Class {
             timeout++
 
             // Gets both reactions
-            val yReaction = request { acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE")) }.also {
-                if (it.result !is IReaction) {
-                    messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                    return
-                }
-            }.result as IReaction
+            val yReaction = request {
+                acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))
+            }.asIReaction()
 
-            val nReaction = request { acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3")) }.also {
-                if (it.result !is IReaction) {
-                    messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                    return
-                }
-            }.result as IReaction
+            val nReaction = request {
+                acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))
+            }.asIReaction()
 
             // Checks if the user reacted to the Y
             if (yReaction.getUserReacted(unFinalUser))

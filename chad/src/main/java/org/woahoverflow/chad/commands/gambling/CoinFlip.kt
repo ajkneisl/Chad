@@ -4,7 +4,8 @@ import kotlinx.coroutines.delay
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
-import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.asIMessage
+import org.woahoverflow.chad.framework.handle.coroutine.asIReaction
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
@@ -12,8 +13,6 @@ import org.woahoverflow.chad.framework.obj.Player.DataType
 import org.woahoverflow.chad.framework.util.validBet
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.impl.obj.ReactionEmoji
-import sx.blah.discord.handle.obj.IMessage
-import sx.blah.discord.handle.obj.IReaction
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
@@ -89,10 +88,7 @@ class CoinFlip : Command.Class {
 
             val acceptMessage = request {
                 e.channel.sendMessage("Do you accept `${e.author.name}`'s challenge, `${user.name}`?")
-            }.also {
-                if (it.isUnit() || it.result !is IMessage)
-                    return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-            }.result as IMessage
+            }.asIMessage()
 
             val rb = RequestBuilder(e.client)
             rb.shouldBufferRequests(true)
@@ -119,17 +115,11 @@ class CoinFlip : Command.Class {
 
                 val yReaction = request {
                     acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))
-                }.also {
-                    if (it.isUnit() || it.result !is IReaction)
-                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                }.result as IReaction
+                }.asIReaction()
 
                 val nReaction = request {
                     acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))
-                }.also {
-                    if (it.isUnit() || it.result !is IReaction)
-                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                }.result as IReaction
+                }.asIReaction()
 
                 if (yReaction.getUserReacted(user)) reacted = true
 
@@ -150,10 +140,7 @@ class CoinFlip : Command.Class {
 
             val pick = request {
                 e.channel.sendMessage("**X** TAILS\n**O** HEADS")
-            }.also {
-                if (it.isUnit() || it.result !is IMessage)
-                    return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-            }.result as IMessage
+            }.asIMessage()
 
             // Request buffer to apply the reactions
             val r = RequestBuilder(e.client)
@@ -181,18 +168,12 @@ class CoinFlip : Command.Class {
                 // X reaction
                 val x = request {
                     pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFD"))
-                }.also {
-                    if (it.isUnit() || it.result !is IReaction)
-                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                }.result as IReaction
+                }.asIReaction()
 
                 // O reaction
                 val o = request {
                     pick.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF4"))
-                }.also {
-                    if (it.isUnit() || it.result !is IReaction)
-                        return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                }.result as IReaction
+                }.asIReaction()
 
                 if (tails == null) {
                     if (x.getUserReacted(user)) {

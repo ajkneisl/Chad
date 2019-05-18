@@ -2,7 +2,7 @@ package org.woahoverflow.chad.commands.admin
 
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
-import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.asIRoleList
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager
 import org.woahoverflow.chad.framework.obj.Command
@@ -69,10 +69,7 @@ class AutoRole : Command.Class {
 
                     roles = request {
                         e.guild.getRolesByName(stringBuilder.toString().trim { it <= ' ' })
-                    }.also {
-                        if (it.isUnit() || it.result !is List<*>)
-                            return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                    }.result as List<IRole>
+                    }.asIRoleList()
 
                     if (roles.isNotEmpty())
                         break

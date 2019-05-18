@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.commands.admin
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.coroutine.asBoolean
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -19,12 +20,9 @@ class Nsfw : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val messageHandler = MessageHandler(e.channel, e.author)
 
-        val hasPermission = request { e.channel.getModifiedPermissions(e.client.ourUser).contains(Permissions.MANAGE_CHANNEL) }.also {
-            if (it.result !is Boolean) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                return
-            }
-        }.result as Boolean
+        val hasPermission = request {
+            e.channel.getModifiedPermissions(e.client.ourUser).contains(Permissions.MANAGE_CHANNEL)
+        }.asBoolean()
 
         // Makes sure they've got permissions
         if (!hasPermission) {
@@ -32,12 +30,7 @@ class Nsfw : Command.Class {
             return
         }
 
-        val nsfw = request { e.channel.isNSFW }.also {
-            if (it.result !is Boolean) {
-                messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                return
-            }
-        }.result as Boolean
+        val nsfw = request { e.channel.isNSFW }.asBoolean()
 
         // If the channel is NSFW, revoke, if not, add
         if (nsfw) {

@@ -3,6 +3,7 @@ package org.woahoverflow.chad.commands.admin
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PermissionHandler
+import org.woahoverflow.chad.framework.handle.coroutine.asIRoleList
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Command.Class
@@ -10,7 +11,6 @@ import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.util.EmbedBuilder
-import sx.blah.discord.util.RequestBuffer
 import java.util.*
 import java.util.regex.Pattern
 
@@ -43,14 +43,7 @@ class Permissions : Class {
                 stringBuilder.append("$s ")
 
                 // Requests the roles from the guild
-                val rolesList = request {
-                    e.guild.roles
-                }.also {
-                    if (it.result !is List<*>) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-                        return
-                    }
-                }.result as List<IRole>
+                val rolesList = request { e.guild.roles }.asIRoleList()
 
                 // Checks if any of the roles equal
                 for (rol in rolesList)

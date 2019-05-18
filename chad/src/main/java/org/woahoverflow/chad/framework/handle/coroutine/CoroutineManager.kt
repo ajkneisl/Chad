@@ -125,15 +125,31 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
         }
 
         launch {
-            ChadInstance.getLogger().debug("Starting task for user ${event.author.name} running $commandName")
+            ChadInstance.getLogger().debug("Starting task for user ${event.author.stringID}: $commandName")
             synchronized(users) {
                 users[event.author] = if (users[event.author] != null) users[event.author]!! else 0 + 1
             }
 
-            if (args.size == 1 && args[0].equals("help", ignoreCase = true)) command.commandClass.help(event) else command.commandClass.run(event, args)
+            val successful: Boolean = try {
+                if (args.size == 1 && args[0].equals("help", ignoreCase = true))
+                    command.commandClass.help(event)
+                else command.commandClass.run(event, args)
 
-            users[event.author] = users[event.author]!! - 1
-            ChadInstance.getLogger().debug("Finished task for using ${event.author.name}")
+                true
+            } catch (ex: Exception) {
+                request { event.channel.sendMessage("There was an issue running that command!\nError: `${ex.message}`") }
+                false
+            }
+
+            synchronized(users) {
+                users[event.author] = users[event.author]!! - 1
+            }
+
+            if (successful) {
+                ChadInstance.getLogger().debug("Finished task successfully for user ${event.author.name}")
+            } else {
+                ChadInstance.getLogger().debug("Finished task unsuccessfully for user ${event.author.name}")
+            }
         }
     }
 

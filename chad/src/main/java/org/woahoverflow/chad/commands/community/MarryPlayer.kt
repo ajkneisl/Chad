@@ -4,15 +4,14 @@ import kotlinx.coroutines.delay
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
-import org.woahoverflow.chad.framework.handle.coroutine.isUnit
+import org.woahoverflow.chad.framework.handle.coroutine.asIMessage
+import org.woahoverflow.chad.framework.handle.coroutine.asIReaction
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Player.DataType
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.impl.obj.ReactionEmoji
-import sx.blah.discord.handle.obj.IMessage
-import sx.blah.discord.handle.obj.IReaction
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuilder
 import java.util.*
@@ -80,10 +79,7 @@ class MarryPlayer : Command.Class {
         // Sends the invitation message
         val acceptMessage = request {
             e.channel.sendMessage("Will you marry `" + e.author.name + "`, `" + otherPerson.name + "`?")
-        }.also {
-            if (it.isUnit() || it.result !is IMessage)
-                return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-        }.result as IMessage
+        }.asIMessage()
 
         // Creates a request buffer and reacts with the Y and N emojis
         val rb = RequestBuilder(e.client)
@@ -116,17 +112,11 @@ class MarryPlayer : Command.Class {
             // Gets both reactions
             val yReaction = request {
                 acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))
-            }.also {
-                if (it.isUnit() || it.result !is IReaction)
-                    return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-            }.result as IReaction
+            }.asIReaction()
 
             val nReaction = request {
                 acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))
-            }.also {
-                if (it.isUnit() || it.result !is IReaction)
-                    return messageHandler.sendPresetError(MessageHandler.Messages.INTERNAL_EXCEPTION)
-            }.result as IReaction
+            }.asIReaction()
 
             // Checks if the user reacted to the Y
             if (yReaction.getUserReacted(otherPerson))
