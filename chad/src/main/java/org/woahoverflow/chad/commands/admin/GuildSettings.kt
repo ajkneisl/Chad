@@ -21,7 +21,7 @@ class GuildSettings : Command.Class {
         val prefix = guild.getObject(DataType.PREFIX) as String
 
         if (args.isEmpty()) {
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings **category/clearstats/stats**")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "guildsettings [category/clearstats/stats]")
             return
         }
 

@@ -6,6 +6,7 @@ import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import java.util.*
+import javax.tools.ToolProvider
 
 /**
  * Gets a random cat fact from an API

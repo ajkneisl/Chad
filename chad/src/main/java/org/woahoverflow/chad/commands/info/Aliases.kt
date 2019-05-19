@@ -26,14 +26,14 @@ class Aliases : Command.Class {
         val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
         if (args.isEmpty()) {
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases **command**")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases [command]")
             return
         }
 
         val command = args[0]
 
         if (!ChadVar.COMMANDS.keys().toList().contains(command)) {
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases **command**")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases [command]")
             return
         }
 

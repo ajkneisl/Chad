@@ -61,7 +61,7 @@ class PhotoEditor : Command.Class {
         }
 
         // If none of the arguments were met, return;
-        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "pe **deepfry**")
+        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "pe [deepfry]")
     }
 
     override suspend fun help(e: MessageEvent) {

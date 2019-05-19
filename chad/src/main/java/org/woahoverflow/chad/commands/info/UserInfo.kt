@@ -25,7 +25,7 @@ class UserInfo : Command.Class {
             u = e.message.mentions[0]
         else {
             // If user wasn't mentioned, return
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX).toString() + "userinfo **@user**")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX).toString() + "userinfo [@user]")
             return
         }
 

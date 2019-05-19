@@ -1,8 +1,11 @@
 package org.woahoverflow.chad.commands.community
 
+import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.PermissionHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
 import org.woahoverflow.chad.framework.obj.Command
+import org.woahoverflow.chad.framework.obj.Guild
 import org.woahoverflow.chad.framework.obj.Player
 import org.woahoverflow.chad.framework.util.Util
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -24,6 +27,135 @@ class Profile : Command.Class {
     }
 
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        val messageHandler = MessageHandler(e.channel, e.author)
+        val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
+
+        if (args.isNotEmpty()) {
+            when (args[0].toLowerCase()) {
+                "desc" -> {
+                    if (args.size >= 2) {
+                        val sb = StringBuilder()
+                        args.removeAt(0)
+
+                        for (arg in args) sb.append("$arg ")
+                        val final = sb.toString().removeSuffix(" ")
+
+                        if (final.length > 240) {
+                            messageHandler.sendError("Your description must be shorter than 240 characters!")
+                            return
+                        }
+
+                        PlayerHandler.getPlayer(e.author.longID).setObject(Player.DataType.PROFILE_DESCRIPTION, final)
+
+                        messageHandler.sendMessage("Changed your description to `$final`.")
+                        return
+                    } else {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}profile desc [new description]")
+                        return
+                    }
+                }
+
+                "title" -> {
+                    if (!PermissionHandler.isDeveloper(e.author)) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
+                        return
+                    }
+
+                    if (args.size >= 2) {
+                        val sb = StringBuilder()
+                        args.removeAt(0)
+
+                        for (arg in args) sb.append("$arg ")
+                        val final = sb.toString().removeSuffix(" ")
+
+                        if (final.length > 64) {
+                            messageHandler.sendError("Your title must be shorter than 64 characters!")
+                            return
+                        }
+
+                        PlayerHandler.getPlayer(e.author.longID).setObject(Player.DataType.PROFILE_TITLE, final)
+
+                        messageHandler.sendMessage("Changed your title to `$final`.")
+                        return
+                    } else {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}profile title [new title]")
+                        return
+                    }
+                }
+
+                "other" -> {
+                    if (!PermissionHandler.isDeveloper(e.author)) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
+                        return
+                    }
+
+                    args.removeAt(0) // Removes the "other"
+
+                    if (args.size < 3) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}profile other [@user] [title/description] [new title/description]")
+                        return
+                    }
+
+                    if (e.message.mentions.isEmpty()) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}profile other [@user] [title/description] [new title/description]")
+                        return
+                    } else if (!args[0].contains(e.message.mentions[0].stringID, true)) {
+                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}profile other [@user] [title/description] [new title/description]")
+                        return
+                    }
+
+                    val user = e.message.mentions[0]
+                    args.removeAt(0) // Removes the user mention
+
+                    when (args[0].toLowerCase()) {
+                        "title" -> {
+                            args.removeAt(0) // Removes "title"
+
+                            val sb = StringBuilder()
+                            args.removeAt(0)
+
+                            for (arg in args) sb.append("$arg ")
+                            val final = sb.toString().removeSuffix(" ")
+
+                            if (final.length > 64) {
+                                messageHandler.sendError("Your title must be shorter than 64 characters!")
+                                return
+                            }
+
+                            PlayerHandler.getPlayer(user.longID).setObject(Player.DataType.PROFILE_TITLE, final)
+
+                            messageHandler.sendMessage("Changed `${user.name}`'s title to `$final`.")
+                            return
+                        }
+
+                        "desc" -> {
+                            args.removeAt(0) // Removes "desc"
+
+                            val sb = StringBuilder()
+
+                            for (arg in args) sb.append("$arg ")
+                            val final = sb.toString().removeSuffix(" ")
+
+                            if (final.length > 240) {
+                                messageHandler.sendError("Your description must be shorter than 240 characters!")
+                                return
+                            }
+
+                            PlayerHandler.getPlayer(user.longID).setObject(Player.DataType.PROFILE_DESCRIPTION, final)
+
+                            messageHandler.sendMessage("Changed `${user.name}`'s description to `$final`.")
+                            return
+                        }
+
+                        else -> {
+                            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}profile other [@user] [title/description] [new title/description]")
+                            return
+                        }
+                    }
+                }
+            }
+        }
+
         val user: IUser = if (e.message.mentions.isEmpty()) {
             e.author
         } else {
@@ -34,7 +166,7 @@ class Profile : Command.Class {
         val userPlayer = PlayerHandler.getPlayer(user.longID)
 
         // The title and description for the embed builder
-        var title: String = user.name + " " + if (userPlayer.getObject(Player.DataType.PROFILE_TITLE) as String == "none") {""} else {userPlayer.getObject(Player.DataType.PROFILE_TITLE) as String}
+        var title: String = user.name + if (userPlayer.getObject(Player.DataType.PROFILE_TITLE) as String == "none") {" "} else {": " + userPlayer.getObject(Player.DataType.PROFILE_TITLE) as String}
         var description = ""
 
         val upvote: Long = userPlayer.getObject(Player.DataType.PROFILE_UPVOTE) as Long
@@ -62,11 +194,10 @@ class Profile : Command.Class {
             }
         }
 
-        MessageHandler(e.channel, e.author).sendEmbed(
-                EmbedBuilder()
-                        .withImage(user.avatarURL)
-                        .withDesc(description)
-                        .withTitle(title)
-        )
+        MessageHandler(e.channel, e.author).sendEmbed {
+           withImage(user.avatarURL)
+            withDesc(description)
+            withTitle(title)
+        }
     }
 }
