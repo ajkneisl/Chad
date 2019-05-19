@@ -16,13 +16,21 @@ class Cuddle : Command.Class {
         val messageHandler = MessageHandler(e.channel, e.author)
 
         if (e.message.mentions.isEmpty()) {
-            messageHandler.sendEmbed(EmbedBuilder().withDesc("You cuddled with yourself, how nice."))
+            messageHandler.sendEmbed { withDesc("You cuddled with yourself, how nice.") }
             return
         }
 
         val target = e.message.mentions[0]
 
-        messageHandler.sendEmbed(EmbedBuilder().withDesc("You cuddled with `" + target.name + "` without direct consent."))
+
+
+        messageHandler.sendEmbed {
+            when (target) {
+                e.author -> withDesc("You cuddled with yourself, how nice.")
+                e.client.ourUser -> withDesc("You cuddled with `${target.name}` with consent, because `${target.name}` loves you.")
+                else -> withDesc("You cuddled with `" + target.name + "` without direct consent, my man <:squadW:579798723467411494>")
+            }
+        }
     }
 
     override suspend fun help(e: MessageEvent) {
