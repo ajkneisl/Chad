@@ -60,7 +60,7 @@ private fun RequestResult.requireListType(type: Types): List<*>? {
  * Gets the [RequestResult.result] as a list of IMessage(s).
  */
 fun RequestResult.asIMessageList(): List<IMessage> {
-    val pf = requireListType(Types.IMessage) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireListType(Types.IMessage) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:L>IMessage")
 
     return pf as List<IMessage>
 }
@@ -69,7 +69,7 @@ fun RequestResult.asIMessageList(): List<IMessage> {
  * Gets the [RequestResult.result] as a list of IReaction(s).
  */
 fun RequestResult.asIReactionList(): List<IReaction> {
-    val pf = requireListType(Types.IReaction) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireListType(Types.IReaction) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:L>IReaction")
 
     return pf as List<IReaction>
 }
@@ -78,7 +78,7 @@ fun RequestResult.asIReactionList(): List<IReaction> {
  * Gets the [RequestResult.result] as a list of IGuild(s).
  */
 fun RequestResult.asIGuildList(): List<IGuild> {
-    val pf = requireListType(Types.IGuild) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireListType(Types.IGuild) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:L>IGuild")
 
     return pf as List<IGuild>
 }
@@ -87,7 +87,7 @@ fun RequestResult.asIGuildList(): List<IGuild> {
  * Gets the [RequestResult.result] as a list of IUser(s).
  */
 fun RequestResult.asIUserList(): List<IUser> {
-    val pf = requireListType(Types.IUser) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireListType(Types.IUser) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:L>IUser")
 
     return pf as List<IUser>
 }
@@ -96,7 +96,7 @@ fun RequestResult.asIUserList(): List<IUser> {
  * Gets the [RequestResult.result] as a list of IChannel(s).
  */
 fun RequestResult.asIChannelList(): List<IChannel> {
-    val pf = requireListType(Types.IChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireListType(Types.IChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:L>IChannel")
 
     return pf as List<IChannel>
 }
@@ -105,7 +105,7 @@ fun RequestResult.asIChannelList(): List<IChannel> {
  * Gets the [RequestResult.result] as a list of IVoiceChannel(s).
  */
 fun RequestResult.asIVoiceChannelList(): List<IVoiceChannel> {
-    val pf = requireListType(Types.IVoiceChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireListType(Types.IVoiceChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:L>IVoiceChannel")
 
     return pf as List<IVoiceChannel>
 }
@@ -114,7 +114,7 @@ fun RequestResult.asIVoiceChannelList(): List<IVoiceChannel> {
  * Gets the [RequestResult.result] as a list of IRole(s).
  */
 fun RequestResult.asIRoleList(): List<IRole> {
-    val pf = requireListType(Types.IRole)
+    val pf = requireListType(Types.IRole) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:L>IRole")
 
     return pf as List<IRole>
 }
@@ -123,7 +123,7 @@ fun RequestResult.asIRoleList(): List<IRole> {
  * Gets the [RequestResult.result] as an IMessage.
  */
 fun RequestResult.asIMessage(): IMessage {
-    val pf = requireType(Types.IMessage) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireType(Types.IMessage) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:IMessage")
 
     return pf as IMessage
 }
@@ -132,7 +132,7 @@ fun RequestResult.asIMessage(): IMessage {
  * Gets the [RequestResult.result] as an IGuild.
  */
 fun RequestResult.asIGuild(): IGuild {
-    val pf = requireType(Types.IGuild) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireType(Types.IGuild) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:IGuild")
 
     return pf as IGuild
 }
@@ -141,7 +141,7 @@ fun RequestResult.asIGuild(): IGuild {
  * Gets the [RequestResult.result] as an IReaction.
  */
 fun RequestResult.asIReaction(): IReaction {
-    val pf = requireType(Types.IReaction) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireType(Types.IReaction) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:IReaction")
 
     return pf as IReaction
 }
@@ -150,7 +150,7 @@ fun RequestResult.asIReaction(): IReaction {
  * Gets the [RequestResult.result] as an IChannel.
  */
 fun RequestResult.asIChannel(): IChannel {
-    val pf = requireType(Types.IChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireType(Types.IChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:IChannel")
 
     return pf as IChannel
 }
@@ -159,7 +159,7 @@ fun RequestResult.asIChannel(): IChannel {
  * Gets the [RequestResult.result] as an IVoiceChannel.
  */
 fun RequestResult.asIVoiceChannel(): IVoiceChannel {
-    val pf = requireType(Types.IVoiceChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireType(Types.IVoiceChannel) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:IVoiceChannel")
 
     return pf as IVoiceChannel
 }
@@ -168,7 +168,7 @@ fun RequestResult.asIVoiceChannel(): IVoiceChannel {
  * Gets the [RequestResult.result] as an IUser.
  */
 fun RequestResult.asIUser(): IUser {
-    val pf = requireType(Types.IUser) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireType(Types.IUser) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:IUser")
 
     return pf as IUser
 }
@@ -177,7 +177,7 @@ fun RequestResult.asIUser(): IUser {
  * Gets the [RequestResult.result] as an IRole.
  */
 fun RequestResult.asIRole(): IRole {
-    val pf = requireType(Types.IRole) ?: throw IllegalArgumentException("INV_REQUEST_RESULT")
+    val pf = requireType(Types.IRole) ?: throw IllegalArgumentException("INV_REQUEST_RESULT:IRole")
 
     return pf as IRole
 }
@@ -186,7 +186,7 @@ fun RequestResult.asIRole(): IRole {
  * Gets the [RequestResult.result] as a Boolean.
  */
 fun RequestResult.asBoolean(): Boolean {
-    if (result !is Boolean) throw IllegalArgumentException("INV_REQUEST_RESULT")
+    if (result !is Boolean) throw IllegalArgumentException("INV_REQUEST_RESULT:Boolean")
 
     return result
 }
@@ -205,7 +205,7 @@ fun RequestResult.requireType(type: Types): Any? {
         Types.IRole -> Role::class
     }
 
-    return if (type::class != typeClass)
+    return if (result::class != typeClass)
         null
     else {
         if (isUnit())

@@ -77,9 +77,7 @@ class MarryPlayer : Command.Class {
         }
 
         // Sends the invitation message
-        val acceptMessage = request {
-            e.channel.sendMessage("Will you marry `" + e.author.name + "`, `" + otherPerson.name + "`?")
-        }.asIMessage()
+        val acceptMessage = messageHandler.sendMessage("Will you marry `${e.author.name}`, `${otherPerson.name}`?")!!
 
         // Creates a request buffer and reacts with the Y and N emojis
         val rb = RequestBuilder(e.client)
