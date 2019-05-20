@@ -22,27 +22,21 @@ class DogGallery : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val messageHandler = MessageHandler(e.channel, e.author)
 
-        // The embed builder
-        val embedBuilder = EmbedBuilder()
+        messageHandler
+                .credit("thedogapi.com")
+                .sendEmbed {
+                    val request = JsonHandler.readArray("https://api.thedogapi.com/v1/images/search?size=full")!!
 
-        // The API we use for our dog images :)
-        val url = "https://api.thedogapi.com/v1/images/search?size=full"
+                    withImage(request.getJSONObject(0).getString("url"))
 
-        val response = JsonHandler.readArray(url)
+                    if (!request.getJSONObject(0).getJSONArray("breeds").isEmpty) {
+                        val dog = request.getJSONObject(0).getJSONArray("breeds").getJSONObject(0)
 
-        embedBuilder.withImage(
-                response!!.getJSONObject(0).getString("url")
-        )
+                        val desc = "Their temperaments are ${dog.getString("temperament").toLowerCase()}. They live to around ${dog.getString("life_span")} years old."
 
-        if (response.getJSONObject(0).getJSONArray("breeds").length() != 0) {
-            val dog = response.getJSONObject(0).getJSONArray("breeds").getJSONObject(0)
-            val desc = "**Breed** ${dog.getString("name")}" +
-                    "\n**Life Span** ${dog.getString("life_span")}" +
-                    "\n**Temperament** ${dog.getString("temperament")}"
-
-            embedBuilder.withDesc(desc)
-        }
-
-        messageHandler.credit("thedogapi.com").sendEmbed(embedBuilder)
+                        withTitle(dog.getString("name"))
+                        withDesc(desc)
+                    }
+                }
     }
 }

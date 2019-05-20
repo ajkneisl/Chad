@@ -19,17 +19,22 @@ class CatGallery : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val messageHandler = MessageHandler(e.channel, e.author)
 
-        // The embed builder
-        val embedBuilder = EmbedBuilder()
+        messageHandler
+                .credit("thecatapi.com")
+                .sendEmbed {
+            val data = JsonHandler.readArray("https://api.thecatapi.com/v1/images/search?size=full")!!.getJSONObject(0)
 
-        // The API we use for our cat images :)
-        val url = "https://api.thecatapi.com/v1/images/search?size=full"
 
-        embedBuilder.withImage(
-                Objects.requireNonNull<JSONArray>(JsonHandler.readArray(url)).getJSONObject(0).getString("url")
-        )
+            withImage(data.getString("url"))
+            if (data.getJSONArray("breeds").isEmpty) {
+                return@sendEmbed
+            } else { // Not all of requests return a specific breed.
+                val breed = data.getJSONArray("breeds").getJSONObject(0)!!
 
-        messageHandler.credit("thecatapi.com").sendEmbed(embedBuilder)
+                withTitle(breed.getString("name"))
+                withDesc(breed.getString("description"))
+            }
+        }
     }
 
     override suspend fun help(e: MessageEvent) {
