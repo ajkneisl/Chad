@@ -10,6 +10,7 @@ import sx.blah.discord.util.EmbedBuilder
 
 import java.security.SecureRandom
 import java.util.HashMap
+import kotlin.random.Random
 
 /**
  * Gets a variety of random things
@@ -44,26 +45,25 @@ class Random : Command.Class {
                         }
 
                         // Gets the random numbers and sends
-                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Your random number is `" + rand.nextInt(i) + "`. (out of `" + i + "`)"))
+                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Your random number is `${rand.nextInt(i)}`. (out of `$i`)"))
                     } catch (throwaway: NumberFormatException) {
-                        messageHandler.sendError("Invalid Number")
+                        messageHandler.sendError("Invalid Number!")
                     }
 
                     return
                 }
 
                 // Sends a random number within 100
-                messageHandler.sendEmbed(EmbedBuilder().withDesc("Your random number is `" + rand.nextInt(100) + "`."))
+                messageHandler.sendEmbed { withDesc("Your random number is `${rand.nextInt(100)}`.") }
                 return
             }
             "word" -> {
-                val word = ChadVar.wordsList[java.util.Random().nextInt(ChadVar.wordsList.size)]
+                val word = ChadVar.wordsList[Random.nextInt(ChadVar.wordsList.size)]
 
                 // Makes the first letter of the word uppercase
                 val uppercaseWord = word.toUpperCase()[0] + word.substring(1)
 
-                // Gets a random word and sends it
-                messageHandler.sendEmbed(EmbedBuilder().withDesc(uppercaseWord))
+                messageHandler.sendEmbed { withDesc(uppercaseWord) }
                 return
             }
             else -> messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "random [quote/word/number]")
