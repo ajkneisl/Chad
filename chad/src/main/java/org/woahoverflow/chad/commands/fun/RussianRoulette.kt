@@ -14,6 +14,7 @@ import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.RequestBuilder
 import java.security.SecureRandom
 import java.util.*
+import kotlin.random.Random
 
 /**
  * Play russian roulette with another user
@@ -29,14 +30,12 @@ class RussianRoulette : Command.Class {
 
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val messageHandler = MessageHandler(e.channel, e.author)
-        val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX) as String
 
         // Assigns the user to the mentioned user
-        val unFinalUser: IUser
-        if (e.message.mentions.isNotEmpty())
-            unFinalUser = e.message.mentions[0]
+        val unFinalUser: IUser = if (e.message.mentions.isNotEmpty())
+            e.message.mentions[0]
         else {
-            messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS, prefix + "rrl [@user]")
+            messageHandler.sendPresetError(MessageHandler.Messages.NO_MENTIONS, "rrl [@user]", includePrefix = true)
             return
         }
 
@@ -52,15 +51,15 @@ class RussianRoulette : Command.Class {
         }.asIMessage()
 
         // Creates a request buffer and reacts with the Y and N emojis
-        val rb = RequestBuilder(e.client)
-        rb.shouldBufferRequests(true)
-        rb.doAction {
-            acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDFE")) // Y
-            true
-        }.andThen {
-            acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDF3")) // N
-            true
-        }.execute() // Executes
+        RequestBuilder(e.client)
+                .apply { shouldBufferRequests(true) }
+                .doAction {
+                    acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDFE")) // Y
+                    true
+                }.andThen {
+                    acceptMessage.addReaction(ReactionEmoji.of("\uD83C\uDDF3")) // N
+                    true
+                }.execute()
 
         // Assigns variables
         var reacted = true
@@ -69,30 +68,18 @@ class RussianRoulette : Command.Class {
         while (reacted) {
             // If it's been 10 seconds, exit
             if (timeout == 10) {
-                messageHandler.sendError('`'.toString() + unFinalUser.name + "` didn't respond in time!")
+                messageHandler.sendError("`${unFinalUser.name}` didn't respond in time!")
                 return
             }
 
-            // Sleeps a second so it doesn't go so fast
             delay(1000L)
-
-            // Increases the timeout value
             timeout++
 
             // Gets both reactions
-            val yReaction = request {
-                acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE"))
-            }.asIReaction()
+            val yReaction = request { acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDFE")) }.asIReaction()
+            val nReaction = request { acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3")) }.asIReaction()
 
-            val nReaction = request {
-                acceptMessage.getReactionByEmoji(ReactionEmoji.of("\uD83C\uDDF3"))
-            }.asIReaction()
-
-            // Checks if the user reacted to the Y
-            if (yReaction.getUserReacted(unFinalUser))
-                reacted = false
-
-            // Checks if the user reacted with the N
+            if (yReaction.getUserReacted(unFinalUser)) reacted = false
             if (nReaction.getUserReacted(unFinalUser)) {
                 messageHandler.sendError("User Denied!")
                 return
@@ -102,15 +89,23 @@ class RussianRoulette : Command.Class {
         // Calculates the winner with two random numbers
         var win: IUser? = null
         var loser: IUser? = null
-        val r1 = SecureRandom().nextInt(100)
-        val r2 = SecureRandom().nextInt(100)
-        if (r1 > r2) {
-            win = e.author
-            loser = unFinalUser
-        }
-        if (r2 > r1) {
-            win = unFinalUser
-            loser = e.author
+        val r1 = Random.nextInt(100)
+        val r2 = Random.nextInt(100)
+
+        when {
+            r1 > r2 -> {
+                win = e.author
+                loser = unFinalUser
+            }
+
+            r2 > r1 -> {
+                win = unFinalUser
+                loser = e.author
+            }
+
+            else -> {
+                messageHandler.sendMessage("The revolver had no bullets... Tie!")
+            }
         }
 
         // Makes sure the users aren't null
@@ -120,6 +115,6 @@ class RussianRoulette : Command.Class {
         }
 
         // Sends the message
-        messageHandler.sendMessage('`'.toString() + win.name + "` is the winner! \n`" + loser.name + "`\uD83D\uDD2B")
+        messageHandler.sendMessage("`${win.name}` is the winner! \n`" + loser.name + "`\uD83D\uDD2B")
     }
 }
