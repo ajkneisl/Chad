@@ -20,10 +20,10 @@ class DogFact : Command.Class {
     }
 
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
-        // Gets the fact
-        val fact = JsonHandler.read("https://dog-api.kinduff.com/api/facts")!!.getJSONArray("facts").getString(0)
-
-        // Sends the fact
-        MessageHandler(e.channel, e.author).credit("dog-api.kinduff.com").sendEmbed(EmbedBuilder().withDesc(fact))
+        JsonHandler.read("https://dog-api.kinduff.com/api/facts")!!
+                .getJSONArray("facts").getString(0)
+                .also {
+                    MessageHandler(e.channel, e.author).credit("https://dog-api.kinduff.com/api/facts").sendEmbed { withDesc(it) }
+                }
     }
 }
