@@ -57,10 +57,14 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
      * @param message The preset error
      * @param strings The arguments that message requires
      */
-    fun sendPresetError(message: Messages, vararg strings: String) {
+    fun sendPresetError(message: Messages, vararg strings: String, includePrefix: Boolean = false) {
         if (strings.size != message.replaceable) sendPresetError(Messages.INTERNAL_EXCEPTION)
 
-        sendError(Util.buildString(message.message, *strings))
+        if (includePrefix) {
+            val prefix = GuildHandler.getGuild(channel.guild.longID).getObject(DataType.PREFIX) as String
+
+            sendError(Util.buildString(prefix + message.message, *strings))
+        } else sendError(Util.buildString(message.message, *strings))
     }
 
     /**
