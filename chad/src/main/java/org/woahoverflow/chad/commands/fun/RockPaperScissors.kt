@@ -19,11 +19,10 @@ import java.util.stream.Stream
 class RockPaperScissors : Command.Class {
     override suspend fun run(e: MessageEvent, args:MutableList<String>) {
         val messageHandler = MessageHandler(e.channel, e.author)
-        val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX) as String
 
         // Checks if there's arguments
         if (args.isEmpty()) {
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rps [rock/paper/scissors]")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "rps [rock/paper/scissors]", includePrefix = true)
             return
         }
 
@@ -33,26 +32,26 @@ class RockPaperScissors : Command.Class {
             val i2 = SecureRandom().nextInt(3)
 
             // Forms the author's value
-            var i = 420
-            when {
-                args[0].equals("rock", ignoreCase = true) -> i = 0
-                args[0].equals("paper", ignoreCase = true) -> i = 1
-                args[0].equals("scissors", ignoreCase = true) -> i = 2
+            val i = when (args[0].toLowerCase()) {
+                "rock" -> 0
+                "paper" -> 1
+                "scissors" -> 2
+                else -> 2
             }
 
             // Sends the result
-            messageHandler.sendEmbed(EmbedBuilder().withDesc(calculateWinner(i, i2)))
+            messageHandler.sendEmbed { withDesc(calculateWinner(i, i2)) }
         } else {
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "rps [rock/paper/scissors]")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "rps [rock/paper/scissors]", includePrefix = true)
         }
     }
 
-    // Builds the string for RPS
+    /**
+     * Builds the string.
+     *
+     *
+     */
     private fun calculateWinner(i: Int, i2: Int): String {
-        // 'i' is meant for the user's input
-        // 'i2' is meant for the bot's input
-
-        // Builds Chad's value
         val chadValue: String = when (i2) {
             0 -> "Rock"
             1 -> "Paper"
@@ -60,27 +59,11 @@ class RockPaperScissors : Command.Class {
             else -> return "Internal Exception!"
         }
 
-        // If they're both equal, tie
-        if (i2 == i) {
-            return "Chad had `$chadValue`, tie!"
+        return when {
+            i2 == i -> "Chad had `$chadValue`, tie!"
+            i2 == 2 && i == 1 || i2 == 0 && i == 2 || i2 == 1 && i == 0 -> "Chad had `$chadValue`, Chad wins!"
+            else -> "Chad had `$chadValue`, you win!"
         }
-
-        // If Chad has scissors and author has paper
-        if (i2 == 2 && i == 1) {
-            return "Chad had `$chadValue`, Chad wins!"
-        }
-
-        // If Chad has rock and the author has scissors
-        if (i2 == 0 && i == 2) {
-            return "Chad had `$chadValue`, Chad wins!"
-        }
-
-        // If Chad has Paper and the author has rock
-        return if (i2 == 1 && i == 0) {
-            "Chad had `$chadValue`, Chad wins!"
-        } else "Chad had `$chadValue`, you win!"
-
-        // The rest of the inputs are the author winning, so
     }
 
     override suspend fun help(e: MessageEvent) {
