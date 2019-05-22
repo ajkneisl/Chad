@@ -11,6 +11,7 @@ import java.awt.Color
 import java.io.File
 import java.io.FileNotFoundException
 import java.security.SecureRandom
+import java.util.stream.Collectors
 
 /**
  * Handles almost all messages within Chad
@@ -62,8 +63,9 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
 
         if (includePrefix) {
             val prefix = GuildHandler.getGuild(channel.guild.longID).getObject(DataType.PREFIX) as String
+            val string = strings.toList().stream().collect(Collectors.joining(" "))
 
-            sendError(Util.buildString(prefix + message.message, *strings))
+            sendError(Util.buildString(message.message, prefix + string))
         } else sendError(Util.buildString(message.message, *strings))
     }
 
