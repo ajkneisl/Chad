@@ -1,10 +1,8 @@
 package org.woahoverflow.chad.commands.info
 
-import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.youtube.YouTubeHandler
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.text.DecimalFormat
@@ -17,26 +15,25 @@ import java.util.*
  */
 class SubscriberCount : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        val messageHandler = MessageHandler(e.channel, e.author)
         if (args.isEmpty()) {
-            val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX) as String
-            MessageHandler(e.channel, e.author).sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "subcount [channel name]")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "subcount [channel name]", includePrefix = true)
+            return
         }
 
         // Puts two YouTube channels in a VS format
         if (args.size == 3 && args[0].equals("vs", ignoreCase = true)) {
             // Both channels from arguments 1 & 2
-            val channelOne = YouTubeHandler.getYoutubeChannel(args[1])
-            val channelTwo = YouTubeHandler.getYoutubeChannel(args[2])
-
-            // If either couldn't be found
-            if (channelOne == null || channelTwo == null) {
-                MessageHandler(e.channel, e.author).sendEmbed(EmbedBuilder().withDesc("Invalid YouTube Channel(s)!"))
-                return
+            val channels = Pair(YouTubeHandler.getYoutubeChannel(args[1]), YouTubeHandler.getYoutubeChannel(args[2])).also {
+                if (it.first == null || it.second == null) {
+                    messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid YouTube Channel(s)!"))
+                    return
+                }
             }
 
             // Both channels subscriber count
-            val channelOneSubscriberCount = channelOne.subscriberCount
-            val channelTwoSubscriberCount = channelTwo.subscriberCount
+            val channelOneSubscriberCount = channels.first!!.subscriberCount
+            val channelTwoSubscriberCount = channels.second!!.subscriberCount
 
             // Makes sure the difference isn't negative, by not putting smaller channel - the larger channel
             val difference = if (channelOneSubscriberCount - channelTwoSubscriberCount > 0)
@@ -48,43 +45,39 @@ class SubscriberCount : Command.Class {
             val formatter = DecimalFormat("#,###")
 
             // The difference string
-            var formattedString = ""
-            formattedString += if (channelOneSubscriberCount > channelTwoSubscriberCount)
-                '`'.toString() + channelOne.username + "` has `" + formatter.format(difference) + "` more subscribers than `" + channelTwo.username + "`!"
+            val formattedString = if (channelOneSubscriberCount > channelTwoSubscriberCount)
+                "`${channels.first!!.username}` has `${formatter.format(difference)}` more subscribers than `${channels.second!!.username}`!"
             else
-                '`'.toString() + channelTwo.username + "` has `" + formatter.format(difference) + "` more subscribers than `" + channelOne.userUrl + "`!"
+                "${channels.second!!.username}` has `${formatter.format(difference)}` more subscribers than `${channels.first!!.username}`!"
 
-            MessageHandler(e.channel, e.author).sendEmbed(EmbedBuilder().withDesc(
-                    "**" + channelOne.username + "** : `" + formatter.format(channelOne.subscriberCount) + "`\n"
-                            + "**" + channelTwo.username + "** : `" + formatter.format(channelTwo.subscriberCount) + "`\n\n" + formattedString
-            ))
+            messageHandler.sendEmbed { withDesc(
+                    "**${channels.first!!.username}** : `${formatter.format(channels.first!!.subscriberCount)}`\n"
+                            + "**${channels.second!!.username}** : `${formatter.format(channels.second!!.subscriberCount)}`\n\n" + formattedString
+            ) }
 
             return
         }
 
         // The selected channel
-        val channel = YouTubeHandler.getYoutubeChannel(args[0])
-
-        // If the channel doesn't exist
-        if (channel == null) {
+        val channel = YouTubeHandler.getYoutubeChannel(args[0]) ?: run {
             MessageHandler(e.channel, e.author).sendEmbed(EmbedBuilder().withDesc("Invalid YouTube channel!"))
             return
         }
 
         // Formats the message & sends
         val formatter = DecimalFormat("#,###")
-        val channelDetails = "**Name** : " + channel.username +
-                "\n**Subscriber Count** : " + formatter.format(channel.subscriberCount) +
-                "\n**View Count** : " + formatter.format(channel.viewCount) +
-                "\n**Video Count** : " + formatter.format(channel.videoCount) +
-                "\n**Channel Link** : " + channel.userUrl
+        val channelDetails = "**Name** : `${channel.username}`" +
+                "\n**Subscriber Count** : `${formatter.format(channel.subscriberCount)}`" +
+                "\n**View Count** : `${formatter.format(channel.viewCount)}`" +
+                "\n**Video Count** : `${formatter.format(channel.videoCount)}`" +
+                "\n**Channel Link** : ${channel.userUrl}"
 
-        MessageHandler(e.channel, e.author).sendEmbed(EmbedBuilder().withDesc(channelDetails).withImage(channel.userIconUrl))
+        messageHandler.sendEmbed { withDesc(channelDetails).withImage(channel.userIconUrl) }
     }
 
     override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
-        st["subcount [youtuber name]"] = "Gets a profile of a YouTuber."
+        st["subcount [youtuber name]"] = "Gets the profile of a YouTuber."
         st["subcount vs [youtuber name] [2nd youtuber name]"] = "Compares two YouTuber's subscriber counts."
         Command.helpCommand(st, "Subscriber Count", e)
     }
