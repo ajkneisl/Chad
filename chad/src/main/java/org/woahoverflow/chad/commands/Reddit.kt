@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.commands
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.PermissionHandler
 import org.woahoverflow.chad.framework.handle.Reddit
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
@@ -105,7 +106,7 @@ class Hentai : Command.Class {
  */
 private fun send(arrayList: ArrayList<String>, e: MessageEvent, requiresNsfw: Boolean = true) {
     MessageHandler(e.channel, e.author).also { handle ->
-        if (e.message.content.contains("rfall")) {
+        if (e.message.content.contains("rfall") && PermissionHandler.isDeveloper(e.author)) {
             handle.sendMessage("Refreshing all...").also {
                 Reddit.getPost(arrayList, Reddit.PostType.HOT)
                 if (it != null) request { it.edit("Complete!") }
@@ -121,7 +122,7 @@ private fun send(arrayList: ArrayList<String>, e: MessageEvent, requiresNsfw: Bo
             }
 
             handle.sendEmbed {
-                val post = Reddit.getPost(arrayList, Reddit.PostType.HOT)!!.getJSONObject("data")
+                val post = Reddit.getPost(arrayList, Reddit.PostType.HOT, saveAll = false)!!.getJSONObject("data")
                 withUrl("https://reddit.com" + post.getString("permalink"))
                 withTitle(post.getString("title"))
                 withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")

@@ -12,6 +12,8 @@ import org.woahoverflow.chad.framework.handle.xp.XPHandler
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.api.events.EventSubscriber
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.handle.obj.Permissions
@@ -27,10 +29,21 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
     val users = ConcurrentHashMap<IUser, Int>()
 
     /**
-     * Dispatches the events.
+     * Handles message edit events.
      */
     @EventSubscriber
-    fun messageReceived(event: MessageReceivedEvent) {
+    fun messageEditEvent(event: MessageEditEvent) { event(event) }
+
+    /**
+     * Handles message received events.
+     */
+    @EventSubscriber
+    fun messageReceivedEvent(event: MessageReceivedEvent) { event(event); }
+
+    /**
+     * Dispatches the events.
+     */
+    private fun event(event: MessageEvent) {
         if (event.guild == null) return
 
         if (event.author.isBot) return
