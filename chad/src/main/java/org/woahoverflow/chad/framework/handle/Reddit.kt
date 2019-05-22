@@ -43,6 +43,15 @@ object Reddit {
         val loc = Random.nextInt(subs.size)
         val sub = subs[loc]
 
+        // Saves all subreddits: This makes retrieving posts from a command like Meme much faster, but uses a lot of resources and possibly can get ratelimited.
+        if (saveAll) {
+            GlobalScope.launch {
+                for (subr in subs) {
+                    launch { refreshSubreddit(subr, postType) }
+                }
+            }
+        }
+
         return getPost(sub, postType)
     }
 
@@ -102,7 +111,7 @@ object Reddit {
                 }
             }
 
-            TimeUnit.SECONDS.sleep(1)
+            TimeUnit.MILLISECONDS.sleep(500)
 
             return true
         } catch (ex: Exception) {

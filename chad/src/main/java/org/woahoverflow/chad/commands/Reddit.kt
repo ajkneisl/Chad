@@ -2,6 +2,7 @@ package org.woahoverflow.chad.commands
 
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.Reddit
+import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
@@ -34,7 +35,7 @@ class Meme : Command.Class {
                 "pewdiepiesubmissions",
                 "terriblefacebookmemes",
                 "memeeconomy")
-                , e, false)
+                , e, requiresNsfw = false)
     }
 }
 /**
@@ -103,24 +104,32 @@ class Hentai : Command.Class {
  * @param e The message event from the command.
  */
 private fun send(arrayList: ArrayList<String>, e: MessageEvent, requiresNsfw: Boolean = true) {
-    val message = MessageHandler(e.channel, e.author).sendMessage("Loading...")!!
-    val messageHandler = MessageHandler(e.channel, e.author)
+    MessageHandler(e.channel, e.author).also { handle ->
+        if (e.message.content.contains("rfall")) {
+            handle.sendMessage("Refreshing all...").also {
+                Reddit.getPost(arrayList, Reddit.PostType.HOT)
+                if (it != null) request { it.edit("Complete!") }
+                return
+            }
+        }
 
-    // Checks if channel is Nsfw
-    if (!e.channel.isNSFW && requiresNsfw) {
-        RequestBuffer.request { message.edit(MessageHandler.Messages.CHANNEL_NOT_NSFW.message) }
-        return
+        handle.sendMessage("Loading...").also { msg ->
+            if (msg == null) throw IllegalArgumentException("REQ_NULL")
+            if (!e.channel.isNSFW && requiresNsfw) {
+                request { msg.edit(MessageHandler.Messages.CHANNEL_NOT_NSFW.message) }
+                return
+            }
+
+            handle.sendEmbed {
+                val post = Reddit.getPost(arrayList, Reddit.PostType.HOT)!!.getJSONObject("data")
+                withUrl("https://reddit.com" + post.getString("permalink"))
+                withTitle(post.getString("title"))
+                withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")
+                withImage(post.getString("url"))
+
+                request { msg.delete() }
+                handle.credit(post.getString("subreddit_name_prefixed"))
+            }
+        }
     }
-
-    val post = Reddit.getPost(arrayList, Reddit.PostType.HOT)!!.getJSONObject("data")
-
-    val embedBuilder = EmbedBuilder()
-
-    embedBuilder.withUrl("https://reddit.com" + post.getString("permalink"))
-    embedBuilder.withTitle(post.getString("title"))
-    embedBuilder.withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")
-    embedBuilder.withImage(post.getString("url"))
-
-    message.delete()
-    messageHandler.credit(post.getString("subreddit_name_prefixed")).sendEmbed(embedBuilder)
 }
