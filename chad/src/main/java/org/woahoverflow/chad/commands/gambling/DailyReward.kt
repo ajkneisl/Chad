@@ -22,16 +22,9 @@ class DailyReward : Class {
 
         // If the user hasn't claimed the daily reward ever
         if (player.getObject(DataType.LAST_DAILY_REWARD) == "none") {
-            // Get the user's current balance
             val userBalance = player.getObject(DataType.BALANCE) as Long
-
-            // Adds the money
             player.setObject(DataType.BALANCE, userBalance + 2000)
-
-            // Updates the user's ldr to the current time
             player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis())
-
-            // Send the message
             messageHandler.sendEmbed(EmbedBuilder().withDesc("You claimed your daily reward of `2000`!"))
             return
         }
@@ -40,23 +33,15 @@ class DailyReward : Class {
         val lastDailyReward = player.getObject(DataType.LAST_DAILY_REWARD) as Long
 
         val difference = Util.howOld(lastDailyReward)
-        val day = 24 * 60 * 60 * 1000
+        val day = 24*60*60*1000
 
         if (difference < day) {
-            messageHandler.sendError("You can only claim your reward once a day!\nTime left: " + Util.fancyDate(day - difference))
+            messageHandler.sendError("You can only claim your reward once a day!\nTime left: `${Util.fancyDate(day - difference)}`")
             return
         }
 
-        // Get the user's current balance
-        val currentBalance = player.getObject(DataType.BALANCE) as Long
-
-        // Adds the money
-        player.setObject(DataType.BALANCE, currentBalance + 2000)
-
-        // Updates the user's ldr
+        player.setObject(DataType.BALANCE, player.getObject(DataType.BALANCE) as Long + 2000)
         player.setObject(DataType.LAST_DAILY_REWARD, System.currentTimeMillis())
-
-        // Send the message
         messageHandler.sendEmbed(EmbedBuilder().withDesc("You claimed your daily reward of `2000`!"))
     }
 
