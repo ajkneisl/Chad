@@ -20,51 +20,45 @@ import java.util.regex.Pattern
 class Help : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val stringBuilder = StringBuilder()
+
         // Go through each category and add all it's commands to the help string
         for (category in Command.Category.values()) {
-            // If the category is Nsfw and the channel isn't Nsfw, don't show.
-            if (category === Command.Category.NSFW && !e.channel.isNSFW) continue
+            if (
+                    when {
+                        category === Command.Category.NSFW && !e.channel.isNSFW -> true
+                        category === Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(e.author) -> true
+                        (GuildHandler.getGuild(e.guild.longID).getObject(DataType.DISABLED_CATEGORIES) as ArrayList<*>).contains(category.toString().toLowerCase()) -> true
+                        else -> false
+                    }
+            ) continue
 
-            // If the category is Admin and the user isn't an Admin, don't show.
-            if (category === Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(e.author)) continue
-
-            // If the category is disabled
-            if ((GuildHandler.getGuild(e.guild.longID).getObject(DataType.DISABLED_CATEGORIES) as ArrayList<*>).contains(category.toString().toLowerCase())) continue
 
             // The commands builder
             val commandsBuilder = StringBuilder()
             for ((key, meta) in ChadVar.COMMANDS) {
-                // Gets the command's data
+                if (
+                        when {
+                            meta.commandCategory !== category -> true
+                            !PermissionHandler.hasPermission(key, e.author, e.guild) -> true
+                            else -> false
+                        }
+                ) continue
 
-                // Makes sure the command is in the right area
-                if (meta.commandCategory !== category)
-                    continue
-
-                // Makes sure the user has permission
-                if (!PermissionHandler.hasPermission(key, e.author, e.guild))
-                    continue
-
-                // Adds the command to the builder
-                val str = "`$key`, "
-                commandsBuilder.append(str)
+                commandsBuilder.append("`$key`, ")
             }
 
             // Replaces the end and makes sure there's content
             if (commandsBuilder.isNotEmpty()) {
-                stringBuilder.append("\n\n").append("**").append(Util.fixEnumString(category.toString().toLowerCase())).append("**").append(": \n").append(REGEX.matcher(commandsBuilder.toString()).replaceAll(""))
+                stringBuilder.append("\n\n**${Util.fixEnumString(category.toString().toLowerCase())}**: \n ${REGEX.matcher(commandsBuilder.toString()).replaceAll("")}")
             }
         }
 
-        // Adds a warning that you can only see the commands you have permission to
         stringBuilder.append("\n\nYou can only see the commands you have permission to!")
 
-        val embedBuilder = EmbedBuilder()
-
-        embedBuilder.withDesc("**Support Discord**: https://woahoverflow.org/discord\n**Invite Chad**: https://woahoverflow.org/chad/invite$stringBuilder")
-        embedBuilder.withTitle("Chad's Commands")
-
-        // Sends the message
-        MessageHandler(e.channel, e.author).sendEmbed(embedBuilder)
+        MessageHandler(e.channel, e.author).sendEmbed {
+            withDesc("**Support Discord**: https://woahoverflow.org/discord\n**Invite Chad**: https://woahoverflow.org/chad/invite$stringBuilder")
+            withTitle("Chad's Commands")
+        }
     }
 
     override suspend fun help(e: MessageEvent) {
