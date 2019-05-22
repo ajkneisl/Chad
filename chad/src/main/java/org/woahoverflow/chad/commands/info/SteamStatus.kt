@@ -23,26 +23,26 @@ class SteamStatus : Command.Class {
      * It updates every hour
      */
     private val cached = object : ConcurrentHashMap<String, String>() {
+        fun update() {
+            if (ArgumentHandler.isToggled("DISABLE_STEAM_CACHE") || ArgumentHandler.isToggled("TEST_RUN")) return
+
+            val csgo = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+
+            val pubg = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+
+            val dota = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+
+            val tf = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=440&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+
+            val formatter = DecimalFormat("#,###")
+
+            this["csgo"] = formatter.format(csgo)
+            this["pubg"] = formatter.format(pubg)
+            this["dota"] = formatter.format(dota)
+            this["tf"] = formatter.format(tf)
+        }
+
         init {
-            fun update() {
-                if (ArgumentHandler.isToggled("DISABLE_STEAM_CACHE") || ArgumentHandler.isToggled("TEST_RUN")) return
-
-                val csgo = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
-
-                val pubg = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
-
-                val dota = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
-
-                val tf = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=440&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
-
-                val formatter = DecimalFormat("#,###")
-
-                this["csgo"] = formatter.format(csgo)
-                this["pubg"] = formatter.format(pubg)
-                this["dota"] = formatter.format(dota)
-                this["tf"] = formatter.format(tf)
-            }
-
             Timer().schedule(object : TimerTask(){
                 override fun run() {
                     update()
@@ -52,7 +52,6 @@ class SteamStatus : Command.Class {
     }
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val status = JsonHandler.read("https://steamgaug.es/api/v2")
-        val embedBuilder = EmbedBuilder()
 
         // All of the statistics from SteamGauge
         val steamCommunity = if (Objects.requireNonNull<JSONObject>(status).getJSONObject("SteamCommunity").getInt("online") == 1) "online" else "offline"
@@ -64,17 +63,28 @@ class SteamStatus : Command.Class {
         val steamApi = if (status.getJSONObject("ISteamUser").getInt("online") == 1) "online" else "offline"
         val steamApiLatency = status.getJSONObject("ISteamUser").getInt("time").toString() + "ms"
 
-        embedBuilder.withDesc(
-                "Steam Community: `" + steamCommunity + "` (" + steamCommunityLatency + ')'.toString() +
-                        "\nSteam Store: `" + steamStore + "` (" + steamStoreLatency + ')'.toString() +
-                        "\nSteam API: `" + steamApi + "` (" + steamApiLatency + ')'.toString() +
-                        "\n\nCSGO: `${cached["csgo"]}`" +
-                        "\nPUBG: `${cached["pubg"]}`" +
-                        "\nDota 2: `${cached["dota"]}`" +
-                        "\nTF 2: `${cached["tf"]}`"
-        )
+        if (steamApi.equals("offline", true)
+                || steamStore.equals("offline", true)
+                || steamCommunity.equals("offline", true)
+        ) cached.update()
 
-        MessageHandler(e.channel, e.author).credit("steamguag.es").sendEmbed(embedBuilder)
+        if (
+                cached["csgo"] == null
+                || cached["pubg"] == null
+                || cached["dota"] == null
+                || cached["tf"] == null
+        ) cached.update()
+
+        MessageHandler(e.channel, e.author).credit("steamgaug.es").sendEmbed {
+            withDesc("Steam Community: `$steamCommunity` ($steamCommunityLatency)" +
+                            "\nSteam Store: `$steamStore` ($steamStoreLatency)" +
+                            "\nSteam API: `$steamApi` ($steamApiLatency)" +
+                            "\n\nCSGO: `${cached["csgo"]}`" +
+                            "\nPUBG: `${cached["pubg"]}`" +
+                            "\nDota 2: `${cached["dota"]}`" +
+                            "\nTF 2: `${cached["tf"]}`"
+            )
+        }
     }
 
     override suspend fun help(e: MessageEvent) {

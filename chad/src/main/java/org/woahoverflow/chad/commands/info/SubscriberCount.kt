@@ -5,6 +5,7 @@ import org.woahoverflow.chad.framework.handle.youtube.YouTubeHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
+import java.lang.Exception
 import java.text.DecimalFormat
 import java.util.*
 
@@ -24,11 +25,21 @@ class SubscriberCount : Command.Class {
         // Puts two YouTube channels in a VS format
         if (args.size == 3 && args[0].equals("vs", ignoreCase = true)) {
             // Both channels from arguments 1 & 2
-            val channels = Pair(YouTubeHandler.getYoutubeChannel(args[1]), YouTubeHandler.getYoutubeChannel(args[2])).also {
-                if (it.first == null || it.second == null) {
-                    messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid YouTube Channel(s)!"))
-                    return
+            val channels = try {
+                Pair(YouTubeHandler.getYoutubeChannel(args[1]), YouTubeHandler.getYoutubeChannel(args[2])).also {
+                    if (it.first == null || it.second == null) {
+                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid YouTube Channel(s)!"))
+                        return
+                    }
                 }
+            } catch (ex: Exception) {
+                messageHandler.sendEmbed(EmbedBuilder().withDesc("Invalid YouTube Channel(s)!"))
+                return
+            }
+
+            if (channels.first!!.userId == channels.second!!.userId) {
+                messageHandler.sendEmbed(EmbedBuilder().withDesc("You cannot compare the same channel!"))
+                return
             }
 
             // Both channels subscriber count
