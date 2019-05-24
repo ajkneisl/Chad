@@ -38,6 +38,26 @@ public class Queue implements Command.Class {
             GuildMusicManager manager = MusicHandler.getMusicManager(e.getGuild(), chadChannel);
             List<AudioTrack> queue = manager.scheduler.getFullQueue();
 
+            if (args.size() >= 2 && args.get(0).equalsIgnoreCase("remove"))
+            {
+                try
+                {
+                    int removeIndex = Integer.parseInt(args.get(1));
+                    if (removeIndex > 0)
+                    {
+                        removeIndex--;
+                        String trackTitle = queue.get(removeIndex).getInfo().title;
+                        queue.remove(removeIndex);
+                        messageHandler.sendMessage(String.format("Removed `%s` from the queue.", trackTitle));
+                    } else {
+                        messageHandler.sendError("Whoops! You can't use `0` as an index value. *It breaks the **code**.*");
+                    }
+                    return;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
             // If there's nothing playing
             if (manager.player.getPlayingTrack() == null && queue.size() == 0) {
                 messageHandler.sendEmbed(new EmbedBuilder().withDesc("There's no things currently playing!"));
@@ -75,6 +95,7 @@ public class Queue implements Command.Class {
     public Runnable help(@NotNull MessageEvent e) {
         HashMap<String, String> st = new HashMap<>();
         st.put("queue", "Gets the current song(s) in the queue.");
+        st.put("queue remove <index>", "Removes a specific song from the queue.");
         return Command.helpCommand(st, "Queue", e);
     }
 }
