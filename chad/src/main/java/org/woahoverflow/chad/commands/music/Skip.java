@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.commands.music;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.jetbrains.annotations.NotNull;
 import org.woahoverflow.chad.framework.handle.MessageHandler;
 import org.woahoverflow.chad.framework.handle.MusicHandler;
@@ -7,6 +8,7 @@ import org.woahoverflow.chad.framework.obj.Command;
 import org.woahoverflow.chad.framework.obj.GuildMusicManager;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.util.audio.AudioPlayer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +42,29 @@ public class Skip implements Command.Class {
 
             // The guild's music manager
             GuildMusicManager manager = MusicHandler.getMusicManager(e.getGuild(), channel);
+            List<AudioTrack> queue = manager.scheduler.getFullQueue();
+
+            if (args.size() == 2 && args.get(0).equalsIgnoreCase("to"))
+            {
+                try
+                {
+                    int skipIndex = Integer.parseInt(args.get(1));
+                    if (skipIndex > 0)
+                    {
+                        skipIndex--;
+                        AudioTrack track = manager.scheduler.getFullQueue().get(skipIndex);
+                        for (int i = 0; i < skipIndex + 1; i++)
+                            manager.scheduler.getFullQueue().remove(0);
+                        manager.scheduler.getPlayer().playTrack(track);
+                        messageHandler.sendMessage(String.format("Skipped to `%s`.", track.getInfo().title));
+                    } else {
+                        messageHandler.sendError("Whoops! You can't use `0` as an index value. *It breaks the **code**.*");
+                    }
+                    return;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
 
             // Skips all of the songs in the queue
             if (args.size() == 1 && args.get(0).equalsIgnoreCase("all")) {

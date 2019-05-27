@@ -10,7 +10,7 @@ import java.util.*
 /**
  * The guild's audio manager
  *
- * @author sho
+ * @author sho, codebasepw
  */
 class TrackScheduler(
         private val player: AudioPlayer,
@@ -18,6 +18,14 @@ class TrackScheduler(
         var channelId: Long,
         private val musicManager: GuildMusicManager
 ) : AudioEventAdapter() {
+
+    /**
+     * Get the player
+     */
+    fun getPlayer() : AudioPlayer
+    {
+        return player
+    }
 
     /**
      * The Guild's queue
