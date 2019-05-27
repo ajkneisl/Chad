@@ -1,12 +1,15 @@
 package org.woahoverflow.chad.commands.developer
 
+import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
+import org.woahoverflow.chad.framework.handle.ThreadHandler
 import org.woahoverflow.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Temporarily modifies users with developer role
@@ -46,12 +49,19 @@ class ModifyDevelopers : Command.Class {
                         return@Runnable
                     }
 
-                    if (ChadVar.DEVELOPERS.contains(id) || ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
+                    if (ChadVar.DEVELOPERS.contains(id) /*|| ChadVar.ORIGINAL_DEVELOPERS.contains(id)*/) {
                         messageHandler.sendError("That user is already a developer!")
                         return@Runnable
                     }
 
                     ChadVar.DEVELOPERS.add(id)
+
+                    ThreadHandler.runThread(Thread
+                    {
+                        TimeUnit.MINUTES.sleep(3)
+                        ChadVar.DEVELOPERS.remove(id)
+                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Time limited expired. User `$id` was removed from developer role."))
+                    }, ChadInstance.cli.ourUser.longID)
 
                     messageHandler.sendEmbed(EmbedBuilder().withDesc("Added user `$id` temporarily to developer role."))
                     return@Runnable
@@ -75,12 +85,19 @@ class ModifyDevelopers : Command.Class {
                     if (!ChadVar.DEVELOPERS.contains(id)) {
                         messageHandler.sendError("That user isn't a developer!")
                         return@Runnable
-                    } else if (ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
+                    } /*else if (ChadVar.ORIGINAL_DEVELOPERS.contains(id)) {
                         messageHandler.sendError("You aren't allowed to remove that person!")
                         return@Runnable
-                    }
+                    }*/
 
                     ChadVar.DEVELOPERS.remove(id)
+
+                    ThreadHandler.runThread(Thread
+                    {
+                        TimeUnit.MINUTES.sleep(3)
+                        ChadVar.DEVELOPERS.add(id)
+                        messageHandler.sendEmbed(EmbedBuilder().withDesc("Time limited expired. User `$id` was added back to developer role."))
+                    }, ChadInstance.cli.ourUser.longID)
 
                     messageHandler.sendEmbed(EmbedBuilder().withDesc("Removed user `$id` temporarily from developer role."))
                     return@Runnable
@@ -90,7 +107,7 @@ class ModifyDevelopers : Command.Class {
                     val stringBuilder = StringBuilder()
 
                     for (id in ChadVar.DEVELOPERS) stringBuilder.append("$id, ")
-                    for (id in ChadVar.ORIGINAL_DEVELOPERS) stringBuilder.append("[O] $id, ")
+                    //for (id in ChadVar.ORIGINAL_DEVELOPERS) stringBuilder.append("[O] $id, ")
 
                     messageHandler.sendEmbed(EmbedBuilder().withDesc(stringBuilder.toString().removeSuffix(", ")))
                 }

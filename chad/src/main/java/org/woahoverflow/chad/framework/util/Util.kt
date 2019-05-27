@@ -176,17 +176,17 @@ object Util {
     }
 
     /**
-     * Refreshes the original developer list using the woahoverflow cdn.
+     * Refreshes the original list using the woahoverflow cdn.
      *
      * These users are marked as trusted, and cannot be removed from the developer list.
      */
     fun refreshDevelopers() {
-        ChadVar.ORIGINAL_DEVELOPERS.clear()
+        ChadVar.DEVELOPERS.clear()
         Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
 
             if ((v as JSONObject).getBoolean("developer")) {
                 ChadInstance.getLogger().debug("User ${v.getString("display_name")} has been given the role of Developer.")
-                ChadVar.ORIGINAL_DEVELOPERS.add(v.getLong("id"))
+                ChadVar.DEVELOPERS.add(v.getLong("id"))
             }
         }
     }

@@ -20,7 +20,7 @@ object PermissionHandler {
      * @return If they're a verified developer
      */
     @JvmStatic
-    fun isDeveloper(user: IUser): Boolean = ChadVar.DEVELOPERS.contains(user.longID) || ChadVar.ORIGINAL_DEVELOPERS.contains(user.longID)
+    fun isDeveloper(user: IUser): Boolean = ChadVar.DEVELOPERS.contains(user.longID) /*|| ChadVar.ORIGINAL_DEVELOPERS.contains(user.longID)*/
 
     /**
      * Checks if a user has permission for a command

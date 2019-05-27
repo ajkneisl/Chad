@@ -200,8 +200,8 @@ object ChadVar {
      *
      * Adds a useful fallback if an original developer gets removed through mistake etc.
      */
-    @JvmStatic
-    val ORIGINAL_DEVELOPERS: ArrayList<Long> = arrayListOf()
+    /*@JvmStatic
+    val ORIGINAL_DEVELOPERS: ArrayList<Long> = arrayListOf()*/
 
     /*
       Registers sources for the player manager

@@ -28,6 +28,14 @@ public class Shutdown implements Command.Class  {
         return() -> {
             MessageHandler messageHandler = new MessageHandler(e.getChannel(), e.getAuthor());
 
+            if (args.get(0).equalsIgnoreCase("-instant"))
+            {
+                // Warns within the UI
+                ChadInstance.getLogger().warn("Shutting down...");
+                ChadInstance.cli.logout();
+                System.exit(0);
+            }
+
             // Requests to send the confirmation message then gets it
             IMessage confirm = RequestBuffer.request(() -> e.getChannel().sendMessage("Are you sure you want to do this?")).get();
 
