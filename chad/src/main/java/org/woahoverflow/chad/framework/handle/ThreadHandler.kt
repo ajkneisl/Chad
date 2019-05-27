@@ -1,5 +1,6 @@
 package org.woahoverflow.chad.framework.handle
 
+import org.woahoverflow.chad.core.ChadInstance
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -52,5 +53,10 @@ object ThreadHandler {
      * @param long The user's ID
      */
     @JvmStatic
-    fun canUserRunThread(long: Long): Boolean = threadHash[long] == null || threadHash[long]!!.size < 3
+    fun canUserRunThread(long: Long): Boolean
+    {
+        if (long == ChadInstance.cli.ourUser.longID)
+            return true
+        return threadHash[long] == null || threadHash[long]!!.size < 3
+    }
 }
