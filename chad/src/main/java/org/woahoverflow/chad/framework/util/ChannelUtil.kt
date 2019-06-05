@@ -1,5 +1,7 @@
 package org.woahoverflow.chad.framework.util
 
+import org.woahoverflow.chad.framework.handle.MessageHandler
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IGuild
 
 /**
@@ -15,3 +17,5 @@ fun getChannelName(any: Any, guild: IGuild): String {
 
     return "Deleted Channel"
 }
+
+fun MessageEvent.createMessageHandler(): MessageHandler = MessageHandler(channel, author)

@@ -8,6 +8,8 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import org.woahoverflow.chad.commands.Hentai
 import org.woahoverflow.chad.commands.Meme
 import org.woahoverflow.chad.commands.Porn
+import org.woahoverflow.chad.commands.RedditNew
+import org.woahoverflow.chad.commands.RedditTop
 import org.woahoverflow.chad.commands.`fun`.*
 import org.woahoverflow.chad.commands.admin.*
 import org.woahoverflow.chad.commands.community.*

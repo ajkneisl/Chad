@@ -5,10 +5,59 @@ import org.woahoverflow.chad.framework.handle.PermissionHandler
 import org.woahoverflow.chad.framework.handle.Reddit
 import org.woahoverflow.chad.framework.handle.coroutine.request
 import org.woahoverflow.chad.framework.obj.Command
+import org.woahoverflow.chad.framework.util.createMessageHandler
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
 import java.util.HashMap
+
+/**
+ * Sends a new post from a selected Sub Reddit
+ *
+ * @type Info
+ * @author sho
+ */
+class RedditNew : Command.Class {
+    override suspend fun help(e: MessageEvent) {
+        val st = HashMap<String, String>()
+        st["rnew [subreddit]"] = "Displays the most recent post from a subreddit."
+
+        Command.helpCommand(st, "Reddit New", e)
+    }
+
+    override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        if (args.isEmpty()) {
+            e.createMessageHandler().sendError("Please include the name of the subreddit!")
+            return
+        }
+
+        send(arrayListOf(args[0]), e, requiresNsfw = false, postType = Reddit.PostType.NEW)
+    }
+}
+
+/**
+ * Sends a new post from a selected Sub Reddit
+ *
+ * @type Info
+ * @author sho
+ */
+class RedditTop : Command.Class {
+    override suspend fun help(e: MessageEvent) {
+        val st = HashMap<String, String>()
+        st["rtop [subreddit]"] = "Displays the top post from a subreddit."
+
+        Command.helpCommand(st, "Reddit Top", e)
+    }
+
+    override suspend fun run(e: MessageEvent, args: MutableList<String>) {
+        if (args.isEmpty()) {
+            e.createMessageHandler().sendError("Please include the name of the subreddit!")
+            return
+        }
+
+        send(arrayListOf(args[0]), e, requiresNsfw = false, postType = Reddit.PostType.TOP)
+    }
+}
 
 /**
  * Sends a random meme to a channel
@@ -104,8 +153,8 @@ class Hentai : Command.Class {
  * @param arrayList The different subreddits to choose from.
  * @param e The message event from the command.
  */
-private fun send(arrayList: ArrayList<String>, e: MessageEvent, requiresNsfw: Boolean = true) {
-    MessageHandler(e.channel, e.author).also { handle ->
+private fun send(arrayList: ArrayList<String>, e: MessageEvent, requiresNsfw: Boolean = true, postType: Reddit.PostType = Reddit.PostType.HOT) {
+    e.createMessageHandler().also { handle ->
         if (e.message.content.contains("rfall") && PermissionHandler.isDeveloper(e.author)) {
             handle.sendMessage("Refreshing all...").also {
                 Reddit.getPost(arrayList, Reddit.PostType.HOT)
@@ -121,8 +170,14 @@ private fun send(arrayList: ArrayList<String>, e: MessageEvent, requiresNsfw: Bo
                 return
             }
 
+            val post = Reddit.getPost(arrayList, postType, saveAll = false)?.getJSONObject("data").also {
+                if (it == null) {
+                    request { msg.edit("Invalid subreddit!") }
+                    return
+                }
+            }!!
+
             handle.sendEmbed {
-                val post = Reddit.getPost(arrayList, Reddit.PostType.HOT, saveAll = false)!!.getJSONObject("data")
                 withUrl("https://reddit.com" + post.getString("permalink"))
                 withTitle(post.getString("title"))
                 withDesc("**Vote**: ${post.getLong("ups")} / **Comments**: ${post.getLong("num_comments")}")

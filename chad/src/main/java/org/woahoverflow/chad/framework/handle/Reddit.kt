@@ -104,9 +104,11 @@ object Reddit {
             GlobalScope.launch {
                 for (post in json.getJSONObject("data").getJSONArray("children")) {
                     launch {
-                        val postJson = post as JSONObject
-                        if (!postJson.getJSONObject("data").getBoolean("stickied") && !(postJson.getJSONObject("data").getString("url").contains(postJson.getJSONObject("data").getString("permalink"))))
-                            subreddits[subreddit]!![postType]!!.add(postJson)
+                        try {
+                            val postJson = post as JSONObject
+                            if (!postJson.getJSONObject("data").getBoolean("stickied") && !(postJson.getJSONObject("data").getString("url").contains(postJson.getJSONObject("data").getString("permalink"))))
+                                subreddits[subreddit]!![postType]!!.add(postJson)
+                        } catch (ex: Exception) { }
                     }
                 }
             }

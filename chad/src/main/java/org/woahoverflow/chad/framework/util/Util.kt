@@ -23,7 +23,6 @@ import javax.net.ssl.HttpsURLConnection
  * @author sho, codebasepw
  */
 object Util {
-
     /**
      * The user agent
      */
