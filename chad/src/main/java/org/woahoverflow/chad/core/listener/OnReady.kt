@@ -1,6 +1,6 @@
 package org.woahoverflow.chad.core.listener
 
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getLogger
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.ReadyEvent
 
@@ -17,7 +17,5 @@ class OnReady {
      * @param event Discord Ready Event
      */
     @EventSubscriber
-    fun onReadyEvent(event: ReadyEvent) {
-        ChadInstance.getLogger().info("Bot started with {} guilds!", event.client.guilds.size)
-    }
+    fun onReadyEvent(event: ReadyEvent) { getLogger().info("Bot started with {} guilds!", event.client.guilds.size) }
 }

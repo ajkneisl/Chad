@@ -5,7 +5,7 @@ import com.google.common.io.Files.asCharSink
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.apache.commons.lang3.SystemUtils
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.util.Util
 import java.io.File
 import java.io.FileWriter
@@ -24,14 +24,14 @@ object JsonHandler {
         val woahoverflowDirectory = if (linux) File("/home/" + System.getProperty("user.name") + "/woahoverflow") else File(System.getenv("appdata") + "\\woahoverflow")
 
         if (!woahoverflowDirectory.exists() && woahoverflowDirectory.mkdirs()) {
-            ChadInstance.getLogger().error("There was an error making the woahoverflow directory.")
+            getLogger().error("There was an error making the woahoverflow directory.")
             System.exit(1)
         }
 
         fileLocation = if (linux) File(woahoverflowDirectory.path + "/chad") else File(woahoverflowDirectory.path + "\\chad")
 
         if (!fileLocation.exists() && !fileLocation.mkdirs()) {
-            ChadInstance.getLogger().error("There was an error making the Chad directory.")
+            getLogger().error("There was an error making the Chad directory.")
             System.exit(1)
         }
 
@@ -39,7 +39,7 @@ object JsonHandler {
 
         if (!botLocation.exists()) {
             if (!botLocation.createNewFile()) {
-                ChadInstance.getLogger().error("There was an error creating the bot.json file.")
+                getLogger().error("There was an error creating the bot.json file.")
                 System.exit(1)
             }
 
@@ -56,7 +56,7 @@ object JsonHandler {
                     fileWriter.flush()
                 }
             } catch (e: IOException) {
-                ChadInstance.getLogger().error("There was an issue creating files at startup!", e)
+                getLogger().error("There was an issue creating files at startup!", e)
             }
         }
     }
@@ -70,22 +70,22 @@ object JsonHandler {
     fun forceCheck(): JsonHandler {
         when (SystemUtils.OS_NAME.toUpperCase()) {
             "WINDOWS 10" -> {
-                ChadInstance.getLogger().debug("Checking files as if OS is Windows 10")
+                getLogger().debug("Checking files as if OS is Windows 10")
                 execFiles(false)
             }
 
             "WINDOWS 7" -> {
-                ChadInstance.getLogger().debug("Checking files as if OS is Windows 7")
+                getLogger().debug("Checking files as if OS is Windows 7")
                 execFiles(false)
             }
 
             "LINUX" -> {
-                ChadInstance.getLogger().debug("Checking files as if OS is Linux")
+                getLogger().debug("Checking files as if OS is Linux")
                 execFiles(true)
             }
 
             else -> {
-                ChadInstance.getLogger().error("Chad cannot run on this Operating System!")
+                getLogger().error("Chad cannot run on this Operating System!")
                 System.exit(1)
             }
         }

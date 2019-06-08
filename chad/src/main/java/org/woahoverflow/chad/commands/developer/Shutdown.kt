@@ -1,7 +1,8 @@
 package org.woahoverflow.chad.commands.developer
 
 import kotlinx.coroutines.delay
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getClient
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.coroutine.asIMessage
 import org.woahoverflow.chad.framework.handle.coroutine.request
@@ -74,15 +75,15 @@ class Shutdown : Command.Class {
         MessageHandler(e.channel, e.author).sendEmbed(EmbedBuilder().withDesc("Chad is shutting down in 10 seconds..."))
 
         // Warns within the UI
-        ChadInstance.getLogger().warn("Shutting down in 10 seconds...")
+        getLogger().warn("Shutting down in 10 seconds...")
 
         // Updates the presence
-        ChadInstance.cli.changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...")
+        getClient().changePresence(StatusType.DND, ActivityType.PLAYING, "Shutting down...")
 
         delay(10000L)
 
         // Exits
-        ChadInstance.cli.logout()
+        getClient().logout()
         System.exit(0)
     }
 

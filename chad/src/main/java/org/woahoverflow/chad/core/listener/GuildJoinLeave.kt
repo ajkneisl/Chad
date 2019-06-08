@@ -1,6 +1,6 @@
 package org.woahoverflow.chad.core.listener
 
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
 import org.woahoverflow.chad.framework.obj.Player.DataType
@@ -38,7 +38,7 @@ class GuildJoinLeave {
                     @Suppress("UNCHECKED_CAST")
                     guildData = guildData as ArrayList<Long>
                 } catch (e: ClassCastException) {
-                    ChadInstance.getLogger().error("Error with cast!", e)
+                    getLogger().error("Error with cast!", e)
                     return@Thread
                 }
 
@@ -54,7 +54,7 @@ class GuildJoinLeave {
             GuildHandler.getGuild(event.guild.longID)
 
             // Send a log with the new guild
-            ChadInstance.getLogger().debug('['.toString() + event.guild.stringID + "] Joined Guild")
+            getLogger().debug('['.toString() + event.guild.stringID + "] Joined Guild")
 
             // The guild's default channel
             val defaultChannel = RequestBuffer.request<IChannel> { event.guild.defaultChannel }.get()
@@ -96,6 +96,6 @@ class GuildJoinLeave {
         GuildHandler.removeGuild(event.guild.longID)
 
         // Send a log
-        ChadInstance.getLogger().debug('<'.toString() + event.guild.stringID + "> Left Guild")
+        getLogger().debug('<'.toString() + event.guild.stringID + "> Left Guild")
     }
 }

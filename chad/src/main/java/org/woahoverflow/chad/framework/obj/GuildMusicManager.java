@@ -2,13 +2,12 @@ package org.woahoverflow.chad.framework.obj;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import org.woahoverflow.chad.core.ChadInstance;
 import org.woahoverflow.chad.framework.handle.TrackScheduler;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static org.woahoverflow.chad.core.ChadInstance.cli;
 
 /**
  * @author sho
@@ -55,13 +54,13 @@ public class GuildMusicManager {
                     @Override
                     public void run() {
                         if (active) {
-                            if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> cli.getOurUser().getVoiceStateForGuild(cli.getGuildByID(guildId)).getChannel() == null).get()) {
+                            if ((player.isPaused() || player.getPlayingTrack() == null) || RequestBuffer.request(() -> ChadInstance.getClient().getOurUser().getVoiceStateForGuild(ChadInstance.getClient().getGuildByID(guildId)).getChannel() == null).get()) {
                                 amount++;
                             } else amount = 0;
 
                             if (amount >= 60) {
                                 RequestBuffer.request(() -> {
-                                    RequestBuffer.request(() -> cli.getGuildByID(scheduler.getGuildId()).getClient().getOurUser().getVoiceStateForGuild(cli.getGuildByID(scheduler.getGuildId())).getChannel().leave());
+                                    RequestBuffer.request(() -> ChadInstance.getClient().getGuildByID(scheduler.getGuildId()).getClient().getOurUser().getVoiceStateForGuild(ChadInstance.getClient().getGuildByID(scheduler.getGuildId())).getChannel().leave());
                                 });
 
                                 setActive(false);

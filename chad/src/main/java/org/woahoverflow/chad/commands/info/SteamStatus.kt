@@ -26,13 +26,13 @@ class SteamStatus : Command.Class {
         fun update() {
             if (ArgumentHandler.isToggled("DISABLE_STEAM_CACHE") || ArgumentHandler.isToggled("TEST_RUN")) return
 
-            val csgo = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+            val csgo = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730&key=" + ChadVar.STEAM_API_KEY)?.getJSONObject("response")?.getInt("player_count")?.toLong() ?: return
 
-            val pubg = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+            val pubg = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=578080&key=" + ChadVar.STEAM_API_KEY)?.getJSONObject("response")?.getInt("player_count")?.toLong() ?: return
 
-            val dota = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+            val dota = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=570&key=" + ChadVar.STEAM_API_KEY)?.getJSONObject("response")?.getInt("player_count")?.toLong() ?: return
 
-            val tf = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=440&key=" + ChadVar.STEAM_API_KEY)!!.getJSONObject("response").getInt("player_count").toLong()
+            val tf = JsonHandler.read("https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=440&key=" + ChadVar.STEAM_API_KEY)?.getJSONObject("response")?.getInt("player_count")?.toLong() ?: return
 
             val formatter = DecimalFormat("#,###")
 

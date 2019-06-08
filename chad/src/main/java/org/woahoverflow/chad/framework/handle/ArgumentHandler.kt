@@ -1,6 +1,6 @@
 package org.woahoverflow.chad.framework.handle
 
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getLogger
 
 /**
  * Manages arguments that're inputted on start
@@ -29,17 +29,12 @@ object ArgumentHandler {
             LAUNCH_ARGUMENTS["DISABLE_STEAM_CACHE"] = false
         }
 
-        val start = System.currentTimeMillis()
-        ChadInstance.getLogger().debug("Checking arguments...")
-
         for (arg in args) {
             if (LAUNCH_ARGUMENTS.keys.contains(arg)) {
-                ChadInstance.getLogger().debug("{} has been enabled!", arg)
+                getLogger().debug("{} has been enabled!", arg)
                 LAUNCH_ARGUMENTS[arg.toUpperCase()] = true
             }
         }
-
-        ChadInstance.getLogger().debug("Completed checking arguments! Took ${System.currentTimeMillis()-start}ms")
 
         ran = true
     }

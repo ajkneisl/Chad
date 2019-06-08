@@ -3,8 +3,8 @@ package org.woahoverflow.chad.framework.handle.coroutine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PermissionHandler
@@ -138,7 +138,7 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
         }
 
         launch {
-            ChadInstance.getLogger().debug("Starting task for user ${event.author.stringID}: $commandName")
+            getLogger().debug("Starting task for user ${event.author.stringID}: $commandName")
             synchronized(users) {
                 users[event.author] = if (users[event.author] != null) users[event.author]!! else 0 + 1
             }
@@ -159,9 +159,9 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
             }
 
             if (successful) {
-                ChadInstance.getLogger().debug("Finished task successfully for user ${event.author.name}")
+                getLogger().debug("Finished task successfully for user ${event.author.name}")
             } else {
-                ChadInstance.getLogger().debug("Finished task unsuccessfully for user ${event.author.name}")
+                getLogger().debug("Finished task unsuccessfully for user ${event.author.name}")
             }
         }
     }

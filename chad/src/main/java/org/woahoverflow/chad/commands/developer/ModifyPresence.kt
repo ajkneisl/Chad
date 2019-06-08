@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.developer
 
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.core.getClient
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PresenceHandler
@@ -102,7 +102,7 @@ class ModifyPresence : Command.Class {
                 for (arg in args) sb.append("$arg ")
 
                 ChadVar.currentStatus = sb.toString().trim { it <= ' ' }
-                ChadInstance.cli.changePresence(ChadVar.statusType, ChadVar.activityType, ChadVar.currentStatus)
+                getClient().changePresence(ChadVar.statusType, ChadVar.activityType, ChadVar.currentStatus)
                 MessageHandler(e.channel, e.author).sendMessage("Changed presence to `${ChadVar.currentStatus}`.")
             }
         }

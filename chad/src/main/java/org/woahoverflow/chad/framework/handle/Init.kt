@@ -6,13 +6,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.woahoverflow.chad.core.ChadInstance
-import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.core.*
 import org.woahoverflow.chad.framework.sync.sync
 import org.woahoverflow.chad.framework.util.Util
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.Exception
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -25,22 +25,14 @@ import javax.net.ssl.HttpsURLConnection
  * Main initialization, does everything
  */
 fun init() {
-    if (!ChadInstance.cli.isReady) {
-        ChadInstance.getLogger().warn("Discord Client is not ready, waiting")
-        while (!ChadInstance.cli.isReady) {
-            TimeUnit.MILLISECONDS.sleep(500)
-            ChadInstance.getLogger().warn("Discord Client is still not ready, waiting")
-        }
-    }
-
     val start = System.currentTimeMillis()
-    ChadInstance.getLogger().info("Starting initialization...")
+    getLogger().info("Starting initialization...")
 
     val initInstance = Init()
     initInstance.timers()
     initInstance.data()
 
-    if (initInstance.start()) ChadInstance.getLogger().info("Completed initialization! Took {}ms", System.currentTimeMillis()-start)
+    if (initInstance.start()) getLogger().info("Completed initialization! Took {}ms", System.currentTimeMillis()-start)
 }
 
 class Init {
@@ -67,20 +59,29 @@ class Init {
         val job = GlobalScope.launch(CoroutineName("Initialization Handler")) {
             /**
              * Syncs with the website
-             * Updates money leaderboard
+             * Refreshes presences
              *
              * # 5 minutes
              */
-            ChadInstance.getTimer().schedule(object : TimerTask(){
+            TIMER.schedule(object : TimerTask(){
                 override fun run() {
-                    sync(ChadInstance.cli)
+                    sync(getClient())
 
                     PresenceHandler.refreshPresences()
+                }
+            }, 0, 1000*60*5)
 
+            /**
+             * Updates leaderboards. (This is initially delayed to improve startup times)
+             *
+             * # 15 minutes
+             */
+            TIMER.schedule(object : TimerTask() {
+                override fun run() {
                     LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.MONEY)
                     LeaderboardHandler.refreshLeaderboard(LeaderboardHandler.LeaderboardType.XP)
                 }
-            }, 0, 1000*60*5)
+            }, 1000*60*5, 1000*60*15)
 
             /**
              * Rotates presence
@@ -90,7 +91,7 @@ class Init {
              * # 5 minutes
              */
             if (ChadVar.rotatePresence) {
-                ChadInstance.getTimer().schedule(object : TimerTask() {
+                TIMER.schedule(object : TimerTask() {
                     override fun run() {
                         if (!ChadVar.rotatePresence) return
 
@@ -104,11 +105,11 @@ class Init {
              *
              * # 1 day
              */
-            ChadInstance.getTimer().schedule(object : TimerTask() {
+            TIMER.schedule(object : TimerTask() {
                 override fun run() {
                     Reddit.subreddits.clear()
 
-                    ChadInstance.getLogger().debug("Reset all Reddit data!")
+                    getLogger().debug("Reset all Reddit data!")
                 }
             }, 0, 86400 * 1000)
         }

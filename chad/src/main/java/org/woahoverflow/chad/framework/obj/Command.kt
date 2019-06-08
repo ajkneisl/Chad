@@ -1,6 +1,5 @@
 package org.woahoverflow.chad.framework.obj
 
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Guild.DataType

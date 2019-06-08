@@ -2,10 +2,10 @@ package org.woahoverflow.chad.commands.developer
 
 import kotlinx.coroutines.delay
 import org.json.JSONObject
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
 import org.woahoverflow.chad.core.ChadVar.eightBallResults
 import org.woahoverflow.chad.core.ChadVar.swearWords
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.*
 import org.woahoverflow.chad.framework.obj.Command
 import org.woahoverflow.chad.framework.obj.Guild
@@ -113,10 +113,10 @@ class ModifyCache : Command.Class {
                         JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")!!.forEach { v ->
                             run {
                                 if (java.lang.Boolean.parseBoolean((v as JSONObject).getString("allow"))) {
-                                    ChadInstance.getLogger().debug("Added user " + v.getString("display_name") + " to group System Administrator")
+                                    getLogger().debug("Added user " + v.getString("display_name") + " to group System Administrator")
                                     ChadVar.DEVELOPERS.add(v.getLong("id"))
                                 } else {
-                                    ChadInstance.getLogger().debug("Avoided adding user " + v.getString("display_name"))
+                                    getLogger().debug("Avoided adding user " + v.getString("display_name"))
                                 }
                             }
                         }

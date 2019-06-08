@@ -4,8 +4,8 @@ package org.woahoverflow.chad.framework.sync
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.ArgumentHandler
 import org.woahoverflow.chad.framework.handle.JsonHandler
 import sx.blah.discord.api.IDiscordClient
@@ -34,7 +34,7 @@ fun sync(client: IDiscordClient) {
         Class.forName("com.mysql.jdbc.Driver")
         connection = DriverManager.getConnection(JsonHandler["jdbc"])
     } catch (ex: Exception) {
-        ChadInstance.getLogger().error("Failed to connect to the database!")
+        getLogger().error("Failed to connect to the database!")
         return
     }
 

@@ -1,7 +1,8 @@
 package org.woahoverflow.chad.core.listener
 
 import org.bson.Document
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getClient
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.PlayerHandler
@@ -39,7 +40,7 @@ class UserLeaveJoin {
             @Suppress("UNCHECKED_CAST")
             guildData = guildData as ArrayList<Long>
         } catch (e: ClassCastException) {
-            ChadInstance.getLogger().error("Error with cast!", e)
+            getLogger().error("Error with cast!", e)
             return
         }
 
@@ -69,7 +70,7 @@ class UserLeaveJoin {
         }
 
         if (
-            ChadInstance.cli.ourUser.getPermissionsForGuild(e.guild).contains(Permissions.MANAGE_ROLES)
+            getClient().ourUser.getPermissionsForGuild(e.guild).contains(Permissions.MANAGE_ROLES)
             && g.getObject(Guild.DataType.ROLE_ON_JOIN) as Boolean
                 ) {
             val joinRoleStringID = g.getObject(Guild.DataType.JOIN_ROLE)
@@ -111,7 +112,7 @@ class UserLeaveJoin {
             @Suppress("UNCHECKED_CAST")
             guildData = guildData as ArrayList<Long>
         } catch (e: ClassCastException) {
-            ChadInstance.getLogger().error("Error with cast!", e)
+            getLogger().error("Error with cast!", e)
             return
         }
 

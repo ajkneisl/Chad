@@ -2,8 +2,8 @@ package org.woahoverflow.chad.framework.util
 
 import org.json.JSONArray
 import org.json.JSONObject
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.JsonHandler
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.obj.IGuild
@@ -51,10 +51,10 @@ object Util {
             con.setRequestProperty("User-Agent", USER_AGENT)
             val responseCode = con.responseCode
             if (responseCode != 200) {
-                ChadInstance.getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode)
+                getLogger().error("Failed to send a request to url {}\nResponse Code : {}", url, responseCode)
                 return ""
             }
-            ChadInstance.getLogger().debug("Fulfilled a request at URL : {}", url)
+            getLogger().debug("Fulfilled a request at URL : {}", url)
             val `in` = BufferedReader(
                     InputStreamReader(con.inputStream, StandardCharsets.UTF_8))
 
@@ -179,7 +179,7 @@ object Util {
         Objects.requireNonNull<JSONArray>(JsonHandler.readArray("https://cdn.woahoverflow.org/data/contributors.json")).forEach { v ->
 
             if ((v as JSONObject).getBoolean("developer")) {
-                ChadInstance.getLogger().debug("User ${v.getString("display_name")} has been given the role of Developer.")
+                getLogger().debug("User ${v.getString("display_name")} has been given the role of Developer.")
                 ChadVar.ORIGINAL_DEVELOPERS.add(v.getLong("id"))
             }
         }

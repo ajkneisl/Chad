@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.commands.admin
 
 import kotlinx.coroutines.delay
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getClient
 import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.handle.coroutine.asIMessage
@@ -26,7 +26,7 @@ class Purge : Command.Class {
         val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX) as String
 
         // Makes sure the bot has permission to manage messages
-        if (!ChadInstance.cli.ourUser.getPermissionsForGuild(e.guild).contains(Permissions.MANAGE_MESSAGES)) {
+        if (!getClient().ourUser.getPermissionsForGuild(e.guild).contains(Permissions.MANAGE_MESSAGES)) {
             messageHandler.sendPresetError(MessageHandler.Messages.BOT_NO_PERMISSION)
             return
         }

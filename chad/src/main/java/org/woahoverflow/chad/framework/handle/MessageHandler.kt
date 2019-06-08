@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.framework.handle
 
 import org.apache.http.util.TextUtils
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.obj.Guild.DataType
 import org.woahoverflow.chad.framework.util.Util
 import sx.blah.discord.handle.obj.*
@@ -185,7 +185,7 @@ class MessageHandler(private val channel: IChannel, user: IUser) {
             try {
                 loggingChannel = RequestBuffer.request<IChannel> { guild.getChannelByID(java.lang.Long.parseLong(channelID)) }.get()
             } catch (e: NumberFormatException) {
-                ChadInstance.getLogger().error("Guild " + guild.stringID + "'s logging had an issue!", e)
+                getLogger().error("Guild " + guild.stringID + "'s logging had an issue!", e)
                 return null
             }
 

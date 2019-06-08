@@ -1,6 +1,7 @@
 package org.woahoverflow.chad.framework.handle
 
-import org.woahoverflow.chad.core.ChadInstance
+import org.woahoverflow.chad.core.getClient
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.obj.Player
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.IUser
@@ -44,7 +45,12 @@ object LeaderboardHandler {
             /**
              * The minimum amount for the leaderboard
              */
-            val minimum: Long
+            val minimum: Long,
+
+            /**
+             * Used for refreshing the Leaderboard
+             */
+            val type: LeaderboardType
     ) {
         /**
          * The stored leaderboard
@@ -54,7 +60,11 @@ object LeaderboardHandler {
         /**
          * Gets the leaderboard
          */
-        fun getLeaderBoard(): ConcurrentHashMap<Int, E> = leaderBoard
+        fun getLeaderBoard(): ConcurrentHashMap<Int, E> {
+            if (lastRefreshed == 0L) LeaderboardHandler.refreshLeaderboard(type)
+
+            return leaderBoard
+        }
 
         /**
          * Sets the position on the leaderboard to a user.
@@ -78,13 +88,18 @@ object LeaderboardHandler {
         fun reset() {
             leaderBoard.clear()
         }
+
+        /**
+         * The last time the leaderboard was refreshed
+         */
+        var lastRefreshed = 0L
     }
 
     /**
      * The leaderboards for Chad
      */
-    val moneyLeaderBoard = LeaderBoard<MoneyUserSet>(10, 2000)
-    val xpLeaderBoard = LeaderBoard<XPUserSet>(10, 20)
+    val moneyLeaderBoard = LeaderBoard<MoneyUserSet>(10, 2000, LeaderboardHandler.LeaderboardType.MONEY)
+    val xpLeaderBoard = LeaderBoard<XPUserSet>(10, 20, LeaderboardHandler.LeaderboardType.XP)
 
     /**
      * Refreshes the leaderboard
@@ -93,12 +108,12 @@ object LeaderboardHandler {
         if (ArgumentHandler.isToggled("TEST_RUN")) return TimeResult(0, 0L)
 
         val start = System.currentTimeMillis()
-        ChadInstance.getLogger().debug("Refreshing $type leaderboard...")
+        getLogger().debug("Refreshing $type leaderboard...")
 
         when (type) {
             LeaderboardHandler.LeaderboardType.MONEY -> {
                 val guilds = RequestBuffer.request<List<IGuild>> {
-                    ChadInstance.cli.guilds
+                    getClient().guilds
                 }.get()
 
                 // Gets all users and checks for duplicates
@@ -113,7 +128,7 @@ object LeaderboardHandler {
                     list
                 }.get()
 
-                ChadInstance.getLogger().debug("Refreshing ${users.size} users for MONEY leaderboard...")
+                getLogger().debug("Refreshing ${users.size} users for MONEY leaderboard...")
 
                 moneyLeaderBoard.reset()
                 val amount = moneyLeaderBoard.amount
@@ -140,13 +155,14 @@ object LeaderboardHandler {
                     }
                 }
 
-                ChadInstance.getLogger().debug("Completed money leaderboard refresh! Took ${System.currentTimeMillis()-start}ms")
+                moneyLeaderBoard.lastRefreshed = System.currentTimeMillis()
+                getLogger().debug("Completed money leaderboard refresh! Took ${System.currentTimeMillis()-start}ms")
                 return TimeResult(users.size, System.currentTimeMillis()-start)
             }
 
             LeaderboardHandler.LeaderboardType.XP -> {
                 val guilds = RequestBuffer.request<List<IGuild>> {
-                    ChadInstance.cli.guilds
+                    getClient().guilds
                 }.get()
 
                 // Gets all users and checks for duplicates
@@ -161,7 +177,7 @@ object LeaderboardHandler {
                     list
                 }.get()
 
-                ChadInstance.getLogger().debug("Refreshing ${users.size} users for XP leaderboard...")
+                getLogger().debug("Refreshing ${users.size} users for XP leaderboard...")
 
                 xpLeaderBoard.reset()
                 val amount = xpLeaderBoard.amount
@@ -188,7 +204,8 @@ object LeaderboardHandler {
                     }
                 }
 
-                ChadInstance.getLogger().debug("Completed XP leaderboard refresh! Took ${System.currentTimeMillis()-start}ms")
+                xpLeaderBoard.lastRefreshed = System.currentTimeMillis()
+                getLogger().debug("Completed XP leaderboard refresh! Took ${System.currentTimeMillis()-start}ms")
                 return TimeResult(users.size, System.currentTimeMillis()-start)
             }
         }

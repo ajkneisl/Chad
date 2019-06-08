@@ -1,7 +1,7 @@
 package org.woahoverflow.chad.framework.obj
 
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.core.getLogger
 import org.woahoverflow.chad.framework.handle.database.DatabaseManager
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -199,7 +199,7 @@ class Guild {
             permissionSet = permissions as ArrayList<String>
         } catch (castException: ClassCastException) {
             // If it for some reason doesn't cast properly
-            ChadInstance.getLogger().error("Permission set failed to cast to an array-list!", castException)
+            getLogger().error("Permission set failed to cast to an array-list!", castException)
             return ArrayList()
         }
 

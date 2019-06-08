@@ -1,7 +1,8 @@
 package org.woahoverflow.chad.framework.handle
 
-import org.woahoverflow.chad.core.ChadInstance
 import org.woahoverflow.chad.core.ChadVar
+import org.woahoverflow.chad.core.getClient
+import org.woahoverflow.chad.core.getLogger
 import sx.blah.discord.handle.obj.ActivityType
 import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.RequestBuffer
@@ -24,13 +25,13 @@ object PresenceHandler {
     @JvmStatic
     fun refreshPresences() {
         val obj = JsonHandler.read("https://api.woahoverflow.org/app/presences") ?: return run {
-            ChadInstance.getLogger().error("There was an issue getting presences from the API!")
+            getLogger().error("There was an issue getting presences from the API!")
         }
 
         val data = obj.getJSONObject("message").getJSONArray("contents")
 
         if (data.length() == 0) {
-            ChadInstance.getLogger().error("There's no presences on API!")
+            getLogger().error("There's no presences on API!")
             return
         }
 
@@ -57,7 +58,7 @@ object PresenceHandler {
                 }
 
                 presences.add(RPSet(activityType, statusType, ob.getString("status")))
-            } else ChadInstance.getLogger().error("There was an issue with one of the presence entries!")
+            } else getLogger().error("There was an issue with one of the presence entries!")
         }
     }
 
@@ -71,8 +72,8 @@ object PresenceHandler {
         ChadVar.currentStatus = presence.status
 
         RequestBuffer.request {
-            ChadInstance.getLogger().debug("Changing presence to {}, {}, {}", presence.statusType, presence.activityType, presence.status)
-            ChadInstance.cli.changePresence(presence.statusType, presence.activityType, presence.status)
+            getLogger().debug("Changing presence to {}, {}, {}", presence.statusType, presence.activityType, presence.status)
+            getClient().changePresence(presence.statusType, presence.activityType, presence.status)
         }
     }
 
@@ -84,7 +85,7 @@ object PresenceHandler {
         try {
             updatePresence(presences.random())
         } catch (e: Exception) {
-            ChadInstance.getLogger().error("There's no presences in list, setting to default!")
+            getLogger().error("There's no presences in list, setting to default!")
             updatePresence(RPSet(ActivityType.PLAYING, StatusType.ONLINE, "Minecraft"))
         }
     }
