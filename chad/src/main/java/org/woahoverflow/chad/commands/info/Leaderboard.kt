@@ -1,59 +1,62 @@
 package org.woahoverflow.chad.commands.info
 
-import org.woahoverflow.chad.framework.handle.GuildHandler
 import org.woahoverflow.chad.framework.handle.LeaderboardHandler
 import org.woahoverflow.chad.framework.handle.MessageHandler
 import org.woahoverflow.chad.framework.obj.Command
-import org.woahoverflow.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
 /**
- * Gives a leaderboard..
+ * Gives a leaderboard.
+ *
+ * @author sho
  */
 class Leaderboard: Command.Class {
     override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
-        st["leaderboard [money/xp/world/total]"] = "Get the leaderboard of the specific type."
+        st["leaderboard [money/xp]"] = "Get the leaderboard of the specific type."
         Command.helpCommand(st, "Leaderboard", e)
     }
 
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
         val messageHandler = MessageHandler(e.channel, e.author)
-        val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
 
         if (args.size != 1) {
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}leaderboard [money/xp/total]")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "leaderboard [money/xp]", includePrefix = true)
             return
         }
 
         when (args[0].toLowerCase()) {
-            "money" -> {
-                val leaderboard = LeaderboardHandler.moneyLeaderBoard.getLeaderBoard()
-                val sb = StringBuilder()
-
-                for (i in 1..leaderboard.size) sb.append("**[$i]** `${leaderboard[i]!!.user.name}`: `${leaderboard[i]!!.bal}`\n")
-
-                messageHandler.sendEmbed(EmbedBuilder().withTitle("Money Leaderboard").withDesc(sb.toString().removeSuffix("\n")))
-
-                return
+            "money" -> LeaderboardHandler.moneyLeaderBoard.getLeaderBoard().also { lb ->
+                StringBuilder().apply {
+                    for (i in 1..lb.size) {
+                        append("**[$i]** `${lb[i]!!.user.name}`: `${lb[i]!!.bal}`\n")
+                    }
+                }.toString().removeSuffix("\n").also { msg ->
+                    messageHandler.sendEmbed {
+                        withDesc(msg)
+                        withTitle("Money Leaderboard")
+                    }
+                }
             }
 
-            "xp" -> {
-                val leaderboard = LeaderboardHandler.xpLeaderBoard.getLeaderBoard()
-                val sb = StringBuilder()
-
-                for (i in 1..leaderboard.size) sb.append("**[$i]** `${leaderboard[i]!!.user.name}`: `${leaderboard[i]!!.xp}`\n")
-
-                messageHandler.sendEmbed(EmbedBuilder().withTitle("XP Leaderboard").withDesc(sb.toString().removeSuffix("\n")))
+            "xp" -> LeaderboardHandler.xpLeaderBoard.getLeaderBoard().also { lb ->
+                StringBuilder().apply {
+                    for (i in 1..lb.size) {
+                        append("**[$i]** `${lb[i]!!.user.name}`: `${lb[i]!!.xp}`\n")
+                    }
+                }.toString().removeSuffix("\n").also { msg ->
+                    messageHandler.sendEmbed {
+                        withDesc(msg)
+                        withTitle("XP Leaderboard")
+                    }
+                }
             }
 
             else -> {
-                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}leaderboard [money/xp/total]")
+                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "leaderboard [money/xp]", includePrefix = true)
                 return
             }
         }
     }
-
 }
