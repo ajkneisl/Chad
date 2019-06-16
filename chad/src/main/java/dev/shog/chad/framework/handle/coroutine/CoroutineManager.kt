@@ -38,7 +38,7 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
      * Handles message received events.
      */
     @EventSubscriber
-    fun messageReceivedEvent(event: MessageReceivedEvent) { event(event); }
+    fun messageReceivedEvent(event: MessageReceivedEvent) { event(event) }
 
     /**
      * Dispatches the events.
@@ -140,7 +140,7 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
         launch {
             getLogger().debug("Starting task for user ${event.author.stringID}: $commandName")
             synchronized(users) {
-                users[event.author] = if (users[event.author] != null) users[event.author]!! else 0 + 1
+                users[event.author] = if (users[event.author] != null) users[event.author]!! + 1 else 1
             }
 
             val successful: Boolean = try {
