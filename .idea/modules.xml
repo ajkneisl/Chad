@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Chad.iml" filepath="$PROJECT_DIR$/Chad.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chad_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Chad_main.iml" group="Chad" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chad_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Chad_test.iml" group="Chad" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.woahoverflow-Chad.iml" filepath="$PROJECT_DIR$/.idea/modules/org.woahoverflow-Chad.iml" group="Chad" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.shog-Chad.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.shog-Chad.iml" group="Chad" />
     </modules>
   </component>
 </project>
