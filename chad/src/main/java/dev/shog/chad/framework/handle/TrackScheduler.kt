@@ -16,7 +16,7 @@ class TrackScheduler(
         private val player: AudioPlayer,
         val guildId: Long,
         var channelId: Long,
-        private val musicManager: dev.shog.chad.framework.obj.GuildMusicManager
+        private val musicManager: GuildMusicManager
 ) : AudioEventAdapter() {
 
     /**
@@ -36,7 +36,7 @@ class TrackScheduler(
      *
      * @return The queue
      */
-    val fullQueue: List<AudioTrack> = queue
+    val fullQueue: MutableList<AudioTrack> = queue
 
     /**
      * Queues a track for the Guild
