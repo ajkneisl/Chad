@@ -25,9 +25,15 @@ import java.util.*
  */
 class Play : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
-
         val messageHandler = MessageHandler(e.channel, e.author)
         val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX)
+
+        if (args.size == 1 && args[0].equals("resetPlayer", true)) {
+            getMusicManager(e.guild)?.delete()
+            e.client.ourUser.getVoiceStateForGuild(e.guild)?.channel?.leave()
+            messageHandler.sendMessage("Player deleted!")
+            return
+        }
 
         // If the bot needs to join the music channel
         val userChannel = e.author.getVoiceStateForGuild(e.guild).channel
@@ -192,6 +198,7 @@ class Play : Command.Class {
     override suspend fun help(e: MessageEvent) {
         val st = HashMap<String, String>()
         st["play [song name]"] = "Play music."
+        st["play resetPlayer"] = "Resets the music player. Only use this if there's an issue with the player."
         Command.helpCommand(st, "Play", e)
     }
 }

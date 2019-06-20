@@ -67,7 +67,7 @@ object ChadVar {
      * The music manager for guilds
      */
     @JvmStatic
-    val musicManagers = ConcurrentHashMap<Long, dev.shog.chad.framework.obj.GuildMusicManager>()
+    val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
 
     /**
      * The Youtube API Key in the bot.json file
