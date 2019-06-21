@@ -3,6 +3,7 @@ package dev.shog.chad.framework.obj
 import dev.shog.chad.core.ChadVar
 import dev.shog.chad.core.getLogger
 import dev.shog.chad.framework.handle.database.DatabaseManager
+import dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -159,8 +160,8 @@ class Guild {
      * @param dataType The data's key
      * @return The retrieved data
      */
-    fun getObject(dataType: String): Any {
-        return dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA.getObject(guildID, dataType)
+    fun getObject(dataType: String): Any? {
+        return USER_DATA.getObject(guildID, dataType)
     }
 
     /**
