@@ -7,6 +7,7 @@ import dev.shog.chad.framework.handle.coroutine.request
 import dev.shog.chad.framework.handle.database.DatabaseManager
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild
+import dev.shog.chad.framework.util.createMessageHandler
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.util.EmbedBuilder
@@ -19,12 +20,11 @@ import java.util.*
  */
 class AutoRole : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
-        val messageHandler = MessageHandler(e.channel, e.author)
-        val prefix = GuildHandler.getGuild(e.guild.longID).getObject(Guild.DataType.PREFIX) as String
+        val messageHandler = e.createMessageHandler()
 
         // Makes sure the arguments are empty
         if (args.isEmpty()) {
-            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole [on/off/set]")
+            messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "autorole [on/off/set]", includePrefix = true)
             return
         }
 
@@ -50,10 +50,10 @@ class AutoRole : Command.Class {
                 GuildHandler.refreshGuild(e.guild.longID)
 
                 // Builds the embed and sends it
-                val embedBuilder2 = EmbedBuilder()
-                embedBuilder2.withTitle("Auto Role")
-                embedBuilder2.withDesc("Auto Role disabled.")
-                messageHandler.sendEmbed(embedBuilder2)
+                messageHandler.sendEmbed {
+                    withThumbnail("Auto Role")
+                    withDesc("Auto Role disabled.")
+                }
             }
             "set" -> {
                 // Isolates the role text
@@ -67,12 +67,9 @@ class AutoRole : Command.Class {
                 for (s in args) {
                     stringBuilder.append("$s ")
 
-                    roles = request {
-                        e.guild.getRolesByName(stringBuilder.toString().trim { it <= ' ' })
-                    }.asIRoleList()
+                    roles = request { e.guild.getRolesByName(stringBuilder.toString().trim { it <= ' ' }) }.asIRoleList()
 
-                    if (roles.isNotEmpty())
-                        break
+                    if (roles.isNotEmpty()) break
                 }
 
                 // If there's no roles, return
@@ -85,15 +82,16 @@ class AutoRole : Command.Class {
                 val newRole = roles[0]
 
                 // Sets the role ID into the database
-                dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(e.guild.longID, "join_role", newRole.stringID)
+                DatabaseManager.GUILD_DATA.setObject(e.guild.longID, "join_role", newRole.stringID)
 
                 // Builds the embed and sends it
-                val embedBuilder3 = EmbedBuilder()
-                embedBuilder3.withTitle("Auto Role")
-                embedBuilder3.withDesc("New users will now automatically receive the role: " + newRole.name)
-                messageHandler.sendEmbed(embedBuilder3)
+                messageHandler.sendEmbed {
+                    withTitle("Auto Role")
+                    withDesc("New users will now automatically receive the role: " + newRole.name)
+                }
             }
-            else -> messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, prefix + "autorole [on/off/set]")
+
+            else -> messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "autorole [on/off/set]", includePrefix = true)
         }
     }
 
