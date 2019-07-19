@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Manages Player instances
  *
- * @author sho, codebasepw
+ * @author sho
  */
 object PlayerHandler {
     /**

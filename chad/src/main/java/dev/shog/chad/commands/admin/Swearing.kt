@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Filters through swears
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class Swearing : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

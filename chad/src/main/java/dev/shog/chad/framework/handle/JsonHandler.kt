@@ -14,7 +14,7 @@ import java.io.IOException
 /**
  * Handles all web and local JSON content
  *
- * @author sho, codebasepw
+ * @author sho
  */
 object JsonHandler {
     /**

@@ -16,8 +16,10 @@ import sx.blah.discord.api.IDiscordClient
 import kotlin.system.measureTimeMillis
 import dev.shog.chad.framework.handle.ArgumentHandler
 import dev.shog.chad.framework.handle.init
+import dev.shog.chad.framework.handle.uno.obj.UnoGame
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 private var CLIENT: IDiscordClient? = null
 private val LOGGER = LoggerFactory.getLogger("Chad Instance")!!
@@ -49,7 +51,7 @@ fun main(args: Array<String>) {
     // No UI due to servers and stuff
     if (JsonHandler["token"].isEmpty().or(JsonHandler["uri_link"].isEmpty())) {
         getLogger().error("Bot.json is not filled correctly!")
-        System.exit(1)
+        exitProcess(1)
     }
 
     // Disables MongoDB's logging, as it's just clutter and not really needed

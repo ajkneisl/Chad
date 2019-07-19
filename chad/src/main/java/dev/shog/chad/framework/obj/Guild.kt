@@ -223,7 +223,7 @@ class Guild {
         val permissionSet = getRolePermissions(role)
 
         // Make sure the command is an actual command
-        if (!ChadVar.COMMANDS.containsKey(command) || ChadVar.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
+        if (!Command.COMMANDS.containsKey(command) || Command.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
             return 3
 
         // Make sure it doesn't already have that permission
@@ -237,7 +237,7 @@ class Guild {
         permissionData[role] = permissionSet
 
         // Re-add to database
-        dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(guildID, java.lang.Long.toString(role), permissionSet)
+        dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(guildID, role.toString(), permissionSet)
 
         return 0
     }
@@ -254,7 +254,7 @@ class Guild {
         val permissionSet = getRolePermissions(role)
 
         // Make sure the command is an actual command
-        if (!ChadVar.COMMANDS.containsKey(command) || ChadVar.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
+        if (!Command.COMMANDS.containsKey(command) || Command.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
             return 3
 
         // If there's no commands at all

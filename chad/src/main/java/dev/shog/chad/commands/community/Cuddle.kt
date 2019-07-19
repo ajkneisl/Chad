@@ -7,9 +7,9 @@ import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
 /**
- * Why not?
+ * I don't know what's wrong with command.
  *
- * @author codebasepw
+ * @author sho
  */
 class Cuddle : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
@@ -20,11 +20,11 @@ class Cuddle : Command.Class {
             return
         }
 
+        // Target for the command
         val target = e.message.mentions[0]
 
-
-
         messageHandler.sendEmbed {
+            // Decides what type of user the target is.
             when (target) {
                 e.author -> withDesc("You cuddled with yourself, how nice.")
                 e.client.ourUser -> withDesc("You cuddled with `${target.name}` with consent, because `${target.name}` loves you.")

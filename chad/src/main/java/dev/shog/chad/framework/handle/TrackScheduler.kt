@@ -10,7 +10,7 @@ import java.util.*
 /**
  * The guild's audio manager
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class TrackScheduler(
         private val player: AudioPlayer,

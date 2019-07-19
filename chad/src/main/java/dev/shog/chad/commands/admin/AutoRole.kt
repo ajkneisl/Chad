@@ -16,7 +16,7 @@ import java.util.*
 /**
  * Automatically adds a role to a user when they join a server
  *
- * @author codebasepw
+ * @author sho
  */
 class AutoRole : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

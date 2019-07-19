@@ -1,6 +1,7 @@
 package dev.shog.chad.framework.handle
 
 import dev.shog.chad.core.ChadVar
+import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Command.Category
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.IUser
@@ -10,7 +11,7 @@ import java.util.stream.Stream
 /**
  * Handles permissions within Chad
  *
- * @author sho, codebasepw
+ * @author sho
  */
 object PermissionHandler {
     /**
@@ -28,7 +29,7 @@ object PermissionHandler {
     @JvmStatic
     fun hasPermission(command: String, user: IUser, guild: IGuild): Boolean {
         val guildInstance = GuildHandler.getGuild(guild.longID)
-        val meta = ChadVar.COMMANDS[command]
+        val meta = Command.COMMANDS[command]
 
         return when {
             meta!!.commandCategory == Category.DEVELOPER && isDeveloper(user) -> true

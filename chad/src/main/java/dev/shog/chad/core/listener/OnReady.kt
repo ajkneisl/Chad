@@ -7,7 +7,7 @@ import sx.blah.discord.handle.impl.events.ReadyEvent
 /**
  * The on ready event from Discord
  *
- * @author sho, codebasepw
+ * @author sho
  * @since 0.6.3 B2
  */
 class OnReady {

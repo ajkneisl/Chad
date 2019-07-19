@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Information about a cached user
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class Player {
     /**
@@ -24,10 +24,10 @@ class Player {
     /**
      * The types of data you can request from a player.
      *
-     * 0 -> Long
-     * 1 -> Integer
-     * 2 -> String
-     * 3 -> ArrayList<Any>
+     * 0 -> [Long]
+     * 1 -> [Int]
+     * 2 -> [String]
+     * 3 -> [ArrayList]
      */
     enum class DataType(val type: Int) {
         // Other

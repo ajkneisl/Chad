@@ -10,7 +10,7 @@ import dev.shog.chad.framework.handle.JsonHandler
 /**
  * Accesses the database
  *
- * @author sho, codebasepw
+ * @author sho
  */
 object DatabaseManager {
     private val client: MongoClient = MongoClient(MongoClientURI(JsonHandler["uri_link"]))
