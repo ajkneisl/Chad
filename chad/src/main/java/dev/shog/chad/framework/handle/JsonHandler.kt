@@ -10,37 +10,31 @@ import dev.shog.chad.framework.util.Util
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import kotlin.system.exitProcess
 
 /**
  * Handles all web and local JSON content
  *
- * @author sho, codebasepw
+ * @author sho
  */
 object JsonHandler {
     /**
      * Creates files
      */
     private fun execFiles(linux: Boolean) {
-        val woahoverflowDirectory = if (linux) File("/home/" + System.getProperty("user.name") + "/woahoverflow") else File(System.getenv("appdata") + "\\woahoverflow")
+        val directory = if (linux) File("/home/" + System.getProperty("user.name") + "/chad") else File(System.getenv("appdata") + "\\chad")
 
-        if (!woahoverflowDirectory.exists() && woahoverflowDirectory.mkdirs()) {
-            getLogger().error("There was an error making the woahoverflow directory.")
-            System.exit(1)
-        }
-
-        fileLocation = if (linux) File(woahoverflowDirectory.path + "/chad") else File(woahoverflowDirectory.path + "\\chad")
-
-        if (!fileLocation.exists() && !fileLocation.mkdirs()) {
+        if (!directory.exists() && !directory.mkdirs()) {
             getLogger().error("There was an error making the Chad directory.")
-            System.exit(1)
+            exitProcess(1)
         }
 
-        botLocation = if (linux) File(fileLocation.path + "/bot.json") else File(fileLocation.path + "\\bot.json")
+        botLocation = if (linux) File(directory.path + "/bot.json") else File(directory.path + "\\bot.json")
 
         if (!botLocation.exists()) {
             if (!botLocation.createNewFile()) {
                 getLogger().error("There was an error creating the bot.json file.")
-                System.exit(1)
+                exitProcess(1)
             }
 
             val obj = org.json.JSONObject()
@@ -74,11 +68,6 @@ object JsonHandler {
                 execFiles(false)
             }
 
-            "WINDOWS 7" -> {
-                getLogger().debug("Checking files as if OS is Windows 7")
-                execFiles(false)
-            }
-
             "LINUX" -> {
                 getLogger().debug("Checking files as if OS is Linux")
                 execFiles(true)
@@ -86,7 +75,7 @@ object JsonHandler {
 
             else -> {
                 getLogger().error("Chad cannot run on this Operating System!")
-                System.exit(1)
+                exitProcess(1)
             }
         }
         return this
@@ -163,6 +152,8 @@ object JsonHandler {
     @Synchronized
     fun readFile(file: String): org.json.JSONObject? = org.json.JSONObject(String(file.byteInputStream().readBytes()))
 
-    var fileLocation: File = File("")
+    /**
+     * The location of the Chad directory.
+     */
     private var botLocation: File = File("")
 }
