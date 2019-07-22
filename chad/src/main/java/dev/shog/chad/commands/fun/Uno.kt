@@ -24,7 +24,7 @@ class Uno : Command.Class {
         st["uno"] = "Starts a game of Uno, or gets your cards."
         st["uno end"] = "Ends a game of Uno."
         st["uno play **number**"] = "Plays the card."
-        st["!TEXT!How to Play"] = "Start of a game of Uno with just `!PREFIX!uno`. This will give you 7 cards, and Chad 7 cards also. It plays down a card, and you must play off that."
+        st["!TEXT!How to Play"] = "Start of a game of Uno with just `!PREFIX!uno`. This will give you 7 cards, and Chad 7 cards also. It plays down a card, and you must play off that. When you have one card, before playing next, you must type `!PREFIX!uno call`"
         Command.helpCommand(st, "Uno", e)
     }
 
@@ -37,13 +37,31 @@ class Uno : Command.Class {
                 // When the user tries to end the game
                 "end" -> {
                     if (!UnoGame.games.containsKey(e.author)) {
-                        messageHandler.sendError("You haven't crated a game!")
+                        messageHandler.sendError("You haven't created a game!")
                         return
                     }
 
                     messageHandler.sendMessage("Ended game!")
                     UnoGame.games.remove(e.author)
                     return
+                }
+
+                "call" -> {
+                    if (!UnoGame.games.containsKey(e.author)) {
+                        messageHandler.sendError("You haven't created a game!")
+                        return
+                    }
+
+                    val game = UnoGame.getGame(e.author)
+                    val uno = game.second
+
+                    if (uno.userCards.size == 1) {
+                        uno.userCalledUno = true
+                        messageHandler.sendMessage("You have called uno!")
+                        return
+                    } else {
+                        messageHandler.sendError("You don't have 1 card left!")
+                    }
                 }
 
                 // When the user draws a card
@@ -98,6 +116,16 @@ class Uno : Command.Class {
                     // Makes sure they inputted a valid number
                     val number = args[1].toIntOrNull()?.minus(1) ?: run {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "uno play [number]", includePrefix = true)
+                        return
+                    }
+
+                    // If they've got 1 card, and they haven't called uno, give them 2 cards.
+                    if (uno.userCards.size == 1 && !uno.userCalledUno) {
+                        messageHandler.sendError("You didn't call Uno! You have gained 2 cards!")
+
+                        uno.userCards.add(uno.drawCard())
+                        uno.userCards.add(uno.drawCard())
+
                         return
                     }
 
@@ -186,7 +214,9 @@ class Uno : Command.Class {
 
         messageHandler.sendEmbed {
             if (game.first) {
-                withDesc("You have started with these cards. Play your first card by using the number on the left of the card, then typing `${prefix}uno play {num}`!\n\n")
+                withDesc("You have started with these cards. Play your first card by using the number on the left of the card, then typing `${prefix}uno play {num}`!" +
+                        "\nMake sure that if you have 1 card left, to do `${prefix}uno call`." +
+                        "\n\n")
             }
 
             if (game.first) {

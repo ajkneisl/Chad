@@ -49,7 +49,7 @@ fun main(args: Array<String>) {
     JsonHandler.forceCheck()
 
     // No UI due to servers and stuff
-    if (JsonHandler["token"].isEmpty().or(JsonHandler["uri_link"].isEmpty())) {
+    if (JsonHandler["token"].isEmpty() || JsonHandler["uri_link"].isEmpty()) {
         getLogger().error("Bot.json is not filled correctly!")
         exitProcess(1)
     }

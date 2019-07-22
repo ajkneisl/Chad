@@ -3,6 +3,8 @@ package dev.shog.chad.commands.developer
 import dev.shog.chad.framework.handle.MessageHandler
 import dev.shog.chad.framework.handle.coroutine.asIGuildList
 import dev.shog.chad.framework.handle.coroutine.request
+import dev.shog.chad.framework.handle.uno.handle.UnoStatistics
+import dev.shog.chad.framework.handle.uno.obj.UnoGame
 import dev.shog.chad.framework.obj.Command
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IGuild
@@ -39,7 +41,8 @@ class Statistics : Command.Class {
                 "Guilds `${guilds.size}`" +
                         "\n Users `$users`" +
                         "\n Biggest Guild `${biggestGuild!!.name}`" +
-                        "\n Biggest Guild Size `$biggestGuildSize`"
+                        "\n Biggest Guild Size `$biggestGuildSize`" +
+                        "\n Chad win ratio `${UnoStatistics.botGamesWon/(UnoStatistics.botGamesWon+UnoStatistics.gamesWon)}%`"
         )
 
         // Sends the embed builder

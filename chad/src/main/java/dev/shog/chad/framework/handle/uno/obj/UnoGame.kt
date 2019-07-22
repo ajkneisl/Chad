@@ -1,5 +1,6 @@
 package dev.shog.chad.framework.handle.uno.obj
 
+import dev.shog.chad.framework.handle.uno.handle.ChadAI
 import sx.blah.discord.handle.obj.IUser
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
@@ -307,6 +308,11 @@ abstract class UnoGame(val user: IUser) {
 
         return getInitialCard()
     }
+
+    /**
+     * If the user called Uno, meaning that they had 1 card left.
+     */
+    var userCalledUno = false
 
     companion object {
         /**

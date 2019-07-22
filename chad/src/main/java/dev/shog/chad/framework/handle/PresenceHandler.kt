@@ -41,7 +41,6 @@ object PresenceHandler {
                     1 -> ActivityType.PLAYING
                     2 -> ActivityType.LISTENING
                     3 -> ActivityType.WATCHING
-                    4 -> ActivityType.STREAMING
 
                     else -> return
                 }
