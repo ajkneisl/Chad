@@ -49,6 +49,8 @@ object JsonHandler {
             obj.put("uri_link", "")
             obj.put("youtube_api_key", "")
             obj.put("jdbc", "")
+            obj.put("secret", "")
+            obj.put("id", "")
 
             try {
                 FileWriter(botLocation).use { fileWriter ->

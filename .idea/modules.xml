@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Chad.iml" filepath="$PROJECT_DIR$/Chad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chad-chad-Chad.iml" filepath="$PROJECT_DIR$/.idea/modules/Chad-chad-Chad.iml" group="Chad" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chad_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Chad_main.iml" group="Chad" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chad_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Chad_test.iml" group="Chad" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/chad-Chad.iml" filepath="$PROJECT_DIR$/.idea/modules/chad-Chad.iml" group="Chad" />

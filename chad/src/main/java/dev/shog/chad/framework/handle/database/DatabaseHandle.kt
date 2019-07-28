@@ -1,67 +1,23 @@
 package dev.shog.chad.framework.handle.database
 
-import com.mongodb.client.MongoCollection
-import org.bson.Document
+import com.amazonaws.services.dynamodbv2.document.AttributeUpdate
+import com.amazonaws.services.dynamodbv2.document.Item
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey
+import com.amazonaws.services.dynamodbv2.document.Table
 
 /**
- * Used for a single operation, such as managing guilds in the actual guild collection
- *
- * @author sho
+ * Makes managing a table easier. With the primary key being: [indicator]: (inputted)
  */
-class DatabaseHandle internal constructor(
-        /**
-         * The collection to get documents from
-         */
-        val collection: MongoCollection<Document>,
-
-        /**
-         * The key to look for
-         */
-        private val keyObject: String)
-{
+class DatabaseHandle(val table: Table, private val indicator: String) {
+    /**
+     * Gets an Item
+     */
+    fun getObject(indicator: Any): Item? = table.getItem(this.indicator, indicator)
 
     /**
-     * Gets an object from a document
-     *
-     * @param key The object's identifier
-     * @param obj The object to get
-     * @return The retrieved object
+     * Sets objects for the [indicator].
      */
-    fun getObject(key: Any, obj: String): Any? {
-        val get = collection.find(Document(keyObject, key)).first() ?: return Any()
-
-        return get[obj]
-    }
-
-    /**
-     * Sets an object from a document
-     *
-     * @param key The object's identifier
-     * @param obj The object to set
-     * @param value The new value
-     */
-    fun setObject(key: Any, obj: String, value: Any) {
-        val get = collection.find(Document(keyObject, key)).first() ?: return
-
-        collection.updateOne(get, Document("\$set", Document(obj, value)))
-    }
-
-    /**
-     * If the object exists in the collection
-     *
-     * @param key The identifier
-     * @return If it exists
-     */
-    fun documentExists(key: Any): Boolean = collection.find(Document(keyObject, key)).first() != null
-
-    /**
-     * Removes a document from the collection
-     *
-     * @param key The identifier
-     */
-    fun removeDocument(key: Any) {
-        val get = collection.find(Document(keyObject, key)).first() ?: return
-
-        collection.deleteOne(get)
+    fun setObjects(indicator: Any, vararg updates: AttributeUpdate) {
+        table.updateItem(PrimaryKey(this.indicator, indicator), *updates)
     }
 }

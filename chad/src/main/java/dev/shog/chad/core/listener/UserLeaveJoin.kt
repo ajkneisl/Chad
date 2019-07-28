@@ -1,6 +1,5 @@
 package dev.shog.chad.core.listener
 
-import org.bson.Document
 import dev.shog.chad.core.getClient
 import dev.shog.chad.core.getLogger
 import dev.shog.chad.framework.handle.GuildHandler
@@ -120,11 +119,7 @@ class UserLeaveJoin {
 
         if (guildData.isEmpty()) {
             // If it's the last guild that they're in with Chad, remove theirs
-            val col = dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA.collection
-            val document = col.find(Document("id", e.user.longID)).first()
-
-            if (document != null)
-                col.deleteOne(document)
+            DatabaseManager.USER_DATA.table.deleteItem("id", e.user.longID)
         } else {
             player.setObject(
                     DataType.GUILD_DATA,

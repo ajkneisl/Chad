@@ -6,6 +6,7 @@ import dev.shog.chad.framework.handle.PlayerHandler
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild
 import dev.shog.chad.framework.obj.Player.DataType
+import org.json.JSONArray
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
@@ -37,15 +38,15 @@ class UpVote : Command.Class {
         // The author's player instance
         val author = PlayerHandler.getPlayer(e.author.longID)
 
-        val voteData = author.getObject(DataType.VOTE_DATA) as ArrayList<Long>?
+        val voteData = JSONArray(author.getObject(DataType.VOTE_DATA))
 
-        if (voteData!!.contains(target.longID)) {
+        if (voteData.contains(target.longID)) {
             messageHandler.sendError("You've already voted on this user!")
             return
         }
 
         // Add the voted user to the array
-        voteData.add(target.longID)
+        voteData.put(target.longID)
 
         // ReSet it
         author.setObject(DataType.VOTE_DATA, voteData)

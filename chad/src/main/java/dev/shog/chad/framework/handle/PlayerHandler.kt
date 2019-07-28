@@ -1,7 +1,10 @@
 package dev.shog.chad.framework.handle
 
-import org.bson.Document
+import com.amazonaws.services.dynamodbv2.datamodeling.*
+import com.amazonaws.services.dynamodbv2.document.Item
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey
 import dev.shog.chad.framework.handle.database.DatabaseManager
+import dev.shog.chad.framework.handle.dynamo.DynamoDB
 import dev.shog.chad.framework.obj.Player
 import dev.shog.chad.framework.obj.Player.DataType
 import java.util.*
@@ -26,9 +29,7 @@ object PlayerHandler {
      * @return If it contains it
      */
     @JvmStatic
-    fun playerExists(player: Long): Boolean {
-        return players.containsKey(player)
-    }
+    fun playerExists(player: Long): Boolean = players.containsKey(player)
 
     /**
      * Refreshes a player into the hashmap
@@ -52,11 +53,7 @@ object PlayerHandler {
         players.remove(user)
 
         // Removes it from the database
-        val col = dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA.collection
-
-        val get = col.find(Document("id", user)).first() ?: return
-
-        col.deleteOne(get)
+        DatabaseManager.USER_DATA.table.deleteItem("id", user)
     }
 
     /**
@@ -66,34 +63,34 @@ object PlayerHandler {
      */
     @JvmStatic
     private fun createPlayer(user: Long): Player {
-        val playerDocument = Document()
+        val playerDocument = Item()
 
         // The user's ID
-        playerDocument["id"] = user
+        playerDocument.with("id", user)
 
         // The user's balance
-        playerDocument["balance"] = 0L
+        playerDocument.with("balance", 0L)
 
         // The user's XP
-        playerDocument["xp"] = 0L
+        playerDocument.with("xp", 0L)
 
         // The user's rank
-        playerDocument["rank"] = 0
+        playerDocument.with("rank", 0)
 
         // Other default user data
-        playerDocument["marry_data"] = "none&none"
-        playerDocument["profile_description"] = "No description!"
-        playerDocument["profile_title"] = "none"
-        playerDocument["profile_downvote"] = 0L
-        playerDocument["profile_upvote"] = 0L
+        playerDocument.with("marry_data", "none&none")
+        playerDocument.with("profile_description", "No description!")
+        playerDocument.with("profile_title", "none")
+        playerDocument.with("profile_downvote", 0L)
+        playerDocument.with("profile_upvote", 0L)
 
-        playerDocument["guild_data"] = ArrayList<Any>()
-        playerDocument["vote_data"] = ArrayList<Any>()
+        playerDocument.with("guild_data", ArrayList<Any>())
+        playerDocument.with("vote_data", ArrayList<Any>())
 
-        playerDocument["last_daily_reward"] = "none"
+        playerDocument.with("last_daily_reward", "none")
 
-        // Insert the new player=
-        dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA.collection.insertOne(playerDocument)
+        // Insert the new player
+        DatabaseManager.USER_DATA.table.putItem(playerDocument)
 
         // The player
         val player = parsePlayer(playerDocument, user)
@@ -112,20 +109,24 @@ object PlayerHandler {
      * @return The player retrieved
      */
     @JvmStatic
-    private fun parsePlayer(playerDataDocument: Document, user: Long): Player {
+    private fun parsePlayer(playerDataDocument: Item, user: Long): Player {
         val playerData = ConcurrentHashMap<DataType, Any>()
 
         // Sets the data
         for (type in DataType.values()) {
-            if (playerDataDocument[type.toString().toLowerCase()] == null) {
-                when (type.type) {
-                    0 -> playerData[type] = 0L
-                    1 -> playerData[type] = 0
-                    2 -> playerData[type] = ""
-                    3 -> playerData[type] = ArrayList<Any>()
+            if (playerDataDocument.get(type.toString()) == null) {
+                if (type.defaultValue != null) {
+                    playerData[type] = type.defaultValue
+                } else {
+                    when (type.type) {
+                        0 -> playerData[type] = 0L
+                        1 -> playerData[type] = 0
+                        2 -> playerData[type] = ""
+                        3 -> playerData[type] = ArrayList<Any>()
+                    }
                 }
             } else {
-                playerData[type] = playerDataDocument[type.toString().toLowerCase()]!!
+                playerData[type] = playerDataDocument.get(type.toString())!!
             }
         }
 
@@ -142,9 +143,8 @@ object PlayerHandler {
         // If the user's in in the hash map, return it
         if (players.containsKey(user)) return players[user]!!
 
-        if (userDataExists(user)) {
-            val get = dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA.collection.find(Document("id", user)).first()!!
-
+        val get = DatabaseManager.USER_DATA.getObject(user)
+        if (get != null) {
             val player = parsePlayer(get, user)
 
             players[user] = player
@@ -158,17 +158,5 @@ object PlayerHandler {
 
         // If it's not in there, create one
         return player
-    }
-
-    /**
-     * Checks if a user's data already exists within the database
-     *
-     * @param user The user to check
-     * @return If it exists
-     */
-    @JvmStatic
-    private fun userDataExists(user: Long): Boolean {
-        val get = dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA.collection.find(Document("id", user)).first()
-        return get != null
     }
 }

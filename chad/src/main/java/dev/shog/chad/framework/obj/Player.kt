@@ -1,5 +1,6 @@
 package dev.shog.chad.framework.obj
 
+import com.amazonaws.services.dynamodbv2.document.AttributeUpdate
 import dev.shog.chad.framework.handle.PlayerHandler
 import dev.shog.chad.framework.handle.database.DatabaseManager
 import java.util.*
@@ -29,7 +30,7 @@ class Player {
      * 2 -> String
      * 3 -> ArrayList<Any>
      */
-    enum class DataType(val type: Int) {
+    enum class DataType(val type: Int, val defaultValue: Any? = null) {
         // Other
         BALANCE(0),
         XP(0), RANK(1),
@@ -39,7 +40,7 @@ class Player {
         PROFILE_DOWNVOTE(0), PROFILE_DESCRIPTION(2), PROFILE_TITLE(2),
 
         // Data
-        GUILD_DATA(3),
+        GUILD_DATA(2, "[]"),
         MARRY_DATA(2), VOTE_DATA(2), LAST_DAILY_REWARD(2)
     }
 
@@ -58,7 +59,7 @@ class Player {
         playerData[DataType.PROFILE_UPVOTE] = 0L
 
         playerData[DataType.VOTE_DATA] = ArrayList<Any>()
-        playerData[DataType.GUILD_DATA] = ArrayList<Any>()
+        playerData[DataType.GUILD_DATA] = "[]"
         playerData[DataType.LAST_DAILY_REWARD] = "none"
     }
 
@@ -81,9 +82,7 @@ class Player {
     fun setObject(dataType: DataType, value: Any) {
         playerData[dataType] = value
 
-        dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA.setObject(userId, dataType.toString().toLowerCase(), value)
-
-        PlayerHandler.refreshPlayer(userId)
+        DatabaseManager.USER_DATA.setObjects(userId, AttributeUpdate(dataType.toString().toLowerCase()).put(value))
     }
 
     /**

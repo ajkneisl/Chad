@@ -7,6 +7,7 @@ import dev.shog.chad.framework.handle.PermissionHandler
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild.DataType
 import dev.shog.chad.framework.util.Util
+import org.json.JSONArray
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.util.EmbedBuilder
 import java.util.*
@@ -27,7 +28,7 @@ class Help : Command.Class {
                     when {
                         category === Command.Category.NSFW && !e.channel.isNSFW -> true
                         category === Command.Category.DEVELOPER && !PermissionHandler.isDeveloper(e.author) -> true
-                        (GuildHandler.getGuild(e.guild.longID).getObject(DataType.DISABLED_CATEGORIES) as ArrayList<*>).contains(category.toString().toLowerCase()) -> true
+                        JSONArray(GuildHandler.getGuild(e.guild.longID).getObject(DataType.DISABLED_CATEGORIES).toString()).contains(category.toString().toLowerCase()) -> true
                         else -> false
                     }
             ) continue
