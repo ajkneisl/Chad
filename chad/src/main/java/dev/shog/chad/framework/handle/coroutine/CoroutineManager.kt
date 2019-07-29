@@ -11,6 +11,7 @@ import dev.shog.chad.framework.handle.PermissionHandler
 import dev.shog.chad.framework.handle.xp.XPHandler
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild
+import org.json.JSONArray
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -129,8 +130,11 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
             return
         }
-
-        if ((guild.getObject(Guild.DataType.DISABLED_CATEGORIES) as ArrayList<String>).contains(command.commandCategory.toString().toLowerCase())) return
+      
+        if (
+                JSONArray(guild.getObject(Guild.DataType.DISABLED_CATEGORIES) as String)
+                        .contains(command.commandCategory.toString().toLowerCase())
+        ) return
 
         if (!PermissionHandler.hasPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NO_PERMISSION)

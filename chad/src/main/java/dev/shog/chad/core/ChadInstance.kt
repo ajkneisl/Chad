@@ -15,6 +15,7 @@ import sx.blah.discord.api.ClientBuilder
 import sx.blah.discord.api.IDiscordClient
 import kotlin.system.measureTimeMillis
 import dev.shog.chad.framework.handle.ArgumentHandler
+import dev.shog.chad.framework.handle.dynamo.DynamoDB
 import dev.shog.chad.framework.handle.init
 import dev.shog.chad.framework.handle.uno.obj.UnoGame
 import java.util.*
@@ -49,15 +50,18 @@ fun main(args: Array<String>) {
     JsonHandler.forceCheck()
 
     // No UI due to servers and stuff
-    if (JsonHandler["token"].isEmpty() || JsonHandler["uri_link"].isEmpty()) {
+    if (
+            JsonHandler["token"].isEmpty()
+            || JsonHandler["uri_link"].isEmpty()
+            || JsonHandler["id"].isEmpty()
+            || JsonHandler["secret"].isEmpty()
+    ) {
         getLogger().error("Bot.json is not filled correctly!")
         exitProcess(1)
     }
 
-    // Disables MongoDB's logging, as it's just clutter and not really needed
-    val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
-    val rootLogger = loggerContext.getLogger("org.mongodb.driver")
-    rootLogger.level = Level.OFF
+    DynamoDB.secret = JsonHandler["secret"]
+    DynamoDB.id = JsonHandler["id"]
 
     getLogger().debug("shoganeko: Chad (${ChadVar.VERSION})")
 
