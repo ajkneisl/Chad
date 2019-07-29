@@ -17,7 +17,7 @@ import java.util.regex.Pattern
 /**
  * Give or revoke command permissions
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class Permissions : Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

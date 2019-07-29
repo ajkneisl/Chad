@@ -12,7 +12,7 @@ import java.util.*
 /**
  * The current running threads within Chad
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class CurrentThreads : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

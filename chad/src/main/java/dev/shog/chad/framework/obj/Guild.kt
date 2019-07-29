@@ -222,7 +222,7 @@ class Guild {
         val permissionSet = getRolePermissions(role)
 
         // Make sure the command is an actual command
-        if (!ChadVar.COMMANDS.containsKey(command) || ChadVar.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
+        if (!Command.COMMANDS.containsKey(command) || Command.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
             return 3
 
         // Make sure it doesn't already have that permission
@@ -253,7 +253,7 @@ class Guild {
         val permissionSet = getRolePermissions(role)
 
         // Make sure the command is an actual command
-        if (!ChadVar.COMMANDS.containsKey(command) || ChadVar.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
+        if (!Command.COMMANDS.containsKey(command) || Command.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
             return 3
 
         // If there's no commands at all

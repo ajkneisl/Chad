@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 /**
  * The Discord guild join and leave events
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class GuildJoinLeave {
     /**

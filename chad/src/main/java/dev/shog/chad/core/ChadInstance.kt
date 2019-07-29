@@ -17,8 +17,10 @@ import kotlin.system.measureTimeMillis
 import dev.shog.chad.framework.handle.ArgumentHandler
 import dev.shog.chad.framework.handle.dynamo.DynamoDB
 import dev.shog.chad.framework.handle.init
+import dev.shog.chad.framework.handle.uno.obj.UnoGame
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 private var CLIENT: IDiscordClient? = null
 private val LOGGER = LoggerFactory.getLogger("Chad Instance")!!
@@ -55,7 +57,7 @@ fun main(args: Array<String>) {
             || JsonHandler["secret"].isEmpty()
     ) {
         getLogger().error("Bot.json is not filled correctly!")
-        System.exit(1)
+        exitProcess(1)
     }
 
     DynamoDB.secret = JsonHandler["secret"]

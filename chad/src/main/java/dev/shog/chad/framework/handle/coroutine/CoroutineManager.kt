@@ -96,7 +96,7 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
 
         val commandString = argArray[0].substring(prefix.length).toLowerCase()
 
-        val args = ArrayList(Arrays.asList<String>(*argArray.toTypedArray()))
+        val args = ArrayList(mutableListOf(*argArray.toTypedArray()))
         args.removeAt(0)
 
         if (!event.author.canRun()) return
@@ -104,8 +104,8 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
         var command: Command.Data? = null
         var commandName: String? = null
 
-        for (cmd in ChadVar.COMMANDS.keys) {
-            val data = ChadVar.COMMANDS[cmd]!!
+        for (cmd in Command.COMMANDS.keys) {
+            val data = Command.COMMANDS[cmd]!!
 
             if (commandString.equals(cmd, true)) {
                 command = data
@@ -130,7 +130,7 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
             return
         }
-
+      
         if (
                 JSONArray(guild.getObject(Guild.DataType.DISABLED_CATEGORIES) as String)
                         .contains(command.commandCategory.toString().toLowerCase())
@@ -154,7 +154,8 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
 
                 true
             } catch (ex: Exception) {
-                request { event.channel.sendMessage("There was an issue running that command!\nError: `${ex.message}`") }
+                throw ex
+//                request { event.channel.sendMessage("There was an issue running that command!\nError: `${ex.message}`") }
                 false
             }
 

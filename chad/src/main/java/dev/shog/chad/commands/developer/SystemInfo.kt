@@ -14,7 +14,7 @@ import java.util.*
 /**
  * Gives info about the system via discord
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class SystemInfo : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
@@ -32,7 +32,6 @@ class SystemInfo : Command.Class {
         embedBuilder.withDesc(
                 "OS `" + os.name + " [" + os.version + "]`" +
                         "\n Available cores `" + os.availableProcessors + '`'.toString() +
-                        "\n Home Directory `${JsonHandler.fileLocation.path}`" +
                         "\n CPU Load `" + os.systemCpuLoad + '`'.toString() +
                         "\n Memory `" + os.totalPhysicalMemorySize / 1000 / 1000 + "`mb" +
                         "\n Used Memory `${(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000/1000}`mb" +

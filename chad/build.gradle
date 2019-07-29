@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'dev.shog'
-version '1.0.0-B2DYN'
+version '1.0.0-B3'
 
 sourceCompatibility = 1.8
 

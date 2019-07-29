@@ -1,6 +1,5 @@
 package dev.shog.chad.commands.info
 
-import dev.shog.chad.core.ChadVar
 import dev.shog.chad.framework.handle.GuildHandler
 import dev.shog.chad.framework.handle.MessageHandler
 import dev.shog.chad.framework.handle.PermissionHandler
@@ -9,14 +8,13 @@ import dev.shog.chad.framework.obj.Guild.DataType
 import dev.shog.chad.framework.util.Util
 import org.json.JSONArray
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 import java.util.regex.Pattern
 
 /**
  * All Chad commands
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class Help : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
@@ -36,7 +34,7 @@ class Help : Command.Class {
 
             // The commands builder
             val commandsBuilder = StringBuilder()
-            for ((key, meta) in ChadVar.COMMANDS) {
+            for ((key, meta) in Command.COMMANDS) {
                 if (
                         when {
                             meta.commandCategory !== category -> true
@@ -50,7 +48,7 @@ class Help : Command.Class {
 
             // Replaces the end and makes sure there's content
             if (commandsBuilder.isNotEmpty()) {
-                stringBuilder.append("\n\n**${Util.fixEnumString(category.toString().toLowerCase())}**: \n ${REGEX.matcher(commandsBuilder.toString()).replaceAll("")}")
+                stringBuilder.append("\n\n**${category.toString().toLowerCase().capitalize()}**: \n ${REGEX.matcher(commandsBuilder.toString()).replaceAll("")}")
             }
         }
 

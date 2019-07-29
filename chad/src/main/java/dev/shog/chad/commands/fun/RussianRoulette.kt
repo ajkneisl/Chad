@@ -19,7 +19,7 @@ import kotlin.random.Random
 /**
  * Play russian roulette with another user
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class RussianRoulette : Command.Class {
     override suspend fun help(e: MessageEvent) {

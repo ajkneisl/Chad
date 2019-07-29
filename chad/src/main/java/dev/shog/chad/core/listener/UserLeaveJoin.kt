@@ -21,7 +21,7 @@ import java.util.regex.Pattern
 /**
  * User joining and Leaving events
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class UserLeaveJoin {
 

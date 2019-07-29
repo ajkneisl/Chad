@@ -19,7 +19,7 @@ import java.util.*
 /**
  * Shuts down the bot via discord
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class Shutdown : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

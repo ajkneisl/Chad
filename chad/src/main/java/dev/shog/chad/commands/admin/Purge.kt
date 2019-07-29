@@ -17,7 +17,7 @@ import java.util.*
 /**
  * Removes a large amount of messages from a channel
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class Purge : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

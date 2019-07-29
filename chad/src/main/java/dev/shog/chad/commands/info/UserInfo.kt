@@ -13,7 +13,7 @@ import java.util.*
 /**
  * Gets info about a discord user
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class UserInfo : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
