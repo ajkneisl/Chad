@@ -2,14 +2,22 @@ package dev.shog.chad.commands.`fun`
 
 import dev.shog.chad.framework.handle.GuildHandler
 import dev.shog.chad.framework.handle.MessageHandler
+import dev.shog.chad.framework.handle.coroutine.asBoolean
+import dev.shog.chad.framework.handle.coroutine.asIReaction
+import dev.shog.chad.framework.handle.coroutine.request
 import dev.shog.chad.framework.handle.uno.handle.ChadAI
 import dev.shog.chad.framework.handle.uno.obj.Card
 import dev.shog.chad.framework.handle.uno.obj.CardColor
+import dev.shog.chad.framework.handle.uno.obj.CardType
 import dev.shog.chad.framework.handle.uno.obj.UnoGame
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild
+import kotlinx.coroutines.delay
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
+import sx.blah.discord.handle.impl.obj.ReactionEmoji
+import sx.blah.discord.util.RequestBuilder
 import java.util.HashMap
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -143,23 +151,65 @@ class Uno : Command.Class {
                     }
 
                     // The wild color
-                    // TODO turn into a reaction based choice
-                    if (card.color == null && card.num == null && args.size != 3) {
-                        messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "uno play [number] [red/green/blue/yellow]", includePrefix = true)
-                        return
-                    } else if (args.size == 3 && card.color == null) {
-                        val color = when (args[2].toLowerCase()) {
-                            "green" -> CardColor.GREEN
-                            "yellow" -> CardColor.YELLOW
-                            "blue" -> CardColor.BLUE
-                            "red" -> CardColor.RED
-                            else -> {
-                                messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "uno play [number] [red/green/blue/yellow]", includePrefix = true)
+                    if (card.type == CardType.WILD_DEFAULT || card.type == CardType.WILD_DRAW) {
+                        val msg = messageHandler.sendMessage("What color for the wild card?")!!
+
+                        // Add reactions
+                        val builder = RequestBuilder(e.client)
+                        builder.shouldBufferRequests(true)
+
+                        builder.doAction {
+                            msg.addReaction(ReactionEmoji.of("\uD83D\uDCD8"))
+                            return@doAction true
+                        }.andThen {
+                            msg.addReaction(ReactionEmoji.of("\uD83D\uDCD5"))
+                            return@andThen true
+                        }.andThen {
+                            msg.addReaction(ReactionEmoji.of("\uD83D\uDCD9"))
+                            return@andThen true
+                        }.andThen {
+                            msg.addReaction(ReactionEmoji.of("\uD83D\uDCD7"))
+                            return@andThen true
+                        }.execute()
+
+                        var sec = 0
+                        var selectedColor: CardColor? = null
+
+                        while (selectedColor == null) {
+                            if (sec >= 10) {
+                                request { msg.edit("Timed out!") }
                                 return
                             }
+
+                            sec++
+
+                            when {
+                                // Blue
+                                request {
+                                    msg.getReactionByUnicode("\uD83D\uDCD8").getUserReacted(e.author)
+                                }.asBoolean() -> selectedColor = CardColor.BLUE
+
+                                // Red
+                                request {
+                                    msg.getReactionByUnicode("\uD83D\uDCD5").getUserReacted(e.author)
+                                }.asBoolean() -> selectedColor = CardColor.RED
+
+                                // Yellow
+                                request {
+                                    msg.getReactionByUnicode("\uD83D\uDCD9").getUserReacted(e.author)
+                                }.asBoolean() -> selectedColor = CardColor.YELLOW
+
+                                // Green
+                                request {
+                                    msg.getReactionByUnicode("\uD83D\uDCD7").getUserReacted(e.author)
+                                }.asBoolean() -> selectedColor = CardColor.GREEN
+                            }
+
+                            delay(500L)
                         }
 
-                        card = Card(color, card.type, null)
+                        request { msg.delete() }
+                        card = Card(selectedColor, card.type, null)
                     }
 
                     val playedCard = uno.user.play(card)
