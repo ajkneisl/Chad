@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author sho
  */
 object ChadVar {
-    const val VERSION = "v1.0.0-B3"
+    const val VERSION = "v1.0.0-RC1"
 
     /**
      * All the swear words for the swear filter

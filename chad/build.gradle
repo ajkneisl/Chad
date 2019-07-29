@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'dev.shog'
-version '1.0.0-B3'
+version '1.0.0-RC1'
 
 sourceCompatibility = 1.8
 
@@ -36,6 +36,7 @@ dependencies {
 }
 
 jar {
+    zip64 true
     manifest {
         attributes 'Main-Class': 'dev.shog.chad.core.ChadInstance'
     }
