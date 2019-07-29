@@ -398,6 +398,11 @@ class UnoGame(val iUser: IUser) {
     }
 
     /**
+     * What time the game started at.
+     */
+    val startedAt = System.currentTimeMillis()
+
+    /**
      * If the user called Uno, meaning that they had 1 card left.
      */
     var userCalledUno = false

@@ -3,7 +3,6 @@ package dev.shog.chad.commands.`fun`
 import dev.shog.chad.framework.handle.GuildHandler
 import dev.shog.chad.framework.handle.MessageHandler
 import dev.shog.chad.framework.handle.coroutine.asBoolean
-import dev.shog.chad.framework.handle.coroutine.asIReaction
 import dev.shog.chad.framework.handle.coroutine.request
 import dev.shog.chad.framework.handle.uno.handle.ChadAI
 import dev.shog.chad.framework.handle.uno.obj.Card
@@ -12,12 +11,12 @@ import dev.shog.chad.framework.handle.uno.obj.CardType
 import dev.shog.chad.framework.handle.uno.obj.UnoGame
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild
+import dev.shog.chad.framework.util.Util
 import kotlinx.coroutines.delay
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.impl.obj.ReactionEmoji
 import sx.blah.discord.util.RequestBuilder
 import java.util.HashMap
-import java.util.concurrent.TimeUnit
 
 
 /**
@@ -91,18 +90,17 @@ class Uno : Command.Class {
                         }
 
                         // The user's current cards.
-                        appendDesc("Chad has ${uno.chad.cards.getSize()} cards\n\n")
-                        appendDesc("Your current cards:\n\n")
+                        appendField("Chad", "${uno.chad.cards.getSize()} cards", true)
+                        appendField("Last Played Card", uno.playedCards.last().toString(), true)
+                        appendField("Drawn Card", drawn[0].toString(), true)
+
+                        // Current cards
+                        val builder = StringBuilder()
                         for (i in uno.user.cards.cards.indices) {
-                            val crd = uno.user.cards.cards[i]
-                            appendDesc("**${i + 1}**: $crd\n")
+                            val card = uno.user.cards.cards[i]
+                            builder.append("**${i + 1}**: $card\n")
                         }
-
-                        // Gives the output of the drawn card.
-                        appendDesc("\nYou drew a ${drawn[0]}.")
-
-                        // The most recent played card
-                        appendDesc("\n\nThe most recently played card is a ${uno.playedCards.last()}")
+                        appendField("Your Cards", builder.toString(), false)
                     }
 
                     return
@@ -228,40 +226,44 @@ class Uno : Command.Class {
                     // Sends the user's updated status.
                     messageHandler.sendEmbed {
                         // Gives the output of the played card.
-                        appendDesc("\nYou played a $card.")
-
-                        // Chad's card.
-                        appendDesc("\n\nChad has ${uno.chad.cards.getSize()} cards.\n")
+                        appendDesc(":black_small_square: You played a $card.")
 
                         // If you skipped Chad's turn
                         if (playedCard.second) {
-                            appendDesc("\nYou skipped Chad's turn!")
+                            appendDesc("\n:black_small_square: You skipped Chad's turn!")
                         } else {
                             // If not, play for Chad
                             ChadAI(uno).play().also {
                                 val played = uno.chad.play(it)
-                                appendDesc("\nChad played a $it.")
+                                appendDesc("\n:black_small_square: Chad played a $it.")
 
                                 var cont = played.second
 
                                 while (cont) {
                                     val c = ChadAI(uno).play()
                                     val ret = uno.chad.play(c)
-                                    appendDesc("\nYour turn was skipped, so Chad played a $c")
+                                    appendDesc("\n:black_small_square: Your turn was skipped, so Chad played a $c")
                                     cont = ret.second
                                 }
                             }
                         }
 
-                        appendDesc("\n\nYour current cards:\n\n")
+                        // Chad's cards.
+                        appendField("Chad", "${uno.chad.cards.getSize()} cards", true)
+
+                        appendField("Last Played Card", uno.playedCards.last().toString(), true)
+                        val builder = StringBuilder()
                         for (i in uno.user.cards.cards.indices) {
-                            val crd = uno.user.cards.cards[i]
-                            appendDesc("**${i + 1}**: $crd\n")
+                            val cList = uno.user.cards.cards[i]
+                            builder.append("**${i + 1}**: $cList\n")
                         }
+                        appendField("Your Cards", builder.toString(), false)
 
                         // Chad has no more cards. Chad doesn't call Uno because that's just useless.
                         if (uno.chad.cards.getSize() == 0) {
+                            clearFields()
                             withDesc("Chad won!")
+                            uno.endGame(false)
                         }
                     }
                     return
@@ -275,26 +277,26 @@ class Uno : Command.Class {
         // Gives info about the game & the user's cards
         messageHandler.sendEmbed {
             if (game.first) {
-                withDesc("You have started with these cards. Play your first card by using the number on the left of the card, then typing `${prefix}uno play {num}`!" +
-                        "\nMake sure that if you have 1 card left, to do `${prefix}uno call`." +
-                        "\n\n")
+                withDesc("You have started a game of Uno!" +
+                        "\nSelect a playable card below, and play it with `${prefix}uno play **number**`." +
+                        "\nOnce you're about to play your last card make sure to type `${prefix}uno call`.")
 
                 val init = uno.initGame()
-                appendDesc("The first played card is a $init\n\n")
+                appendField("First Played Card", init.toString(), true)
             }
 
             if (!game.first) {
-                appendDesc("Chad has ${uno.chad.cards.getSize()} cards\n\n")
+                withDesc("You started this game ${Util.fancyDate(System.currentTimeMillis() - uno.startedAt)} ago.")
+                appendField("Chad", "${uno.chad.cards.getSize()} cards", true)
+                appendField("Last Played Card", uno.playedCards.last().toString(), true)
             }
 
+            val builder = StringBuilder()
             for (i in uno.user.cards.cards.indices) {
                 val card = uno.user.cards.cards[i]
-                appendDesc("**${i + 1}**: $card\n")
+                builder.append("**${i + 1}**: $card\n")
             }
-
-            if (!game.first) {
-                appendDesc("\nThe last played card is: ${uno.playedCards.last()}")
-            }
+            appendField("Your Cards", builder.toString(), false)
         }
     }
 }
