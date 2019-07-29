@@ -1,6 +1,7 @@
 package dev.shog.chad.framework.handle.uno.obj
 
-import dev.shog.chad.framework.handle.uno.handle.ChadAI
+import dev.shog.chad.core.getLogger
+import dev.shog.chad.framework.handle.uno.handle.UnoStatistics
 import sx.blah.discord.handle.obj.IUser
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
@@ -8,33 +9,212 @@ import kotlin.random.Random
 /**
  * The main Uno game. This holds all data, including the played [Card]s etc.
  *
- * @param user The user who created the game instance.
+ * @param iUser The user who created the game instance.
  */
-abstract class UnoGame(val user: IUser) {
+class UnoGame(val iUser: IUser) {
     /**
-     * If the game has ended
+     * The [iUser]'s player class.
      */
-    var isComplete = false
+    val user = Player(this)
 
     /**
-     * The bot's current cards.
+     * Chad's player class.
      */
-    val botCards = ArrayList<Card>()
+    val chad = Player(this)
 
     /**
-     * The cards the user has.
+     * If the [player] is [chad], return [user]. Vice versa.
      */
-    val userCards = ArrayList<Card>()
+    fun getOtherUser(player: Player): Player {
+        return if (player == chad)
+            user
+        else chad
+    }
 
     /**
-     * A card that can possibly be used. [num] set to null when wild.
+     * A user within the Uno Game.
      */
-    data class PreCard(val cardType: CardType, val cardColor: CardColor, val num: Int?)
+    class Player internal constructor(private val uno: UnoGame) {
+        /**
+         * The cards
+         */
+        class CardCollection internal constructor() {
+            /**
+             * The size of [cards].
+             */
+            fun getSize() = cards.size
+
+            /**
+             * The player's cards.
+             */
+            val cards = ArrayList<Card>()
+
+            /**
+             * Add a card
+             */
+            fun add(card: Card) {
+                cards.add(card)
+            }
+
+            /**
+             * If the collection contains the inputted card, remove it.
+             */
+            fun remove(card: Card) {
+                when (card.type) {
+                    CardType.WILD_DEFAULT -> {
+                        cards.forEach {
+                            if (it.type == CardType.WILD_DEFAULT) {
+                                cards.remove(it)
+                                return
+                            }
+                        }
+                    }
+
+                    CardType.WILD_DRAW -> {
+                        cards.forEach {
+                            if (it.type == CardType.WILD_DRAW) {
+                                cards.remove(it)
+                                return
+                            }
+                        }
+                    }
+
+                    else -> cards.remove(card)
+                }
+            }
+
+            /**
+             * If the collection contains the inputted card.
+             */
+            fun contains(card: Card): Boolean {
+                when (card.type) {
+                    CardType.WILD_DEFAULT -> {
+                        cards.forEach {
+                            if (it.type == CardType.WILD_DEFAULT)
+                                return true
+                        }
+
+                        return false
+                    }
+
+                    CardType.WILD_DRAW -> {
+                        cards.forEach {
+                            if (it.type == CardType.WILD_DRAW)
+                                return true
+                        }
+
+                        return false
+                    }
+
+                    CardType.REGULAR -> {
+                        cards.forEach {
+                            if (it.color == card.color || it.num == card.num)
+                                return true
+                        }
+
+                        return false
+                    }
+
+                    CardType.SKIP -> {
+                        cards.forEach {
+                            if (it.type == card.type || it.color == card.color)
+                                return true
+                        }
+
+                        return false
+                    }
+
+                    CardType.REVERSE -> {
+                        cards.forEach {
+                            if (it.type == card.type || it.color == card.color)
+                                return true
+                        }
+
+                        return false
+                    }
+
+                    CardType.DRAW_TWO -> {
+                        cards.forEach {
+                            if (it.type == card.type || it.color == card.color)
+                                return true
+                        }
+
+                        return false
+                    }
+                }
+            }
+        }
+        /**
+         * The player's cards.
+         */
+        val cards = CardCollection()
+
+        /**
+         * Draws a card for the player [times] times.
+         */
+        fun draw(times: Int = 1): ArrayList<Card> {
+            val drawn = ArrayList<Card>()
+
+            repeat(times) {
+                cards.add(uno.drawCard().also {
+                    drawn.add(it)
+                })
+            }
+
+            return drawn
+        }
+
+        /**
+         * Play a card.
+         *
+         * @return First: is okay; Second: Turn Skipped
+         */
+        fun play(card: Card): Pair<Boolean, Boolean> {
+            // If the user's card array contains the card they're attempting to play, and if they can play the card.
+            if (!cards.contains(card.getAsClearWild()) || !uno.canPlayCard(card.getAsClearWild())) return Pair(first = false, second = false)
+
+            // If the next user's turn has been skipped
+            var turnSkipped = false
+
+            when (card.type) {
+                // Changes the color
+                CardType.WILD_DEFAULT -> {}
+
+                // Changes color and the other user and draws 4
+                CardType.WILD_DRAW -> {
+                    turnSkipped = true
+                    uno.getOtherUser(this).draw(4)
+                }
+
+                // Skips the other user's turn
+                CardType.SKIP -> {
+                    turnSkipped = true
+                }
+
+                // Reverse does nothing
+                CardType.REVERSE -> {}
+
+                // Gets the other user and draws 2
+                CardType.DRAW_TWO -> {
+                    turnSkipped = true
+                    uno.getOtherUser(this).draw(2)
+                }
+
+                CardType.REGULAR -> {}
+            }
+
+            // Removes the card from the list, and adds to the played cards.
+            cards.remove(card)
+            uno.playedCards.add(card)
+
+            return Pair(true, turnSkipped)
+        }
+    }
 
     /**
      * The amount of times a [Card] has been used.
      */
-    val usedCards = ConcurrentHashMap<PreCard, Int>()
+    val usedCards = ConcurrentHashMap<Card, Int>()
 
     /**
      * The played [Card]s.
@@ -43,99 +223,13 @@ abstract class UnoGame(val user: IUser) {
 
     /**
      * Ends the game after a user runs out of cards.
-     *
-     * If the [userWon], this will be true.
      */
     fun endGame(userWon: Boolean) {
-        isComplete = true
-        games.remove(user)
-    }
+        games.remove(iUser)
 
-
-    /**
-     * Plays a card, and checks if the user can.
-     *
-     * @param card The card the user is trying to play.
-     * @return First: is okay; Second: Turn Skipped
-     */
-    fun playerPlayCard(card: Card): Pair<Boolean, Boolean> {
-        if (!userCards.contains(card) || !canPlayCard(card)) return Pair(first = false, second = false)
-
-        var turnSkipped = false
-
-        when (card.type) {
-            CardType.WILD_DEFAULT -> {}
-
-            CardType.WILD_DRAW -> {
-                turnSkipped = true
-                repeat(4) {
-                    botCards.add(drawCard())
-                }
-            }
-
-            CardType.SKIP -> {
-                turnSkipped = true
-            }
-
-            // Reverse does nothing
-            CardType.REVERSE -> {}
-
-            CardType.DRAW_TWO -> {
-                turnSkipped = true
-                repeat(2) {
-                    botCards.add(drawCard())
-                }
-            }
-
-            CardType.REGULAR -> {}
-        }
-
-        userCards.remove(card)
-        playedCards.add(card)
-
-        return Pair(true, turnSkipped)
-    }
-
-    /**
-     * Plays a card.
-     *
-     * @return Card: The played card; Second: Turn Skipped
-     */
-    fun chadPlayCard(): Pair<Card, Boolean> {
-        val card = ChadAI(this).play()
-
-        if (!botCards.contains(card) || !canPlayCard(card)) throw IllegalArgumentException("Chad cannot play this card! ${playedCards.last()} -> $card")
-
-        var turnSkipped = false
-
-        when (card.type) {
-            CardType.WILD_DRAW -> {
-                turnSkipped = true
-                repeat(4) {
-                    botCards.add(drawCard())
-                }
-            }
-
-            CardType.SKIP -> {
-                turnSkipped = true
-            }
-
-            CardType.DRAW_TWO -> {
-                turnSkipped = true
-                repeat(2) {
-                    userCards.add(drawCard())
-                }
-            }
-
-            else -> {}
-        }
-
-        println("Played card: $card\nRemoved card: $card")
-
-        botCards.remove(card)
-        playedCards.add(card)
-
-        return Pair(card, turnSkipped)
+        if (userWon) {
+            UnoStatistics.gamesWon++
+        } else UnoStatistics.botGamesWon++
     }
 
     /**
@@ -157,17 +251,17 @@ abstract class UnoGame(val user: IUser) {
             // Wild Cards
             0 -> {
                 // Lesser chance to get +4
-                return if (Random.nextInt(3) == 0) {
-                    val pre = PreCard(CardType.WILD_DEFAULT, CardColor.WILD, null)
+                return if (Random.nextInt(2) == 0) {
+                    val pre = Card(null, CardType.WILD_DRAW, null)
                     if (canHaveCard(pre)) {
                         usedCards[pre] = (usedCards[pre] ?: 0) + 1
-                        Card(CardColor.WILD, CardType.WILD_DEFAULT, null)
+                        Card(null, CardType.WILD_DRAW, null)
                     } else drawCard()
                 } else {
-                    val pre = PreCard(CardType.WILD_DEFAULT, CardColor.WILD, null)
+                    val pre = Card(null, CardType.WILD_DEFAULT, null)
                     if (canHaveCard(pre)) {
                         usedCards[pre] = (usedCards[pre] ?: 0) + 1
-                        Card(CardColor.WILD, CardType.WILD_DEFAULT, null)
+                        Card(null, CardType.WILD_DEFAULT, null)
                     } else drawCard()
                 }
             }
@@ -175,7 +269,7 @@ abstract class UnoGame(val user: IUser) {
             // Skip Cards
             1 -> {
                 val color = randomColor()
-                val pre = PreCard(CardType.SKIP, color, null)
+                val pre = Card(color, CardType.SKIP, null)
                 if (canHaveCard(pre)) {
                     usedCards[pre] = (usedCards[pre] ?: 0) + 1
                     Card(color, CardType.SKIP, null)
@@ -185,7 +279,7 @@ abstract class UnoGame(val user: IUser) {
             // Reverse Cards
             2 -> {
                 val color = randomColor()
-                val pre = PreCard(CardType.REVERSE, color, null)
+                val pre = Card(color,CardType.REVERSE, null)
                 if (canHaveCard(pre)) {
                     usedCards[pre] = (usedCards[pre] ?: 0) + 1
                     Card(color, CardType.REVERSE, null)
@@ -195,7 +289,7 @@ abstract class UnoGame(val user: IUser) {
             // Draw Two
             3 -> {
                 val color = randomColor()
-                val pre = PreCard(CardType.DRAW_TWO, color, null)
+                val pre = Card(color, CardType.DRAW_TWO, null)
                 if (canHaveCard(pre)) {
                     usedCards[pre] = (usedCards[pre] ?: 0) + 1
                     Card(color, CardType.DRAW_TWO, null)
@@ -205,7 +299,7 @@ abstract class UnoGame(val user: IUser) {
             // Reverse
             4 -> {
                 val color = randomColor()
-                val pre = PreCard(CardType.REVERSE, color, null)
+                val pre = Card(color, CardType.REVERSE, null)
                 if (canHaveCard(pre)) {
                     usedCards[pre] = (usedCards[pre] ?: 0) + 1
                     Card(color, CardType.REVERSE, null)
@@ -217,7 +311,7 @@ abstract class UnoGame(val user: IUser) {
                 val num = Random.nextInt(10) // 0 -> 9
 
                 val color = randomColor()
-                val pre = PreCard(CardType.REGULAR, color, num)
+                val pre = Card(color, CardType.REGULAR, num)
                 if (canHaveCard(pre)) {
                     usedCards[pre] = (usedCards[pre] ?: 0) + 1
                     Card(color, CardType.REGULAR, num)
@@ -227,44 +321,39 @@ abstract class UnoGame(val user: IUser) {
     }
 
     /**
-     * Gets a random [CardColor], excluding [CardColor.WILD].
+     * Gets a random [CardColor].
      */
-    private fun randomColor(): CardColor {
-        val rand = CardColor.values().random()
-
-        // Re-pick if wild.
-        return if (rand == CardColor.WILD)
-            randomColor()
-        else rand
-    }
+    private fun randomColor(): CardColor = CardColor.values().random()
 
     /**
      * Checks if the user can have a [Card].
      *
      * Makes sure there's a proper amount of cards within the game.
      */
-    private fun canHaveCard(preCard: PreCard): Boolean {
-        return when (preCard.cardType) {
-            CardType.WILD_DEFAULT -> (usedCards[preCard] ?: 0) < 4
-            CardType.WILD_DRAW -> (usedCards[preCard] ?: 0) < 4
-            CardType.SKIP -> (usedCards[preCard] ?: 0) < 4
-            CardType.REVERSE -> (usedCards[preCard] ?: 0) < 2
-            CardType.DRAW_TWO -> (usedCards[preCard] ?: 0) < 2
+    private fun canHaveCard(Card: Card): Boolean {
+        return when (Card.type) {
+            CardType.WILD_DEFAULT -> (usedCards[Card] ?: 0) < 4
+            CardType.WILD_DRAW -> (usedCards[Card] ?: 0) < 4
+            CardType.SKIP -> (usedCards[Card] ?: 0) < 4
+            CardType.REVERSE -> (usedCards[Card] ?: 0) < 2
+            CardType.DRAW_TWO -> (usedCards[Card] ?: 0) < 2
             CardType.REGULAR -> {
-                if (preCard.num!! == 0) {
-                    (usedCards[preCard] ?: 0) == 0
-                } else (usedCards[preCard] ?: 0) < 2
+                if (Card.num!! == 0) {
+                    (usedCards[Card] ?: 0) == 0
+                } else (usedCards[Card] ?: 0) < 2
 
             }
         }
     }
 
     /**
-     * Checks if the user can play the current [card].
+     * Checks if the user can play the current [c].
      *
-     * If the [card] is wild, it can be played no matter what. If it's not, it must check if the
+     * If the [c] is wild, it can be played no matter what. If it's not, it must check if the
      */
-    private fun canPlayCard(card: Card): Boolean {
+    private fun canPlayCard(c: Card): Boolean {
+        val card = c.getAsClearWild()
+
         return when (card.type) {
             CardType.WILD_DEFAULT -> true
             CardType.WILD_DRAW -> true
@@ -273,15 +362,15 @@ abstract class UnoGame(val user: IUser) {
                 val otherCard = playedCards.last()
 
                 // Checks if the color is the same, the number is the same if it is a number card, or if the type of a non-regular card is the same.
-                card.color == otherCard.color
+                (card.color == otherCard.color
                         || (card.num != null && otherCard.num != null && otherCard.num == card.num)
-                        || (card.type != CardType.REGULAR && card.type == otherCard.type)
+                        || (card.type != CardType.REGULAR && card.type == otherCard.type))
             }
         }
     }
 
     /**
-     * Places down and returns the initial [Card] of the game.
+     * Places down and returns the initial [Card] of the game. Cannot be anything but a [CardType.REGULAR]
      */
     private fun getInitialCard(): Card {
         if (playedCards.size != 0) throw IllegalArgumentException("Game already started!")
@@ -293,6 +382,7 @@ abstract class UnoGame(val user: IUser) {
                 playedCards.add(card)
                 card
             }
+
             else -> getInitialCard()
         }
     }
@@ -301,10 +391,8 @@ abstract class UnoGame(val user: IUser) {
      * Gives the Chad and the player 7 cards, and returns [getInitialCard].
      */
     fun initGame(): Card {
-        for (i in 0..6) {
-            userCards.add(drawCard())
-            botCards.add(drawCard())
-        }
+        user.draw(7)
+        chad.draw(7)
 
         return getInitialCard()
     }
@@ -327,7 +415,7 @@ abstract class UnoGame(val user: IUser) {
          */
         fun getGame(iUser: IUser): Pair<Boolean, UnoGame> {
             if (!games.containsKey(iUser)) {
-                games[iUser] = object : UnoGame(iUser) {}
+                games[iUser] = UnoGame(iUser)
                 return Pair(true, games[iUser]!!)
             }
 

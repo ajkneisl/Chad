@@ -41,5 +41,5 @@ enum class CardType {
  * The color of a [Card].
  */
 enum class CardColor {
-    YELLOW, GREEN, BLUE, RED, WILD
+    YELLOW, GREEN, BLUE, RED
 }

@@ -5,6 +5,7 @@ import dev.shog.chad.framework.handle.uno.obj.Card
 import dev.shog.chad.framework.handle.uno.obj.CardColor
 import dev.shog.chad.framework.handle.uno.obj.CardType
 import dev.shog.chad.framework.handle.uno.obj.UnoGame
+import java.lang.Exception
 
 /**
  * Creates plays in a [UnoGame] for the bot.
@@ -62,13 +63,13 @@ class ChadAI(private val unoGame: UnoGame) {
         reverse.clear()
         skip.clear()
         reg.clear()
-        cards = unoGame.botCards
+        cards = unoGame.chad.cards.cards
         recentCard = unoGame.playedCards.last()
 
         cards.forEach { card ->
             when (card.type) {
-                CardType.WILD_DEFAULT -> wild.add(card)
-                CardType.WILD_DRAW -> wildDraw.add(card)
+                CardType.WILD_DEFAULT -> wild.add(card.getAsClearWild())
+                CardType.WILD_DRAW -> wildDraw.add(card.getAsClearWild())
                 CardType.SKIP -> skip.add(card)
                 CardType.REVERSE -> reverse.add(card)
                 CardType.DRAW_TWO -> plusTwo.add(card)
@@ -84,15 +85,7 @@ class ChadAI(private val unoGame: UnoGame) {
      */
     fun play(): Card {
         // If they've got less cards, attempt to get a +2 card.
-        if (unoGame.userCards.size < cards.size && plusTwo.isNotEmpty()) {
-            val card = attemptPlusTwo()
-
-            if (card != null)
-                return card
-        }
-
-        // If they've got less cards, attempt to get a +2 card.
-        if (unoGame.userCards.size < cards.size && plusTwo.isNotEmpty()) {
+        if (unoGame.user.cards.getSize() < cards.size && plusTwo.isNotEmpty()) {
             val card = attemptPlusTwo()
 
             if (card != null)
@@ -100,7 +93,7 @@ class ChadAI(private val unoGame: UnoGame) {
         }
 
         // If we've got more cards, attempt to skip them to be able to use more
-        if (unoGame.userCards.size < cards.size && skip.isNotEmpty()) {
+        if (unoGame.user.cards.getSize() < cards.size && skip.isNotEmpty()) {
             val card = attemptSkip()
 
             if (card != null)
@@ -112,6 +105,10 @@ class ChadAI(private val unoGame: UnoGame) {
         if (card != null)
             return card
 
+        // We don't care anymore
+        attemptSkip()
+        attemptPlusTwo()
+
         card = attemptRegular()
 
         if (card != null)
@@ -122,18 +119,9 @@ class ChadAI(private val unoGame: UnoGame) {
         if (card != null)
             return card
 
-        println("Bot needed to draw for card. Needs to find a playable card ontop of $recentCard")
-        unoGame.botCards.forEach { crd ->
-            println(crd)
-        }
-
         // Keep drawing until it finds the right card
-        val drawn = unoGame.drawCard()
-
-        unoGame.botCards.add(drawn)
+        unoGame.chad.draw(1)
         drawAttempts++
-
-        getLogger().warn("The bot has drawn $drawAttempts times!")
 
         calculate()
 
@@ -157,42 +145,21 @@ class ChadAI(private val unoGame: UnoGame) {
 
             when {
                 // Draw isn't empty and regulars are: Play draw
-                draw && !reg -> {
-                    unoGame.botCards.remove(Card(CardColor.WILD, CardType.WILD_DRAW, null))
-
-                    val card = Card(largest, CardType.WILD_DRAW, null)
-                    unoGame.botCards.add(card)
-
-                    return card
-                }
+                draw && !reg -> return Card(largest, CardType.WILD_DRAW, null)
 
                 // Draw is empty and regulars aren't: Play regular
-                reg && !draw -> {
-                    unoGame.botCards.remove(Card(CardColor.WILD, CardType.WILD_DEFAULT, null))
-
-                    val card = Card(largest, CardType.WILD_DEFAULT, null)
-                    unoGame.botCards.add(card)
-
-                    return card
-                }
+                reg && !draw -> return Card(largest, CardType.WILD_DEFAULT, null)
 
                 draw && reg -> {
-                    return if (unoGame.userCards.size > unoGame.botCards.size) { // If the user has more cards, play a regular one as we're ahead.
-                        unoGame.botCards.remove(Card(CardColor.WILD, CardType.WILD_DEFAULT, null))
-
-                        val card = Card(largest, CardType.WILD_DEFAULT, null)
-                        unoGame.botCards.add(card)
-
-                        card
+                    // If the user has more cards, play a regular one as we're ahead.
+                    return if (unoGame.user.cards.getSize() > unoGame.user.cards.getSize()) {
+                        Card(largest, CardType.WILD_DEFAULT, null)
                     } else { // If we're the same, or they're ahead, use +4
-                        unoGame.botCards.remove(Card(CardColor.WILD, CardType.WILD_DRAW, null))
-
-                        val card = Card(largest, CardType.WILD_DRAW, null)
-                        unoGame.botCards.add(card)
-
-                        card
+                        Card(largest, CardType.WILD_DRAW, null)
                     }
                 }
+
+                else -> throw Exception("Issue with attemptWild()")
             }
         }
 
@@ -245,8 +212,6 @@ class ChadAI(private val unoGame: UnoGame) {
      */
     private fun attemptRegular(): Card? {
         reg.forEach { crd ->
-            println("Recent Card Color: ${recentCard.color}\nCard Color: ${crd.color}\n\nRecent Card Number: ${recentCard.num}\nCard Number: ${crd.num}")
-
             if (recentCard.color == crd.color || (recentCard.num != null && recentCard.num == crd.num))
                 return crd
         }
@@ -273,7 +238,7 @@ class ChadAI(private val unoGame: UnoGame) {
             }
         }
 
-        var biggestCard = CardColor.WILD
+        var biggestCard: CardColor? = null
         var biggestVal = 0
 
         arrayListOf(Pair(CardColor.YELLOW, yellow), Pair(CardColor.GREEN, green), Pair(CardColor.BLUE, blue), Pair(CardColor.RED, red)).forEach {
@@ -283,6 +248,6 @@ class ChadAI(private val unoGame: UnoGame) {
             }
         }
 
-        return biggestCard
+        return biggestCard ?: throw Exception("There was an issue calculating the largest card.")
     }
 }

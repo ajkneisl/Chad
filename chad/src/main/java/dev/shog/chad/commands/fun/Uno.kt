@@ -2,14 +2,13 @@ package dev.shog.chad.commands.`fun`
 
 import dev.shog.chad.framework.handle.GuildHandler
 import dev.shog.chad.framework.handle.MessageHandler
+import dev.shog.chad.framework.handle.uno.handle.ChadAI
 import dev.shog.chad.framework.handle.uno.obj.Card
 import dev.shog.chad.framework.handle.uno.obj.CardColor
-import dev.shog.chad.framework.handle.uno.obj.CardType
 import dev.shog.chad.framework.handle.uno.obj.UnoGame
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.util.EmbedBuilder
 import java.util.HashMap
 
 
@@ -46,6 +45,7 @@ class Uno : Command.Class {
                     return
                 }
 
+                // When the user calls Uno
                 "call" -> {
                     if (!UnoGame.games.containsKey(e.author)) {
                         messageHandler.sendError("You haven't created a game!")
@@ -55,7 +55,8 @@ class Uno : Command.Class {
                     val game = UnoGame.getGame(e.author)
                     val uno = game.second
 
-                    if (uno.userCards.size == 1) {
+                    // Makes sure they've got 1 card left, then call Uno
+                    if (uno.user.cards.getSize() == 1) {
                         uno.userCalledUno = true
                         messageHandler.sendMessage("You have called uno!")
                         return
@@ -76,19 +77,21 @@ class Uno : Command.Class {
                     }
 
                     messageHandler.sendEmbed {
-                        val drawn = uno.drawCard()
-                        uno.userCards.add(drawn)
+                        // Draws a card, and makes sure it returned properly
+                        val drawn = uno.user.draw(1).also {
+                            if (it.size <= 0) throw Exception("There was an issue drawing!")
+                        }
 
                         // The user's current cards.
-                        appendDesc("Chad has ${uno.botCards.size} cards\n\n")
+                        appendDesc("Chad has ${uno.chad.cards.getSize()} cards\n\n")
                         appendDesc("Your current cards:\n\n")
-                        for (i in uno.userCards.indices) {
-                            val crd = uno.userCards[i]
+                        for (i in uno.user.cards.cards.indices) {
+                            val crd = uno.user.cards.cards[i]
                             appendDesc("**${i + 1}**: $crd\n")
                         }
 
                         // Gives the output of the drawn card.
-                        appendDesc("\nYou drew a $drawn.")
+                        appendDesc("\nYou drew a ${drawn[0]}.")
 
                         // The most recent played card
                         appendDesc("\n\nThe most recently played card is a ${uno.playedCards.last()}")
@@ -97,6 +100,7 @@ class Uno : Command.Class {
                     return
                 }
 
+                // Plays a card
                 "play" -> {
                     if (args.size < 2) {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "uno play [number]", includePrefix = true)
@@ -120,28 +124,30 @@ class Uno : Command.Class {
                     }
 
                     // If they've got 1 card, and they haven't called uno, give them 2 cards.
-                    if (uno.userCards.size == 1 && !uno.userCalledUno) {
-                        messageHandler.sendError("You didn't call Uno! You have gained 2 cards!")
+                    if (uno.user.cards.getSize() == 1 && !uno.userCalledUno) {
+                        // Draws 2 cards and makes sure it was properly returned
+                        val drawn = uno.user.draw(1).also {
+                            if (it.size != 1) throw Exception("There was an issue drawing!")
+                        }
 
-                        uno.userCards.add(uno.drawCard())
-                        uno.userCards.add(uno.drawCard())
-
+                        messageHandler.sendError("You didn't call Uno! You have been given a ${drawn[0]} and ${drawn[1]}!")
                         return
                     }
 
                     // Attempts to play the card
                     var card = try {
-                        uno.userCards[number]
+                        uno.user.cards.cards[number]
                     } catch (e: Exception) {
                         messageHandler.sendError("That card doesn't exist!")
                         return
                     }
 
                     // The wild color
-                    if (card.color == CardColor.WILD && args.size != 3) {
+                    // TODO turn into a reaction based choice
+                    if (card.color == null && card.num == null && args.size != 3) {
                         messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "uno play [number] [red/green/blue/yellow]", includePrefix = true)
                         return
-                    } else if (args.size == 3 && card.color == CardColor.WILD) {
+                    } else if (args.size == 3 && card.color == null) {
                         val color = when (args[2].toLowerCase()) {
                             "green" -> CardColor.GREEN
                             "yellow" -> CardColor.YELLOW
@@ -153,18 +159,17 @@ class Uno : Command.Class {
                             }
                         }
 
-                        uno.userCards.remove(card)
                         card = Card(color, card.type, null)
-                        uno.userCards.add(card)
                     }
 
-                    val playedCard = uno.playerPlayCard(card)
+                    val playedCard = uno.user.play(card)
                     if (!playedCard.first) {
                         messageHandler.sendError("You can't play that card!")
                         return
                     }
 
-                    if (uno.userCards.size == 0) {
+                    // If they've got 0 cards, they won. Uno calling was previously checked
+                    if (uno.user.cards.getSize() == 0) {
                         messageHandler.sendEmbed { withDesc("You won!") }
                         uno.endGame(true)
                         return
@@ -172,35 +177,40 @@ class Uno : Command.Class {
 
                     // Sends the user's updated status.
                     messageHandler.sendEmbed {
-                        // The user's new cards.
-                        appendDesc("Chad has ${uno.botCards.size} cards\n\n")
-                        appendDesc("Your current cards:\n\n")
-                        for (i in uno.userCards.indices) {
-                            val crd = uno.userCards[i]
-                            appendDesc("**${i + 1}**: $crd\n")
-                        }
-
                         // Gives the output of the played card.
                         appendDesc("\nYou played a $card.")
 
+                        // Chad's card.
+                        appendDesc("\n\nChad has ${uno.chad.cards.getSize()} cards.\n")
+
+                        // If you skipped Chad's turn
                         if (playedCard.second) {
-                            appendDesc("\n\nYou skipped Chad's turn!")
-                            return@sendEmbed
-                        }
+                            appendDesc("\nYou skipped Chad's turn!")
+                        } else {
+                            // If not, play for Chad
+                            ChadAI(uno).play().also {
+                                val played = uno.chad.play(it)
+                                appendDesc("\nChad played a $it.")
 
-                        uno.chadPlayCard().also {
-                            appendDesc("\n\nChad played a ${it.first}.")
+                                var cont = played.second
 
-                            var cont = it.second
-
-                            while (cont) {
-                                val ret = uno.chadPlayCard()
-                                appendDesc("\nYour turn was skipped, so Chad played a ${ret.first}")
-                                cont = ret.second
+                                while (cont) {
+                                    val c = ChadAI(uno).play()
+                                    val ret = uno.chad.play(c)
+                                    appendDesc("\nYour turn was skipped, so Chad played a $c")
+                                    cont = ret.second
+                                }
                             }
                         }
 
-                        if (uno.botCards.size == 0) {
+                        appendDesc("\n\nYour current cards:\n\n")
+                        for (i in uno.user.cards.cards.indices) {
+                            val crd = uno.user.cards.cards[i]
+                            appendDesc("**${i + 1}**: $crd\n")
+                        }
+
+                        // Chad has no more cards. Chad doesn't call Uno because that's just useless.
+                        if (uno.chad.cards.getSize() == 0) {
                             withDesc("Chad won!")
                         }
                     }
@@ -212,24 +222,23 @@ class Uno : Command.Class {
         val game = UnoGame.getGame(e.author)
         val uno = game.second
 
+        // Gives info about the game & the user's cards
         messageHandler.sendEmbed {
             if (game.first) {
                 withDesc("You have started with these cards. Play your first card by using the number on the left of the card, then typing `${prefix}uno play {num}`!" +
                         "\nMake sure that if you have 1 card left, to do `${prefix}uno call`." +
                         "\n\n")
-            }
 
-            if (game.first) {
                 val init = uno.initGame()
                 appendDesc("The first played card is a $init\n\n")
             }
 
             if (!game.first) {
-                appendDesc("Chad has ${uno.botCards.size} cards\n\n")
+                appendDesc("Chad has ${uno.chad.cards.getSize()} cards\n\n")
             }
 
-            for (i in uno.userCards.indices) {
-                val card = uno.userCards[i]
+            for (i in uno.user.cards.cards.indices) {
+                val card = uno.user.cards.cards[i]
                 appendDesc("**${i + 1}**: $card\n")
             }
 
