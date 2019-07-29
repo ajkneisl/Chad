@@ -15,7 +15,7 @@ import java.util.*
 /**
  * Modify Chad's discord presence
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class ModifyPresence : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

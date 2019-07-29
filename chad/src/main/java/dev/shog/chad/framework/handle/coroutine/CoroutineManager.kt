@@ -11,6 +11,7 @@ import dev.shog.chad.framework.handle.PermissionHandler
 import dev.shog.chad.framework.handle.xp.XPHandler
 import dev.shog.chad.framework.obj.Command
 import dev.shog.chad.framework.obj.Guild
+import org.json.JSONArray
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
@@ -95,7 +96,7 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
 
         val commandString = argArray[0].substring(prefix.length).toLowerCase()
 
-        val args = ArrayList(Arrays.asList<String>(*argArray.toTypedArray()))
+        val args = ArrayList(mutableListOf(*argArray.toTypedArray()))
         args.removeAt(0)
 
         if (!event.author.canRun()) return
@@ -103,8 +104,8 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
         var command: Command.Data? = null
         var commandName: String? = null
 
-        for (cmd in ChadVar.COMMANDS.keys) {
-            val data = ChadVar.COMMANDS[cmd]!!
+        for (cmd in Command.COMMANDS.keys) {
+            val data = Command.COMMANDS[cmd]!!
 
             if (commandString.equals(cmd, true)) {
                 command = data
@@ -129,8 +130,11 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NOT_DEVELOPER)
             return
         }
-
-        if ((guild.getObject(Guild.DataType.DISABLED_CATEGORIES) as ArrayList<*>).contains(command.commandCategory.toString().toLowerCase())) return
+      
+        if (
+                JSONArray(guild.getObject(Guild.DataType.DISABLED_CATEGORIES) as String)
+                        .contains(command.commandCategory.toString().toLowerCase())
+        ) return
 
         if (!PermissionHandler.hasPermission(commandName!!, event.author, event.guild) && !event.author.getPermissionsForGuild(event.guild).contains(Permissions.ADMINISTRATOR)) {
             MessageHandler(event.channel, event.author).sendPresetError(MessageHandler.Messages.USER_NO_PERMISSION)
@@ -150,7 +154,8 @@ class CoroutineManager internal constructor(): CoroutineScope by CoroutineScope(
 
                 true
             } catch (ex: Exception) {
-                request { event.channel.sendMessage("There was an issue running that command!\nError: `${ex.message}`") }
+                throw ex
+//                request { event.channel.sendMessage("There was an issue running that command!\nError: `${ex.message}`") }
                 false
             }
 

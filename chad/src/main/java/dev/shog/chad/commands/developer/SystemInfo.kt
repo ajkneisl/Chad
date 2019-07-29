@@ -14,7 +14,7 @@ import java.util.*
 /**
  * Gives info about the system via discord
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class SystemInfo : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

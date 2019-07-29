@@ -1,5 +1,6 @@
 package dev.shog.chad.commands.admin
 
+import com.amazonaws.services.dynamodbv2.document.AttributeUpdate
 import dev.shog.chad.framework.handle.GuildHandler
 import dev.shog.chad.framework.handle.MessageHandler
 import dev.shog.chad.framework.handle.coroutine.asIRoleList
@@ -16,7 +17,7 @@ import java.util.*
 /**
  * Automatically adds a role to a user when they join a server
  *
- * @author codebasepw
+ * @author sho
  */
 class AutoRole : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {
@@ -31,7 +32,10 @@ class AutoRole : Command.Class {
         when (args[0].toLowerCase()) {
             "on" -> {
                 // Sets the value in the database
-                dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(e.guild.longID, "role_on_join", true)
+                DatabaseManager.GUILD_DATA.setObjects(
+                        e.guild.longID,
+                        AttributeUpdate("role_on_join").put(true)
+                )
 
                 // ReCaches the guild
                 GuildHandler.refreshGuild(e.guild.longID)
@@ -44,7 +48,10 @@ class AutoRole : Command.Class {
             }
             "off" -> {
                 // Sets the value in the database
-                DatabaseManager.GUILD_DATA.setObject(e.guild.longID, "role_on_join", false)
+                DatabaseManager.GUILD_DATA.setObjects(
+                        e.guild.longID,
+                        AttributeUpdate("role_on_join").put(false)
+                )
 
                 // ReCaches the guild
                 GuildHandler.refreshGuild(e.guild.longID)
@@ -82,7 +89,10 @@ class AutoRole : Command.Class {
                 val newRole = roles[0]
 
                 // Sets the role ID into the database
-                DatabaseManager.GUILD_DATA.setObject(e.guild.longID, "join_role", newRole.stringID)
+                DatabaseManager.GUILD_DATA.setObjects(
+                        e.guild.longID,
+                        AttributeUpdate("join_role").put(newRole.stringID)
+                )
 
                 // Builds the embed and sends it
                 messageHandler.sendEmbed {

@@ -1,6 +1,5 @@
 package dev.shog.chad.commands.info
 
-import dev.shog.chad.core.ChadVar
 import dev.shog.chad.framework.handle.GuildHandler
 import dev.shog.chad.framework.handle.MessageHandler
 import dev.shog.chad.framework.obj.Command
@@ -32,12 +31,12 @@ class Aliases : Command.Class {
 
         val command = args[0]
 
-        if (!ChadVar.COMMANDS.keys().toList().contains(command)) {
+        if (!Command.COMMANDS.keys().toList().contains(command)) {
             messageHandler.sendPresetError(MessageHandler.Messages.INVALID_ARGUMENTS, "${prefix}aliases [command]")
             return
         }
 
-        val commandData = ChadVar.COMMANDS[command]
+        val commandData = Command.COMMANDS[command]
 
         if (!commandData!!.usesAliases()) {
             messageHandler.sendError("There's no aliases for this command!")

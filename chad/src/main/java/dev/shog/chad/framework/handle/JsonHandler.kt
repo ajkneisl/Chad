@@ -22,7 +22,9 @@ object JsonHandler {
      * Creates files
      */
     private fun execFiles(linux: Boolean) {
-        val directory = if (linux) File("/home/" + System.getProperty("user.name") + "/chad") else File(System.getenv("appdata") + "\\chad")
+        val directory = if (linux)
+            File("/home/" + System.getProperty("user.name") + "/chad")
+        else File(System.getenv("appdata") + "\\chad")
 
         if (!directory.exists() && !directory.mkdirs()) {
             getLogger().error("There was an error making the Chad directory.")
@@ -43,6 +45,8 @@ object JsonHandler {
             obj.put("uri_link", "")
             obj.put("youtube_api_key", "")
             obj.put("jdbc", "")
+            obj.put("secret", "")
+            obj.put("id", "")
 
             try {
                 FileWriter(botLocation).use { fileWriter ->
@@ -53,6 +57,8 @@ object JsonHandler {
                 getLogger().error("There was an issue creating files at startup!", e)
             }
         }
+
+        getLogger().debug("Using path for bot.json ${botLocation.path}")
     }
 
     /**

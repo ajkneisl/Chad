@@ -16,7 +16,7 @@ import java.util.regex.Pattern
 /**
  * Moderator tool to kick a user
  *
- * @author sho, codebasepw
+ * @author sho
  * @since 0.6.3 B2
  */
 class Kick : Command.Class {

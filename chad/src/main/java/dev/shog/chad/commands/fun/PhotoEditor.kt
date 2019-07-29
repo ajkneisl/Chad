@@ -17,7 +17,7 @@ import java.util.Objects
 /**
  * Use preset options to modify a photo
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class PhotoEditor : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

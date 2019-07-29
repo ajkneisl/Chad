@@ -16,7 +16,7 @@ import java.util.regex.Pattern
 /**
  * Moderator tool to ban a user
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class Ban : Command.Class {
     override suspend fun run(e: MessageEvent, args: MutableList<String>) {

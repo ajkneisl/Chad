@@ -1,9 +1,12 @@
 package dev.shog.chad.framework.obj
 
+import com.amazonaws.services.dynamodbv2.document.AttributeUpdate
 import dev.shog.chad.core.ChadVar
 import dev.shog.chad.core.getLogger
 import dev.shog.chad.framework.handle.database.DatabaseManager
+import dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA
 import dev.shog.chad.framework.handle.database.DatabaseManager.USER_DATA
+import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -128,8 +131,8 @@ class Guild {
         this.guildData = guildData
         this.guildID = guild
 
-        messagesSent = guildData[DataType.MESSAGES_SENT] as Long
-        commandsSent = guildData[DataType.COMMANDS_SENT] as Long
+        messagesSent = (guildData[DataType.MESSAGES_SENT] as BigDecimal).toLong()
+        commandsSent = (guildData[DataType.MESSAGES_SENT] as BigDecimal).toLong()
     }
 
     /**
@@ -141,7 +144,7 @@ class Guild {
     fun setObject(dataType: DataType, value: Any) {
         guildData[dataType] = value
 
-        dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(guildID, dataType.toString().toLowerCase(), value)
+        DatabaseManager.GUILD_DATA.setObjects(guildID, AttributeUpdate(dataType.toString().toLowerCase()).put(value))
     }
 
     /**
@@ -150,9 +153,7 @@ class Guild {
      * @param dataType The data type to retrieve
      * @return The retrieved data
      */
-    fun getObject(dataType: DataType): Any {
-        return guildData[dataType]!!
-    }
+    fun getObject(dataType: DataType): Any = guildData[dataType]!!
 
     /**
      * Gets data from a string, directly from the database.
@@ -160,9 +161,7 @@ class Guild {
      * @param dataType The data's key
      * @return The retrieved data
      */
-    fun getObject(dataType: String): Any? {
-        return USER_DATA.getObject(guildID, dataType)
-    }
+    fun getObject(dataType: String): Any? = GUILD_DATA.getObject(guildID)?.get(dataType)
 
     /**
      * Gets the permissions for a role
@@ -176,7 +175,7 @@ class Guild {
             return permissionData[role]!!
 
         // Get the permissions from the database
-        val permissions = dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.getObject(guildID, java.lang.Long.toString(role))
+        val permissions = DatabaseManager.GUILD_DATA.getObject(guildID)?.getList<String>(role.toString())
 
         // If it doesn't exist
         if (permissions == null) {
@@ -186,7 +185,7 @@ class Guild {
             permissionData[role] = permissionSet
 
             // Put it in the database
-            dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(guildID, java.lang.Long.toString(role), permissionSet)
+            DatabaseManager.GUILD_DATA.setObjects(guildID, AttributeUpdate(role.toString()).put(permissionSet))
 
             return permissionSet
         }
@@ -223,7 +222,7 @@ class Guild {
         val permissionSet = getRolePermissions(role)
 
         // Make sure the command is an actual command
-        if (!ChadVar.COMMANDS.containsKey(command) || ChadVar.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
+        if (!Command.COMMANDS.containsKey(command) || Command.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
             return 3
 
         // Make sure it doesn't already have that permission
@@ -237,7 +236,7 @@ class Guild {
         permissionData[role] = permissionSet
 
         // Re-add to database
-        dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(guildID, java.lang.Long.toString(role), permissionSet)
+        DatabaseManager.GUILD_DATA.setObjects(guildID, AttributeUpdate(role.toString()).put(permissionSet))
 
         return 0
     }
@@ -254,7 +253,7 @@ class Guild {
         val permissionSet = getRolePermissions(role)
 
         // Make sure the command is an actual command
-        if (!ChadVar.COMMANDS.containsKey(command) || ChadVar.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
+        if (!Command.COMMANDS.containsKey(command) || Command.COMMANDS[command]!!.commandCategory == Command.Category.DEVELOPER)
             return 3
 
         // If there's no commands at all
@@ -272,7 +271,7 @@ class Guild {
         permissionData[role] = permissionSet
 
         // Re-add to database
-        dev.shog.chad.framework.handle.database.DatabaseManager.GUILD_DATA.setObject(guildID, java.lang.Long.toString(role), permissionSet)
+        DatabaseManager.GUILD_DATA.setObjects(guildID, AttributeUpdate(role.toString()).put(permissionSet))
 
         return 0
     }

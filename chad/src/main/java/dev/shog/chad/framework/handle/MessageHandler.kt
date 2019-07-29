@@ -16,7 +16,7 @@ import java.util.stream.Collectors
 /**
  * Handles almost all messages within Chad
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class MessageHandler(private val channel: IChannel, user: IUser) {
     /**

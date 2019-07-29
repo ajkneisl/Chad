@@ -20,7 +20,7 @@ import javax.net.ssl.HttpsURLConnection
 /**
  * The Utility class for Chad
  *
- * @author sho, codebasepw
+ * @author sho
  */
 object Util {
     /**

@@ -3,7 +3,9 @@ package dev.shog.chad.core.listener
 import dev.shog.chad.core.getLogger
 import dev.shog.chad.framework.handle.GuildHandler
 import dev.shog.chad.framework.handle.PlayerHandler
+import dev.shog.chad.framework.handle.database.DatabaseManager
 import dev.shog.chad.framework.obj.Player.DataType
+import org.json.JSONArray
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent
 import sx.blah.discord.handle.impl.events.guild.GuildLeaveEvent
@@ -13,11 +15,12 @@ import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.handle.obj.Permissions
 import sx.blah.discord.util.RequestBuffer
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * The Discord guild join and leave events
  *
- * @author sho, codebasepw
+ * @author sho
  */
 class GuildJoinLeave {
     /**
@@ -32,24 +35,16 @@ class GuildJoinLeave {
             val users = RequestBuffer.request<List<IUser>> { event.guild.users }.get()
             for (user in users) {
                 val player = PlayerHandler.getPlayer(user.longID)
-                var guildData = player.getObject(DataType.GUILD_DATA) as ArrayList<*>
-
-                try {
-                    @Suppress("UNCHECKED_CAST")
-                    guildData = guildData as ArrayList<Long>
-                } catch (e: ClassCastException) {
-                    getLogger().error("Error with cast!", e)
-                    return@Thread
-                }
+                val guildData = JSONArray(player.getObject(DataType.GUILD_DATA) as String)
 
                 if (!guildData.contains(event.guild.longID)) {
-                    guildData.add(event.guild.longID)
-                    player.setObject(DataType.GUILD_DATA, guildData)
+                    guildData.put(event.guild.longID)
+                    player.setObject(DataType.GUILD_DATA, guildData.toString())
                 }
             }
         }.run()
 
-        if (!GuildHandler.guildDataExists(event.guild.longID)) {
+        if (DatabaseManager.GUILD_DATA.getObject(event.guild.longID) == null) {
             // By retrieving the guild's instance, it creates an instance for the guild within the database
             GuildHandler.getGuild(event.guild.longID)
 
