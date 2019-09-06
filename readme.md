@@ -2,6 +2,8 @@
 
 # Chad 
 
+Chad has been replaced with [Buta](https://github.com/Shoganeko/buta), and is now archived.
+
 Chad has a wide variety of features and utilities. They can be useful and fun to your moderators, and to your users.
 
 Invite Chad to your server [here](https://shog.dev/chad/invite), or invite Test Chad [here](https://shog.dev/chad/test-invite).
